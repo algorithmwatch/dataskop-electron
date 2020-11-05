@@ -7,10 +7,10 @@ import logo from '../static/images/dataskop_logo.png';
 
 export default function Base({ children }): JSX.Element {
   return (
-    <div className="container">
+    <section className="section">
       <div className="columns">
-        <div className="column is-one-quarter">
-          <img src={logo} className={styles.logo} />
+        <div className="column is-narrow">
+          <img src={logo} className={styles.logo} alt="Dataskop Logo" />
           <aside className="menu">
             <p className="menu-label">Introduction</p>
             <ul className="menu-list">
@@ -18,10 +18,10 @@ export default function Base({ children }): JSX.Element {
                 <Link to={routes.HOME}>home</Link>
               </li>
               <li>
-                <Link to={routes.LOGIN}>login</Link>
+                <Link to={routes.SCRAPING}>scraping</Link>
               </li>
               <li>
-                <Link to={routes.SCRAPING}>scraping</Link>
+                <Link to={routes.VISUALIZATION}>visualization</Link>
               </li>
             </ul>
             <p className="menu-label">More Information</p>
@@ -29,6 +29,7 @@ export default function Base({ children }): JSX.Element {
               <li>
                 <a
                   target="_blank"
+                  rel="noreferrer"
                   href="https://algorithmwatch.org/en/project/dataskop/"
                 >
                   About DataSkop
@@ -43,6 +44,6 @@ export default function Base({ children }): JSX.Element {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

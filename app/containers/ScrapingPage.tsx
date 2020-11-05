@@ -1,6 +1,6 @@
 import React from 'react';
-import Home from '../components/Home';
+import Scraping from '../components/Scraping';
 
-export default function LoginPage() {
-  return <Home />;
+export default function ScrapingPage() {
+  return <Scraping />;
 }
