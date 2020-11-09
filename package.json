@@ -1,8 +1,8 @@
 {
-  "name": "electron-react-boilerplate",
-  "productName": "ElectronReact",
-  "version": "1.3.1",
-  "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
+  "name": "dataskop-pedd",
+  "productName": "DataSkop",
+  "version": "0.0.0",
+  "description": "DataSkop work in progress",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
     "build-dll": "cross-env NODE_ENV=development webpack --config ./configs/webpack.config.renderer.dev.dll.babel.js --colors",
@@ -52,8 +52,8 @@
     ]
   },
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.develar.ElectronReact",
+    "productName": "DataSkop",
+    "appId": "org.algorithmwatch.DataSkop",
     "files": [
       "dist/",
       "node_modules/",
@@ -99,54 +99,36 @@
     ],
     "publish": {
       "provider": "github",
-      "owner": "electron-react-boilerplate",
-      "repo": "electron-react-boilerplate",
-      "private": false
+      "owner": "algorithmwatch",
+      "repo": "dataskop-pedd",
+      "private": true
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/electron-react-boilerplate/electron-react-boilerplate.git"
+    "url": "git+https://github.com/algorithmwatch/dataskop-pedd.git"
   },
   "author": {
-    "name": "Electron React Boilerplate Maintainers",
-    "email": "electronreactboilerplate@gmail.com",
-    "url": "https://electron-react-boilerplate.js.org"
+    "name": "AlgorithmWatch",
+    "email": "it@algorithmwatch.org",
+    "url": "https://algorithmwatch.org"
   },
   "contributors": [
     {
-      "name": "Vikram Rangaraj",
-      "email": "vikr01@icloud.com",
-      "url": "https://github.com/vikr01"
-    },
-    {
-      "name": "Amila Welihinda",
-      "email": "amilajack@gmail.com",
-      "url": "https://github.com/amilajack"
-    },
-    {
-      "name": "John Tran",
-      "email": "jptran318@gmail.com",
-      "url": "https://github.com/jooohhn"
+      "name": "Johannes Filter",
+      "email": "hi@jfilter.de",
+      "url": "https://johannesfilter.com"
     }
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues"
+    "url": "https://github.com/algorithmwatch/dataskop-pedd/issues"
   },
   "keywords": [
     "electron",
-    "boilerplate",
-    "react",
-    "redux",
-    "typescript",
-    "ts",
-    "sass",
-    "webpack",
-    "hot",
-    "reload"
+    "dataskop"
   ],
-  "homepage": "https://github.com/electron-react-boilerplate/electron-react-boilerplate#readme",
+  "homepage": "https://github.com/algorithmwatch/dataskop-pedd#readme",
   "jest": {
     "testURL": "http://localhost/",
     "moduleNameMapper": {
@@ -251,7 +233,6 @@
     "lint-staged": "^10.2.11",
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.14.1",
-    "opencollective-postinstall": "^2.0.3",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "prettier": "^2.0.5",
     "react-test-renderer": "^16.12.0",
@@ -296,12 +277,9 @@
     "source-map-support": "^0.5.19"
   },
   "devEngines": {
-    "node": ">=7.x",
+    "node": ">=10.x",
     "npm": ">=4.x",
     "yarn": ">=0.21.3"
-  },
-  "collective": {
-    "url": "https://opencollective.com/electron-react-boilerplate-594"
   },
   "browserslist": [],
   "prettier": {
