@@ -1,10 +1,5 @@
 # `dataskop-pedd`
 
-[![Build Status][github-actions-status]][github-actions-url]
-[![Dependency Status][david-image]][david-url]
-[![DevDependency Status][david-dev-image]][david-dev-url]
-[![Github Tag][github-tag-image]][github-tag-url]
-
 DataSkop will be a platform for data donations used to examine and scrutinize algorithmic decision-making systems and to strengthen the users’ digital autonomy. The aim of the project is to empower individuals to handle their data in an informed way, to act safely in digital environments, and to understand and algorithmic systems in use.
 
 More information: https://algorithmwatch.org/en/project/dataskop/
