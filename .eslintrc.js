@@ -1,5 +1,11 @@
 module.exports = {
-  extends: 'erb/typescript',
+  extends: [
+    'erb/typescript',
+    'prettier',
+    'prettier/@typescript-eslint',
+    'prettier/babel',
+    'prettier/react',
+  ],
   rules: {
     // A temporary hack related to IDE not resolving correct package.json
     'import/no-extraneous-dependencies': 'off',
