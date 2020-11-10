@@ -6,9 +6,24 @@ import routes from '../constants/routes.json';
 
 import Base from './Base';
 
+// eslint-disable-next-line @typescript-eslint/ban-types
+async function* scrapingGenerator(getHTML: Function) {
+  let progress = 0;
+  const max = 5;
+
+  while (progress < max) {
+    // eslint-disable-next-line no-await-in-loop
+    const html = await getHTML('https://youtube.com');
+    progress += 1;
+    yield [progress, max];
+  }
+  return [progress, max];
+}
+
 const scrapingConfigYoutube = {
   loginUrl: 'https://www.youtube.com/account',
   logingCookie: 'LOGIN_INFO',
+  scrapingGenerator,
 };
 
 // the react wrapper is buggy, remove it?
@@ -20,7 +35,14 @@ const scrapingConfigYoutube = {
 export default function Scraping(): JSX.Element {
   const [curUrl, setCurUrl] = useState(null);
   const [curHtml, setCurHtml] = useState('');
-  const [userLoggedIn, setUserLoggedIn] = useState(false);
+  const [scrapingGen, setScrapingGen] = useState<any>(null);
+  const [progresFrac, setProgresFrac] = useState(0);
+
+  const [isUserLoggedIn, setUserLoggedIn] = useState(false);
+  const [isScrapingStarted, setIsScrapingStarted] = useState(false);
+  const [isScrapingPaused, setIsScrapingPaused] = useState(false);
+  const [isScrapingFinished, setIsScrapingFinished] = useState(false);
+
   const browser = useRef<any>(null);
 
   const waitUntilLoggingIn = async () => {
@@ -35,6 +57,7 @@ export default function Scraping(): JSX.Element {
   };
 
   const goToStart = () => {
+    // can't set custom userAgent with a prop
     browser.current.loadURL(scrapingConfigYoutube.loginUrl, {
       userAgent: 'Chrome',
     });
@@ -43,6 +66,35 @@ export default function Scraping(): JSX.Element {
   const clearBrowser = () => {
     browser?.current.view.webContents.session.clearStorageData();
     goToStart();
+  };
+
+  const getHTML = async (url: string) => {
+    await browser?.current.loadURL(url, {
+      userAgent: 'Chrome',
+    });
+
+    const html = await browser.current.executeJavaScript(
+      'document.documentElement.innerHTML'
+    );
+    return html;
+  };
+
+  const doScraping = async () => {
+    let gen = null;
+    if (scrapingGen === null) {
+      gen = scrapingConfigYoutube.scrapingGenerator(getHTML);
+      setScrapingGen(gen);
+      setIsScrapingStarted(true);
+    } else {
+      gen = scrapingGen;
+    }
+
+    while (!isScrapingFinished) {
+      // eslint-disable-next-line no-await-in-loop
+      const { value, done } = await gen.next();
+      setProgresFrac(value[0] / value[1]);
+      if (done) setIsScrapingFinished(true);
+    }
   };
 
   return (
@@ -59,11 +111,32 @@ export default function Scraping(): JSX.Element {
         Reset Browser
       </button>
       <br />
-      {!userLoggedIn && <p>Please login before continuing.</p>}
-      {userLoggedIn && (
-        <button className="button" type="button">
+      {!isUserLoggedIn && <p>Please login before continuing.</p>}
+      {isUserLoggedIn && !isScrapingStarted && (
+        <button className="button" type="button" onClick={doScraping}>
           start scraping
         </button>
+      )}
+      {!isScrapingFinished && isScrapingStarted && !isScrapingPaused && (
+        <button className="button" type="button">
+          pause scraping
+        </button>
+      )}
+      {!isScrapingFinished && isScrapingStarted && isScrapingPaused && (
+        <button className="button" type="button">
+          resume scraping
+        </button>
+      )}
+      {isScrapingFinished && (
+        <button className="button" type="button">
+          go to visualization
+        </button>
+      )}
+
+      {isScrapingStarted && (
+        <progress className="progress" value={progresFrac} max="1">
+          {progresFrac}
+        </progress>
       )}
 
       {/* <h3 className="title is-3">Working on {curUrl}</h3> */}
@@ -75,22 +148,13 @@ export default function Scraping(): JSX.Element {
           height: 500,
         }}
         onDidAttach={() => {
-          // can't set custom userAgent with a prop
           setTimeout(goToStart, 100);
         }}
         onUpdateTargetUrl={async () => {
-          if (!userLoggedIn) {
+          if (!isUserLoggedIn) {
             const justLoggedIn = await waitUntilLoggingIn();
             if (!justLoggedIn) return;
           }
-
-          const url = browser?.current.getURL();
-          setCurUrl(url);
-
-          browser.current
-            .executeJavaScript('document.documentElement.innerHTML')
-            .then(setCurHtml)
-            .catch((x) => console.error(x));
         }}
       />
     </Base>
