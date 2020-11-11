@@ -21,20 +21,18 @@ const getDuration = (s: string): number => {
   s = s.replace(/:/g, '.');
   const spl = s.split('.');
   if (spl.length === 0) return +spl;
-  else {
-    const sumStr = spl.pop();
-    if (sumStr !== undefined) {
-      let sum = +sumStr;
-      if (spl.length === 1) sum += +spl[0] * 60;
-      if (spl.length === 2) {
-        sum += +spl[1] * 60;
-        sum += +spl[0] * 3600;
-      }
-      return sum;
-    } else {
-      return 0;
+
+  const sumStr = spl.pop();
+  if (sumStr !== undefined) {
+    let sum = +sumStr;
+    if (spl.length === 1) sum += +spl[0] * 60;
+    if (spl.length === 2) {
+      sum += +spl[1] * 60;
+      sum += +spl[0] * 3600;
     }
+    return sum;
   }
+  return 0;
 };
 
 /**
@@ -57,7 +55,7 @@ export function parseSearch(
 
     const id = $result.find('a.yt-uix-tile-link').attr('href');
     if (id === undefined || id.startsWith('https://www.googleadservices.com'))
-      return true; //Ignoring non video
+      return true; // Ignoring non video
 
     let result;
 
@@ -74,8 +72,9 @@ export function parseSearch(
           id: $result.find('.yt-lockup-byline a').attr('href')!.split('/')[2],
           name: $result.find('.yt-lockup-byline a').text() || null,
           url:
-            'https://www.youtube.com' +
-              $result.find('.yt-lockup-byline a').attr('href') || null,
+            `https://www.youtube.com${$result
+              .find('.yt-lockup-byline a')
+              .attr('href')}` || null,
         } as Channel,
         uploadDate: $result
           .find('.yt-lockup-meta-info li:first-of-type')
@@ -97,8 +96,9 @@ export function parseSearch(
           id: $result.find('.yt-lockup-byline a').attr('href')!.split('/')[2],
           name: $result.find('.yt-lockup-byline a').text() || null,
           url:
-            'https://www.youtube.com' +
-              $result.find('.yt-lockup-byline a').attr('href') || null,
+            `https://www.youtube.com${$result
+              .find('.yt-lockup-byline a')
+              .attr('href')}` || null,
         } as Channel,
         videoCount: +$result
           .find('.formatted-video-count-label b')
@@ -118,9 +118,9 @@ export function parseSearch(
           .find('.yt-lockup-meta-info li')
           .text()
           .replace(/[^0-9]/g, ''),
-        url:
-          'https://www.youtube.com' +
-          $result.find('a.yt-uix-tile-link').attr('href'),
+        url: `https://www.youtube.com${$result
+          .find('a.yt-uix-tile-link')
+          .attr('href')}`,
         type: 'channel',
       } as Channel;
     }
@@ -128,7 +128,7 @@ export function parseSearch(
     results.push(result);
   });
 
-  //Alternative
+  // Alternative
   if (results.length === 0) {
     let dataInfo = [];
     let scrapped = false;
@@ -144,7 +144,7 @@ export function parseSearch(
       html = data;
     } catch (err) {}
 
-    //Trying to scrap for each possible ways of how Youtube serve the data in JS ordered by most common possibility
+    // Trying to scrap for each possible ways of how Youtube serve the data in JS ordered by most common possibility
     try {
       dataInfo = JSON.parse(
         html
@@ -200,9 +200,8 @@ export function parseSearch(
               data.ownerText.runs[0].navigationEndpoint.browseEndpoint.browseId,
             name: data.ownerText.runs[0].text || null,
             url:
-              'https://www.youtube.com' +
-                data.ownerText.runs[0].navigationEndpoint.browseEndpoint
-                  .canonicalBaseUrl || null,
+              `https://www.youtube.com${data.ownerText.runs[0].navigationEndpoint.browseEndpoint.canonicalBaseUrl}` ||
+              null,
           } as Channel,
           uploadDate: data.publishedTimeText
             ? data.publishedTimeText.simpleText
@@ -228,10 +227,7 @@ export function parseSearch(
               data.shortBylineText.runs[0].navigationEndpoint.browseEndpoint
                 .browseId,
             name: data.shortBylineText.runs[0].text,
-            url:
-              'https://www.youtube.com' +
-              data.shortBylineText.runs[0].navigationEndpoint.commandMetadata
-                .webCommandMetadata.url,
+            url: `https://www.youtube.com${data.shortBylineText.runs[0].navigationEndpoint.commandMetadata.webCommandMetadata.url}`,
           } as Channel,
           videoCount: +data.videoCount.replace(/[^0-9]/g, ''),
           type: 'playlist',
@@ -248,9 +244,7 @@ export function parseSearch(
           videoCount: data.videoCountText
             ? +data.videoCountText.runs[0].text.replace(/[^0-9]/g, '')
             : null,
-          url:
-            'https://www.youtube.com' +
-            data.navigationEndpoint.browseEndpoint.canonicalBaseUrl,
+          url: `https://www.youtube.com${data.navigationEndpoint.browseEndpoint.canonicalBaseUrl}`,
           type: 'channel',
         } as Channel;
       }
@@ -275,7 +269,7 @@ export function parseGetPlaylist(html: string): PlaylistDetailed | {} {
   $('.pl-video').each((i: number, v: CheerioElement) => {
     const $result = $(v);
     if ($result.find('.pl-video-owner a').attr('href') === undefined)
-      return true; //Continue if deleted video
+      return true; // Continue if deleted video
     const video = {
       id: $result.find('button').attr('data-video-ids'),
       title: $result
@@ -288,9 +282,9 @@ export function parseGetPlaylist(html: string): PlaylistDetailed | {} {
       channel: {
         id: $result.find('.pl-video-owner a').attr('href')!.split('/')[2],
         name: $result.find('.pl-video-owner a').text(),
-        url:
-          'https://www.youtube.com' +
-          $result.find('.pl-video-owner a').attr('href'),
+        url: `https://www.youtube.com${$result
+          .find('.pl-video-owner a')
+          .attr('href')}`,
       } as Channel,
     } as Video;
     videos.push(video);
@@ -314,7 +308,7 @@ export function parseGetPlaylist(html: string): PlaylistDetailed | {} {
           id: $('#appbar-nav a').attr('href')!.split('/')[2],
           name: $('.appbar-nav-avatar').attr('title'),
           thumbnail: $('.appbar-nav-avatar').attr('src'),
-          url: 'https://www.youtube.com' + $('#appbar-nav a').attr('href'),
+          url: `https://www.youtube.com${$('#appbar-nav a').attr('href')}`,
         },
       }),
       videos: videos as Video[],
@@ -324,9 +318,11 @@ export function parseGetPlaylist(html: string): PlaylistDetailed | {} {
     let playlistVideoList = null;
     try {
       playlistVideoList = JSON.parse(
-        html
-          .split('{"playlistVideoListRenderer":{"contents":')[1]
-          .split('}],"playlistId"')[0] + '}]'
+        `${
+          html
+            .split('{"playlistVideoListRenderer":{"contents":')[1]
+            .split('}],"playlistId"')[0]
+        }}]`
       );
     } catch (err) {
       // Playlist not found
@@ -335,7 +331,7 @@ export function parseGetPlaylist(html: string): PlaylistDetailed | {} {
 
     for (let i = 0; i < playlistVideoList.length; i++) {
       const videoInfo = playlistVideoList[i].playlistVideoRenderer;
-      if (videoInfo.shortBylineText === undefined) continue; //Continue if deleted video
+      if (videoInfo.shortBylineText === undefined) continue; // Continue if deleted video
 
       const video = {
         id: videoInfo.videoId,
@@ -352,10 +348,7 @@ export function parseGetPlaylist(html: string): PlaylistDetailed | {} {
             videoInfo.shortBylineText.runs[0].navigationEndpoint.browseEndpoint
               .browseId,
           name: videoInfo.shortBylineText.runs[0].text,
-          url:
-            'https://www.youtube.com' +
-            videoInfo.shortBylineText.runs[0].navigationEndpoint.commandMetadata
-              .webCommandMetadata.url,
+          url: `https://www.youtube.com${videoInfo.shortBylineText.runs[0].navigationEndpoint.commandMetadata.webCommandMetadata.url}`,
         } as Channel,
       } as Video;
 
@@ -368,8 +361,9 @@ export function parseGetPlaylist(html: string): PlaylistDetailed | {} {
 
     const primaryRenderer =
       sidebarRenderer[0].playlistSidebarPrimaryInfoRenderer;
-    const videoOwner =
-      sidebarRenderer[1].playlistSidebarSecondaryInfoRenderer.videoOwner;
+    const {
+      videoOwner,
+    } = sidebarRenderer[1].playlistSidebarSecondaryInfoRenderer;
 
     let videoCount = 0;
     let viewCount = 0;
@@ -397,9 +391,9 @@ export function parseGetPlaylist(html: string): PlaylistDetailed | {} {
         primaryRenderer.title.runs[0].navigationEndpoint.watchEndpoint
           .playlistId,
       title: primaryRenderer.title.runs[0].text,
-      videoCount: videoCount,
-      viewCount: viewCount,
-      lastUpdatedAt: lastUpdatedAt,
+      videoCount,
+      viewCount,
+      lastUpdatedAt,
       ...(videoOwner !== undefined && {
         channel: {
           id:
@@ -410,10 +404,7 @@ export function parseGetPlaylist(html: string): PlaylistDetailed | {} {
             videoOwner.videoOwnerRenderer.thumbnail.thumbnails[
               videoOwner.videoOwnerRenderer.thumbnail.thumbnails.length - 1
             ].url,
-          url:
-            'https://www.youtube.com' +
-            videoOwner.videoOwnerRenderer.title.runs[0].navigationEndpoint
-              .commandMetadata.webCommandMetadata.url,
+          url: `https://www.youtube.com${videoOwner.videoOwnerRenderer.title.runs[0].navigationEndpoint.commandMetadata.webCommandMetadata.url}`,
         } as Channel,
       }),
       videos: videos as Video[],
@@ -438,13 +429,13 @@ export function parseGetVideo(html: string): VideoDetailed | {} {
         .watch_next_response
     ).contents.twoColumnWatchNextResults.results.results.contents[0]
       .itemSectionRenderer.contents[0].videoMetadataRenderer;
-    const videoDetails = JSON.parse(
+    const { videoDetails } = JSON.parse(
       JSON.parse(
         html
           .split('ytplayer.config = ')[1]
           .split(';ytplayer.load = function()')[0]
       ).args.player_response
-    ).videoDetails;
+    );
 
     const tags: string[] = [];
     let description = '';
@@ -473,7 +464,7 @@ export function parseGetVideo(html: string): VideoDetailed | {} {
         videoDetails.thumbnail.thumbnails[
           +videoDetails.thumbnail.thumbnails.length - 1
         ].url,
-      description: description,
+      description,
       channel: {
         id:
           videoInfo.owner.videoOwnerRenderer.title.runs[0].navigationEndpoint
@@ -485,14 +476,13 @@ export function parseGetVideo(html: string): VideoDetailed | {} {
           ? videoInfo.owner.videoOwnerRenderer.thumbnail.thumbnails[
               videoInfo.owner.videoOwnerRenderer.thumbnail.thumbnails.length - 1
             ].url
-          : 'https:' +
-            videoInfo.owner.videoOwnerRenderer.thumbnail.thumbnails[
-              videoInfo.owner.videoOwnerRenderer.thumbnail.thumbnails.length - 1
-            ].url,
-        url:
-          'https://www.youtube.com/channel/' +
-          videoInfo.owner.videoOwnerRenderer.title.runs[0].navigationEndpoint
-            .browseEndpoint.browseId,
+          : `https:${
+              videoInfo.owner.videoOwnerRenderer.thumbnail.thumbnails[
+                videoInfo.owner.videoOwnerRenderer.thumbnail.thumbnails.length -
+                  1
+              ].url
+            }`,
+        url: `https://www.youtube.com/channel/${videoInfo.owner.videoOwnerRenderer.title.runs[0].navigationEndpoint.browseEndpoint.browseId}`,
       } as Channel,
       uploadDate: videoInfo.dateText.simpleText,
       viewCount: +videoDetails.viewCount,
@@ -505,7 +495,7 @@ export function parseGetVideo(html: string): VideoDetailed | {} {
           ? videoInfo.likeButton.likeButtonRenderer.likeCount
           : null,
       isLiveContent: videoDetails.isLiveContent,
-      tags: tags,
+      tags,
     } as VideoDetailed;
 
     return video;
@@ -524,9 +514,9 @@ export function parseGetVideo(html: string): VideoDetailed | {} {
 
     const secondaryInfo = contents[1].videoSecondaryInfoRenderer;
     const primaryInfo = contents[0].videoPrimaryInfoRenderer;
-    const videoDetails = JSON.parse(
+    const { videoDetails } = JSON.parse(
       html.split('window["ytInitialPlayerResponse"] = ')[1].split(';\n')[0]
-    ).videoDetails;
+    );
     const videoInfo = { ...secondaryInfo, ...primaryInfo, videoDetails };
 
     const tags: string[] = [];
@@ -554,7 +544,7 @@ export function parseGetVideo(html: string): VideoDetailed | {} {
         videoInfo.videoDetails.thumbnail.thumbnails[
           videoInfo.videoDetails.thumbnail.thumbnails.length - 1
         ].url,
-      description: description,
+      description,
       channel: {
         id:
           videoInfo.owner.videoOwnerRenderer.title.runs[0].navigationEndpoint
@@ -566,14 +556,13 @@ export function parseGetVideo(html: string): VideoDetailed | {} {
           ? videoInfo.owner.videoOwnerRenderer.thumbnail.thumbnails[
               videoInfo.owner.videoOwnerRenderer.thumbnail.thumbnails.length - 1
             ].url
-          : 'https:' +
-            videoInfo.owner.videoOwnerRenderer.thumbnail.thumbnails[
-              videoInfo.owner.videoOwnerRenderer.thumbnail.thumbnails.length - 1
-            ].url,
-        url:
-          'https://www.youtube.com/channel/' +
-          videoInfo.owner.videoOwnerRenderer.title.runs[0].navigationEndpoint
-            .browseEndpoint.browseId,
+          : `https:${
+              videoInfo.owner.videoOwnerRenderer.thumbnail.thumbnails[
+                videoInfo.owner.videoOwnerRenderer.thumbnail.thumbnails.length -
+                  1
+              ].url
+            }`,
+        url: `https://www.youtube.com/channel/${videoInfo.owner.videoOwnerRenderer.title.runs[0].navigationEndpoint.browseEndpoint.browseId}`,
       } as Channel,
       uploadDate: videoInfo.dateText.simpleText,
       viewCount: +videoInfo.videoDetails.viewCount,
@@ -592,7 +581,7 @@ export function parseGetVideo(html: string): VideoDetailed | {} {
           )
         : null,
       isLiveContent: videoInfo.videoDetails.isLiveContent,
-      tags: tags,
+      tags,
     } as VideoDetailed;
 
     return video;
@@ -667,10 +656,7 @@ export function parseGetRelated(html: string, limit: number): Video[] {
           videoInfo.longBylineText.runs[0].navigationEndpoint.browseEndpoint
             .browseId,
         name: videoInfo.longBylineText.runs[0].text,
-        url:
-          'https://www.youtube.com/channel/' +
-          videoInfo.longBylineText.runs[0].navigationEndpoint.browseEndpoint
-            .browseId,
+        url: `https://www.youtube.com/channel/${videoInfo.longBylineText.runs[0].navigationEndpoint.browseEndpoint.browseId}`,
       } as Channel,
       uploadDate: videoInfo.publishedTimeText
         ? videoInfo.publishedTimeText.simpleText
@@ -739,10 +725,7 @@ export function parseGetUpNext(html: string): Video | {} {
         videoInfo.longBylineText.runs[0].navigationEndpoint.browseEndpoint
           .browseId,
       name: videoInfo.longBylineText.runs[0].text,
-      url:
-        'https://www.youtube.com/channel/' +
-        videoInfo.longBylineText.runs[0].navigationEndpoint.browseEndpoint
-          .browseId,
+      url: `https://www.youtube.com/channel/${videoInfo.longBylineText.runs[0].navigationEndpoint.browseEndpoint.browseId}`,
     },
     title: videoInfo.title.simpleText,
     duration: videoInfo.lengthText
