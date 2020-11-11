@@ -328,7 +328,6 @@ export function parseGetPlaylist(html: string): PlaylistDetailed | {} {
       // Playlist not found
       return {};
     }
-
     for (let i = 0; i < playlistVideoList.length; i++) {
       const videoInfo = playlistVideoList[i].playlistVideoRenderer;
       if (videoInfo.shortBylineText === undefined) continue; // Continue if deleted video
