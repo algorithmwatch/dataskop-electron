@@ -1,30 +1,18 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import BrowserView from 'react-electron-browser-view';
+import { v4 as uuidv4 } from 'uuid';
+
 import routes from '../constants/routes.json';
 // import styles from './Home.css';
 
+import { addData } from '../utils/db';
+
 import Base from './Base';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-async function* scrapingGenerator(getHTML: Function) {
-  let progress = 0;
-  const max = 5;
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-  while (progress < max) {
-    // eslint-disable-next-line no-await-in-loop
-    const html = await getHTML('https://youtube.com');
-    progress += 1;
-    yield [progress, max];
-  }
-  return [progress, max];
-}
-
-const scrapingConfigYoutube = {
-  loginUrl: 'https://www.youtube.com/account',
-  logingCookie: 'LOGIN_INFO',
-  scrapingGenerator,
-};
+import youtubeConfig from '../scrapers/youtube';
 
 // the react wrapper is buggy, remove it?
 // https://github.com/vantezzen/react-electron-browser-view
@@ -37,6 +25,7 @@ export default function Scraping(): JSX.Element {
   const [curHtml, setCurHtml] = useState('');
   const [scrapingGen, setScrapingGen] = useState<any>(null);
   const [progresFrac, setProgresFrac] = useState(0);
+  const [scrapingSession, setScrapingSession] = useState<any>(null);
 
   const [isUserLoggedIn, setUserLoggedIn] = useState(false);
   const [isScrapingStarted, setIsScrapingStarted] = useState(false);
@@ -50,7 +39,7 @@ export default function Scraping(): JSX.Element {
     const cookies = await webContents.session.cookies.get({});
     // complexity is currently not needed, maybe later?
     const isLoggedIn = cookies.some(
-      (x: any) => x.name === scrapingConfigYoutube.logingCookie
+      (x: any) => x.name === youtubeConfig.logingCookie
     );
     setUserLoggedIn(isLoggedIn);
     return isLoggedIn;
@@ -58,7 +47,7 @@ export default function Scraping(): JSX.Element {
 
   const goToStart = () => {
     // can't set custom userAgent with a prop
-    browser.current.loadURL(scrapingConfigYoutube.loginUrl, {
+    browser.current.loadURL(youtubeConfig.loginUrl, {
       userAgent: 'Chrome',
     });
   };
@@ -69,32 +58,49 @@ export default function Scraping(): JSX.Element {
   };
 
   const getHTML = async (url: string) => {
+    console.log(url);
     await browser?.current.loadURL(url, {
       userAgent: 'Chrome',
     });
 
+    await delay(2000);
+
     const html = await browser.current.executeJavaScript(
       'document.documentElement.innerHTML'
     );
+
     return html;
   };
 
-  const doScraping = async () => {
-    let gen = null;
-    if (scrapingGen === null) {
-      gen = scrapingConfigYoutube.scrapingGenerator(getHTML);
-      setScrapingGen(gen);
-      setIsScrapingStarted(true);
-    } else {
-      gen = scrapingGen;
-    }
-
-    while (!isScrapingFinished) {
+  useEffect(() => {
+    const runScraperOnce = async () => {
+      if (scrapingGen === null) return;
+      if (isScrapingPaused) return;
       // eslint-disable-next-line no-await-in-loop
-      const { value, done } = await gen.next();
-      setProgresFrac(value[0] / value[1]);
+      const { value, done } = await scrapingGen.next();
+      if (value == null) return;
+      setProgresFrac(value[0]);
+      addData(scrapingSession, value[1]);
       if (done) setIsScrapingFinished(true);
-    }
+    };
+    runScraperOnce();
+  }, [progresFrac, scrapingSession, isScrapingPaused]); // Only re-run the effect if these change
+
+  const startScraping = async () => {
+    setIsScrapingStarted(true);
+    const gen = youtubeConfig.scrapingGenerator(getHTML);
+    setScrapingGen(gen);
+    const sId = uuidv4();
+    setScrapingSession(sId);
+  };
+
+  const pauseScraping = () => {
+    setIsScrapingPaused(true);
+  };
+
+  const resumeScraping = () => {
+    setIsScrapingPaused(false);
+    // runScraping(scrapingGen, scrapingSession);
   };
 
   return (
@@ -113,17 +119,17 @@ export default function Scraping(): JSX.Element {
       <br />
       {!isUserLoggedIn && <p>Please login before continuing.</p>}
       {isUserLoggedIn && !isScrapingStarted && (
-        <button className="button" type="button" onClick={doScraping}>
+        <button className="button" type="button" onClick={startScraping}>
           start scraping
         </button>
       )}
       {!isScrapingFinished && isScrapingStarted && !isScrapingPaused && (
-        <button className="button" type="button">
+        <button className="button" type="button" onClick={pauseScraping}>
           pause scraping
         </button>
       )}
       {!isScrapingFinished && isScrapingStarted && isScrapingPaused && (
-        <button className="button" type="button">
+        <button className="button" type="button" onClick={resumeScraping}>
           resume scraping
         </button>
       )}

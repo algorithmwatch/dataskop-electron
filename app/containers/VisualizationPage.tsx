@@ -1,6 +1,6 @@
 import React from 'react';
-import Home from '../components/Home';
+import Visualization from '../components/Visualization';
 
 export default function VisualizationPage() {
-  return <Home />;
+  return <Visualization />;
 }
