@@ -10,7 +10,7 @@ const scrapePopularVideos = async (getHTML: Function) => {
 };
 
 const scrapeRecommendedVideos = async (videoId: string, getHTML: Function) => {
-  const url = `https://www.youtube.com/v=${videoId}`;
+  const url = `https://www.youtube.com/watch?v=${videoId}`;
   const html = await getHTML(url);
   const videos = parseGetRelated(html, 100);
   return videos;
