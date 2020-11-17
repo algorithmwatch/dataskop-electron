@@ -12,6 +12,7 @@ import {
   PlaylistDetailed,
   Channel,
   SearchOptions,
+  VideoWatched,
 } from './types';
 
 /**
@@ -43,7 +44,7 @@ const getDuration = (s: string): number => {
  * @param html HTML
  * @param options Search options
  */
-export function parseSearch(
+function parseSearch(
   html: string,
   options: SearchOptions
 ): (Video | Playlist | Channel)[] {
@@ -263,7 +264,7 @@ export function parseSearch(
  *
  * @param html HTML
  */
-export function parseGetPlaylist(html: string): PlaylistDetailed | null {
+function parseGetPlaylist(html: string): PlaylistDetailed | null {
   const $ = cheerio.load(html);
   let playlist: PlaylistDetailed;
   const videos: Video[] = [];
@@ -422,7 +423,7 @@ export function parseGetPlaylist(html: string): PlaylistDetailed | null {
  *
  * @param html HTML
  */
-export function parseGetVideo(html: string): VideoDetailed | null {
+function parseGetVideo(html: string): VideoDetailed | null {
   try {
     const relatedPlayer = html
       .split("RELATED_PLAYER_ARGS': ")[1]
@@ -597,7 +598,7 @@ export function parseGetVideo(html: string): VideoDetailed | null {
  *
  * @param html HTML
  */
-export function parseGetRelated(html: string, limit?: number): Video[] | null {
+function parseGetRelated(html: string, limit?: number): Video[] | null {
   let videosInfo = [];
   let scrapped = false;
 
@@ -686,7 +687,7 @@ export function parseGetRelated(html: string, limit?: number): Video[] | null {
  *
  * @param html HTML
  */
-export function parseGetUpNext(html: string): Video | null {
+function parseGetUpNext(html: string): Video | null {
   let videoInfo = null;
   let scrapped = false;
 
@@ -753,23 +754,93 @@ export function parseGetUpNext(html: string): Video | null {
   return upNext;
 }
 
-// /**
-//  * Scrape search result from passed HTML
-//  *
-//  * @param html HTML
-//  */
-// export function parseWatchHistory(html: string): Video[] {
-//   const $ = cheerio.load(html);
-//   const $.find('#contents .ytd-section-list-renderer');
-//   const results = [];
+// TODO: not sure what happens if the account was deleted
+function parseChannel(element: CheerioElement) {
+  return {
+    name: element.find('.yt-lockup-byline a').text() || null,
+    url: `https://www.youtube.com${element
+      .find('.yt-lockup-byline a')
+      .attr('href')}`,
+  } as Channel;
+}
 
-//   return results;
-// }
+function parseUrl(url: string) {
+  let resumeWatching = null;
+  let id = null;
+  if (url.includes('&t=')) {
+    [id, resumeWatching] = url.split('&t=');
+    resumeWatching = parseInt(resumeWatching, 10);
+  } else {
+    id = url;
+  }
+  id = id.replace('/watch?v=', '');
+  return [id, resumeWatching];
+}
 
-// export default {
-//   parseSearch,
-//   parseGetPlaylist,
-//   parseGetVideo,
-//   parseGetRelated,
-//   parseGetUpNext,
-// };
+function parseWatchHistoryVideo(
+  videoElement: any,
+  watchedAt: string
+): VideoWatched {
+  const [id, resumeWatching] = parseUrl(
+    videoElement.find('a#video-title').attr('href')
+  );
+
+  const description = videoElement.find('#description-text')?.text();
+
+  return {
+    channel: parseChannel(videoElement),
+    title: videoElement.find('#video-title').text(),
+    viewCount: videoElement.find('#metadata-line').text(),
+    duration: videoElement
+      .find('.ytd-thumbnail-overlay-time-status-renderer')
+      .text(),
+    watchedAt,
+    id,
+    resumeWatching,
+    description,
+  } as VideoWatched;
+}
+
+function trimStrings(obj) {
+  return Object.keys(obj).map(
+    (k) => (obj[k] = typeof obj[k] == 'string' ? obj[k].trim() : obj[k])
+  );
+}
+
+function parseWatchHistoryChunks(
+  chunk: CheerioElement,
+  $html: any
+): VideoWatched[] {
+  const watchedAt = $html(chunk).find('#title').text();
+
+  return $html(chunk)
+    .find('#dismissable')
+    .map((i, x: CheerioElement) => parseWatchHistoryVideo($html(x), watchedAt))
+    .toArray()
+    .map(trimStrings);
+}
+
+/**
+ * Scrape search result from passed HTML
+ *
+ * https://github.com/zvodd/Youtube-Watch-History-Scraper/blob/master/youtube_history/spiders/youtube_history_spider.py
+ *
+ * @param html HTML
+ */
+function parseWatchHistory(html: string): VideoWatched[] {
+  const $html = cheerio.load(html);
+  const results = $html('#contents .ytd-section-list-renderer')
+    .map((i, x) => parseWatchHistoryChunks(x, $html))
+    .toArray();
+
+  return [].concat(results);
+}
+
+export {
+  parseSearch,
+  parseGetPlaylist,
+  parseGetVideo,
+  parseGetRelated,
+  parseGetUpNext,
+  parseWatchHistory,
+};

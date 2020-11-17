@@ -19,13 +19,19 @@ export interface SearchResult {
   type?: 'video' | 'channel' | 'playlist';
 }
 
-export interface Video extends SearchResult {
+export interface Video {
+  id: string;
   title: string;
   duration: number | null;
-  thumbnail: string;
+  thumbnail?: string;
   channel: Channel;
-  uploadDate: string;
+  uploadDate?: string;
   viewCount: number | null;
+}
+
+export interface VideoWatched extends Video {
+  watchedAt: string;
+  resumeWatching: number | null;
 }
 
 export interface VideoDetailed {
@@ -60,7 +66,8 @@ export interface PlaylistDetailed {
   videos: Video[];
 }
 
-export interface Channel extends SearchResult {
+export interface Channel {
+  id?: string;
   name: string;
   url: string;
   thumbnail?: string;

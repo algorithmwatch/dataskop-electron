@@ -4,10 +4,15 @@
 /* eslint-disable promise/catch-or-return */
 import got from 'got';
 
+import fs from 'fs';
+import path from 'path';
+
 import {
   parseGetRelated,
   parseGetPlaylist,
+  parseWatchHistory,
 } from '../../app/libs/parse-youtube';
+import { exception } from 'console';
 
 test('parse recommended videos', (done) => {
   got.get('https://www.youtube.com/watch?v=3HyAlm62VsE').then((response) => {
@@ -36,6 +41,16 @@ test('parse playlist', (done) => {
       expect(playlist.videos.length).toBe(5);
       done();
     });
+});
+
+test('scrape watch histroy', () => {
+  const htmlFile = fs.readFileSync(
+    path.resolve(__dirname, 'YouTube_watch_history.html'),
+    'utf8'
+  );
+
+  const videos = parseWatchHistory(htmlFile);
+  expect(videos.length).toBeGreaterThan(10);
 });
 
 // const videos = parseGetRelated(html);
