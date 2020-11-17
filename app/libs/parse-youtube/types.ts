@@ -56,7 +56,7 @@ export interface PlaylistDetailed {
   videoCount: number;
   viewCount: number;
   lastUpdatedAt: string;
-  channel: Channel;
+  channel?: Channel;
   videos: Video[];
 }
 

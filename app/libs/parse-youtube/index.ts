@@ -1,6 +1,8 @@
-// https://github.com/SuspiciousLookingOwl/scrape-yt/blob/master/src/common/parser.ts
-
+/* eslint-disable no-continue */
 /* eslint no-empty: ["error", { "allowEmptyCatch": true }] */
+
+// taken from
+// https://github.com/SuspiciousLookingOwl/scrape-yt/blob/master/src/common/parser.ts
 
 import cheerio from 'cheerio';
 import {
@@ -18,8 +20,8 @@ import {
  * @param s String timestamp
  */
 const getDuration = (s: string): number => {
-  s = s.replace(/:/g, '.');
-  const spl = s.split('.');
+  const sMod = s.replace(/:/g, '.');
+  const spl = sMod.split('.');
   if (spl.length === 0) return +spl;
 
   const sumStr = spl.pop();
@@ -261,7 +263,7 @@ export function parseSearch(
  *
  * @param html HTML
  */
-export function parseGetPlaylist(html: string): PlaylistDetailed | {} {
+export function parseGetPlaylist(html: string): PlaylistDetailed | null {
   const $ = cheerio.load(html);
   let playlist: PlaylistDetailed;
   const videos: Video[] = [];
@@ -361,9 +363,10 @@ export function parseGetPlaylist(html: string): PlaylistDetailed | {} {
 
     const primaryRenderer =
       sidebarRenderer[0].playlistSidebarPrimaryInfoRenderer;
-    const {
-      videoOwner,
-    } = sidebarRenderer[1].playlistSidebarSecondaryInfoRenderer;
+
+    const videoOwner =
+      sidebarRenderer[1]?.playlistSidebarSecondaryInfoRenderer.videoOwner ??
+      undefined;
 
     let videoCount = 0;
     let viewCount = 0;
@@ -375,9 +378,10 @@ export function parseGetPlaylist(html: string): PlaylistDetailed | {} {
         ''
       );
       viewCount = +primaryRenderer.stats[1].simpleText.replace(/[^0-9]/g, '');
-      lastUpdatedAt = primaryRenderer.stats[2].runs
-        ? primaryRenderer.stats[2].runs.join()
-        : primaryRenderer.stats[2].simpleText;
+      lastUpdatedAt =
+        (primaryRenderer.stats[2].runs[1]?.text ??
+          primaryRenderer.stats[2].simpleText) ||
+        primaryRenderer.stats[2].runs[0].text;
     } else if (primaryRenderer.stats.length === 2) {
       videoCount = +primaryRenderer.stats[0]?.runs[0].text.replace(
         /[^0-9]/g,
@@ -418,7 +422,7 @@ export function parseGetPlaylist(html: string): PlaylistDetailed | {} {
  *
  * @param html HTML
  */
-export function parseGetVideo(html: string): VideoDetailed | {} {
+export function parseGetVideo(html: string): VideoDetailed | null {
   try {
     const relatedPlayer = html
       .split("RELATED_PLAYER_ARGS': ")[1]
@@ -509,7 +513,7 @@ export function parseGetVideo(html: string): VideoDetailed | {} {
         html.split('window["ytInitialData"] = ')[1].split(';\n')[0]
       ).contents.twoColumnWatchNextResults.results.results.contents;
     } catch (err) {
-      return {}; // Video not found;
+      return null; // Video not found;
     }
 
     const secondaryInfo = contents[1].videoSecondaryInfoRenderer;
@@ -593,10 +597,11 @@ export function parseGetVideo(html: string): VideoDetailed | {} {
  *
  * @param html HTML
  */
-export function parseGetRelated(html: string, limit: number): Video[] {
+export function parseGetRelated(html: string, limit?: number): Video[] | null {
   let videosInfo = [];
   let scrapped = false;
 
+  // not sure about this part
   try {
     const relatedPlayer = html
       .split("RELATED_PLAYER_ARGS': ")[1]
@@ -630,13 +635,14 @@ export function parseGetRelated(html: string, limit: number): Video[] {
     } catch (err) {}
   }
 
+  // ??
   if (!scrapped) {
-    return [];
+    return null;
   }
 
   const relatedVideos: Video[] = [];
 
-  for (let i = 0; i < videosInfo.length; i++) {
+  for (let i = 0; i < videosInfo.length; i += 1) {
     const videoInfo = videosInfo[i].compactVideoRenderer;
     if (videoInfo === undefined || videoInfo.viewCountText === undefined)
       continue;
@@ -667,8 +673,9 @@ export function parseGetRelated(html: string, limit: number): Video[] {
           : +videoInfo.viewCountText.runs[0].text.replace(/[^0-9]/g, ''),
     } as Video;
 
-    if (relatedVideos.length < limit) relatedVideos.push(video);
-    else break;
+    if (limit && relatedVideos.length === limit) break;
+
+    relatedVideos.push(video);
   }
 
   return relatedVideos;
@@ -679,7 +686,7 @@ export function parseGetRelated(html: string, limit: number): Video[] {
  *
  * @param html HTML
  */
-export function parseGetUpNext(html: string): Video | {} {
+export function parseGetUpNext(html: string): Video | null {
   let videoInfo = null;
   let scrapped = false;
 
@@ -716,7 +723,7 @@ export function parseGetUpNext(html: string): Video | {} {
     } catch (err) {}
   }
 
-  if (!scrapped || videoInfo === null) return {}; // Video not found
+  if (!scrapped || videoInfo === null) return null; // Video not found
 
   const upNext: Video = {
     id: videoInfo.videoId,
@@ -746,10 +753,23 @@ export function parseGetUpNext(html: string): Video | {} {
   return upNext;
 }
 
-export default {
-  parseSearch,
-  parseGetPlaylist,
-  parseGetVideo,
-  parseGetRelated,
-  parseGetUpNext,
-};
+// /**
+//  * Scrape search result from passed HTML
+//  *
+//  * @param html HTML
+//  */
+// export function parseWatchHistory(html: string): Video[] {
+//   const $ = cheerio.load(html);
+//   const $.find('#contents .ytd-section-list-renderer');
+//   const results = [];
+
+//   return results;
+// }
+
+// export default {
+//   parseSearch,
+//   parseGetPlaylist,
+//   parseGetVideo,
+//   parseGetRelated,
+//   parseGetUpNext,
+// };
