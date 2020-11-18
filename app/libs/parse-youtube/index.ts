@@ -15,6 +15,7 @@ import {
   HistorySearch,
   HistoryVideo,
   HistoryComment,
+  Subscription,
 } from './types';
 
 /**
@@ -874,6 +875,35 @@ function parseCommentHistory(html: string): HistoryComment[] {
     .toArray();
 }
 
+function extractInteger(str: string): number | null {
+  const numbers = str.match(/\d/g);
+  if (numbers == null) return null;
+  return parseInt(numbers.join(''), 10);
+}
+
+// https://www.youtube.com/feed/channels
+function parseSubscriptions(html: string): Subscription[] {
+  const $html = cheerio.load(html);
+
+  return $html('#contents #content-section')
+    .map((_, x) => {
+      const $x = $html(x);
+      return {
+        url: $x.find('a#main-link').attr('href'),
+        name: $x.find('#channel-title #text').text(),
+        videoCount: extractInteger($x.find('#video-count').text()),
+        subscribersCount: $x.find('#subscribers').text(),
+        description: $x.find('#description').text(),
+        notificationSetting: $x
+          .find(
+            'a.ytd-subscription-notification-toggle-button-renderer button#button'
+          )
+          .attr('aria-label'),
+      } as Subscription;
+    })
+    .toArray();
+}
+
 export {
   parseSearch,
   parseGetPlaylist,
@@ -883,4 +913,5 @@ export {
   parseWatchHistory,
   parseSearchHistory,
   parseCommentHistory,
+  parseSubscriptions,
 };

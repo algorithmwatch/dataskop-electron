@@ -61,8 +61,14 @@ export interface Channel {
   id?: string;
   name: string;
   url: string;
+  description?: string;
   thumbnail?: string;
   videoCount?: number;
+}
+
+export interface Subscription extends Channel {
+  subscribersCount: string;
+  notificationSetting: string;
 }
 
 export type SearchType<T> = T extends { type: 'video' }

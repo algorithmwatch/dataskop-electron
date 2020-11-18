@@ -13,6 +13,7 @@ import {
   parseWatchHistory,
   parseSearchHistory,
   parseCommentHistory,
+  parseSubscriptions,
 } from '../../app/libs/parse-youtube';
 
 test('parse recommended videos', (done) => {
@@ -78,6 +79,26 @@ test('scrape comment history', () => {
     'https://www.youtube.com/watch?v=OnhXeq3nO7g&lc=UgxtUrtAziPpHAEoyAN4AaABAg'
   );
   expect(comments.length).toBeGreaterThan(3);
+});
+
+test('scrape subscritions', () => {
+  const htmlFile = fs.readFileSync(
+    path.resolve(__dirname, 'YouTube_subscription_list.html'),
+    'utf8'
+  );
+  const channels = parseSubscriptions(htmlFile);
+  expect(channels[0].url).toBe(
+    'https://www.youtube.com/channel/UCkC7aJat8Bh4kz4hgx0Thdw'
+  );
+  expect(channels[0].name).toBe('Blizzard Guides');
+  expect(channels[0].subscribersCount).toBe('224K subscribers');
+  expect(channels[0].videoCount).toBe(286);
+  expect(channels[0].notificationSetting).toBe(
+    'Current setting is personalized notifications. Tap to change your notification setting for Blizzard Guides'
+  );
+  expect(channels[0].description.length).toBeGreaterThan(100);
+
+  expect(channels.length).toBeGreaterThan(3);
 });
 
 // const videos = parseGetRelated(html);
