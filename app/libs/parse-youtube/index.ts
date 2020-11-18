@@ -14,6 +14,7 @@ import {
   SearchOptions,
   HistorySearch,
   HistoryVideo,
+  HistoryComment,
 } from './types';
 
 /**
@@ -839,7 +840,7 @@ function parseWatchHistory(html: string): HistoryVideo[] {
 
 function parseSearchHistory(html: string): HistorySearch[] {
   const $html = cheerio.load(html);
-  const results = $html(
+  return $html(
     '#contents a.yt-simple-endpoint.style-scope.ytd-search-history-query-renderer'
   )
     .map((_, x: any) => {
@@ -852,7 +853,25 @@ function parseSearchHistory(html: string): HistorySearch[] {
       } as HistorySearch;
     })
     .toArray();
-  return results;
+}
+
+function parseCommentHistory(html: string): HistoryComment[] {
+  const $html = cheerio.load(html);
+  return $html(
+    '#contents div.main.style-scope.ytd-comment-history-entry-renderer'
+  )
+    .map((_, x: any) => {
+      return {
+        videoTitle: $html(x).find('a:nth-child(2)').text().trim(),
+        videoUrl: `https://youtube.com${$html(x)
+          .find('a:nth-child(2)')
+          .attr('href')}`,
+        commentUrl: $html(x).find('a:nth-child(1)').attr('href'),
+        text: $html(x).find('#content').text().trim(),
+        commentedAt: $html(x).find('.timestamp').text(),
+      } as HistoryComment;
+    })
+    .toArray();
 }
 
 export {
@@ -863,4 +882,5 @@ export {
   parseGetUpNext,
   parseWatchHistory,
   parseSearchHistory,
+  parseCommentHistory,
 };

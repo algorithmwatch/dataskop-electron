@@ -35,6 +35,14 @@ export interface HistorySearch {
   searchedAt: string;
 }
 
+export interface HistoryComment {
+  text: string;
+  videoUrl: string;
+  videoTitle: string;
+  commentUrl: string;
+  commentedAt: string;
+}
+
 export interface Playlist {
   id: string;
   title: string;

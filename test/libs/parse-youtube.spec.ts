@@ -5,13 +5,14 @@
 import got from 'got';
 
 import fs from 'fs';
-import path, { parse } from 'path';
+import path from 'path';
 
 import {
   parseGetRelated,
   parseGetPlaylist,
   parseWatchHistory,
   parseSearchHistory,
+  parseCommentHistory,
 } from '../../app/libs/parse-youtube';
 
 test('parse recommended videos', (done) => {
@@ -62,6 +63,21 @@ test('scrape search history', () => {
   const queries = parseSearchHistory(htmlFile);
   expect(queries[0].query).toBe('Johannes Filter');
   expect(queries.length).toBeGreaterThan(10);
+});
+
+test('scrape comment history', () => {
+  const htmlFile = fs.readFileSync(
+    path.resolve(__dirname, 'YouTube_comment_history.html'),
+    'utf8'
+  );
+
+  const comments = parseCommentHistory(htmlFile);
+  expect(comments[0].text).toBe('not finding what I wanted here');
+  expect(comments[0].commentedAt).toBe('2 months ago');
+  expect(comments[0].commentUrl).toBe(
+    'https://www.youtube.com/watch?v=OnhXeq3nO7g&lc=UgxtUrtAziPpHAEoyAN4AaABAg'
+  );
+  expect(comments.length).toBeGreaterThan(3);
 });
 
 // const videos = parseGetRelated(html);
