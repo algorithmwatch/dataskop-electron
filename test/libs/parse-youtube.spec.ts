@@ -5,14 +5,14 @@
 import got from 'got';
 
 import fs from 'fs';
-import path from 'path';
+import path, { parse } from 'path';
 
 import {
   parseGetRelated,
   parseGetPlaylist,
   parseWatchHistory,
+  parseSearchHistory,
 } from '../../app/libs/parse-youtube';
-import { exception } from 'console';
 
 test('parse recommended videos', (done) => {
   got.get('https://www.youtube.com/watch?v=3HyAlm62VsE').then((response) => {
@@ -43,7 +43,7 @@ test('parse playlist', (done) => {
     });
 });
 
-test('scrape watch histroy', () => {
+test('scrape watch history', () => {
   const htmlFile = fs.readFileSync(
     path.resolve(__dirname, 'YouTube_watch_history.html'),
     'utf8'
@@ -51,6 +51,17 @@ test('scrape watch histroy', () => {
 
   const videos = parseWatchHistory(htmlFile);
   expect(videos.length).toBeGreaterThan(10);
+});
+
+test('scrape search history', () => {
+  const htmlFile = fs.readFileSync(
+    path.resolve(__dirname, 'YouTube_search_history.html'),
+    'utf8'
+  );
+
+  const queries = parseSearchHistory(htmlFile);
+  expect(queries[0].query).toBe('Johannes Filter');
+  expect(queries.length).toBeGreaterThan(10);
 });
 
 // const videos = parseGetRelated(html);

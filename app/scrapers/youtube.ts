@@ -1,12 +1,25 @@
-import { parseGetPlaylist, parseGetRelated } from '../libs/parse-youtube';
+import {
+  parseGetPlaylist,
+  parseGetRelated,
+  parseSearch,
+} from '../libs/parse-youtube';
 
-// is a special playlist? need to investigate
-const scrapePopularVideos = async (getHTML: Function) => {
-  const html = await getHTML(
-    'https://www.youtube.com/playlist?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-'
-  );
+const scrapePlaylist = async (playlistUrl: string, getHTML: Function) => {
+  const html = await getHTML(playlistUrl);
   const { videos } = parseGetPlaylist(html);
   return videos;
+};
+
+// is a special playlist? need to investigate
+const scrapePopularVideos = (getHTML: Function) => {
+  return scrapePlaylist(
+    'https://www.youtube.com/playlist?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-',
+    getHTML
+  );
+};
+
+const scrapeLikedVideos = (getHTML: Function) => {
+  return scrapePlaylist('https://www.youtube.com/playlist?list=LL', getHTML);
 };
 
 const scrapeRecommendedVideos = async (videoId: string, getHTML: Function) => {
@@ -16,11 +29,18 @@ const scrapeRecommendedVideos = async (videoId: string, getHTML: Function) => {
   return videos;
 };
 
+const scrapeWatchedVideos = async (getHTML: Function) => {
+  const html = await getHTML('https://www.youtube.com/feed/history');
+  const videos = parseSearch(html);
+  return videos;
+};
+
 async function* scrapingGenerator(getHTML: Function, limitSteps = 5) {
   let step = 0;
   let maxSteps = null;
 
-  const videos = await scrapePopularVideos(getHTML);
+  // const videos = await scrapePopularVideos(getHTML);
+  const videos = await scrapeWatchedVideos(getHTML);
 
   maxSteps = videos.length + 1;
   if (limitSteps !== null) {

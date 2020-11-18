@@ -1,22 +1,9 @@
 // https://github.com/SuspiciousLookingOwl/scrape-yt/blob/master/src/common/types.ts
 
-export interface Options {
-  useWorkerThread?: boolean;
-}
-
-export interface SearchOptions extends Options {
+export interface SearchOptions {
   type?: 'video' | 'channel' | 'playlist' | 'all';
   limit?: number;
   page?: number;
-}
-
-export interface GetRelatedOptions extends Options {
-  limit?: number;
-}
-
-export interface SearchResult {
-  id: string;
-  type?: 'video' | 'channel' | 'playlist';
 }
 
 export interface Video {
@@ -27,21 +14,10 @@ export interface Video {
   channel: Channel;
   uploadDate?: string;
   viewCount: number | null;
+  description?: string;
 }
 
-export interface VideoWatched extends Video {
-  watchedAt: string;
-  resumeWatching: number | null;
-}
-
-export interface VideoDetailed {
-  id: string;
-  title: string;
-  duration: number | null;
-  thumbnail: string;
-  description: string;
-  channel: Channel;
-  uploadDate: string;
+export interface VideoDetailed extends Video {
   viewCount: number | null;
   likeCount: number | null;
   dislikeCount: number | null;
@@ -49,20 +25,27 @@ export interface VideoDetailed {
   tags: string[];
 }
 
-export interface Playlist extends SearchResult {
+export interface HistoryVideo extends Video {
+  watchedAt: string;
+  resumeWatching: number | null;
+}
+
+export interface HistorySearch {
+  query: string;
+  searchedAt: string;
+}
+
+export interface Playlist {
+  id: string;
   title: string;
   thumbnail: string;
-  channel: Channel;
+  channel?: Channel;
   videoCount: number;
 }
 
-export interface PlaylistDetailed {
-  id: string;
-  title: string;
-  videoCount: number;
+export interface PlaylistDetailed extends Playlist {
   viewCount: number;
   lastUpdatedAt: string;
-  channel?: Channel;
   videos: Video[];
 }
 

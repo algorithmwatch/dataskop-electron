@@ -12,7 +12,8 @@ import {
   PlaylistDetailed,
   Channel,
   SearchOptions,
-  VideoWatched,
+  HistorySearch,
+  HistoryVideo,
 } from './types';
 
 /**
@@ -780,7 +781,7 @@ function parseUrl(url: string) {
 function parseWatchHistoryVideo(
   videoElement: any,
   watchedAt: string
-): VideoWatched {
+): HistoryVideo {
   const [id, resumeWatching] = parseUrl(
     videoElement.find('a#video-title').attr('href')
   );
@@ -798,7 +799,7 @@ function parseWatchHistoryVideo(
     id,
     resumeWatching,
     description,
-  } as VideoWatched;
+  } as HistoryVideo;
 }
 
 function trimStrings(obj) {
@@ -810,12 +811,12 @@ function trimStrings(obj) {
 function parseWatchHistoryChunks(
   chunk: CheerioElement,
   $html: any
-): VideoWatched[] {
+): HistoryVideo[] {
   const watchedAt = $html(chunk).find('#title').text();
 
   return $html(chunk)
     .find('#dismissable')
-    .map((i, x: CheerioElement) => parseWatchHistoryVideo($html(x), watchedAt))
+    .map((_, x: CheerioElement) => parseWatchHistoryVideo($html(x), watchedAt))
     .toArray()
     .map(trimStrings);
 }
@@ -827,13 +828,31 @@ function parseWatchHistoryChunks(
  *
  * @param html HTML
  */
-function parseWatchHistory(html: string): VideoWatched[] {
+function parseWatchHistory(html: string): HistoryVideo[] {
   const $html = cheerio.load(html);
   const results = $html('#contents .ytd-section-list-renderer')
-    .map((i, x) => parseWatchHistoryChunks(x, $html))
+    .map((_, x) => parseWatchHistoryChunks(x, $html))
     .toArray();
 
   return [].concat(results);
+}
+
+function parseSearchHistory(html: string): HistorySearch[] {
+  const $html = cheerio.load(html);
+  const results = $html(
+    '#contents a.yt-simple-endpoint.style-scope.ytd-search-history-query-renderer'
+  )
+    .map((_, x: any) => {
+      return {
+        query: $html(x)
+          .find('> div.ytd-search-history-query-renderer')
+          .text()
+          .trim(),
+        searchedAt: $html(x).find('.latest-search-time-text').text(),
+      } as HistorySearch;
+    })
+    .toArray();
+  return results;
 }
 
 export {
@@ -843,4 +862,5 @@ export {
   parseGetRelated,
   parseGetUpNext,
   parseWatchHistory,
+  parseSearchHistory,
 };
