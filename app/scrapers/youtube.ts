@@ -6,57 +6,89 @@ import {
   parseCommentHistory,
   parseSubscriptions,
 } from '../libs/parse-youtube';
+import {
+  HistoryComment,
+  HistorySearch,
+  HistoryVideo,
+  Subscription,
+  Video,
+} from '../libs/parse-youtube/types';
 
-const scrapePlaylist = async (playlistUrl: string, getHTML: Function) => {
+type GetHtmlFunction = (url: string) => string;
+
+const scrapePlaylist = async (
+  playlistUrl: string,
+  getHTML: GetHtmlFunction
+): Promise<Video[]> => {
   const html = await getHTML(playlistUrl);
   const { videos } = parseGetPlaylist(html);
   return videos;
 };
 
 // is a special playlist? need to investigate
-const scrapePopularVideos = (getHTML: Function) => {
-  return scrapePlaylist(
+const scrapePopularVideos = async (
+  getHTML: GetHtmlFunction
+): Promise<{ items: Video[]; type: string }> => {
+  const items = await scrapePlaylist(
     'https://www.youtube.com/playlist?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-',
     getHTML
   );
+  return { items, type: 'popularVideos' };
 };
 
-const scrapeLikedVideos = (getHTML: Function) => {
-  return scrapePlaylist('https://www.youtube.com/playlist?list=LL', getHTML);
+const scrapeLikedVideos = async (
+  getHTML: GetHtmlFunction
+): Promise<{ items: Video[]; type: string }> => {
+  const items = await scrapePlaylist(
+    'https://www.youtube.com/playlist?list=LL',
+    getHTML
+  );
+  return { items, type: 'linkedVideos' };
 };
 
-const scrapeRecommendedVideos = async (videoId: string, getHTML: Function) => {
+const scrapeRecommendedVideos = async (
+  videoId: string,
+  getHTML: GetHtmlFunction
+): Promise<{ items: Video[]; type: string }> => {
   const url = `https://www.youtube.com/watch?v=${videoId}`;
   const html = await getHTML(url);
-  const videos = parseGetRelated(html, 100);
-  return videos;
+  const items = parseGetRelated(html, 100);
+  return { items, type: 'recommendedVideos' };
 };
 
-const scrapeWatchedVideos = async (getHTML: Function) => {
+const scrapeWatchedVideos = async (
+  getHTML: GetHtmlFunction
+): Promise<{ items: HistoryVideo[]; type: string }> => {
   const html = await getHTML('https://www.youtube.com/feed/history');
-  return parseWatchHistory(html);
+  return { items: parseWatchHistory(html), type: 'watchedHistroy' };
 };
 
-const scrapeSearchHistory = async (getHTML: Function) => {
+const scrapeSearchHistory = async (
+  getHTML: GetHtmlFunction
+): Promise<{ items: HistorySearch[]; type: string }> => {
   const html = await getHTML(
     'https://www.youtube.com/feed/history/search_history'
   );
-  return parseSearchHistory(html);
+  return { items: parseSearchHistory(html), type: 'searchHistory' };
 };
 
-const scrapeCommentHistory = async (getHTML: Function) => {
+const scrapeCommentHistory = async (
+  getHTML: GetHtmlFunction
+): Promise<{ items: HistoryComment[]; type: string }> => {
   const html = await getHTML(
     'https://www.youtube.com/feed/history/comment_history'
   );
-  return parseCommentHistory(html);
+  return { items: parseCommentHistory(html), type: 'commentHistory' };
 };
 
-const scrapeSubscriptions = async (getHTML: Function) => {
+const scrapeSubscriptions = async (
+  getHTML: GetHtmlFunction
+): Promise<{ items: Subscription[]; type: string }> => {
   const html = await getHTML('https://www.youtube.com/feed/channels');
-  return parseSubscriptions(html);
+  return { items: parseSubscriptions(html), type: 'subscriptions' };
 };
 
-async function* scrapingGenerator(getHTML: Function, limitSteps = 5) {
+async function* scrapingGenerator(getHTML: GetHtmlFunction, limitSteps = 5) {
   // these functions
   const backgroundFuns = [
     scrapeWatchedVideos,
@@ -69,10 +101,10 @@ async function* scrapingGenerator(getHTML: Function, limitSteps = 5) {
   let step = 0;
   let maxSteps = null;
 
-  const videos = await scrapePopularVideos(getHTML);
+  const seedVideos = await scrapePopularVideos(getHTML);
 
   // limit number of videos if needed
-  maxSteps = videos.length;
+  maxSteps = seedVideos.items.length;
   if (limitSteps !== null) {
     maxSteps = Math.min(limitSteps, maxSteps);
   }
@@ -81,7 +113,7 @@ async function* scrapingGenerator(getHTML: Function, limitSteps = 5) {
   maxSteps += 1 + backgroundFuns.length;
 
   step += 1;
-  yield [step / maxSteps, videos];
+  yield [step / maxSteps, seedVideos];
 
   // eslint-disable-next-line no-restricted-syntax
   for (const fun of backgroundFuns) {
@@ -93,15 +125,15 @@ async function* scrapingGenerator(getHTML: Function, limitSteps = 5) {
 
   while (true) {
     // eslint-disable-next-line no-await-in-loop
-    const recommendedVideos = await scrapeRecommendedVideos(
-      videos[step - 1].id,
+    const data = await scrapeRecommendedVideos(
+      seedVideos.items[step - 1].id,
       getHTML
     );
     step += 1;
     if (step < maxSteps) {
-      yield [step / maxSteps, recommendedVideos];
+      yield [step / maxSteps, data];
     } else {
-      return [step / maxSteps, recommendedVideos];
+      return [step / maxSteps, data];
     }
   }
 }
