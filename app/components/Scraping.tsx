@@ -4,13 +4,10 @@ import BrowserView from 'react-electron-browser-view';
 import { v4 as uuidv4 } from 'uuid';
 
 import routes from '../constants/routes.json';
-// import styles from './Home.css';
 
 import { addData } from '../utils/db';
 
 import Base from './Base';
-
-const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 import youtubeConfig from '../scrapers/youtube';
 
@@ -20,9 +17,9 @@ import youtubeConfig from '../scrapers/youtube';
 // the api
 // https://www.electronjs.org/docs/api/web-contents
 
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
 export default function Scraping(): JSX.Element {
-  const [curUrl, setCurUrl] = useState(null);
-  const [curHtml, setCurHtml] = useState('');
   const [scrapingGen, setScrapingGen] = useState<any>(null);
   const [progresFrac, setProgresFrac] = useState(0);
   const [scrapingSession, setScrapingSession] = useState<any>(null);
@@ -100,7 +97,6 @@ export default function Scraping(): JSX.Element {
 
   const resumeScraping = () => {
     setIsScrapingPaused(false);
-    // runScraping(scrapingGen, scrapingSession);
   };
 
   return (
@@ -135,7 +131,7 @@ export default function Scraping(): JSX.Element {
       )}
       {isScrapingFinished && (
         <button className="button" type="button">
-          go to visualization
+          <Link to={routes.VISUALIZATION}> go to visualization</Link>
         </button>
       )}
 
@@ -144,8 +140,6 @@ export default function Scraping(): JSX.Element {
           {progresFrac}
         </progress>
       )}
-
-      {/* <h3 className="title is-3">Working on {curUrl}</h3> */}
 
       <BrowserView
         ref={browser}
@@ -158,8 +152,7 @@ export default function Scraping(): JSX.Element {
         }}
         onUpdateTargetUrl={async () => {
           if (!isUserLoggedIn) {
-            const justLoggedIn = await waitUntilLoggingIn();
-            if (!justLoggedIn) return;
+            await waitUntilLoggingIn();
           }
         }}
       />
