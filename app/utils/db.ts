@@ -53,14 +53,14 @@ const getData = (whereClause = {}) => {
 
 // clear database but also initialize it
 const clearData = () => {
-  db.delete()
+  db.scrapeResults
+    .clear()
     .then(() => {
-      console.log('Database successfully deleted');
-      db = new ScrapeDatabase();
+      console.log('Rows successfully deleted');
       return true;
     })
     .catch((err) => {
-      console.error(`Could not delete database ${err}`);
+      console.error(`Could not delete rows ${err}`);
       return false;
     });
   return true;
