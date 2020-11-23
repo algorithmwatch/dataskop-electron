@@ -27,7 +27,7 @@ class ScrapeDatabase extends Dexie {
   }
 }
 
-const db = new ScrapeDatabase();
+let db = new ScrapeDatabase();
 
 // https://dexie.org/docs/Dexie/Dexie.transaction()#specify-reusage-of-parent-transaction
 
@@ -51,4 +51,19 @@ const getData = (whereClause = {}) => {
   });
 };
 
-export { addData, getData };
+// clear database but also initialize it
+const clearData = () => {
+  db.delete()
+    .then(() => {
+      console.log('Database successfully deleted');
+      db = new ScrapeDatabase();
+      return true;
+    })
+    .catch((err) => {
+      console.error(`Could not delete database ${err}`);
+      return false;
+    });
+  return true;
+};
+
+export { addData, getData, clearData };
