@@ -1,13 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
-
-import { Link } from 'react-router-dom';
-import routes from '../constants/routes.json';
+import React, { useEffect, useState } from 'react';
 // import styles from './Home.css';
-
-import { getData, clearData } from '../utils/db';
-
+import { getData } from '../utils/db';
 import Base from './Base';
-
 import SessionTable from './SessionTable';
 
 export default function VisualizationDetails({ sessionId }): JSX.Element {

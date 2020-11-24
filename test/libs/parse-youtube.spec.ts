@@ -2,18 +2,16 @@
 /* eslint-disable jest/no-test-callback */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
-import got from 'got';
-
 import fs from 'fs';
+import got from 'got';
 import path from 'path';
-
 import {
-  parseGetRelated,
-  parseGetPlaylist,
-  parseWatchHistory,
-  parseSearchHistory,
   parseCommentHistory,
+  parseGetPlaylist,
+  parseGetRelated,
+  parseSearchHistory,
   parseSubscriptions,
+  parseWatchHistory,
 } from '../../app/libs/parse-youtube';
 
 test('parse recommended videos', (done) => {

@@ -1,10 +1,10 @@
-import React from 'react';
-import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
-import { hot } from 'react-hot-loader/root';
 import { History } from 'history';
-import { Store } from '../store';
+import React from 'react';
+import { hot } from 'react-hot-loader/root';
+import { Provider } from 'react-redux';
 import Routes from '../Routes';
+import { Store } from '../store';
 
 type Props = {
   store: Store;

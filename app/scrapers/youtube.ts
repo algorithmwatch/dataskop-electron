@@ -1,10 +1,10 @@
 import {
+  parseCommentHistory,
   parseGetPlaylist,
   parseGetRelated,
-  parseWatchHistory,
   parseSearchHistory,
-  parseCommentHistory,
   parseSubscriptions,
+  parseWatchHistory,
 } from '../libs/parse-youtube';
 import {
   HistoryComment,

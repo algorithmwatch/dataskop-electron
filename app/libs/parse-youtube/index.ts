@@ -6,16 +6,16 @@
 
 import cheerio from 'cheerio';
 import {
-  Video,
-  VideoDetailed,
-  Playlist,
-  PlaylistDetailed,
   Channel,
-  SearchOptions,
+  HistoryComment,
   HistorySearch,
   HistoryVideo,
-  HistoryComment,
+  Playlist,
+  PlaylistDetailed,
+  SearchOptions,
   Subscription,
+  Video,
+  VideoDetailed,
 } from './types';
 
 /**

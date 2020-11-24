@@ -1,15 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
 import BrowserView from 'react-electron-browser-view';
+import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-
 import routes from '../constants/routes.json';
-
-import { addData } from '../utils/db';
-
-import Base from './Base';
-
 import youtubeConfig from '../scrapers/youtube';
+import { addData } from '../utils/db';
+import Base from './Base';
 
 // the react wrapper is buggy, remove it?
 // https://github.com/vantezzen/react-electron-browser-view

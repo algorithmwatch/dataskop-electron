@@ -1,13 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
-
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import routes from '../constants/routes.json';
-// import styles from './Home.css';
-
-// TODO: link to details page
-
 import { clearData, getSessionsMetaData } from '../utils/db';
-
 import Base from './Base';
 
 export default function Visualization(): JSX.Element {

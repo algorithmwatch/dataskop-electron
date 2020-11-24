@@ -1,6 +1,5 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-
 import VisualizationDetails from '../components/VisualizationDetails';
 
 export default function VisualizationDetailsPage() {

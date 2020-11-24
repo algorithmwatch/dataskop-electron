@@ -1,9 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-
+import React from 'react';
 import { useTable } from 'react-table';
-
-import { Link } from 'react-router-dom';
-import routes from '../constants/routes.json';
 
 export default function SessionTable({ data }): JSX.Element {
   const columns = React.useMemo(
