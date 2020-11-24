@@ -43,7 +43,7 @@ const scrapeLikedVideos = async (
     'https://www.youtube.com/playlist?list=LL',
     getHTML
   );
-  return { items, task: 'YT-linkedVideos' };
+  return { items, task: 'YT-likedVideos' };
 };
 
 const scrapeRecommendedVideos = async (
@@ -60,7 +60,7 @@ const scrapeWatchedVideos = async (
   getHTML: GetHtmlFunction
 ): Promise<{ items: HistoryVideo[]; task: string }> => {
   const html = await getHTML('https://www.youtube.com/feed/history');
-  return { items: parseWatchHistory(html), task: 'YT-watchedHistroy' };
+  return { items: parseWatchHistory(html), task: 'YT-watchedHistory' };
 };
 
 const scrapeSearchHistory = async (

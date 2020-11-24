@@ -34,7 +34,7 @@ export default function Visualization(): JSX.Element {
         return (
           <div key={x.id}>
             <Link to={routes.VISUALIZATION_DETAILS.replace(':sessionId', x.id)}>
-              {`${x.id} ${x.scrapedAt} ${x.count}`}
+              {`${x.id}, ${new Date(x.scrapedAt)}, Items ${x.count}`}
             </Link>
           </div>
         );

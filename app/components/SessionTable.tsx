@@ -4,30 +4,8 @@ import { useTable } from 'react-table';
 
 import { Link } from 'react-router-dom';
 import routes from '../constants/routes.json';
-// import styles from './Home.css';
 
 export default function SessionTable({ data }): JSX.Element {
-  // const tableData = React.useMemo(
-  //   () => [
-  //     {
-  //       col1: 'Hello',
-
-  //       col2: 'World',
-  //     },
-  //     {
-  //       col1: 'react-table',
-
-  //       col2: 'rocks',
-  //     },
-  //     {
-  //       col1: 'whatever',
-
-  //       col2: 'you want',
-  //     },
-  //   ],
-  //   []
-  // );
-
   const columns = React.useMemo(
     () => [
       {
@@ -57,8 +35,8 @@ export default function SessionTable({ data }): JSX.Element {
 
     []
   );
-
   data.forEach((x) => (x.items = JSON.stringify(x.items)));
+  data.forEach((x) => (x.scrapedAt = new Date(x.scrapedAt).toTimeString()));
 
   const tableInstance = useTable({ columns, data });
   const {
