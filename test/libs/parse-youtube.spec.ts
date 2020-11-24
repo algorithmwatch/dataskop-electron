@@ -53,6 +53,8 @@ test('scrape watch history', () => {
 
   const videos = parseWatchHistory(htmlFile);
   expect(videos.length).toBeGreaterThan(10);
+
+  expect(videos[2].title).toBe('Ellen Allien Balcony Streaming 11.11.2020');
 });
 
 test('scrape search history', () => {

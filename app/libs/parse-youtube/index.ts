@@ -805,7 +805,7 @@ function parseWatchHistoryVideo(
 }
 
 function trimStrings(obj) {
-  return Object.keys(obj).map(
+  Object.keys(obj).map(
     (k) => (obj[k] = typeof obj[k] == 'string' ? obj[k].trim() : obj[k])
   );
 }
@@ -819,8 +819,8 @@ function parseWatchHistoryChunks(
   return $html(chunk)
     .find('#dismissable')
     .map((_, x: CheerioElement) => parseWatchHistoryVideo($html(x), watchedAt))
-    .toArray()
-    .map(trimStrings);
+    .each((_, x) => trimStrings(x))
+    .toArray();
 }
 
 /**
@@ -846,13 +846,11 @@ function parseSearchHistory(html: string): HistorySearch[] {
   )
     .map((_, x: any) => {
       return {
-        query: $html(x)
-          .find('> div.ytd-search-history-query-renderer')
-          .text()
-          .trim(),
+        query: $html(x).find('> div.ytd-search-history-query-renderer').text(),
         searchedAt: $html(x).find('.latest-search-time-text').text(),
       } as HistorySearch;
     })
+    .each((_, x) => trimStrings(x))
     .toArray();
 }
 
@@ -863,15 +861,16 @@ function parseCommentHistory(html: string): HistoryComment[] {
   )
     .map((_, x: any) => {
       return {
-        videoTitle: $html(x).find('a:nth-child(2)').text().trim(),
+        videoTitle: $html(x).find('a:nth-child(2)').text(),
         videoUrl: `https://youtube.com${$html(x)
           .find('a:nth-child(2)')
           .attr('href')}`,
         commentUrl: $html(x).find('a:nth-child(1)').attr('href'),
-        text: $html(x).find('#content').text().trim(),
+        text: $html(x).find('#content').text(),
         commentedAt: $html(x).find('.timestamp').text(),
       } as HistoryComment;
     })
+    .each((_, x) => trimStrings(x))
     .toArray();
 }
 
@@ -885,23 +884,21 @@ function extractInteger(str: string): number | null {
 function parseSubscriptions(html: string): Subscription[] {
   const $html = cheerio.load(html);
 
-  return $html('#contents #content-section')
-    .map((_, x) => {
-      const $x = $html(x);
-      return {
-        url: $x.find('a#main-link').attr('href'),
-        name: $x.find('#channel-title #text').text(),
-        videoCount: extractInteger($x.find('#video-count').text()),
-        subscribersCount: $x.find('#subscribers').text(),
-        description: $x.find('#description').text(),
-        notificationSetting: $x
-          .find(
-            'a.ytd-subscription-notification-toggle-button-renderer button#button'
-          )
-          .attr('aria-label'),
-      } as Subscription;
-    })
-    .toArray();
+  return $html('#contents #content-section').map((_, x) => {
+    const $x = $html(x);
+    return {
+      url: $x.find('a#main-link').attr('href'),
+      name: $x.find('#channel-title #text').text(),
+      videoCount: extractInteger($x.find('#video-count').text()),
+      subscribersCount: $x.find('#subscribers').text(),
+      description: $x.find('#description').text(),
+      notificationSetting: $x
+        .find(
+          'a.ytd-subscription-notification-toggle-button-renderer button#button'
+        )
+        .attr('aria-label'),
+    } as Subscription;
+  });
 }
 
 export {
