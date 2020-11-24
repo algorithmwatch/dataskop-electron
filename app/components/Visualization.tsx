@@ -6,7 +6,7 @@ import routes from '../constants/routes.json';
 
 // TODO: link to details page
 
-import { clearData, getSessionMetaData } from '../utils/db';
+import { clearData, getSessionsMetaData } from '../utils/db';
 
 import Base from './Base';
 
@@ -15,7 +15,7 @@ export default function Visualization(): JSX.Element {
 
   useEffect(() => {
     const newRows = async () => {
-      setRows(await getSessionMetaData());
+      setRows(await getSessionsMetaData());
     };
     newRows();
   }, []);

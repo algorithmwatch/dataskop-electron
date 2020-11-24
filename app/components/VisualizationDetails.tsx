@@ -8,6 +8,8 @@ import { getData, clearData } from '../utils/db';
 
 import Base from './Base';
 
+import SessionTable from './SessionTable';
+
 export default function VisualizationDetails({ sessionId }): JSX.Element {
   const [rows, setRows] = useState<any>([]);
 
@@ -18,5 +20,10 @@ export default function VisualizationDetails({ sessionId }): JSX.Element {
     newRows();
   }, []);
 
-  return <Base>{sessionId}</Base>;
+  return (
+    <Base>
+      <h2>{sessionId}</h2>
+      <SessionTable data={rows} />
+    </Base>
+  );
 }

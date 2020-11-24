@@ -38,7 +38,7 @@ export default function Base({ children }): JSX.Element {
             </ul>
           </aside>
         </div>
-        <div className="column">
+        <div className="column" style={{ height: '100vh' }}>
           <div className={styles.container} data-tid="container">
             {children}
           </div>

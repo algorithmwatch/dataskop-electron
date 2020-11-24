@@ -8,8 +8,9 @@ import Dexie from 'dexie';
 interface ScrapeResult {
   id?: number;
   sessionId?: string;
-  data?: string;
   scrapedAt?: number; // number of millisecconds in UTC
+  task?: string;
+  items?: string;
 }
 
 //
@@ -21,7 +22,7 @@ class ScrapeDatabase extends Dexie {
   public constructor() {
     super('ScrapeDatabase');
     this.version(1).stores({
-      scrapeResults: '++id,sessionId,data,scrapedAt',
+      scrapeResults: '++id,sessionId,scrapedAt,task,items',
     });
     this.scrapeResults = this.table('scrapeResults');
   }
@@ -35,18 +36,26 @@ const addData = (sessionId: string, data: any) => {
   db.transaction('rw', db.scrapeResults, async () => {
     const id = await db.scrapeResults.add({
       sessionId,
-      data,
+      ...data,
       scrapedAt: Date.now(),
     });
     return id;
   });
 };
 
-const getData = (whereClause = {}) => {
+const getData = () => {
   return db.transaction('r', db.scrapeResults, async () => {
-    // const res = await db.scrapeResults.where(whereClause).toArray();
     const res = await db.scrapeResults.toArray();
-    console.log(res);
+    return res;
+  });
+};
+
+const getSessionData = (sessiondId: string) => {
+  return db.transaction('r', db.scrapeResults, async () => {
+    const res = await db.scrapeResults
+      .where('sessionId')
+      .equals(sessiondId)
+      .toArray();
     return res;
   });
 };
@@ -70,7 +79,7 @@ const clearData = () => {
 const getUniqueSessionIds = () =>
   db.scrapeResults.orderBy('sessionId').uniqueKeys();
 
-const getSessionMetaData = async () => {
+const getSessionsMetaData = async () => {
   const sessionsIds = await getUniqueSessionIds();
   return Promise.all(
     sessionsIds.map(async (x) => {
@@ -84,4 +93,4 @@ const getSessionMetaData = async () => {
   );
 };
 
-export { addData, getData, clearData, getSessionMetaData };
+export { addData, getData, clearData, getSessionsMetaData, getSessionData };

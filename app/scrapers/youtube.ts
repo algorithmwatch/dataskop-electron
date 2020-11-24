@@ -28,64 +28,64 @@ const scrapePlaylist = async (
 // is a special playlist? need to investigate
 const scrapePopularVideos = async (
   getHTML: GetHtmlFunction
-): Promise<{ items: Video[]; type: string }> => {
+): Promise<{ items: Video[]; task: string }> => {
   const items = await scrapePlaylist(
     'https://www.youtube.com/playlist?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-',
     getHTML
   );
-  return { items, type: 'popularVideos' };
+  return { items, task: 'YT-popularVideos' };
 };
 
 const scrapeLikedVideos = async (
   getHTML: GetHtmlFunction
-): Promise<{ items: Video[]; type: string }> => {
+): Promise<{ items: Video[]; task: string }> => {
   const items = await scrapePlaylist(
     'https://www.youtube.com/playlist?list=LL',
     getHTML
   );
-  return { items, type: 'linkedVideos' };
+  return { items, task: 'YT-linkedVideos' };
 };
 
 const scrapeRecommendedVideos = async (
   videoId: string,
   getHTML: GetHtmlFunction
-): Promise<{ items: Video[]; type: string }> => {
+): Promise<{ items: Video[]; task: string }> => {
   const url = `https://www.youtube.com/watch?v=${videoId}`;
   const html = await getHTML(url);
   const items = parseGetRelated(html, 100);
-  return { items, type: 'recommendedVideos' };
+  return { items, task: 'YT-recommendedVideos' };
 };
 
 const scrapeWatchedVideos = async (
   getHTML: GetHtmlFunction
-): Promise<{ items: HistoryVideo[]; type: string }> => {
+): Promise<{ items: HistoryVideo[]; task: string }> => {
   const html = await getHTML('https://www.youtube.com/feed/history');
-  return { items: parseWatchHistory(html), type: 'watchedHistroy' };
+  return { items: parseWatchHistory(html), task: 'YT-watchedHistroy' };
 };
 
 const scrapeSearchHistory = async (
   getHTML: GetHtmlFunction
-): Promise<{ items: HistorySearch[]; type: string }> => {
+): Promise<{ items: HistorySearch[]; task: string }> => {
   const html = await getHTML(
     'https://www.youtube.com/feed/history/search_history'
   );
-  return { items: parseSearchHistory(html), type: 'searchHistory' };
+  return { items: parseSearchHistory(html), task: 'YT-searchHistory' };
 };
 
 const scrapeCommentHistory = async (
   getHTML: GetHtmlFunction
-): Promise<{ items: HistoryComment[]; type: string }> => {
+): Promise<{ items: HistoryComment[]; task: string }> => {
   const html = await getHTML(
     'https://www.youtube.com/feed/history/comment_history'
   );
-  return { items: parseCommentHistory(html), type: 'commentHistory' };
+  return { items: parseCommentHistory(html), task: 'YT-commentHistory' };
 };
 
 const scrapeSubscriptions = async (
   getHTML: GetHtmlFunction
-): Promise<{ items: Subscription[]; type: string }> => {
+): Promise<{ items: Subscription[]; task: string }> => {
   const html = await getHTML('https://www.youtube.com/feed/channels');
-  return { items: parseSubscriptions(html), type: 'subscriptions' };
+  return { items: parseSubscriptions(html), task: 'YT-subscriptions' };
 };
 
 async function* scrapingGenerator(getHTML: GetHtmlFunction, limitSteps = 5) {
