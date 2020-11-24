@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+
 import routes from '../constants/routes.json';
 import styles from './Base.css';
-
 import logo from '../static/images/dataskop_logo.png';
 
 export default function Base({ children }): JSX.Element {

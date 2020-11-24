@@ -27,7 +27,7 @@ class ScrapeDatabase extends Dexie {
   }
 }
 
-let db = new ScrapeDatabase();
+const db = new ScrapeDatabase();
 
 // https://dexie.org/docs/Dexie/Dexie.transaction()#specify-reusage-of-parent-transaction
 
@@ -66,4 +66,22 @@ const clearData = () => {
   return true;
 };
 
-export { addData, getData, clearData };
+// https://github.com/dfahlander/Dexie.js/issues/415#issuecomment-268772586
+const getUniqueSessionIds = () =>
+  db.scrapeResults.orderBy('sessionId').uniqueKeys();
+
+const getSessionMetaData = async () => {
+  const sessionsIds = await getUniqueSessionIds();
+  return Promise.all(
+    sessionsIds.map(async (x) => {
+      return {
+        count: await db.scrapeResults.where('sessionId').equals(x).count(),
+        scrapedAt: (await db.scrapeResults.where('sessionId').equals(x).first())
+          ?.scrapedAt,
+        id: x,
+      };
+    })
+  );
+};
+
+export { addData, getData, clearData, getSessionMetaData };

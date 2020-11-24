@@ -28,11 +28,27 @@ const VisualizationPage = (props: Record<string, any>) => (
   </React.Suspense>
 );
 
+const LazyVisualizationDetailsPage = React.lazy(() =>
+  import(
+    /* webpackChunkName: "VisualizationDetailsPage" */ './containers/VisualizationDetailsPage'
+  )
+);
+
+const VisualizationDetailsPage = (props: Record<string, any>) => (
+  <React.Suspense fallback={<h1>Loading...</h1>}>
+    <LazyVisualizationDetailsPage {...props} />
+  </React.Suspense>
+);
+
 export default function Routes() {
   return (
     <App>
       <Switch>
         <Route path={routes.SCRAPING} component={ScrapingPage} />
+        <Route
+          path={routes.VISUALIZATION_DETAILS}
+          component={VisualizationDetailsPage}
+        />
         <Route path={routes.VISUALIZATION} component={VisualizationPage} />
         <Route path={routes.HOME} component={HomePage} />
       </Switch>

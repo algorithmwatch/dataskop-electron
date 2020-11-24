@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom';
 import routes from '../constants/routes.json';
 // import styles from './Home.css';
 
-import { getData, clearData } from '../utils/db';
+// TODO: link to details page
+
+import { clearData, getSessionMetaData } from '../utils/db';
 
 import Base from './Base';
 
@@ -13,7 +15,7 @@ export default function Visualization(): JSX.Element {
 
   useEffect(() => {
     const newRows = async () => {
-      setRows(await getData());
+      setRows(await getSessionMetaData());
     };
     newRows();
   }, []);
@@ -29,7 +31,13 @@ export default function Visualization(): JSX.Element {
       </button>
       <h2>Visualization</h2>
       {rows.map((x) => {
-        return <div key={x.id}>{JSON.stringify(x)}</div>;
+        return (
+          <div key={x.id}>
+            <Link to={routes.VISUALIZATION_DETAILS.replace(':sessionId', x.id)}>
+              {`${x.id} ${x.scrapedAt} ${x.count}`}
+            </Link>
+          </div>
+        );
       })}
     </Base>
   );
