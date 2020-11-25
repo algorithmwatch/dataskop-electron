@@ -11,24 +11,30 @@ Read more information about the boilerplate [in their official documentation](ht
 
 ## Installation
 
+Install [yarn](https://yarnpkg.com/getting-started/install)
+
 - **If you have installation or compilation issues with this project, please see [this debugging guide](https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues/400)**
 
 First, clone the repo via git and install dependencies:
 
 ```bash
+git clone git@github.com:algorithmwatch/dataskop-pedd.git
+cd dataskop-pedd
 yarn install
 ```
 
 We are storing large files in this repositry wit git-lfs.
 So please install git-lfs: https://github.com/git-lfs/git-lfs.
 
-## Development
+Also check out the [guide for setting up the development](./docs/devsetup.md).
 
-Start the app in the `dev` environment. This starts the renderer process in [**hot-module-replacement**](https://webpack.js.org/guides/hmr-react/) mode and starts a webpack dev server that sends hot updates to the renderer process:
+## Development
 
 ```bash
 yarn dev
 ```
+
+This starts the renderer process in [**hot-module-replacement**](https://webpack.js.org/guides/hmr-react/) mode and starts a webpack dev server that sends hot updates to the renderer process.
 
 ## Tests
 
