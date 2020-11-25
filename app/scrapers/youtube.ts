@@ -48,11 +48,12 @@ const scrapeLikedVideos = async (
 
 const scrapeRecommendedVideos = async (
   videoId: string,
-  getHTML: GetHtmlFunction
+  getHTML: GetHtmlFunction,
+  limit?: number | null
 ): Promise<{ items: Video[]; task: string }> => {
   const url = `https://www.youtube.com/watch?v=${videoId}`;
   const html = await getHTML(url);
-  const items = parseGetRelated(html, 100);
+  const items = parseGetRelated(html, limit);
   return { items, task: 'YT-recommendedVideos' };
 };
 

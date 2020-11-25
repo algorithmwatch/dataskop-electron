@@ -601,7 +601,7 @@ function parseGetVideo(html: string): VideoDetailed | null {
  *
  * @param html HTML
  */
-function parseGetRelated(html: string, limit?: number): Video[] | null {
+function parseGetRelated(html: string, limit?: number | null): Video[] | null {
   let videosInfo = [];
   let scrapped = false;
 
