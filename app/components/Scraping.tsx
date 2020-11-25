@@ -26,7 +26,7 @@ export default function Scraping(): JSX.Element {
   const [isScrapingFinished, setIsScrapingFinished] = useState(false);
 
   const [isMuted, setIsMuted] = useState(false);
-
+  const [browserHeight, setBrowserHeight] = useState(500);
   const browser = useRef<any>(null);
 
   const waitUntilLoggingIn = async () => {
@@ -166,6 +166,11 @@ export default function Scraping(): JSX.Element {
         </button>
       )}
 
+      <input
+        value={browserHeight}
+        onChange={(event) => setBrowserHeight(parseInt(event.target.value, 10))}
+      />
+
       {isScrapingStarted && (
         <progress className="progress" value={progresFrac} max="1">
           {progresFrac}
@@ -176,7 +181,7 @@ export default function Scraping(): JSX.Element {
         ref={browser}
         src="about:blank"
         style={{
-          height: 500,
+          height: browserHeight,
         }}
         onDidAttach={() => {
           setTimeout(goToStart, 100);
