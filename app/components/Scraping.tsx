@@ -25,6 +25,8 @@ export default function Scraping(): JSX.Element {
   const [isScrapingPaused, setIsScrapingPaused] = useState(false);
   const [isScrapingFinished, setIsScrapingFinished] = useState(false);
 
+  const [isMuted, setIsMuted] = useState(false);
+
   const browser = useRef<any>(null);
 
   const waitUntilLoggingIn = async () => {
@@ -95,6 +97,14 @@ export default function Scraping(): JSX.Element {
     setIsScrapingPaused(false);
   };
 
+  useEffect(() => {
+    const updateMutedStatus = async () => {
+      const webContents = browser?.current.view.webContents;
+      await webContents?.setAudioMuted(isMuted);
+    };
+    updateMutedStatus();
+  }, [isMuted]);
+
   return (
     <Base>
       <h2 className="title is-2">Scraping</h2>
@@ -128,6 +138,26 @@ export default function Scraping(): JSX.Element {
       {isScrapingFinished && (
         <button className="button" type="button">
           <Link to={routes.VISUALIZATION}> go to visualization</Link>
+        </button>
+      )}
+
+      {isMuted && (
+        <button
+          className="button"
+          type="button"
+          onClick={() => setIsMuted(false)}
+        >
+          is muted
+        </button>
+      )}
+
+      {!isMuted && (
+        <button
+          className="button"
+          type="button"
+          onClick={() => setIsMuted(true)}
+        >
+          is not muted
         </button>
       )}
 
