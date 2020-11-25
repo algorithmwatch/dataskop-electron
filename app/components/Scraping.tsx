@@ -13,12 +13,12 @@ import Base from './Base';
 // the api
 // https://www.electronjs.org/docs/api/web-contents
 
-const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default function Scraping(): JSX.Element {
   const [scrapingGen, setScrapingGen] = useState<any>(null);
   const [progresFrac, setProgresFrac] = useState(0);
-  const [scrapingSession, setScrapingSession] = useState<any>(null);
+  const [sessionId, setSessionId] = useState<any>(null);
 
   const [isUserLoggedIn, setUserLoggedIn] = useState(false);
   const [isScrapingStarted, setIsScrapingStarted] = useState(false);
@@ -75,18 +75,18 @@ export default function Scraping(): JSX.Element {
       const { value, done } = await scrapingGen.next();
       if (value == null) return;
       setProgresFrac(value[0]);
-      addData(scrapingSession, value[1]);
+      addData(sessionId, value[1]);
       if (done) setIsScrapingFinished(true);
     };
     runScraperOnce();
-  }, [progresFrac, scrapingSession, isScrapingPaused]); // Only re-run the effect if these change
+  }, [progresFrac, sessionId, isScrapingPaused]); // Only re-run the effect if these change
 
   const startScraping = async () => {
     setIsScrapingStarted(true);
     const gen = youtubeConfig.scrapingGenerator(getHTML);
     setScrapingGen(gen);
     const sId = uuidv4();
-    setScrapingSession(sId);
+    setSessionId(sId);
   };
 
   const pauseScraping = () => {
@@ -137,7 +137,12 @@ export default function Scraping(): JSX.Element {
       )}
       {isScrapingFinished && (
         <button className="button" type="button">
-          <Link to={routes.VISUALIZATION}> go to visualization</Link>
+          <Link
+            to={routes.VISUALIZATION_DETAILS.replace(':sessionId', sessionId)}
+          >
+            {' '}
+            go to visualization
+          </Link>
         </button>
       )}
 
