@@ -190,6 +190,7 @@
     "@types/react-table": "^7.0.25",
     "@types/react-test-renderer": "^16.9.3",
     "@types/redux-logger": "^3.0.8",
+    "@types/uuid": "^8.3.0",
     "@types/webpack": "^4.41.21",
     "@types/webpack-env": "^1.15.2",
     "@typescript-eslint/eslint-plugin": "^3.6.1",
