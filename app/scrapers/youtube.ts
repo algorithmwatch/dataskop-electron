@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import {
   parseCommentHistory,
   parseGetPlaylist,
@@ -89,7 +90,66 @@ const scrapeSubscriptions = async (
   return { items: parseSubscriptions(html), task: 'YT-subscriptions' };
 };
 
-async function* scrapingGenerator(getHTML: GetHtmlFunction, limitSteps = 5) {
+async function* scrapeSeedVideosAndFollow(
+  getHTML: GetHtmlFunction,
+  seedVideos: any,
+  initialStep: number,
+  maxSteps: number,
+  followVideos: number
+) {
+  let step = initialStep;
+  while (true) {
+    const data = await scrapeRecommendedVideos(
+      seedVideos.items[step - 1].id,
+      getHTML
+    );
+    step += 1;
+    yield [step / maxSteps, data];
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const i of [...Array(followVideos).keys()]) {
+      const followVideo = await scrapeRecommendedVideos(
+        data.items[i].id,
+        getHTML
+      );
+      followVideo.task += '-followed';
+      step += 1;
+      if (step < maxSteps) {
+        yield [step / maxSteps, followVideo];
+      } else {
+        return [1, followVideo];
+      }
+    }
+  }
+}
+
+async function* scrapeSeedVideos(
+  getHTML: GetHtmlFunction,
+  seedVideos: any,
+  initialStep: number,
+  maxSteps: number
+) {
+  let step = initialStep;
+  while (true) {
+    const data = await scrapeRecommendedVideos(
+      seedVideos.items[step - 1].id,
+      getHTML
+    );
+    step += 1;
+
+    if (step < maxSteps) {
+      yield [step / maxSteps, data];
+    } else {
+      return [1, data];
+    }
+  }
+}
+
+async function* scrapingYoutubeProcedure(
+  getHTML: GetHtmlFunction,
+  limitSteps = 5,
+  followVideos = 1
+) {
   // these functions
   const backgroundFuns = [
     scrapeWatchedVideos,
@@ -101,6 +161,7 @@ async function* scrapingGenerator(getHTML: GetHtmlFunction, limitSteps = 5) {
 
   let step = 0;
   let maxSteps = null;
+  const isFollowingVideos = !(followVideos == null || followVideos === 0);
 
   const seedVideos = await scrapePopularVideos(getHTML);
 
@@ -108,6 +169,11 @@ async function* scrapingGenerator(getHTML: GetHtmlFunction, limitSteps = 5) {
   maxSteps = seedVideos.items.length;
   if (limitSteps !== null) {
     maxSteps = Math.min(limitSteps, maxSteps);
+  }
+
+  // for each seed videos, follow X times the new video
+  if (isFollowingVideos) {
+    maxSteps *= followVideos + 1;
   }
 
   // add all fix functions
@@ -124,25 +190,25 @@ async function* scrapingGenerator(getHTML: GetHtmlFunction, limitSteps = 5) {
     yield [step / maxSteps, data];
   }
 
-  while (true) {
-    // eslint-disable-next-line no-await-in-loop
-    const data = await scrapeRecommendedVideos(
-      seedVideos.items[step - 1].id,
-      getHTML
+  // some background on `yield*`
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield%2A
+
+  if (isFollowingVideos) {
+    return yield* scrapeSeedVideosAndFollow(
+      getHTML,
+      seedVideos,
+      step,
+      maxSteps,
+      followVideos
     );
-    step += 1;
-    if (step < maxSteps) {
-      yield [step / maxSteps, data];
-    } else {
-      return [step / maxSteps, data];
-    }
   }
+  return yield* scrapeSeedVideos(getHTML, seedVideos, step, maxSteps);
 }
 
 const config = {
   loginUrl: 'https://www.youtube.com/account',
   logingCookie: 'LOGIN_INFO',
-  scrapingGenerator,
+  scrapingGenerator: scrapingYoutubeProcedure,
 };
 
 export default config;
