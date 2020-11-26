@@ -23,6 +23,11 @@ export default function SessionTable({ data }): JSX.Element {
       },
 
       {
+        Header: 'Single',
+
+        accessor: 'single',
+      },
+      {
         Header: 'Items',
 
         accessor: 'items',
@@ -32,6 +37,13 @@ export default function SessionTable({ data }): JSX.Element {
     []
   );
   data.forEach((x) => (x.items = JSON.stringify(x.items)));
+
+  data.forEach((x) => {
+    if ('single' in x) {
+      x.single = JSON.stringify(x.single);
+    }
+  });
+
   data.forEach((x) => (x.scrapedAt = new Date(x.scrapedAt).toString()));
 
   const tableInstance = useTable({ columns, data });

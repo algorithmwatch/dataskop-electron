@@ -3,6 +3,7 @@ import {
   parseCommentHistory,
   parseGetPlaylist,
   parseGetRelated,
+  parseGetVideo,
   parseSearchHistory,
   parseSubscriptions,
   parseWatchHistory,
@@ -13,6 +14,7 @@ import {
   HistoryVideo,
   Subscription,
   Video,
+  VideoDetailed,
 } from '../libs/parse-youtube/types';
 
 type GetHtmlFunction = (url: string) => string;
@@ -51,11 +53,12 @@ const scrapeRecommendedVideos = async (
   videoId: string,
   getHTML: GetHtmlFunction,
   limit?: number | null
-): Promise<{ items: Video[]; task: string }> => {
+): Promise<{ single: VideoDetailed | null; items: Video[]; task: string }> => {
   const url = `https://www.youtube.com/watch?v=${videoId}`;
   const html = await getHTML(url);
   const items = parseGetRelated(html, limit);
-  return { items, task: 'YT-recommendedVideos' };
+  const single = parseGetVideo(html);
+  return { single, items: items ?? [], task: 'YT-recommendedVideos' };
 };
 
 const scrapeWatchedVideos = async (
