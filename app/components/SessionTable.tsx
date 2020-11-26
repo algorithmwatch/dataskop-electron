@@ -32,7 +32,7 @@ export default function SessionTable({ data }): JSX.Element {
     []
   );
   data.forEach((x) => (x.items = JSON.stringify(x.items)));
-  data.forEach((x) => (x.scrapedAt = new Date(x.scrapedAt).toTimeString()));
+  data.forEach((x) => (x.scrapedAt = new Date(x.scrapedAt).toString()));
 
   const tableInstance = useTable({ columns, data });
   const {
