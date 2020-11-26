@@ -81,7 +81,7 @@ const getUniqueSessionIds = () =>
 
 const getSessionsMetaData = async () => {
   const sessionsIds = await getUniqueSessionIds();
-  return Promise.all(
+  const sessions = await Promise.all(
     sessionsIds.map(async (x) => {
       return {
         count: await db.scrapeResults.where('sessionId').equals(x).count(),
@@ -91,6 +91,8 @@ const getSessionsMetaData = async () => {
       };
     })
   );
+  sessions.sort((a, b) => b.scrapedAt - a.scrapedAt);
+  return sessions;
 };
 
 export { addData, getData, clearData, getSessionsMetaData, getSessionData };
