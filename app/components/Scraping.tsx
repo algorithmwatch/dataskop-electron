@@ -97,6 +97,18 @@ export default function Scraping(): JSX.Element {
     setIsScrapingPaused(false);
   };
 
+  const resetScraping = () => {
+    setScrapingGen(null);
+    setSessionId(null);
+    setProgresFrac(0);
+
+    setIsScrapingPaused(false);
+    setIsScrapingStarted(false);
+    setIsScrapingFinished(false);
+
+    goToUrl(youtubeConfig.loginUrl);
+  };
+
   useEffect(() => {
     const updateMutedStatus = async () => {
       const webContents = browser?.current.view.webContents;
@@ -116,7 +128,10 @@ export default function Scraping(): JSX.Element {
       </p>
       <br />
       <button className="button" type="button" onClick={clearBrowser}>
-        Reset Browser
+        reset browser
+      </button>
+      <button className="button" type="button" onClick={resetScraping}>
+        reset scraping
       </button>
       <br />
       {!isUserLoggedIn && <p>Please login before continuing.</p>}
