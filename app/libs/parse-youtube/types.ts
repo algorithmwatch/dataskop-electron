@@ -38,14 +38,29 @@ export interface HistorySearch {
   searchedAt: string;
 }
 
+// downvotes are not available
+export interface Comment {
+  text: string;
+  publishedAt: string;
+  upvotes: number;
+  numReplies: number;
+  authorName: string;
+  authorUrl: string;
+}
+
+export interface CommentSection {
+  totalComments: number;
+  isClosed: boolean;
+  comments: Comment[];
+}
+
 export interface HistoryComment {
   text: string;
   videoUrl: string;
   videoTitle: string;
   commentUrl: string;
-  commentedAt: string;
+  publishedAt: string;
 }
-
 export interface Playlist {
   id: string;
   title: string;

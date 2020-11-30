@@ -8,7 +8,7 @@ import {
   HistoryVideo,
   Subscription,
 } from './types';
-import { extractInteger } from './utils';
+import { extractInteger, trimStrings } from './utils';
 
 // TODO: not sure what happens if the account was deleted
 function parseChannel(element: CheerioElement) {
@@ -55,12 +55,6 @@ function parseWatchHistoryVideo(
     resumeWatching,
     description,
   } as HistoryVideo;
-}
-
-function trimStrings(obj) {
-  Object.keys(obj).map(
-    (k) => (obj[k] = typeof obj[k] == 'string' ? obj[k].trim() : obj[k])
-  );
 }
 
 function parseWatchHistoryChunks(
@@ -120,7 +114,7 @@ function parseCommentHistory(html: string): HistoryComment[] {
           .attr('href')}`,
         commentUrl: $html(x).find('a:nth-child(1)').attr('href'),
         text: $html(x).find('#content').text(),
-        commentedAt: $html(x).find('.timestamp').text(),
+        publishedAt: $html(x).find('.timestamp').text(),
       } as HistoryComment;
     })
     .each((_, x) => trimStrings(x))

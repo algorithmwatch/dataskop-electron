@@ -27,4 +27,10 @@ const extractInteger = (str: string): number | null => {
   return parseInt(numbers.join(''), 10);
 };
 
-export { extractInteger, getDuration };
+const trimStrings = (obj) => {
+  Object.keys(obj).map(
+    (k) => (obj[k] = typeof obj[k] == 'string' ? obj[k].trim() : obj[k])
+  );
+};
+
+export { extractInteger, getDuration, trimStrings };

@@ -7,6 +7,7 @@ import got from 'got';
 import path from 'path';
 import {
   parseCommentHistory,
+  parseComments,
   parseGetPlaylist,
   parseGetRelated,
   parseSearchHistory,
@@ -74,7 +75,7 @@ test('scrape comment history', () => {
 
   const comments = parseCommentHistory(htmlFile);
   expect(comments[0].text).toBe('not finding what I wanted here');
-  expect(comments[0].commentedAt).toBe('2 months ago');
+  expect(comments[0].publishedAt).toBe('2 months ago');
   expect(comments[0].commentUrl).toBe(
     'https://www.youtube.com/watch?v=OnhXeq3nO7g&lc=UgxtUrtAziPpHAEoyAN4AaABAg'
   );
@@ -99,6 +100,30 @@ test('scrape subscritions', () => {
   expect(channels[0].description.length).toBeGreaterThan(100);
 
   expect(channels.length).toBeGreaterThan(3);
+});
+
+test('scrape comments from video', () => {
+  const htmlFile = fs.readFileSync(
+    path.resolve(__dirname, 'YouTube_video_comments.html'),
+    'utf8'
+  );
+  const commentSection = parseComments(htmlFile);
+
+  console.log(commentSection.comments[0]);
+
+  expect(commentSection.comments[0].upvotes).toBe(166);
+  expect(commentSection.comments[0].numReplies).toBe(44);
+  expect(commentSection.comments[0].publishedAt).toBe('1 month ago');
+  expect(commentSection.comments[0].text).toBe(
+    'Welche Dohle spielt der Eidinger?'
+  );
+  expect(commentSection.comments[0].authorName).toBe('zarazMiOdjebie');
+  expect(commentSection.comments[0].authorUrl).toBe(
+    'https://www.youtube.com/channel/UCBCzwwjqTW7sNIQFJWwWUKw'
+  );
+  expect(commentSection.totalComments).toBe(318);
+  expect(commentSection.isClosed).toBe(false);
+  expect(commentSection.comments.length).toBeGreaterThan(10);
 });
 
 // const videos = parseGetRelated(html);
