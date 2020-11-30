@@ -677,6 +677,14 @@ function parseGetRelated(html: string, limit?: number | null): Video[] | null {
           : +videoInfo.viewCountText.runs[0].text.replace(/[^0-9]/g, ''),
     } as Video;
 
+    // eslint-disable-next-line no-restricted-syntax
+    for (const thumbOverObj of videoInfo.thumbnailOverlays) {
+      if ('thumbnailOverlayResumePlaybackRenderer' in thumbOverObj) {
+        video.percentWatched =
+          thumbOverObj.thumbnailOverlayResumePlaybackRenderer.percentDurationWatched;
+      }
+    }
+
     if (limit && relatedVideos.length === limit) break;
 
     relatedVideos.push(video);

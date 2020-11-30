@@ -6,6 +6,9 @@ export interface SearchOptions {
   page?: number;
 }
 
+// Regarding the attribute `percentWatched`:
+// This value can be only set when there is the red line underneath of a thumbnail.
+// This happens for the recommended / related videos (for logged in users).
 export interface Video {
   id: string;
   title: string;
@@ -15,6 +18,7 @@ export interface Video {
   uploadDate?: string;
   viewCount: number | null;
   description?: string;
+  percentWatched?: number | null;
 }
 
 export interface VideoDetailed extends Video {
