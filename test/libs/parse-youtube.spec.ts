@@ -124,6 +124,13 @@ test('scrape comments from video', () => {
   expect(commentSection.totalComments).toBe(318);
   expect(commentSection.isClosed).toBe(false);
   expect(commentSection.comments.length).toBeGreaterThan(10);
+
+  const htmlFile2 = fs.readFileSync(
+    path.resolve(__dirname, 'YouTube_video_comments_closed.html'),
+    'utf8'
+  );
+  const commentSection2 = parseComments(htmlFile2);
+  expect(commentSection2.isClosed).toBe(true);
 });
 
 // const videos = parseGetRelated(html);

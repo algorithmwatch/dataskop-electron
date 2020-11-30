@@ -1,9 +1,18 @@
 import cheerio from 'cheerio';
 import { extractInteger } from './utils';
 
+function isCommentSectionClosed($html) {
+  const url = $html('#comments #contents #message a').attr('href');
+  if (url == null) return false;
+  return url.includes('https://support.google.com/youtube/answer/9706180');
+}
+
 function parseComments(html: string) {
   const $html = cheerio.load(html);
   const outer = $html('#comments');
+
+  if (isCommentSectionClosed($html)) return { isClosed: true };
+
   const totalComments = extractInteger(outer.find('#count').text());
 
   const comments = outer
@@ -34,9 +43,7 @@ function parseComments(html: string) {
     })
     .toArray();
 
-  const isClosed = false;
-
-  return { comments, totalComments, isClosed };
+  return { comments, totalComments, isClosed: false };
 }
 
 export { parseComments };
