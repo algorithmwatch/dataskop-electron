@@ -29,6 +29,13 @@ export default function Scraping(): JSX.Element {
   const [browserHeight, setBrowserHeight] = useState(500);
   const browser = useRef<any>(null);
 
+  const goToUrl = (url: string) => {
+    // can't set custom userAgent with the prop provded by `react-electron-browser-view`
+    browser.current.loadURL(url, {
+      userAgent: 'Chrome',
+    });
+  };
+
   const waitUntilLoggingIn = async () => {
     const webContents = browser?.current.view.webContents;
     const cookies = await webContents.session.cookies.get({});
@@ -41,10 +48,7 @@ export default function Scraping(): JSX.Element {
   };
 
   const goToStart = () => {
-    // can't set custom userAgent with a prop
-    browser.current.loadURL(youtubeConfig.loginUrl, {
-      userAgent: 'Chrome',
-    });
+    goToUrl(youtubeConfig.loginUrl);
   };
 
   const clearBrowser = () => {
@@ -52,18 +56,13 @@ export default function Scraping(): JSX.Element {
     goToStart();
   };
 
-  const getHTML = async (url: string) => {
+  const getHTML = async (url: string): Promise<string> => {
     console.log(url);
-    await browser?.current.loadURL(url, {
-      userAgent: 'Chrome',
-    });
-
+    await goToUrl(url);
     await delay(2000);
-
     const html = await browser.current.executeJavaScript(
       'document.documentElement.innerHTML'
     );
-
     return html;
   };
 

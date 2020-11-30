@@ -17,7 +17,7 @@ import {
   VideoDetailed,
 } from '../libs/parse-youtube/types';
 
-type GetHtmlFunction = (url: string) => string;
+type GetHtmlFunction = (url: string) => Promise<string>;
 
 const scrapePlaylist = async (
   playlistUrl: string,
@@ -209,6 +209,7 @@ async function* scrapingYoutubeProcedure(
 }
 
 const config = {
+  startUrl: 'https://www.youtube.com',
   loginUrl: 'https://www.youtube.com/account',
   logingCookie: 'LOGIN_INFO',
   scrapingGenerator: scrapingYoutubeProcedure,

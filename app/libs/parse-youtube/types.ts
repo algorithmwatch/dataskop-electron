@@ -22,7 +22,6 @@ export interface Video {
 }
 
 export interface VideoDetailed extends Video {
-  viewCount: number | null;
   likeCount: number | null;
   dislikeCount: number | null;
   isLiveContent: boolean;
