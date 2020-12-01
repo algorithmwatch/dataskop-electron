@@ -6,6 +6,7 @@ import fs from 'fs';
 import got from 'got';
 import path from 'path';
 import {
+  isCommentSpinnerActive,
   parseCommentHistory,
   parseComments,
   parseGetPlaylist,
@@ -131,6 +132,24 @@ test('scrape comments from video', () => {
   );
   const commentSection2 = parseComments(htmlFile2);
   expect(commentSection2.isClosed).toBe(true);
+});
+
+test('check if comments are loading', () => {
+  const htmlFile = fs.readFileSync(
+    path.resolve(__dirname, 'YouTube_video_comments.html'),
+    'utf8'
+  );
+  expect(isCommentSpinnerActive(htmlFile)).toBe(false);
+  const htmlFile2 = fs.readFileSync(
+    path.resolve(__dirname, 'YouTube_video_comments_closed.html'),
+    'utf8'
+  );
+  expect(isCommentSpinnerActive(htmlFile2)).toBe(false);
+  const htmlFile3 = fs.readFileSync(
+    path.resolve(__dirname, 'YouTube_video_comments_spinning.html'),
+    'utf8'
+  );
+  expect(isCommentSpinnerActive(htmlFile3)).toBe(true);
 });
 
 // const videos = parseGetRelated(html);

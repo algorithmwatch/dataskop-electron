@@ -1,6 +1,26 @@
 import cheerio from 'cheerio';
 import { extractInteger } from './utils';
 
+const isCommentSpinnerActive = (html: string) => {
+  const $html = cheerio.load(html);
+  const spinnerElements = $html('#comments #spinner.yt-next-continuation')
+    .map((_, x) => {
+      const $x = $html(x);
+      const xstyle = $x.attr('style');
+      if (xstyle && xstyle === 'display: none;') {
+        return false;
+      }
+      const xhidden = $x.attr('aria-hidden');
+      if (xhidden && xhidden === 'true') {
+        return false;
+      }
+      return true;
+    })
+    .toArray();
+
+  return spinnerElements.some((x) => x);
+};
+
 function isCommentSectionClosed($html) {
   const url = $html('#comments #contents #message a').attr('href');
   if (url == null) return false;
@@ -46,4 +66,4 @@ function parseComments(html: string) {
   return { comments, totalComments, isClosed: false };
 }
 
-export { parseComments };
+export { parseComments, isCommentSpinnerActive };
