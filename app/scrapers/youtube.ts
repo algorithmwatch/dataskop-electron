@@ -1,6 +1,8 @@
 /* eslint-disable no-await-in-loop */
 import {
+  isCommentSpinnerActive,
   parseCommentHistory,
+  parseComments,
   parseGetPlaylist,
   parseGetRelated,
   parseGetVideo,
@@ -18,6 +20,11 @@ import {
 } from '../libs/parse-youtube/types';
 
 type GetHtmlFunction = (url: string) => Promise<string>;
+type GetHtmlLazyFunction = (
+  url: string,
+  scrollBottom: number,
+  doneLoading: (html: string) => boolean
+) => Promise<string>;
 
 const scrapePlaylist = async (
   playlistUrl: string,
@@ -49,16 +56,34 @@ const scrapeLikedVideos = async (
   return { items, task: 'YT-likedVideos' };
 };
 
+const isLoadingCommentsDone = (html: string) => !isCommentSpinnerActive(html);
+
+// todo: scroll down and spinner
+
 const scrapeRecommendedVideos = async (
   videoId: string,
   getHTML: GetHtmlFunction,
-  limit?: number | null
-): Promise<{ single: VideoDetailed | null; items: Video[]; task: string }> => {
+  limit?: number | null,
+  comments?: false
+): Promise<{
+  single: VideoDetailed | null;
+  items: Video[];
+  commentSection: any;
+  task: string;
+}> => {
   const url = `https://www.youtube.com/watch?v=${videoId}`;
+
   const html = await getHTML(url);
+
   const items = parseGetRelated(html, limit);
   const single = parseGetVideo(html);
-  return { single, items: items ?? [], task: 'YT-recommendedVideos' };
+  const commentSection = parseComments(html);
+  return {
+    single,
+    items: items ?? [],
+    commentSection,
+    task: 'YT-recommendedVideos',
+  };
 };
 
 const scrapeWatchedVideos = async (
@@ -148,20 +173,23 @@ async function* scrapeSeedVideos(
   }
 }
 
+// some background on `yield*`
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield%2A
+
 async function* scrapingYoutubeProcedure(
   getHTML: GetHtmlFunction,
+  getHtmlLazy: GetHtmlLazyFunction,
   limitSteps = 5,
-  followVideos = 1
-) {
-  // these functions
-  const backgroundFuns = [
+  followVideos = 1,
+  backgroundFuns = [
     scrapeWatchedVideos,
     scrapeLikedVideos,
     scrapeSearchHistory,
     scrapeCommentHistory,
     scrapeSubscriptions,
-  ];
-
+  ],
+  scrollingBottomForComments?: number
+) {
   let step = 0;
   let maxSteps = null;
   const isFollowingVideos = !(followVideos == null || followVideos === 0);
@@ -193,26 +221,38 @@ async function* scrapingYoutubeProcedure(
     yield [step / maxSteps, data];
   }
 
-  // some background on `yield*`
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield%2A
+  const getHtmlVideos =
+    scrollingBottomForComments === undefined
+      ? getHTML
+      : (url: string) =>
+          getHtmlLazy(url, scrollingBottomForComments, isLoadingCommentsDone);
 
   if (isFollowingVideos) {
     return yield* scrapeSeedVideosAndFollow(
-      getHTML,
+      getHtmlVideos,
       seedVideos,
       step,
       maxSteps,
       followVideos
     );
   }
-  return yield* scrapeSeedVideos(getHTML, seedVideos, step, maxSteps);
+  return yield* scrapeSeedVideos(getHtmlVideos, seedVideos, step, maxSteps);
 }
 
-const config = {
+async function* scrapingYoutubeProcedureSimple(f1, f2) {
+  return yield* scrapingYoutubeProcedure(f1, f2, 5, 0, [], 5);
+}
+
+const defaultConfig = {
   startUrl: 'https://www.youtube.com',
   loginUrl: 'https://www.youtube.com/account',
   logingCookie: 'LOGIN_INFO',
   scrapingGenerator: scrapingYoutubeProcedure,
 };
 
-export default config;
+const simpleConfig = {
+  ...defaultConfig,
+  scrapingGenerator: scrapingYoutubeProcedureSimple,
+};
+
+export { defaultConfig, simpleConfig };

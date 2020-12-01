@@ -1,9 +1,10 @@
+/* eslint-disable no-await-in-loop */
 import React, { useEffect, useRef, useState } from 'react';
 import BrowserView from 'react-electron-browser-view';
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import routes from '../constants/routes.json';
-import youtubeConfig from '../scrapers/youtube';
+import { simpleConfig } from '../scrapers/youtube';
 import { addData } from '../utils/db';
 import Base from './Base';
 
@@ -12,6 +13,8 @@ import Base from './Base';
 
 // the api
 // https://www.electronjs.org/docs/api/web-contents
+
+const youtubeConfig = simpleConfig;
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -30,7 +33,7 @@ export default function Scraping(): JSX.Element {
   const browser = useRef<any>(null);
 
   const goToUrl = (url: string) => {
-    // can't set custom userAgent with the prop provded by `react-electron-browser-view`
+    // can't set custom userAgent with the prop provided by `react-electron-browser-view`
     browser.current.loadURL(url, {
       userAgent: 'Chrome',
     });
@@ -66,6 +69,36 @@ export default function Scraping(): JSX.Element {
     return html;
   };
 
+  const getHtmlLazy = async (
+    url: string,
+    scrollBottom: number,
+    loadingDone: (html: string) => boolean
+  ): Promise<string> => {
+    console.log(url);
+    await goToUrl(url);
+    await delay(2000);
+
+    //  scroll some large value down
+    // eslint-disable-next-line no-restricted-syntax
+    for (const x of [...Array(scrollBottom)]) {
+      await browser.current.executeJavaScript('window.scrollBy(0, 10000);');
+      while (true) {
+        // eslint-disable-next-line no-await-in-loop
+        await delay(100);
+        // eslint-disable-next-line no-await-in-loop
+        const html = await browser.current.executeJavaScript(
+          'document.documentElement.innerHTML'
+        );
+        if (loadingDone(html)) break;
+      }
+    }
+
+    const html = await browser.current.executeJavaScript(
+      'document.documentElement.innerHTML'
+    );
+    return html;
+  };
+
   useEffect(() => {
     const runScraperOnce = async () => {
       if (scrapingGen === null) return;
@@ -82,7 +115,7 @@ export default function Scraping(): JSX.Element {
 
   const startScraping = async () => {
     setIsScrapingStarted(true);
-    const gen = youtubeConfig.scrapingGenerator(getHTML);
+    const gen = youtubeConfig.scrapingGenerator(getHTML, getHtmlLazy);
     setScrapingGen(gen);
     const sId = uuidv4();
     setSessionId(sId);
