@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
 import {
   isCommentSpinnerActive,
@@ -10,14 +12,7 @@ import {
   parseSubscriptions,
   parseWatchHistory,
 } from '../libs/parse-youtube';
-import {
-  HistoryComment,
-  HistorySearch,
-  HistoryVideo,
-  Subscription,
-  Video,
-  VideoDetailed,
-} from '../libs/parse-youtube/types';
+import { Video } from '../libs/parse-youtube/types';
 
 type GetHtmlFunction = (url: string) => Promise<string>;
 type GetHtmlLazyFunction = (
@@ -25,6 +20,11 @@ type GetHtmlLazyFunction = (
   scrollBottom: number,
   doneLoading: (html: string) => boolean
 ) => Promise<string>;
+
+type ScrapingResult = {
+  task: string;
+  result: any;
+};
 
 const scrapePlaylist = async (
   playlistUrl: string,
@@ -38,106 +38,96 @@ const scrapePlaylist = async (
 // is a special playlist? need to investigate
 const scrapePopularVideos = async (
   getHTML: GetHtmlFunction
-): Promise<{ items: Video[]; task: string }> => {
-  const items = await scrapePlaylist(
+): Promise<ScrapingResult> => {
+  const result = await scrapePlaylist(
     'https://www.youtube.com/playlist?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-',
     getHTML
   );
-  return { items, task: 'YT-popularVideos' };
+  return { result, task: 'YT-popularVideos' };
 };
 
 const scrapeLikedVideos = async (
   getHTML: GetHtmlFunction
-): Promise<{ items: Video[]; task: string }> => {
-  const items = await scrapePlaylist(
+): Promise<ScrapingResult> => {
+  const result = await scrapePlaylist(
     'https://www.youtube.com/playlist?list=LL',
     getHTML
   );
-  return { items, task: 'YT-likedVideos' };
+  return { result, task: 'YT-likedVideos' };
 };
 
 const isLoadingCommentsDone = (html: string) => !isCommentSpinnerActive(html);
 
 // todo: scroll down and spinner
 
-const scrapeRecommendedVideos = async (
+const scrapeVideo = async (
   videoId: string,
   getHTML: GetHtmlFunction,
   limit?: number | null,
   comments?: false
-): Promise<{
-  single: VideoDetailed | null;
-  items: Video[];
-  commentSection: any;
-  task: string;
-}> => {
+): Promise<ScrapingResult> => {
   const url = `https://www.youtube.com/watch?v=${videoId}`;
 
   const html = await getHTML(url);
 
-  const items = parseGetRelated(html, limit);
-  const single = parseGetVideo(html);
+  const recommendedVideos = parseGetRelated(html, limit);
+  const videoInformation = parseGetVideo(html);
   const commentSection = parseComments(html);
   return {
-    single,
-    items: items ?? [],
-    commentSection,
+    result: { recommendedVideos, videoInformation, commentSection },
     task: 'YT-recommendedVideos',
   };
 };
 
 const scrapeWatchedVideos = async (
   getHTML: GetHtmlFunction
-): Promise<{ items: HistoryVideo[]; task: string }> => {
+): Promise<ScrapingResult> => {
   const html = await getHTML('https://www.youtube.com/feed/history');
-  return { items: parseWatchHistory(html), task: 'YT-watchedHistory' };
+  return { result: parseWatchHistory(html), task: 'YT-watchedHistory' };
 };
 
 const scrapeSearchHistory = async (
   getHTML: GetHtmlFunction
-): Promise<{ items: HistorySearch[]; task: string }> => {
+): Promise<ScrapingResult> => {
   const html = await getHTML(
     'https://www.youtube.com/feed/history/search_history'
   );
-  return { items: parseSearchHistory(html), task: 'YT-searchHistory' };
+  return { result: parseSearchHistory(html), task: 'YT-searchHistory' };
 };
 
 const scrapeCommentHistory = async (
   getHTML: GetHtmlFunction
-): Promise<{ items: HistoryComment[]; task: string }> => {
+): Promise<ScrapingResult> => {
   const html = await getHTML(
     'https://www.youtube.com/feed/history/comment_history'
   );
-  return { items: parseCommentHistory(html), task: 'YT-commentHistory' };
+  return { result: parseCommentHistory(html), task: 'YT-commentHistory' };
 };
 
 const scrapeSubscriptions = async (
   getHTML: GetHtmlFunction
-): Promise<{ items: Subscription[]; task: string }> => {
+): Promise<ScrapingResult> => {
   const html = await getHTML('https://www.youtube.com/feed/channels');
-  return { items: parseSubscriptions(html), task: 'YT-subscriptions' };
+  return { result: parseSubscriptions(html), task: 'YT-subscriptions' };
 };
 
 async function* scrapeSeedVideosAndFollow(
   getHTML: GetHtmlFunction,
-  seedVideos: any,
+  seedVideos: Video[],
   initialStep: number,
   maxSteps: number,
   followVideos: number
 ) {
   let step = initialStep;
-  while (true) {
-    const data = await scrapeRecommendedVideos(
-      seedVideos.items[step - 1].id,
-      getHTML
-    );
-    step += 1;
-    yield [step / maxSteps, data];
 
-    // eslint-disable-next-line no-restricted-syntax
+  for (const { id } of seedVideos) {
+    const dataFromSeed = await scrapeVideo(id, getHTML);
+    step += 1;
+    yield [step / maxSteps, dataFromSeed];
+
     for (const i of [...Array(followVideos).keys()]) {
-      const followVideo = await scrapeRecommendedVideos(
-        data.items[i].id,
+      const followVideo = await scrapeVideo(
+        dataFromSeed.result.recommendedVideos[i].id,
         getHTML
       );
       followVideo.task += '-followed';
@@ -153,16 +143,13 @@ async function* scrapeSeedVideosAndFollow(
 
 async function* scrapeSeedVideos(
   getHTML: GetHtmlFunction,
-  seedVideos: any,
+  seedVideos: Video[],
   initialStep: number,
   maxSteps: number
 ) {
   let step = initialStep;
-  while (true) {
-    const data = await scrapeRecommendedVideos(
-      seedVideos.items[step - 1].id,
-      getHTML
-    );
+  for (const { id } of seedVideos) {
+    const data = await scrapeVideo(id, getHTML);
     step += 1;
 
     if (step < maxSteps) {
@@ -197,7 +184,7 @@ async function* scrapingYoutubeProcedure(
   const seedVideos = await scrapePopularVideos(getHTML);
 
   // limit number of videos if needed
-  maxSteps = seedVideos.items.length;
+  maxSteps = seedVideos.result.length;
   if (limitSteps !== null) {
     maxSteps = Math.min(limitSteps, maxSteps);
   }
@@ -207,7 +194,7 @@ async function* scrapingYoutubeProcedure(
     maxSteps *= followVideos + 1;
   }
 
-  // add all fix functions
+  // 1 for fetching the seed videos + times for background function
   maxSteps += 1 + backgroundFuns.length;
 
   step += 1;
@@ -230,13 +217,19 @@ async function* scrapingYoutubeProcedure(
   if (isFollowingVideos) {
     return yield* scrapeSeedVideosAndFollow(
       getHtmlVideos,
-      seedVideos,
+      seedVideos.result,
       step,
       maxSteps,
       followVideos
     );
   }
-  return yield* scrapeSeedVideos(getHtmlVideos, seedVideos, step, maxSteps);
+
+  return yield* scrapeSeedVideos(
+    getHtmlVideos,
+    seedVideos.result,
+    step,
+    maxSteps
+  );
 }
 
 async function* scrapingYoutubeProcedureSimple(f1, f2) {
@@ -246,7 +239,7 @@ async function* scrapingYoutubeProcedureSimple(f1, f2) {
 const defaultConfig = {
   startUrl: 'https://www.youtube.com',
   loginUrl: 'https://www.youtube.com/account',
-  logingCookie: 'LOGIN_INFO',
+  loginCookie: 'LOGIN_INFO',
   scrapingGenerator: scrapingYoutubeProcedure,
 };
 

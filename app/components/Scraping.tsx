@@ -44,7 +44,7 @@ export default function Scraping(): JSX.Element {
     const cookies = await webContents.session.cookies.get({});
     // complexity is currently not needed, maybe later?
     const isLoggedIn = cookies.some(
-      (x: any) => x.name === youtubeConfig.logingCookie
+      (x: any) => x.name === youtubeConfig.loginCookie
     );
     setUserLoggedIn(isLoggedIn);
     return isLoggedIn;

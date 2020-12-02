@@ -23,26 +23,15 @@ export default function SessionTable({ data }): JSX.Element {
       },
 
       {
-        Header: 'Single',
+        Header: 'Result',
 
-        accessor: 'single',
-      },
-      {
-        Header: 'Items',
-
-        accessor: 'items',
+        accessor: 'result',
       },
     ],
 
     []
   );
-  data.forEach((x) => (x.items = JSON.stringify(x.items)));
-
-  data.forEach((x) => {
-    if ('single' in x) {
-      x.single = JSON.stringify(x.single);
-    }
-  });
+  data.forEach((x) => (x.result = JSON.stringify(x.result)));
 
   data.forEach((x) => (x.scrapedAt = new Date(x.scrapedAt).toString()));
 
