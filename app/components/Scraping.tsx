@@ -59,7 +59,7 @@ export default function Scraping(): JSX.Element {
     goToStart();
   };
 
-  const getHTML = async (url: string): Promise<string> => {
+  const getHtml = async (url: string): Promise<string> => {
     console.log(url);
     await goToUrl(url);
     await delay(2000);
@@ -115,7 +115,7 @@ export default function Scraping(): JSX.Element {
 
   const startScraping = async () => {
     setIsScrapingStarted(true);
-    const gen = youtubeConfig.scrapingGenerator(getHTML, getHtmlLazy);
+    const gen = youtubeConfig.scrapingGenerator(getHtml, getHtmlLazy);
     setScrapingGen(gen);
     const sId = uuidv4();
     setSessionId(sId);
