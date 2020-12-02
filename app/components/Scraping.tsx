@@ -5,7 +5,7 @@ import BrowserView from 'react-electron-browser-view';
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import routes from '../constants/routes.json';
-import { simpleConfig } from '../scrapers/youtube';
+import { defaultConfig, simpleConfig } from '../scrapers/youtube';
 import { addData, newSession } from '../utils/db';
 import Base from './Base';
 
@@ -15,7 +15,9 @@ import Base from './Base';
 // the api
 // https://www.electronjs.org/docs/api/web-contents
 
-const youtubeConfig = simpleConfig;
+const simp = simpleConfig;
+
+const youtubeConfig = defaultConfig;
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 

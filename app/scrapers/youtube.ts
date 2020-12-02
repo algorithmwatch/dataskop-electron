@@ -63,8 +63,8 @@ const isLoadingCommentsDone = (html: string) => !isCommentSpinnerActive(html);
 const scrapeVideo = async (
   videoId: string,
   getHtml: GetHtmlFunction,
-  limit?: number | null,
-  comments?: false
+  limit: number | null,
+  comments: boolean
 ): Promise<ScrapingResult> => {
   const url = `https://www.youtube.com/watch?v=${videoId}`;
 
@@ -121,19 +121,22 @@ async function* scrapeSeedVideosAndFollow(
   seedVideos: Video[],
   initialStep: number,
   maxSteps: number,
-  followVideos: number
+  followVideos: number,
+  comments: boolean
 ) {
   let step = initialStep;
 
   for (const { id } of seedVideos) {
-    const dataFromSeed = await scrapeVideo(id, getHtml);
+    const dataFromSeed = await scrapeVideo(id, getHtml, null, comments);
     step += 1;
     yield [step / maxSteps, dataFromSeed];
 
     for (const i of [...Array(followVideos).keys()]) {
       const followVideo = await scrapeVideo(
         dataFromSeed.result.recommendedVideos[i].id,
-        getHtml
+        getHtml,
+        null,
+        comments
       );
       followVideo.task += '-followed';
       step += 1;
@@ -150,11 +153,12 @@ async function* scrapeSeedVideos(
   getHtml: GetHtmlFunction,
   seedVideos: Video[],
   initialStep: number,
-  maxSteps: number
+  maxSteps: number,
+  comments: boolean
 ) {
   let step = initialStep;
   for (const { id } of seedVideos) {
-    const data = await scrapeVideo(id, getHtml);
+    const data = await scrapeVideo(id, getHtml, null, comments);
     step += 1;
 
     if (step < maxSteps) {
@@ -173,14 +177,14 @@ async function* scrapingYoutubeProcedure(
   getHtmlLazy: GetHtmlLazyFunction,
   limitSteps = 5,
   followVideos = 1,
+  scrollingBottomForComments = 5,
   backgroundFuns = [
     scrapeWatchedVideos,
     scrapeLikedVideos,
     scrapeSearchHistory,
     scrapeCommentHistory,
     scrapeSubscriptions,
-  ],
-  scrollingBottomForComments?: number
+  ]
 ) {
   let step = 0;
   let maxSteps = null;
@@ -213,11 +217,14 @@ async function* scrapingYoutubeProcedure(
     yield [step / maxSteps, data];
   }
 
-  const getHtmlVideos =
-    scrollingBottomForComments === undefined
-      ? getHtml
-      : (url: string) =>
-          getHtmlLazy(url, scrollingBottomForComments, isLoadingCommentsDone);
+  const scrapeComments = !(
+    scrollingBottomForComments == null || scrollingBottomForComments === 0
+  );
+
+  const getHtmlVideos = !scrapeComments
+    ? getHtml
+    : (url: string) =>
+        getHtmlLazy(url, scrollingBottomForComments, isLoadingCommentsDone);
 
   if (isFollowingVideos) {
     return yield* scrapeSeedVideosAndFollow(
@@ -225,7 +232,8 @@ async function* scrapingYoutubeProcedure(
       seedVideos.result,
       step,
       maxSteps,
-      followVideos
+      followVideos,
+      scrapeComments
     );
   }
 
@@ -233,12 +241,13 @@ async function* scrapingYoutubeProcedure(
     getHtmlVideos,
     seedVideos.result,
     step,
-    maxSteps
+    maxSteps,
+    scrapeComments
   );
 }
 
 async function* scrapingYoutubeProcedureSimple(f1, f2) {
-  return yield* scrapingYoutubeProcedure(f1, f2, 5, 0, [], 5);
+  return yield* scrapingYoutubeProcedure(f1, f2, 5, 0, 5, []);
 }
 
 const defaultConfig = {
