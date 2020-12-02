@@ -1,3 +1,6 @@
+/* eslint-disable no-return-assign */
+/* eslint-disable react/jsx-key */
+/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import { useTable } from 'react-table';
 

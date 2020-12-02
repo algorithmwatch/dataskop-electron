@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
 import React, { useEffect, useRef, useState } from 'react';
 import BrowserView from 'react-electron-browser-view';
@@ -78,18 +79,21 @@ export default function Scraping(): JSX.Element {
     await goToUrl(url);
     await delay(2000);
 
-    //  scroll some large value down
-    // eslint-disable-next-line no-restricted-syntax
+    // scroll some large value down
+    // to simulate proper scrolling, wait between each time scrolling
     for (const x of [...Array(scrollBottom)]) {
-      await browser.current.executeJavaScript('window.scrollBy(0, 10000);');
+      for (const x of [...Array(5)]) {
+        await browser.current.executeJavaScript('window.scrollBy(0, 100);');
+        await delay(10);
+      }
       while (true) {
         // eslint-disable-next-line no-await-in-loop
-        await delay(100);
         // eslint-disable-next-line no-await-in-loop
         const html = await browser.current.executeJavaScript(
           'document.documentElement.innerHTML'
         );
         if (loadingDone(html)) break;
+        else await delay(500);
       }
     }
 

@@ -63,7 +63,12 @@ function parseComments(html: string) {
     })
     .toArray();
 
-  return { comments, totalComments, isClosed: false };
+  return {
+    comments,
+    totalComments,
+    isClosed: false,
+    numParsedComments: comments.length,
+  };
 }
 
 export { parseComments, isCommentSpinnerActive };
