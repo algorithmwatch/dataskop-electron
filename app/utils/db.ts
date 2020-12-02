@@ -13,24 +13,43 @@ interface ScrapeResult {
   items?: string;
 }
 
+interface ScrapingSessions {
+  id?: number;
+  sessionId?: string;
+  startedAt?: number; // number of millisecconds in UTC
+}
+
 //
 // Declare Database
 //
 class ScrapeDatabase extends Dexie {
   public scrapeResults: Dexie.Table<ScrapeResult, number>; // id is number in this case
 
+  public scrapingSessions: Dexie.Table<ScrapingSessions, number>; // id is number in this case
+
   public constructor() {
     super('ScrapeDatabase');
-    this.version(1).stores({
+    this.version(2).stores({
       scrapeResults: '++id,sessionId,scrapedAt,task,items',
+      scrapingSessions: '++id,sessionId,startedAt',
     });
     this.scrapeResults = this.table('scrapeResults');
+    this.scrapingSessions = this.table('scrapingSessions');
   }
 }
 
 const db = new ScrapeDatabase();
 
 // https://dexie.org/docs/Dexie/Dexie.transaction()#specify-reusage-of-parent-transaction
+
+const newSession = (sessionId: string) => {
+  db.transaction(
+    'rw',
+    db.scrapingSessions,
+    async () =>
+      await db.scrapingSessions.add({ sessionId, startedAt: Date.now() })
+  );
+};
 
 const addData = (sessionId: string, data: any) => {
   db.transaction('rw', db.scrapeResults, async () => {
@@ -60,7 +79,6 @@ const getSessionData = (sessiondId: string) => {
   });
 };
 
-// clear database but also initialize it
 const clearData = () => {
   db.scrapeResults
     .clear()
@@ -95,4 +113,63 @@ const getSessionsMetaData = async () => {
   return sessions;
 };
 
-export { addData, getData, clearData, getSessionsMetaData, getSessionData };
+const medianForArray = (arr) => {
+  const mid = Math.floor(arr.length / 2),
+    nums = [...arr].sort((a, b) => a - b);
+  return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+};
+
+const statsForArray = (arr: number[]) => {
+  const min = Math.min(...arr);
+  const max = Math.max(...arr);
+  const average = arr.reduce((p, c) => p + c, 0) / arr.length;
+  const median = medianForArray(arr);
+  return { min, max, average, median };
+};
+
+const getStatisticsForSession = async (sessiondId) => {
+  const allTasks = await db.scrapeResults
+    .where('sessionId')
+    .equals(sessiondId)
+    .toArray();
+
+  allTasks.sort((a, b) => a.scrapedAt - b.scrapedAt);
+
+  const { startedAt } = await db.scrapingSessions
+    .where('sessionId')
+    .equals(sessiondId)
+    .first();
+
+  const allTimes = new Map();
+
+  let previousTime = startedAt;
+
+  for (let i = 0; i < allTasks.length; i += 1) {
+    const task = allTasks[i];
+    const duration = task.scrapedAt - previousTime;
+    if (allTimes.has(task.task)) {
+      const oldTimes = allTimes.get(task.task);
+      const newTimes = oldTimes.concat([duration]);
+      allTimes.set(task.task, newTimes);
+    } else {
+      allTimes.set(task.task, [duration]);
+    }
+    previousTime = task.scrapedAt;
+  }
+
+  const result = {};
+  allTimes.forEach((value, key: string) => {
+    result[key] = statsForArray(value);
+  });
+  return result;
+};
+
+export {
+  addData,
+  getData,
+  clearData,
+  getSessionsMetaData,
+  getSessionData,
+  newSession,
+  getStatisticsForSession,
+};

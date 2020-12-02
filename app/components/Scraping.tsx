@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import routes from '../constants/routes.json';
 import { simpleConfig } from '../scrapers/youtube';
-import { addData } from '../utils/db';
+import { addData, newSession } from '../utils/db';
 import Base from './Base';
 
 // the react wrapper is buggy, remove it?
@@ -103,6 +103,7 @@ export default function Scraping(): JSX.Element {
     return html;
   };
 
+  // gets triggered when e.g. the progress bar is updated (via `frac`)
   useEffect(() => {
     const runScraperOnce = async () => {
       if (scrapingGen === null) return;
@@ -123,6 +124,7 @@ export default function Scraping(): JSX.Element {
     setScrapingGen(gen);
     const sId = uuidv4();
     setSessionId(sId);
+    newSession(sId);
   };
 
   const pauseScraping = () => {
@@ -191,7 +193,6 @@ export default function Scraping(): JSX.Element {
           <Link
             to={routes.VISUALIZATION_DETAILS.replace(':sessionId', sessionId)}
           >
-            {' '}
             go to visualization
           </Link>
         </button>

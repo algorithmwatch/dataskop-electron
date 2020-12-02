@@ -69,14 +69,19 @@ const scrapeVideo = async (
   const url = `https://www.youtube.com/watch?v=${videoId}`;
 
   const html = await getHtml(url);
-
   const recommendedVideos = parseGetRelated(html, limit);
   const videoInformation = parseGetVideo(html);
-  const commentSection = parseComments(html);
-  return {
-    result: { recommendedVideos, videoInformation, commentSection },
+
+  const resultObj = {
+    result: { recommendedVideos, videoInformation },
     task: 'YT-recommendedVideos',
   };
+
+  if (comments) {
+    resultObj.result.commentSection = parseComments(html);
+  }
+
+  return resultObj;
 };
 
 const scrapeWatchedVideos = async (
