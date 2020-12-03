@@ -28,21 +28,35 @@ type ScrapingResult = {
 
 const scrapePlaylist = async (
   playlistUrl: string,
-  getHtml: GetHtmlFunction
+  getHtml: GetHtmlFunction,
+  limit?: number
 ): Promise<Video[]> => {
   const html = await getHtml(playlistUrl);
   const { videos } = parseGetPlaylist(html);
+  if (typeof limit !== 'undefined') return videos.slice(0, limit);
   return videos;
 };
 
 // is a special playlist? need to investigate
 const scrapePopularVideos = async (
-  getHtml: GetHtmlFunction
+  getHtml: GetHtmlFunction,
+  limit?: number
 ): Promise<ScrapingResult> => {
-  const result = await scrapePlaylist(
-    'https://www.youtube.com/playlist?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-',
-    getHtml
-  );
+  console.log('xx');
+  let result = null;
+  if (typeof limit === 'undefined') {
+    result = await scrapePlaylist(
+      'https://www.youtube.com/playlist?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-',
+      getHtml
+    );
+  } else {
+    result = await scrapePlaylist(
+      'https://www.youtube.com/playlist?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-',
+      getHtml,
+      limit
+    );
+  }
+  console.log(result);
   return { result, task: 'YT-popularVideos' };
 };
 
@@ -118,7 +132,7 @@ const scrapeSubscriptions = async (
 
 async function* scrapeSeedVideosAndFollow(
   getHtml: GetHtmlFunction,
-  seedVideos: Video[],
+  seedVideoIds: string[],
   initialStep: number,
   maxSteps: number,
   followVideos: number,
@@ -126,7 +140,7 @@ async function* scrapeSeedVideosAndFollow(
 ) {
   let step = initialStep;
 
-  for (const { id } of seedVideos) {
+  for (const id of seedVideoIds) {
     const dataFromSeed = await scrapeVideo(id, getHtml, null, comments);
     step += 1;
     yield [step / maxSteps, dataFromSeed];
@@ -151,13 +165,13 @@ async function* scrapeSeedVideosAndFollow(
 
 async function* scrapeSeedVideos(
   getHtml: GetHtmlFunction,
-  seedVideos: Video[],
+  seedVideoIds: string[],
   initialStep: number,
   maxSteps: number,
   comments: boolean
 ) {
   let step = initialStep;
-  for (const { id } of seedVideos) {
+  for (const id of seedVideoIds) {
     const data = await scrapeVideo(id, getHtml, null, comments);
     step += 1;
 
@@ -172,55 +186,83 @@ async function* scrapeSeedVideos(
 // some background on `yield*`
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield%2A
 
-async function* scrapingYoutubeProcedure(
-  getHtml: GetHtmlFunction,
-  getHtmlLazy: GetHtmlLazyFunction,
-  limitSteps = 5,
-  followVideos = 1,
-  scrollingBottomForComments = 5,
-  backgroundFuns = [
+const defaultScrapingConfig = {
+  scrollingBottomForComments: 5,
+  followVideos: 1,
+  seedFixed: ['4Y1lZQsyuSQ', 'yr1YyrolRZY'],
+  seedProvider: [
+    {
+      approxNumVideos: 5,
+      seedFunction: async (getHtml: GetHtmlFunction) =>
+        scrapePopularVideos(getHtml, 5),
+    },
+  ],
+  backgroundFuns: [
     scrapeWatchedVideos,
     scrapeLikedVideos,
     scrapeSearchHistory,
     scrapeCommentHistory,
     scrapeSubscriptions,
-  ]
+  ],
+};
+
+async function* scrapingYoutubeProcedure(
+  getHtml: GetHtmlFunction,
+  getHtmlLazy: GetHtmlLazyFunction,
+  scrapingConfig = defaultScrapingConfig
 ) {
-  let step = 0;
-  let maxSteps = null;
+  const {
+    followVideos,
+    seedProvider,
+    backgroundFuns,
+    scrollingBottomForComments,
+    seedFixed,
+  } = scrapingConfig;
+
   const isFollowingVideos = !(followVideos == null || followVideos === 0);
+  const scrapeComments = !(
+    scrollingBottomForComments == null || scrollingBottomForComments === 0
+  );
 
-  const seedVideos = await scrapePopularVideos(getHtml);
+  console.log(scrapingConfig);
 
-  // limit number of videos if needed
-  maxSteps = seedVideos.result.length;
-  if (limitSteps !== null) {
-    maxSteps = Math.min(limitSteps, maxSteps);
+  let step = 0;
+  // guess the number of total steps (may get altered later on)
+  const approxNumSeedVideos =
+    seedProvider.map((x) => x.approxNumVideos).reduce((pv, cv) => pv + cv, 0) +
+    seedFixed.length;
+
+  let maxSteps =
+    seedProvider.length +
+    approxNumSeedVideos * (followVideos + 1) +
+    backgroundFuns.length;
+
+  // 1. block: get seed videos
+  let seedVideoIds: string[] = seedFixed;
+  for (const { seedFunction, approxNumVideos } of seedProvider) {
+    const resultSeedVideos = await seedFunction(getHtml);
+    const numSeedVideos = resultSeedVideos.result.length;
+
+    // if the projected number of seed videos is not the actual seed values, correct it
+    // TODO: is it correct?
+    if (approxNumVideos !== numSeedVideos) {
+      maxSteps -= (approxNumSeedVideos - numSeedVideos) * (followVideos + 1);
+    }
+
+    step += 1;
+    yield [step / maxSteps, resultSeedVideos];
+    seedVideoIds = seedVideoIds.concat(resultSeedVideos.result);
   }
 
-  // for each seed videos, follow X times the new video
-  if (isFollowingVideos) {
-    maxSteps *= followVideos + 1;
-  }
-
-  // 1 for fetching the seed videos + times for background function
-  maxSteps += 1 + backgroundFuns.length;
-
-  step += 1;
-  yield [step / maxSteps, seedVideos];
-
-  // eslint-disable-next-line no-restricted-syntax
+  // 2. block: get background information such as history or subscriptions
   for (const fun of backgroundFuns) {
-    // eslint-disable-next-line no-await-in-loop
     const data = await fun(getHtml);
     step += 1;
     yield [step / maxSteps, data];
   }
 
-  const scrapeComments = !(
-    scrollingBottomForComments == null || scrollingBottomForComments === 0
-  );
-
+  // 3. block: get acutal video + video recommendations
+  // use lazy loading if comments are required
   const getHtmlVideos = !scrapeComments
     ? getHtml
     : (url: string) =>
@@ -229,7 +271,7 @@ async function* scrapingYoutubeProcedure(
   if (isFollowingVideos) {
     return yield* scrapeSeedVideosAndFollow(
       getHtmlVideos,
-      seedVideos.result,
+      seedVideoIds,
       step,
       maxSteps,
       followVideos,
@@ -239,15 +281,11 @@ async function* scrapingYoutubeProcedure(
 
   return yield* scrapeSeedVideos(
     getHtmlVideos,
-    seedVideos.result,
+    seedVideoIds,
     step,
     maxSteps,
     scrapeComments
   );
-}
-
-async function* scrapingYoutubeProcedureSimple(f1, f2) {
-  return yield* scrapingYoutubeProcedure(f1, f2, 5, 0, 5, []);
 }
 
 const defaultConfig = {
@@ -257,9 +295,16 @@ const defaultConfig = {
   scrapingGenerator: scrapingYoutubeProcedure,
 };
 
+const simpleScrapingConfig = {
+  ...defaultScrapingConfig,
+  backgroundFuns: [],
+  seedProvider: [],
+};
+
 const simpleConfig = {
   ...defaultConfig,
-  scrapingGenerator: scrapingYoutubeProcedureSimple,
+  scrapingGenerator: (x1, x2) =>
+    scrapingYoutubeProcedure(x1, x2, simpleScrapingConfig),
 };
 
 export { defaultConfig, simpleConfig };
