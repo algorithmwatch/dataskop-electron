@@ -37,25 +37,28 @@ const scrapePlaylist = async (
   return videos;
 };
 
-// is a special playlist? need to investigate
 const scrapePopularVideos = async (
   getHtml: GetHtmlFunction,
-  limit?: number
+  ...rest: number[]
 ): Promise<ScrapingResult> => {
-  let result = null;
-  if (typeof limit === 'undefined') {
-    result = await scrapePlaylist(
-      'https://www.youtube.com/playlist?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-',
-      getHtml
-    );
-  } else {
-    result = await scrapePlaylist(
-      'https://www.youtube.com/playlist?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-',
-      getHtml,
-      limit
-    );
-  }
+  const result = await scrapePlaylist(
+    'https://www.youtube.com/playlist?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-',
+    getHtml,
+    ...rest
+  );
   return { result, task: 'YT-popularVideos' };
+};
+
+const scrapeNationalNewsTopStories = async (
+  getHtml: GetHtmlFunction,
+  ...rest: number[]
+): Promise<ScrapingResult> => {
+  const result = await scrapePlaylist(
+    'https://www.youtube.com/playlist?list=PLNjtpXOAJhQJYbpJxMnoLKCUPanyEfv_j',
+    getHtml,
+    ...rest
+  );
+  return { result, task: 'YT-nationalNews' };
 };
 
 const scrapeLikedVideos = async (
@@ -193,6 +196,11 @@ const defaultScrapingConfig = {
       approxNumVideos: 5,
       seedFunction: async (getHtml: GetHtmlFunction) =>
         scrapePopularVideos(getHtml, 5),
+    },
+    {
+      approxNumVideos: 5,
+      seedFunction: async (getHtml: GetHtmlFunction) =>
+        scrapeNationalNewsTopStories(getHtml, 5),
     },
   ],
   backgroundFuns: [
