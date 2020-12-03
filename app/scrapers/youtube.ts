@@ -42,7 +42,6 @@ const scrapePopularVideos = async (
   getHtml: GetHtmlFunction,
   limit?: number
 ): Promise<ScrapingResult> => {
-  console.log('xx');
   let result = null;
   if (typeof limit === 'undefined') {
     result = await scrapePlaylist(
@@ -56,7 +55,6 @@ const scrapePopularVideos = async (
       limit
     );
   }
-  console.log(result);
   return { result, task: 'YT-popularVideos' };
 };
 
@@ -224,8 +222,6 @@ async function* scrapingYoutubeProcedure(
     scrollingBottomForComments == null || scrollingBottomForComments === 0
   );
 
-  console.log(scrapingConfig);
-
   let step = 0;
   // guess the number of total steps (may get altered later on)
   const approxNumSeedVideos =
@@ -289,6 +285,7 @@ async function* scrapingYoutubeProcedure(
 }
 
 const defaultConfig = {
+  title: 'youtube default config',
   startUrl: 'https://www.youtube.com',
   loginUrl: 'https://www.youtube.com/account',
   loginCookie: 'LOGIN_INFO',
@@ -303,8 +300,11 @@ const simpleScrapingConfig = {
 
 const simpleConfig = {
   ...defaultConfig,
+  title: 'youtube simple config',
   scrapingGenerator: (x1, x2) =>
     scrapingYoutubeProcedure(x1, x2, simpleScrapingConfig),
 };
 
-export { defaultConfig, simpleConfig };
+const allConfig = [defaultConfig, simpleConfig];
+
+export { defaultConfig, simpleConfig, allConfig };

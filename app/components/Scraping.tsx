@@ -5,23 +5,14 @@ import BrowserView from 'react-electron-browser-view';
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import routes from '../constants/routes.json';
-import { defaultConfig, simpleConfig } from '../scrapers/youtube';
+import { allConfig as ytConfigs } from '../scrapers/youtube';
 import { addData, newSession } from '../utils/db';
 import Base from './Base';
-
-// the react wrapper is buggy, remove it?
-// https://github.com/vantezzen/react-electron-browser-view
-
-// the api
-// https://www.electronjs.org/docs/api/web-contents
-
-const simp = simpleConfig;
-
-const youtubeConfig = defaultConfig;
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default function Scraping(): JSX.Element {
+  const [scrapingconfig, setScrapingConfig] = useState<any>(ytConfigs[0]);
   const [scrapingGen, setScrapingGen] = useState<any>(null);
   const [progresFrac, setProgresFrac] = useState(0);
   const [sessionId, setSessionId] = useState<any>(null);
@@ -47,14 +38,14 @@ export default function Scraping(): JSX.Element {
     const cookies = await webContents.session.cookies.get({});
     // complexity is currently not needed, maybe later?
     const isLoggedIn = cookies.some(
-      (x: any) => x.name === youtubeConfig.loginCookie
+      (x: any) => x.name === scrapingconfig.loginCookie
     );
     setUserLoggedIn(isLoggedIn);
     return isLoggedIn;
   };
 
   const goToStart = () => {
-    goToUrl(youtubeConfig.loginUrl);
+    goToUrl(scrapingconfig.loginUrl);
   };
 
   const clearBrowser = () => {
@@ -122,7 +113,7 @@ export default function Scraping(): JSX.Element {
 
   const startScraping = async () => {
     setIsScrapingStarted(true);
-    const gen = youtubeConfig.scrapingGenerator(getHtml, getHtmlLazy);
+    const gen = scrapingconfig.scrapingGenerator(getHtml, getHtmlLazy);
     setScrapingGen(gen);
     const sId = uuidv4();
     setSessionId(sId);
@@ -146,7 +137,7 @@ export default function Scraping(): JSX.Element {
     setIsScrapingStarted(false);
     setIsScrapingFinished(false);
 
-    goToUrl(youtubeConfig.loginUrl);
+    goToUrl(scrapingconfig.loginUrl);
   };
 
   useEffect(() => {
@@ -224,6 +215,34 @@ export default function Scraping(): JSX.Element {
         value={browserHeight}
         onChange={(event) => setBrowserHeight(parseInt(event.target.value, 10))}
       />
+
+      <div className="dropdown is-hoverable is-up">
+        <div className="dropdown-trigger">
+          <button
+            className="button"
+            aria-haspopup="true"
+            aria-controls="dropdown-menu"
+          >
+            <span>{scrapingconfig.title}</span>
+            <span className="icon is-small">
+              <i className="fas fa-angle-up" aria-hidden="true" />
+            </span>
+          </button>
+        </div>
+        <div className="dropdown-menu" id="dropdown-menu" role="menu">
+          <div className="dropdown-content">
+            {ytConfigs.map((x) => (
+              <button
+                key={x.title}
+                className="dropdown-item"
+                onClick={() => setScrapingConfig(x)}
+              >
+                {x.title}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {isScrapingStarted && (
         <progress className="progress" value={progresFrac} max="1">

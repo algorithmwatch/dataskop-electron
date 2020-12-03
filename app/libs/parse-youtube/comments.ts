@@ -1,6 +1,8 @@
 import cheerio from 'cheerio';
 import { extractInteger } from './utils';
 
+// TODO: right now there are some problems if the spinner is not rendering / loading fast enough
+
 const isCommentSpinnerActive = (html: string) => {
   const $html = cheerio.load(html);
   const spinnerElements = $html('#comments #spinner.yt-next-continuation')
