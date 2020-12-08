@@ -1,6 +1,10 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
+
+// TODO: load parse yt from remote into invisible browserview
+// import { remote } from 'electron';
+
 import {
   isCommentSpinnerActive,
   parseCommentHistory,
@@ -11,8 +15,8 @@ import {
   parseSearchHistory,
   parseSubscriptions,
   parseWatchHistory,
-} from '../libs/parse-youtube';
-import { Video } from '../libs/parse-youtube/types';
+} from 'parse-yt';
+import { Video } from 'parse-yt/src/types';
 
 type GetHtmlFunction = (url: string) => Promise<string>;
 type GetHtmlLazyFunction = (
@@ -25,6 +29,11 @@ type ScrapingResult = {
   task: string;
   result: any;
 };
+
+// const win = new remote.BrowserWindow({ show: false });
+
+// // Load a remote URL
+// win.loadURL('https://github.com');
 
 const scrapePlaylist = async (
   playlistUrl: string,

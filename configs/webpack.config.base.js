@@ -13,7 +13,9 @@ export default {
     rules: [
       {
         test: /\.tsx?$/,
-        exclude: /node_modules/,
+        exclude: /node_modules\/(?!(parse-yt|ADDNEWMODULEHERE)\/).*/,
+        // exclude our external `scrape-yt` module because it's TS, below the original command
+        // exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
           options: {
