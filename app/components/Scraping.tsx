@@ -101,7 +101,6 @@ export default function Scraping(): JSX.Element {
     const runScraperOnce = async () => {
       if (scrapingGen === null) return;
       if (isScrapingPaused) return;
-      // eslint-disable-next-line no-await-in-loop
       const { value, done } = await scrapingGen.next();
       if (value == null) return;
       setProgresFrac(value[0]);

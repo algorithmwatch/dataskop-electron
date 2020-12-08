@@ -28,6 +28,8 @@ type GetHtmlLazyFunction = (
 type ScrapingResult = {
   task: string;
   result: any;
+  error?: boolean;
+  stack?: string;
 };
 
 // const win = new remote.BrowserWindow({ show: false });
@@ -91,21 +93,30 @@ const scrapeVideo = async (
   comments: boolean
 ): Promise<ScrapingResult> => {
   const url = `https://www.youtube.com/watch?v=${videoId}`;
-
   const html = await getHtml(url);
-  const recommendedVideos = parseGetRelated(html, limit);
-  const videoInformation = parseGetVideo(html);
 
-  const resultObj = {
-    result: { recommendedVideos, videoInformation },
-    task: 'YT-recommendedVideos',
-  };
+  try {
+    const recommendedVideos = parseGetRelated(html, limit);
+    const videoInformation = parseGetVideo(html);
 
-  if (comments) {
-    resultObj.result.commentSection = parseComments(html);
+    const resultObj = {
+      result: { recommendedVideos, videoInformation },
+      task: 'YT-recommendedVideos',
+    };
+
+    if (comments) {
+      resultObj.result.commentSection = parseComments(html);
+    }
+
+    return resultObj;
+  } catch (error) {
+    return {
+      result: { videoId },
+      error: true,
+      stack: error.stack,
+      task: 'YT-recommendedVideos',
+    };
   }
-
-  return resultObj;
 };
 
 const scrapeWatchedVideos = async (
@@ -156,12 +167,19 @@ async function* scrapeSeedVideosAndFollow(
     yield [step / maxSteps, dataFromSeed];
 
     for (const i of [...Array(followVideos).keys()]) {
-      const followVideo = await scrapeVideo(
-        dataFromSeed.result.recommendedVideos[i].id,
-        getHtml,
-        null,
-        comments
-      );
+      let followVideo = null;
+      if ('error' in dataFromSeed) {
+        followVideo = await scrapeVideo(
+          dataFromSeed.result.recommendedVideos[i].id,
+          getHtml,
+          null,
+          comments
+        );
+      } else {
+        // some hack to add trash data, rework error handling
+        followVideo = dataFromSeed;
+      }
+
       followVideo.task += '-followed';
       step += 1;
       if (step < maxSteps) {
@@ -264,7 +282,9 @@ async function* scrapingYoutubeProcedure(
 
     step += 1;
     yield [step / maxSteps, resultSeedVideos];
-    seedVideoIds = seedVideoIds.concat(resultSeedVideos.result);
+    seedVideoIds = seedVideoIds.concat(
+      resultSeedVideos.result.map(({ id }) => id)
+    );
   }
 
   // 2. block: get background information such as history or subscriptions
