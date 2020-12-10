@@ -211,9 +211,6 @@ async function* scrapeSeedVideos(
   }
 }
 
-// some background on `yield*`
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield%2A
-
 const defaultScrapingConfig = {
   scrollingBottomForComments: 5,
   followVideos: 1,
@@ -239,6 +236,10 @@ const defaultScrapingConfig = {
   ],
 };
 
+/**
+ *  some background on `yield*`:
+ *  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield%2A
+ */
 async function* scrapingYoutubeProcedure(
   getHtml: GetHtmlFunction,
   getHtmlLazy: GetHtmlLazyFunction,

@@ -80,8 +80,6 @@ export default function Scraping(): JSX.Element {
         await delay(10);
       }
       while (true) {
-        // eslint-disable-next-line no-await-in-loop
-        // eslint-disable-next-line no-await-in-loop
         const html = await browser.current.executeJavaScript(
           'document.documentElement.innerHTML'
         );
@@ -218,6 +216,7 @@ export default function Scraping(): JSX.Element {
       <div className="dropdown is-hoverable is-up">
         <div className="dropdown-trigger">
           <button
+            type="button"
             className="button"
             aria-haspopup="true"
             aria-controls="dropdown-menu"
@@ -234,6 +233,7 @@ export default function Scraping(): JSX.Element {
               <button
                 key={x.title}
                 className="dropdown-item"
+                type="button"
                 onClick={() => setScrapingConfig(x)}
               >
                 {x.title}

@@ -16,9 +16,3 @@ Optional Extensions:
 
 - https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens
 - https://marketplace.visualstudio.com/items?itemName=sleistner.vscode-fileutils
-
-## Tips & Comments
-
-When using Cherio, pay attention to the different returned types.
-Array with cheerio are not ordinary arrays.
-Check out [this answer on SO](https://stackoverflow.com/a/41028856/4028896).
