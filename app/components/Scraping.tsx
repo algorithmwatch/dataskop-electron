@@ -87,6 +87,7 @@ export default function Scraping(): JSX.Element {
         const html = await browser.current.executeJavaScript(
           'document.documentElement.innerHTML'
         );
+        // FIXME: not needed to check this every time, find a better way
         if (loadingAbort(html)) {
           stopScrolling = true;
           break;
