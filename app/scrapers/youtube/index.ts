@@ -1,8 +1,8 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
+import { isCommentSectionClosed, isNotCommentSpinnerActive } from 'parse-yt';
 import {
   allIndependentProvider,
-  isLoadingCommentsDone,
   scrapeNationalNewsTopStories,
   scrapePopularVideos,
   scrapeSeedVideos,
@@ -103,7 +103,12 @@ async function* scrapingYoutubeProcedure(
   const getHtmlVideos = !scrapeComments
     ? getHtml
     : (url: string) =>
-        getHtmlLazy(url, scrollingBottomForComments, isLoadingCommentsDone);
+        getHtmlLazy(
+          url,
+          scrollingBottomForComments,
+          isNotCommentSpinnerActive,
+          isCommentSectionClosed
+        );
 
   if (isFollowingVideos) {
     return yield* scrapeSeedVideosAndFollow(
@@ -149,7 +154,10 @@ const simpleConfig = {
 // fast test, all functions only need to run once
 const testScrapingConfig = {
   ...defaultScrapingConfig,
-  independentProvider: allIndependentProvider.concat([scrapePopularVideos]),
+  independentProvider: allIndependentProvider.concat([
+    scrapePopularVideos,
+    scrapeNationalNewsTopStories,
+  ]),
   seedProvider: [],
   seedFixedVideos: ['4Y1lZQsyuSQ'],
 };

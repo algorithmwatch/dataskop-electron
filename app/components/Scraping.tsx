@@ -66,23 +66,31 @@ export default function Scraping(): JSX.Element {
   const getHtmlLazy = async (
     url: string,
     scrollBottom: number,
-    loadingDone: (html: string) => boolean
+    loadingDone: (html: string) => boolean,
+    loadingAbort: (html: string) => boolean
   ): Promise<string> => {
     console.log(url);
     await goToUrl(url);
     await delay(2000);
 
+    let stopScrolling = false;
     // scroll some large value down
     // to simulate proper scrolling, wait between each time scrolling
     for (const x of [...Array(scrollBottom)]) {
+      if (stopScrolling) break;
       for (const x of [...Array(5)]) {
         await browser.current.executeJavaScript('window.scrollBy(0, 100);');
         await delay(10);
       }
+
       while (true) {
         const html = await browser.current.executeJavaScript(
           'document.documentElement.innerHTML'
         );
+        if (loadingAbort(html)) {
+          stopScrolling = true;
+          break;
+        }
         if (loadingDone(html)) break;
         else await delay(500);
       }

@@ -1,8 +1,6 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 import {
-  isCommentSectionClosed,
-  isCommentSpinnerActive,
   parseCommentHistory,
   parseComments,
   parseGetPlaylist,
@@ -58,9 +56,6 @@ const scrapeLikedVideos = async (
   const result = await scrapePlaylist(LIST_ID_LIKED_VIDEOS, getHtml);
   return { result, task: 'YT-likedVideos' };
 };
-
-const isLoadingCommentsDone = (html: string) =>
-  !isCommentSectionClosed(html) && !isCommentSpinnerActive(html);
 
 const scrapeVideo = async (
   videoId: string,
@@ -199,7 +194,6 @@ export {
   allIndependentProvider,
   scrapeSeedVideos,
   scrapeSeedVideosAndFollow,
-  isLoadingCommentsDone,
   scrapePopularVideos,
   scrapeNationalNewsTopStories,
 };
