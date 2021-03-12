@@ -1,15 +1,46 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
-import React, { useEffect, useRef, useState } from 'react';
-import BrowserView from 'react-electron-browser-view';
+import { ipcRenderer } from 'electron';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import routes from '../constants/routes.json';
 import { allConfig as ytConfigs } from '../scrapers/youtube';
 import { addData, newSession } from '../utils/db';
+import { delay } from '../utils/time';
 import Base from './Base';
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+// commands to communicate with the browser window in the main screen
+
+const goToUrl = async (url: string, options = {}): Promise<string> => {
+  return ipcRenderer.invoke('scraping-load-url', url, options);
+};
+
+const goToUrlHtml = async (url: string): Promise<string> => {
+  return goToUrl(url, { withHtml: true });
+};
+
+const getCookies = async (): Promise<Array<unknown>> => {
+  return ipcRenderer.invoke('scraping-get-cookies');
+};
+
+const setNavigationCallback = async (cbSlug: string, remove = false) => {
+  return ipcRenderer.invoke('scraping-navigation-cb', cbSlug, remove);
+};
+
+const getHtml = async () => {
+  return ipcRenderer.invoke('scraping-get-html');
+};
+
+const scrollDown = async () => {
+  return ipcRenderer.invoke('scraping-scroll-down');
+};
+
+const setMutedStatus = async (isMuted: boolean) => {
+  return ipcRenderer.invoke('scraping-set-muted', isMuted);
+};
+
+// the actual scraping window
 
 export default function Scraping(): JSX.Element {
   const [scrapingconfig, setScrapingConfig] = useState<any>(ytConfigs[0]);
@@ -24,18 +55,9 @@ export default function Scraping(): JSX.Element {
 
   const [isMuted, setIsMuted] = useState(false);
   const [browserHeight, setBrowserHeight] = useState(500);
-  const browser = useRef<any>(null);
 
-  const goToUrl = (url: string) => {
-    // can't set custom userAgent with the prop provided by `react-electron-browser-view`
-    browser.current.loadURL(url, {
-      userAgent: 'Chrome',
-    });
-  };
-
-  const waitUntilLoggingIn = async () => {
-    const webContents = browser?.current.view.webContents;
-    const cookies = await webContents.session.cookies.get({});
+  const checkForLogIn = async () => {
+    const cookies = await getCookies();
     // complexity is currently not needed, maybe later?
     const isLoggedIn = cookies.some(
       (x: any) => x.name === scrapingconfig.loginCookie
@@ -45,22 +67,11 @@ export default function Scraping(): JSX.Element {
   };
 
   const goToStart = () => {
-    goToUrl(scrapingconfig.loginUrl);
+    return goToUrl(scrapingconfig.loginUrl);
   };
 
   const clearBrowser = () => {
-    browser?.current.view.webContents.session.clearStorageData();
-    goToStart();
-  };
-
-  const getHtml = async (url: string): Promise<string> => {
-    console.log(url);
-    await goToUrl(url);
-    await delay(2000);
-    const html = await browser.current.executeJavaScript(
-      'document.documentElement.innerHTML'
-    );
-    return html;
+    goToUrl(scrapingconfig.loginUrl, { clear: true });
   };
 
   const getHtmlLazy = async (
@@ -79,14 +90,12 @@ export default function Scraping(): JSX.Element {
     for (const x of [...Array(scrollBottom)]) {
       if (stopScrolling) break;
       for (const x of [...Array(5)]) {
-        await browser.current.executeJavaScript('window.scrollBy(0, 100);');
+        await scrollDown();
         await delay(10);
       }
 
       while (true) {
-        const html = await browser.current.executeJavaScript(
-          'document.documentElement.innerHTML'
-        );
+        const html = await getHtml();
         // FIXME: not needed to check this every time, find a better way
         if (loadingAbort(html)) {
           stopScrolling = true;
@@ -97,29 +106,26 @@ export default function Scraping(): JSX.Element {
       }
     }
 
-    const html = await browser.current.executeJavaScript(
-      'document.documentElement.innerHTML'
-    );
+    const html = await getHtml();
     return html;
   };
 
-  // gets triggered when e.g. the progress bar is updated (via `frac`)
-  useEffect(() => {
-    const runScraperOnce = async () => {
-      if (scrapingGen === null) return;
-      if (isScrapingPaused) return;
-      const { value, done } = await scrapingGen.next();
-      if (value == null) return;
-      setProgresFrac(value[0]);
-      addData(sessionId, value[1]);
-      if (done) setIsScrapingFinished(true);
-    };
-    runScraperOnce();
-  }, [progresFrac, sessionId, isScrapingPaused]); // Only re-run the effect if these change
+  const initScraper = async () => {
+    await goToStart();
+
+    const cbSlug = 'scraping-navigation-happened';
+    await setNavigationCallback(cbSlug);
+    ipcRenderer.on(cbSlug, async (event, arg) => {
+      const loggedIn = await checkForLogIn();
+      if (loggedIn) {
+        setNavigationCallback(cbSlug, true);
+      }
+    });
+  };
 
   const startScraping = async () => {
     setIsScrapingStarted(true);
-    const gen = scrapingconfig.scrapingGenerator(getHtml, getHtmlLazy);
+    const gen = scrapingconfig.scrapingGenerator(goToUrlHtml, getHtmlLazy);
     setScrapingGen(gen);
     const sId = uuidv4();
     setSessionId(sId);
@@ -146,12 +152,26 @@ export default function Scraping(): JSX.Element {
     goToUrl(scrapingconfig.loginUrl);
   };
 
+  // gets triggered when e.g. the progress bar is updated (via `frac`)
   useEffect(() => {
-    const updateMutedStatus = async () => {
-      const webContents = browser?.current.view.webContents;
-      await webContents?.setAudioMuted(isMuted);
+    const runScraperOnce = async () => {
+      if (scrapingGen === null) return;
+      if (isScrapingPaused) return;
+      const { value, done } = await scrapingGen.next();
+      if (value == null) return;
+      setProgresFrac(value[0]);
+      addData(sessionId, value[1]);
+      if (done) setIsScrapingFinished(true);
     };
-    updateMutedStatus();
+    runScraperOnce();
+  }, [scrapingGen, progresFrac, sessionId, isScrapingPaused]); // Only re-run the effect if these change
+
+  useEffect(() => {
+    initScraper();
+  }, []);
+
+  useEffect(() => {
+    setMutedStatus(isMuted);
   }, [isMuted]);
 
   return (
@@ -257,22 +277,6 @@ export default function Scraping(): JSX.Element {
           {progresFrac}
         </progress>
       )}
-
-      <BrowserView
-        ref={browser}
-        src="about:blank"
-        style={{
-          height: browserHeight,
-        }}
-        onDidAttach={() => {
-          setTimeout(goToStart, 100);
-        }}
-        onUpdateTargetUrl={async () => {
-          if (!isUserLoggedIn) {
-            await waitUntilLoggingIn();
-          }
-        }}
-      />
     </Base>
   );
 }

@@ -9,11 +9,11 @@
  * `./src/main.prod.js` using webpack. This gives us some performance wins.
  */
 import 'core-js/stable';
-import 'regenerator-runtime/runtime';
-import path from 'path';
-import { app, BrowserWindow, shell } from 'electron';
-import { autoUpdater } from 'electron-updater';
+import { app, BrowserView, BrowserWindow, ipcMain, shell } from 'electron';
 import log from 'electron-log';
+import { autoUpdater } from 'electron-updater';
+import path from 'path';
+import 'regenerator-runtime/runtime';
 import MenuBuilder from './menu';
 
 export default class AppUpdater {
@@ -129,4 +129,88 @@ app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) createWindow();
+});
+
+// controlling the scraping window
+
+let scrapingView: BrowserView | null = null;
+
+const getScrapingView = (): BrowserView => {
+  if (scrapingView == null) {
+    const newView = new BrowserView();
+    mainWindow?.setBrowserView(newView);
+
+    const { width } = mainWindow?.getBounds();
+
+    newView.setBounds({ x: width - 300, y: 0, width: 300, height: 300 });
+    scrapingView = newView;
+  }
+  return scrapingView;
+};
+
+ipcMain.handle(
+  'scraping-load-url',
+  async (event, url: string, { withHtml = false, clear = false }) => {
+    const view = getScrapingView();
+
+    if (clear) {
+      view.webContents.session.clearStorageData();
+    }
+
+    await view.webContents.loadURL(url, {
+      userAgent: 'Chrome',
+    });
+
+    if (withHtml) {
+      const html = await view.webContents.executeJavaScript(
+        'document.documentElement.innerHTML'
+      );
+      return html;
+    }
+
+    return null;
+  }
+);
+
+ipcMain.handle('scraping-get-cookies', async (event) => {
+  const { webContents } = getScrapingView();
+  const cookies = await webContents.session.cookies.get({});
+  return cookies;
+});
+
+ipcMain.handle(
+  'scraping-navigation-cb',
+  async (event, cbSlug, remove = false) => {
+    const view = getScrapingView();
+
+    // TODO: find a better event?
+    const navEvent = 'page-title-updated';
+    const cb = () => {
+      event.sender.send(cbSlug);
+    };
+
+    if (remove) {
+      view.webContents.removeListener(navEvent, cb);
+    } else {
+      view.webContents.on(navEvent, cb);
+    }
+  }
+);
+
+ipcMain.handle('scraping-get-html', async (event) => {
+  const view = getScrapingView();
+  const html = await view.webContents.executeJavaScript(
+    'document.documentElement.innerHTML'
+  );
+  return html;
+});
+
+ipcMain.handle('scraping-scroll-down', async (event) => {
+  const view = getScrapingView();
+  await view.webContents.executeJavaScript('window.scrollBy(0, 100);');
+});
+
+ipcMain.handle('scraping-set-muted', async (event, value) => {
+  const { webContents } = getScrapingView();
+  await webContents?.setAudioMuted(value);
 });
