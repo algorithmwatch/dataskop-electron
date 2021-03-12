@@ -235,3 +235,13 @@ ipcMain.handle('scraping-set-muted', async (event, value) => {
   const { webContents } = getScrapingView();
   await webContents?.setAudioMuted(value);
 });
+
+ipcMain.handle('scraping-remove-view', async (event) => {
+  const view = getScrapingView();
+  mainWindow?.removeBrowserView(view);
+
+  // .destroy() does indeed exists and is nesseary to fully remove the view.
+  // Not calling it will result in errors with event handlers.
+  view.webContents.destroy();
+  scrapingView = null;
+});

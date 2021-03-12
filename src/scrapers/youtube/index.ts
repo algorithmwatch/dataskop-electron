@@ -9,12 +9,6 @@ import {
   scrapeSeedVideosAndFollow,
 } from './providers';
 
-// TODO: load parse yt from remote into invisible browserview
-// import { remote } from 'electron';
-// const win = new remote.BrowserWindow({ show: false });
-// // Load a remote URL
-// win.loadURL('https://github.com');
-
 const defaultScrapingConfig = {
   // how often to scroll down for lazy loading
   scrollingBottomForComments: 5,

@@ -40,6 +40,10 @@ const setMutedStatus = async (isMuted: boolean) => {
   return ipcRenderer.invoke('scraping-set-muted', isMuted);
 };
 
+const removeScrapingView = async () => {
+  return ipcRenderer.invoke('scraping-remove-view');
+};
+
 // the actual scraping window
 
 export default function Scraping(): JSX.Element {
@@ -110,17 +114,26 @@ export default function Scraping(): JSX.Element {
     return html;
   };
 
+  const cbSlug = 'scraping-navigation-happened';
+
+  const checkLoginCb = async (event, arg) => {
+    const loggedIn = await checkForLogIn();
+    if (loggedIn) {
+      setNavigationCallback(cbSlug, true);
+    }
+  };
+
+  const cleanUpScraper = () => {
+    ipcRenderer.removeListener(cbSlug, checkLoginCb);
+    removeScrapingView();
+  };
+
   const initScraper = async () => {
+    cleanUpScraper();
     await goToStart();
 
-    const cbSlug = 'scraping-navigation-happened';
     await setNavigationCallback(cbSlug);
-    ipcRenderer.on(cbSlug, async (event, arg) => {
-      const loggedIn = await checkForLogIn();
-      if (loggedIn) {
-        setNavigationCallback(cbSlug, true);
-      }
-    });
+    ipcRenderer.on(cbSlug, checkLoginCb);
   };
 
   const startScraping = async () => {
@@ -167,7 +180,12 @@ export default function Scraping(): JSX.Element {
   }, [scrapingGen, progresFrac, sessionId, isScrapingPaused]); // Only re-run the effect if these change
 
   useEffect(() => {
+    // mount
     initScraper();
+    return () => {
+      // unmount
+      cleanUpScraper();
+    };
   }, []);
 
   useEffect(() => {
