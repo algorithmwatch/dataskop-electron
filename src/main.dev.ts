@@ -9,12 +9,22 @@
  * `./src/main.prod.js` using webpack. This gives us some performance wins.
  */
 import 'core-js/stable';
-import { app, BrowserView, BrowserWindow, ipcMain, shell } from 'electron';
+import {
+  app,
+  BrowserView,
+  BrowserWindow,
+  ipcMain,
+  session,
+  shell,
+} from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import 'regenerator-runtime/runtime';
 import MenuBuilder from './menu';
+
+const DEBUG =
+  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
 export default class AppUpdater {
   constructor() {
@@ -31,10 +41,7 @@ if (process.env.NODE_ENV === 'production') {
   sourceMapSupport.install();
 }
 
-if (
-  process.env.NODE_ENV === 'development' ||
-  process.env.DEBUG_PROD === 'true'
-) {
+if (DEBUG) {
   require('electron-debug')();
 }
 
@@ -52,12 +59,25 @@ const installExtensions = async () => {
 };
 
 const createWindow = async () => {
-  if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.DEBUG_PROD === 'true'
-  ) {
+  if (DEBUG) {
     await installExtensions();
   }
+
+  let cspString =
+    "script-src 'self' 'unsafe-eval' 'unsafe-inline' http://localhost:1212 https://dataskop.net";
+
+  // needed in debug to install dev tools etc
+  if (!DEBUG) cspString = cspString.replace('unsafe-eval', '');
+
+  if (process.env)
+    session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+      callback({
+        responseHeaders: {
+          ...details.responseHeaders,
+          'Content-Security-Policy': [cspString],
+        },
+      });
+    });
 
   const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, 'assets')
