@@ -4,56 +4,38 @@
 // followed: https://github.com/dfahlander/Dexie.js/#hello-world-typescript
 
 import Dexie from 'dexie';
+import { statsForArray } from '../utils/math';
 
-interface ScrapeResult {
-  id?: number;
-  sessionId?: string;
-  scrapedAt?: number; // number of millisecconds in UTC
-  task?: string;
-  items?: string;
-}
-
-interface ScrapingSessions {
-  id?: number;
-  sessionId?: string;
-  startedAt?: number; // number of millisecconds in UTC
-}
-
-//
 // Declare Database
-//
-class ScrapeDatabase extends Dexie {
-  public scrapeResults: Dexie.Table<ScrapeResult, number>; // id is number in this case
+class ScrapingDatabase extends Dexie {
+  public scrapingResults: Dexie.Table<ScrapingResultSaved, number>;
 
-  public scrapingSessions: Dexie.Table<ScrapingSessions, number>; // id is number in this case
+  public scrapingSessions: Dexie.Table<ScrapingSessions, number>;
 
   public constructor() {
-    super('ScrapeDatabase');
-    this.version(2).stores({
-      scrapeResults: '++id,sessionId,scrapedAt,task,items',
+    super('ScrapingDatabase');
+    this.version(1).stores({
+      scrapingResults: '++id,sessionId,scrapedAt,task,result,errorMessage',
       scrapingSessions: '++id,sessionId,startedAt',
     });
-    this.scrapeResults = this.table('scrapeResults');
+    this.scrapingResults = this.table('scrapingResults');
     this.scrapingSessions = this.table('scrapingSessions');
   }
 }
 
-const db = new ScrapeDatabase();
+const db = new ScrapingDatabase();
 
 // https://dexie.org/docs/Dexie/Dexie.transaction()#specify-reusage-of-parent-transaction
 
 const newSession = (sessionId: string) => {
-  db.transaction(
-    'rw',
-    db.scrapingSessions,
-    async () =>
-      await db.scrapingSessions.add({ sessionId, startedAt: Date.now() })
+  db.transaction('rw', db.scrapingSessions, async () =>
+    db.scrapingSessions.add({ sessionId, startedAt: Date.now() }),
   );
 };
 
 const addData = (sessionId: string, data: any) => {
-  db.transaction('rw', db.scrapeResults, async () => {
-    const id = await db.scrapeResults.add({
+  db.transaction('rw', db.scrapingResults, async () => {
+    const id = await db.scrapingResults.add({
       sessionId,
       ...data,
       scrapedAt: Date.now(),
@@ -63,15 +45,15 @@ const addData = (sessionId: string, data: any) => {
 };
 
 const getData = () => {
-  return db.transaction('r', db.scrapeResults, async () => {
-    const res = await db.scrapeResults.toArray();
+  return db.transaction('r', db.scrapingResults, async () => {
+    const res = await db.scrapingResults.toArray();
     return res;
   });
 };
 
 const getSessionData = (sessiondId: string) => {
-  return db.transaction('r', db.scrapeResults, async () => {
-    const res = await db.scrapeResults
+  return db.transaction('r', db.scrapingResults, async () => {
+    const res = await db.scrapingResults
       .where('sessionId')
       .equals(sessiondId)
       .toArray();
@@ -80,7 +62,7 @@ const getSessionData = (sessiondId: string) => {
 };
 
 const clearData = () => {
-  db.scrapeResults
+  db.scrapingResults
     .clear()
     .then(() => {
       console.log('Rows successfully deleted');
@@ -95,53 +77,42 @@ const clearData = () => {
 
 // https://github.com/dfahlander/Dexie.js/issues/415#issuecomment-268772586
 const getUniqueSessionIds = () =>
-  db.scrapeResults.orderBy('sessionId').uniqueKeys();
+  db.scrapingResults.orderBy('sessionId').uniqueKeys();
 
 const getSessionsMetaData = async () => {
   const sessionsIds = await getUniqueSessionIds();
   const sessions = await Promise.all(
     sessionsIds.map(async (x) => {
       return {
-        count: await db.scrapeResults.where('sessionId').equals(x).count(),
-        scrapedAt: (await db.scrapeResults.where('sessionId').equals(x).first())
-          ?.scrapedAt,
+        count: await db.scrapingResults.where('sessionId').equals(x).count(),
+        scrapedAt: (
+          await db.scrapingResults.where('sessionId').equals(x).first()
+        )?.scrapedAt,
         id: x,
       };
-    })
+    }),
   );
-  sessions.sort((a, b) => b.scrapedAt - a.scrapedAt);
+  sessions.sort((a, b) => b.scrapedAt || 0 - (a.scrapedAt || 0));
   return sessions;
 };
 
-const medianForArray = (arr) => {
-  const mid = Math.floor(arr.length / 2),
-    nums = [...arr].sort((a, b) => a - b);
-  return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
-};
-
-const statsForArray = (arr: number[]) => {
-  const min = Math.min(...arr);
-  const max = Math.max(...arr);
-  const average = arr.reduce((p, c) => p + c, 0) / arr.length;
-  const median = medianForArray(arr);
-  return { min, max, average, median };
-};
-
-const getStatisticsForSession = async (sessiondId) => {
-  const allTasks = await db.scrapeResults
+const getStatisticsForSession = async (sessiondId: string) => {
+  const allTasks = await db.scrapingResults
     .where('sessionId')
     .equals(sessiondId)
     .toArray();
 
   allTasks.sort((a, b) => a.scrapedAt - b.scrapedAt);
 
-  const { startedAt } = await db.scrapingSessions
+  const firstResult = await db.scrapingSessions
     .where('sessionId')
     .equals(sessiondId)
     .first();
 
-  const allTimes = new Map();
+  if (!firstResult) throw new Error('no records for sessionId found');
 
+  const { startedAt } = firstResult;
+  const allTimes = new Map();
   let previousTime = startedAt;
 
   for (let i = 0; i < allTasks.length; i += 1) {

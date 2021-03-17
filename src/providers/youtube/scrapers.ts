@@ -83,8 +83,7 @@ const scrapeVideo = async (
   } catch (error) {
     return {
       result: { videoId },
-      error: true,
-      stack: error.stack,
+      errorMessage: error.stack,
       task: 'YT-recommendedVideos',
     };
   }

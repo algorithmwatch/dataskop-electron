@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import routes from '../constants/routes.json';
+import { clearData, getSessionsMetaData } from '../db';
 import Base from '../layouts/Base';
-import { clearData, getSessionsMetaData } from '../utils/db';
 
 export default function ResultsPage(): JSX.Element {
   const [rows, setRows] = useState<any>([]);

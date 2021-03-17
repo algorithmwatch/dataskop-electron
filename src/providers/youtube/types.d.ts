@@ -1,10 +1,3 @@
-type ScrapingResult = {
-  task: string;
-  result: any;
-  error?: boolean;
-  stack?: string;
-};
-
 type GetHtmlFunction = (url: string) => Promise<string>;
 
 type GetHtmlLazyFunction = (

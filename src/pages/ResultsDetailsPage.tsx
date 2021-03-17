@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import SessionTable from '../components/SessionTable';
+import { getSessionData, getStatisticsForSession } from '../db';
 import Base from '../layouts/Base';
-import { getSessionData, getStatisticsForSession } from '../utils/db';
 
 function ResultsDetails({ sessionId }): JSX.Element {
   const [rows, setRows] = useState<any>([]);

@@ -5,9 +5,9 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import routes from '../constants/routes.json';
+import { addData, newSession } from '../db';
 import Base from '../layouts/Base';
 import { allConfigs as ytConfigs } from '../providers/youtube';
-import { addData, newSession } from '../utils/db';
 import { delay } from '../utils/time';
 
 // commands to communicate with the browser window in the main screen
