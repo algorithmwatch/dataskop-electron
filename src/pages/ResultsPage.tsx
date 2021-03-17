@@ -4,7 +4,7 @@ import routes from '../constants/routes.json';
 import Base from '../layouts/Base';
 import { clearData, getSessionsMetaData } from '../utils/db';
 
-export default function VisualizationPage(): JSX.Element {
+export default function ResultsPage(): JSX.Element {
   const [rows, setRows] = useState<any>([]);
 
   useEffect(() => {
@@ -23,11 +23,11 @@ export default function VisualizationPage(): JSX.Element {
       >
         clear data
       </button>
-      <h2>Visualization</h2>
+      <h2>Results</h2>
       {rows.map((x) => {
         return (
           <div key={x.id}>
-            <Link to={routes.VISUALIZATION_DETAILS.replace(':sessionId', x.id)}>
+            <Link to={routes.RESULTS_DETAILS.replace(':sessionId', x.id)}>
               {`${x.id}, ${new Date(x.scrapedAt)}, Items ${x.count}`}
             </Link>
           </div>

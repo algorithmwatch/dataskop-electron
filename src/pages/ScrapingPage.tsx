@@ -227,10 +227,8 @@ export default function ScrapingPage(): JSX.Element {
       )}
       {isScrapingFinished && (
         <button className="button" type="button">
-          <Link
-            to={routes.VISUALIZATION_DETAILS.replace(':sessionId', sessionId)}
-          >
-            go to visualization
+          <Link to={routes.RESULTS_DETAILS.replace(':sessionId', sessionId)}>
+            go to result
           </Link>
         </button>
       )}

@@ -4,7 +4,7 @@ import SessionTable from '../components/SessionTable';
 import Base from '../layouts/Base';
 import { getSessionData, getStatisticsForSession } from '../utils/db';
 
-function VisualizationDetails({ sessionId }): JSX.Element {
+function ResultsDetails({ sessionId }): JSX.Element {
   const [rows, setRows] = useState<any>([]);
   const [stats, setStats] = useState<any>([]);
 
@@ -25,7 +25,7 @@ function VisualizationDetails({ sessionId }): JSX.Element {
   );
 }
 
-export default function VisualizationDetailsPage() {
+export default function ResultsDetailsPage() {
   const { sessionId } = useParams();
-  return <VisualizationDetails sessionId={sessionId} />;
+  return <ResultsDetails sessionId={sessionId} />;
 }

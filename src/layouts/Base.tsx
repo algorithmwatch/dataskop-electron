@@ -20,7 +20,7 @@ export default function Base({ children }): JSX.Element {
                 <Link to={routes.SCRAPING}>scraping</Link>
               </li>
               <li>
-                <Link to={routes.VISUALIZATION}>visualization</Link>
+                <Link to={routes.RESULTS}>results</Link>
               </li>
             </ul>
             <p className="menu-label">More Information</p>
