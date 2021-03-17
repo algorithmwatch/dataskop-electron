@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import routes from '../constants/routes.json';
-import logo from '../static/images/dataskop_logo.png';
+import logo from '../static/logos/dataskop_logo.png';
 import styles from './Base.css';
 
 export default function Base({ children }): JSX.Element {
   return (
     <section className="section">
-      <div className="columns">
+      <div className="columns" style={{ paddingTop: '20rem' }}>
         <div className="column is-narrow">
           <img src={logo} className={styles.logo} alt="Dataskop Logo" />
           <aside className="menu">

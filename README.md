@@ -41,6 +41,11 @@ yarn start
 
 This starts the renderer process in [**hot-module-replacement**](https://webpack.js.org/guides/hmr-react/) mode and starts a webpack dev server that sends hot updates to the renderer process.
 
+### Static Files
+
+Put static files used insige the app in `src/static` and not in `resources`.
+The latter is only used for the application icon.
+
 ## Tests
 
 ```bash
