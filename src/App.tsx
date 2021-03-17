@@ -2,10 +2,10 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.global.css';
 import routes from './constants/routes.json';
-import HomePage from './containers/HomePage';
-import ScrapingPage from './containers/ScrapingPage';
-import VisualizationDetailsPage from './containers/VisualizationDetailsPage';
-import VisualizationPage from './containers/VisualizationPage';
+import HomePage from './pages/HomePage';
+import ScrapingPage from './pages/ScrapingPage';
+import VisualizationDetailsPage from './pages/VisualizationDetailsPage';
+import VisualizationPage from './pages/VisualizationPage';
 
 export default function App() {
   return (
