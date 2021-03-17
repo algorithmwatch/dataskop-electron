@@ -7,7 +7,7 @@ import styles from './Base.css';
 export default function Base({ children }): JSX.Element {
   return (
     <section className="section">
-      <div className="columns" style={{ paddingTop: '20rem' }}>
+      <div className="columns">
         <div className="column is-narrow">
           <img src={logo} className={styles.logo} alt="Dataskop Logo" />
           <aside className="menu">

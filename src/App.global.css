@@ -3,20 +3,20 @@
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 body {
-  position: relative;
+  font-family: sans-serif;
   color: white;
-  height: 100vh;
   background: linear-gradient(
     200.96deg,
     #fedc2a -29.09%,
     #dd5789 51.77%,
     #7a2c9e 129.35%
   );
-  font-family: sans-serif;
-  overflow-y: hidden;
+  /* height: 100vh; */
+  /* overflow-y: hidden;
+    position: relative;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
 }
 
 button {
@@ -48,11 +48,4 @@ a:hover {
   opacity: 1;
   text-decoration: none;
   cursor: pointer;
-}
-
-.Hello {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
 }
