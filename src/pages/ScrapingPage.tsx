@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import routes from '../constants/routes.json';
 import Base from '../layouts/Base';
-import { allConfig as ytConfigs } from '../scrapers/youtube';
+import { allConfigs as ytConfigs } from '../providers/youtube';
 import { addData, newSession } from '../utils/db';
 import { delay } from '../utils/time';
 
@@ -64,7 +64,7 @@ export default function ScrapingPage(): JSX.Element {
     const cookies = await getCookies();
     // complexity is currently not needed, maybe later?
     const isLoggedIn = cookies.some(
-      (x: any) => x.name === scrapingconfig.loginCookie
+      (x: any) => x.name === scrapingconfig.loginCookie,
     );
     setUserLoggedIn(isLoggedIn);
     return isLoggedIn;
@@ -82,7 +82,7 @@ export default function ScrapingPage(): JSX.Element {
     url: string,
     scrollBottom: number,
     loadingDone: (html: string) => boolean,
-    loadingAbort: (html: string) => boolean
+    loadingAbort: (html: string) => boolean,
   ): Promise<string> => {
     console.log(url);
     await goToUrl(url);

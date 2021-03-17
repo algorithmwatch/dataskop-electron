@@ -20,10 +20,10 @@ const LIST_ID_LIKED_VIDEOS = 'LL';
 const scrapePlaylist = async (
   playlistId: string,
   getHtml: GetHtmlFunction,
-  limit?: number
+  limit?: number,
 ): Promise<Video[]> => {
   const html = await getHtml(
-    `https://www.youtube.com/playlist?list=${playlistId}`
+    `https://www.youtube.com/playlist?list=${playlistId}`,
   );
   const { videos } = parseGetPlaylist(html);
   if (typeof limit !== 'undefined') return videos.slice(0, limit);
@@ -45,13 +45,13 @@ const scrapeNationalNewsTopStories = async (
   const result = await scrapePlaylist(
     LIST_ID_NATIONAL_NEWS_TOP_STORIES,
     getHtml,
-    ...rest
+    ...rest,
   );
   return { result, task: 'YT-nationalNews' };
 };
 
 const scrapeLikedVideos = async (
-  getHtml: GetHtmlFunction
+  getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
   const result = await scrapePlaylist(LIST_ID_LIKED_VIDEOS, getHtml);
   return { result, task: 'YT-likedVideos' };
@@ -61,7 +61,7 @@ const scrapeVideo = async (
   videoId: string,
   getHtml: GetHtmlFunction,
   limit: number | null,
-  comments: boolean
+  comments: boolean,
 ): Promise<ScrapingResult> => {
   const url = `https://www.youtube.com/watch?v=${videoId}`;
   const html = await getHtml(url);
@@ -91,32 +91,32 @@ const scrapeVideo = async (
 };
 
 const scrapeWatchedVideos = async (
-  getHtml: GetHtmlFunction
+  getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
   const html = await getHtml('https://www.youtube.com/feed/history');
   return { result: parseWatchHistory(html), task: 'YT-watchedHistory' };
 };
 
 const scrapeSearchHistory = async (
-  getHtml: GetHtmlFunction
+  getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
   const html = await getHtml(
-    'https://www.youtube.com/feed/history/search_history'
+    'https://www.youtube.com/feed/history/search_history',
   );
   return { result: parseSearchHistory(html), task: 'YT-searchHistory' };
 };
 
 const scrapeCommentHistory = async (
-  getHtml: GetHtmlFunction
+  getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
   const html = await getHtml(
-    'https://www.youtube.com/feed/history/comment_history'
+    'https://www.youtube.com/feed/history/comment_history',
   );
   return { result: parseCommentHistory(html), task: 'YT-commentHistory' };
 };
 
 const scrapeSubscriptions = async (
-  getHtml: GetHtmlFunction
+  getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
   const html = await getHtml('https://www.youtube.com/feed/channels');
   return { result: parseSubscriptions(html), task: 'YT-subscriptions' };
@@ -128,7 +128,7 @@ async function* scrapeSeedVideosAndFollow(
   initialStep: number,
   maxSteps: number,
   followVideos: number,
-  comments: boolean
+  comments: boolean,
 ) {
   let step = initialStep;
 
@@ -144,7 +144,7 @@ async function* scrapeSeedVideosAndFollow(
           dataFromSeed.result.recommendedVideos[i].id,
           getHtml,
           null,
-          comments
+          comments,
         );
       } else {
         // some hack to add trash data, rework error handling
@@ -160,6 +160,7 @@ async function* scrapeSeedVideosAndFollow(
       }
     }
   }
+  return null;
 }
 
 async function* scrapeSeedVideos(
@@ -167,7 +168,7 @@ async function* scrapeSeedVideos(
   seedVideoIds: string[],
   initialStep: number,
   maxSteps: number,
-  comments: boolean
+  comments: boolean,
 ) {
   let step = initialStep;
   for (const id of seedVideoIds) {
@@ -180,18 +181,18 @@ async function* scrapeSeedVideos(
       return [1, data];
     }
   }
+  return null;
 }
 
-const allIndependentProvider = [
+export const personalScrapers = {
   scrapeWatchedVideos,
   scrapeLikedVideos,
   scrapeSearchHistory,
   scrapeCommentHistory,
   scrapeSubscriptions,
-];
+};
 
-export {
-  allIndependentProvider,
+export const experimentScrapers = {
   scrapeSeedVideos,
   scrapeSeedVideosAndFollow,
   scrapePopularVideos,
