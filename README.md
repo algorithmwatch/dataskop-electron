@@ -1,4 +1,4 @@
-# `dataskop-pedd`
+# `dataskop-electron`
 
 DataSkop will be a platform for data donations used to examine and scrutinize algorithmic decision-making systems and to strengthen the users' digital autonomy.
 The aim of the project is to empower individuals to handle their data in an informed way, to act safely in digital environments, and to understand and algorithmic systems in use.
@@ -18,8 +18,8 @@ Install [yarn](https://yarnpkg.com/getting-started/install)
 First, clone the repo via git and install dependencies:
 
 ```bash
-git clone git@github.com:algorithmwatch/dataskop-pedd.git
-cd dataskop-pedd
+git clone git@github.com:algorithmwatch/dataskop-electron.git
+cd dataskop-electron
 yarn install
 ```
 

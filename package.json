@@ -1,8 +1,8 @@
 {
-  "name": "dataskop-pedd",
+  "name": "dataskop-electron",
   "productName": "DataSkop",
   "version": "0.0.0",
-  "description": "DataSkop work in progress",
+  "description": "DataSkop Electron App: The Personal Data Dashboard (PeDD) of DataSkop",
   "scripts": {
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
     "build:main": "cross-env NODE_ENV=production webpack --config ./.erb/configs/webpack.config.main.prod.babel.js",
