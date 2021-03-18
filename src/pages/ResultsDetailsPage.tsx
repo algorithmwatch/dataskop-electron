@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import SessionTable from '../components/SessionTable';
+import Stats from '../components/Stats';
 import { getSessionData, getStatisticsForSession } from '../db';
 import Base from '../layouts/Base';
 
@@ -19,7 +20,7 @@ function ResultsDetails({ sessionId }): JSX.Element {
   return (
     <Base>
       <h2>{sessionId}</h2>
-      {JSON.stringify(stats)}
+      <Stats data={stats} />
       <SessionTable data={rows} />
     </Base>
   );

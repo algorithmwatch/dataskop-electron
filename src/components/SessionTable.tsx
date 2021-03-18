@@ -5,7 +5,7 @@ import React from 'react';
 import { useTable } from 'react-table';
 
 type TableProps = {
-  data: Array<ScrapingResult>;
+  data: Array<ScrapingResultSaved>;
 };
 
 export default function SessionTable({ data }: TableProps): JSX.Element {
@@ -15,20 +15,21 @@ export default function SessionTable({ data }: TableProps): JSX.Element {
         Header: 'Scraped at',
         accessor: 'scrapedAt',
       },
-
       {
         Header: 'Session ID',
         accessor: 'sessionId',
       },
-
       {
         Header: 'Task',
         accessor: 'task',
       },
-
       {
         Header: 'Result',
         accessor: 'result',
+      },
+      {
+        Header: 'Error',
+        accessor: 'errorMessage',
       },
     ],
     [],
