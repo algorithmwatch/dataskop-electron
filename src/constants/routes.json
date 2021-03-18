@@ -2,5 +2,6 @@
   "HOME": "/",
   "SCRAPING": "/scraping",
   "RESULTS": "/results",
-  "RESULTS_DETAILS": "/results/:sessionId"
+  "RESULTS_DETAILS": "/results/:sessionId",
+  "VISUALIZATION_SESSION": "/visualization/session/:sessionId"
 }

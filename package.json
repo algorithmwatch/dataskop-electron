@@ -239,6 +239,9 @@
     "yarn-deduplicate": "^3.1.0"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.35",
+    "@fortawesome/free-solid-svg-icons": "^5.15.3",
+    "@fortawesome/react-fontawesome": "^0.1.14",
     "bulma": "^0.9.1",
     "dexie": "^3.0.2",
     "electron-debug": "^3.1.0",
@@ -253,7 +256,8 @@
     "react-table": "^7.6.2",
     "regenerator-runtime": "^0.13.5",
     "source-map-support": "^0.5.19",
-    "uuid": "^8.3.1"
+    "uuid": "^8.3.1",
+    "victory": "^35.4.11"
   },
   "devEngines": {
     "node": ">=10.x",

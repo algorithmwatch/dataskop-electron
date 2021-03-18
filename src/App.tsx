@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import ResultsDetailsPage from './pages/ResultsDetailsPage';
 import ResultsPage from './pages/ResultsPage';
 import ScrapingPage from './pages/ScrapingPage';
+import VisualizationPage from './pages/VisualizationSessionPage';
 
 export default function App() {
   return (
@@ -14,6 +15,10 @@ export default function App() {
         <Route path={routes.SCRAPING} component={ScrapingPage} />
         <Route path={routes.RESULTS_DETAILS} component={ResultsDetailsPage} />
         <Route path={routes.RESULTS} component={ResultsPage} />
+        <Route
+          path={routes.VISUALIZATION_SESSION}
+          component={VisualizationPage}
+        />
         <Route path={routes.HOME} component={HomePage} />
       </Switch>
     </Router>
