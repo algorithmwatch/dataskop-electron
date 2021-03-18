@@ -138,16 +138,17 @@ async function* scrapeSeedVideosAndFollow(
 
     for (const i of [...Array(followVideos).keys()]) {
       let followVideo = null;
-      if ('error' in dataFromSeed) {
+
+      if ('errorMessage' in dataFromSeed) {
+        // some hack to add trash data, TODO: rework error handling
+        followVideo = dataFromSeed;
+      } else {
         followVideo = await scrapeVideo(
           dataFromSeed.result.recommendedVideos[i].id,
           getHtml,
           null,
           comments,
         );
-      } else {
-        // some hack to add trash data, rework error handling
-        followVideo = dataFromSeed;
       }
 
       followVideo.task += '-followed';
