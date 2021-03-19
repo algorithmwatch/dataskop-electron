@@ -3,20 +3,22 @@ import { ipcRenderer } from 'electron';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import routes from '../constants/routes.json';
-import { clearData, getData, getSessionsMetaData } from '../db';
+import { clearData, getData, getSessionsMetaData, importRow } from '../db';
 import Base from '../layouts/Base';
 
 const invokeExport = async (data: ScrapingResultSaved[]) => {
   const filename = `dataskop-${dayjs().format('YYYY-MM-DD-HH-mm-s')}.json`;
-  return ipcRenderer.invoke(
-    'results-export-data',
-    JSON.stringify(data),
-    filename,
-  );
+  ipcRenderer.invoke('results-export', JSON.stringify(data), filename);
+};
+
+const invokeImport = async (loadData: Function) => {
+  ipcRenderer.on('results-import-data', loadData);
+  ipcRenderer.invoke('results-import');
 };
 
 export default function ResultsPage(): JSX.Element {
   const [rows, setRows] = useState<any>([]);
+  const [importedRows, setImportedRows] = useState(0);
 
   useEffect(() => {
     const newRows = async () => {
@@ -25,8 +27,20 @@ export default function ResultsPage(): JSX.Element {
     newRows();
   }, []);
 
+  const importRowCb = async (events, newRowsString) => {
+    const newRows = JSON.parse(newRowsString);
+    const newRowsResults = await Promise.all(
+      newRows.map(async (x) => importRow(x)),
+    );
+
+    setImportedRows(
+      importedRows + newRowsResults.reduce((x0, x1) => x0 + x1, 0),
+    );
+  };
+
   return (
     <Base>
+      <div>{importedRows}</div>
       <button
         className="button"
         type="button"
@@ -36,6 +50,9 @@ export default function ResultsPage(): JSX.Element {
       </button>
       <button type="button" onClick={async () => invokeExport(await getData())}>
         export data
+      </button>
+      <button type="button" onClick={async () => invokeImport(importRowCb)}>
+        import data
       </button>
       <h2>Results</h2>
       {rows.map((x) => {

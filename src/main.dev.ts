@@ -20,7 +20,7 @@ import {
 } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
-import { writeFileSync } from 'fs';
+import { promises as fsPromises, writeFileSync } from 'fs';
 import path from 'path';
 import 'regenerator-runtime/runtime';
 import MenuBuilder from './menu';
@@ -55,7 +55,7 @@ const installExtensions = async () => {
   return installer
     .default(
       extensions.map((name) => installer[name]),
-      forceDownload
+      forceDownload,
     )
     .catch(console.log);
 };
@@ -186,13 +186,13 @@ ipcMain.handle(
 
     if (withHtml) {
       const html = await view.webContents.executeJavaScript(
-        'document.documentElement.innerHTML'
+        'document.documentElement.innerHTML',
       );
       return html;
     }
 
     return null;
-  }
+  },
 );
 
 ipcMain.handle('scraping-get-cookies', async (event) => {
@@ -217,13 +217,13 @@ ipcMain.handle(
     } else {
       view.webContents.on(navEvent, cb);
     }
-  }
+  },
 );
 
 ipcMain.handle('scraping-get-html', async (event) => {
   const view = getScrapingView();
   const html = await view.webContents.executeJavaScript(
-    'document.documentElement.innerHTML'
+    'document.documentElement.innerHTML',
   );
   return html;
 });
@@ -247,7 +247,21 @@ ipcMain.handle('scraping-remove-view', async (event) => {
   view.webContents.destroy();
   scrapingView = null;
 });
-ipcMain.handle('results-export-data', async (event, data, filename) => {
+
+ipcMain.handle('results-import', async (event) => {
+  const { canceled, filePaths } = await dialog.showOpenDialog({
+    properties: ['openFile', 'multiSelections'],
+    filters: [{ name: 'JSON', extensions: ['json'] }],
+  });
+  if (canceled) return;
+
+  filePaths.forEach(async (x) => {
+    const data = await fsPromises.readFile(x, 'utf8');
+    event.sender.send('results-import-data', data);
+  });
+});
+
+ipcMain.handle('results-export', async (event, data, filename) => {
   if (mainWindow === null) return;
   const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
     defaultPath: filename,

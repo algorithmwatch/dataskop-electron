@@ -44,6 +44,31 @@ const addData = (sessionId: string, data: any) => {
   });
 };
 
+const importRow = async (row: ScrapingResultSaved): Promise<number> => {
+  /**
+   * import already scraped data and try to keep the original id if possible.
+   */
+  return db.transaction('rw', db.scrapingResults, async () => {
+    const { id } = row;
+
+    if (id != null) {
+      delete row.id;
+      const existingRow = await db.scrapingResults.get(id);
+      if (existingRow === null) {
+        // no row with this id exists, so re-use the id
+        await db.scrapingResults.add(row, id);
+        return 1;
+      }
+      // row was already entered
+      if (existingRow === row) return 0;
+    }
+
+    // id is undefined so generate new id
+    await db.scrapingResults.add(row);
+    return 1;
+  });
+};
+
 const getData = () => {
   return db.transaction('r', db.scrapingResults, async () => {
     const res = await db.scrapingResults.toArray();
@@ -137,6 +162,7 @@ const getStatisticsForSession = async (sessiondId: string) => {
 
 export {
   addData,
+  importRow,
   getData,
   clearData,
   getSessionsMetaData,
