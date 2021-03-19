@@ -13,12 +13,14 @@ import {
   app,
   BrowserView,
   BrowserWindow,
+  dialog,
   ipcMain,
   session,
   shell,
 } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
+import { writeFileSync } from 'fs';
 import path from 'path';
 import 'regenerator-runtime/runtime';
 import MenuBuilder from './menu';
@@ -244,4 +246,12 @@ ipcMain.handle('scraping-remove-view', async (event) => {
   // Not calling it will result in errors with event handlers.
   view.webContents.destroy();
   scrapingView = null;
+});
+ipcMain.handle('results-export-data', async (event, data, filename) => {
+  if (mainWindow === null) return;
+  const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+    defaultPath: filename,
+  });
+  if (canceled || !filePath) return;
+  writeFileSync(filePath, data);
 });

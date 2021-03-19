@@ -1,8 +1,19 @@
+import dayjs from 'dayjs';
+import { ipcRenderer } from 'electron';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import routes from '../constants/routes.json';
-import { clearData, getSessionsMetaData } from '../db';
+import { clearData, getData, getSessionsMetaData } from '../db';
 import Base from '../layouts/Base';
+
+const invokeExport = async (data: ScrapingResultSaved[]) => {
+  const filename = `dataskop-${dayjs().format('YYYY-MM-DD-HH-mm-s')}.json`;
+  return ipcRenderer.invoke(
+    'results-export-data',
+    JSON.stringify(data),
+    filename,
+  );
+};
 
 export default function ResultsPage(): JSX.Element {
   const [rows, setRows] = useState<any>([]);
@@ -22,6 +33,9 @@ export default function ResultsPage(): JSX.Element {
         onClick={() => clearData() && setRows([])}
       >
         clear data
+      </button>
+      <button type="button" onClick={async () => invokeExport(await getData())}>
+        export data
       </button>
       <h2>Results</h2>
       {rows.map((x) => {
