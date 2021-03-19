@@ -68,13 +68,21 @@ export default function VisualizationPage() {
     <Base>
       <h1>Vis</h1>
       <div>
-        <button onClick={() => setVisType('thumbnails')}>thumbnails</button>
-        <button onClick={() => setVisType('charts')}>charts</button>
-        <button onClick={() => setVisType('topics')}>topics</button>
+        <button type="button" onClick={() => setVisType('thumbnails')}>
+          thumbnails
+        </button>
+        <button type="button" onClick={() => setVisType('charts')}>
+          charts
+        </button>
+        <button type="button" onClick={() => setVisType('topics')}>
+          topics
+        </button>
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {data.map((x) => (
+        {data.map((x, i) => (
           <div
+            // eslint-disable-next-line react/no-array-index-key
+            key={i}
             style={{
               width: 'auto',
               minWidth: '2rem',
