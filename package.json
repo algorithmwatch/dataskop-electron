@@ -87,16 +87,16 @@
     ],
     "publish": {
       "provider": "github",
-      "owner": "electron-react-boilerplate",
-      "repo": "electron-react-boilerplate"
+      "owner": "algorithmwatch",
+      "repo": "dataskop-electron"
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/algorithmwatch/dataskop-pedd.git"
+    "url": "git+https://github.com/algorithmwatch/dataskop-electron.git"
   },
   "author": {
-    "name": "AlgorithmWatch",
+    "name": "AW AlgorithmWatch gGmbH",
     "email": "it@algorithmwatch.org",
     "url": "https://algorithmwatch.org"
   },
@@ -105,17 +105,22 @@
       "name": "Johannes Filter",
       "email": "hi@jfilter.de",
       "url": "https://johannesfilter.com"
+    },
+    {
+      "name": "Gregor Weichbrodt",
+      "email": "gregorweichbrodt@gmail.com",
+      "url": "https://gregorweichbrodt.de"
     }
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/algorithmwatch/dataskop-pedd/issues"
+    "url": "https://github.com/algorithmwatch/dataskop-electron/issues"
   },
   "keywords": [
     "electron",
     "dataskop"
   ],
-  "homepage": "https://github.com/algorithmwatch/dataskop-pedd#readme",
+  "homepage": "https://dataskop.net",
   "jest": {
     "testURL": "http://localhost/",
     "moduleNameMapper": {
