@@ -71,7 +71,7 @@ const importRow = async (row: ScrapingResultSaved): Promise<number> => {
 
 const getData = () => {
   return db.transaction('r', db.scrapingResults, async () => {
-    const res = await db.scrapingResults.toArray();
+    const res = await db.scrapingResults.orderBy('scrapedAt').toArray();
     return res;
   });
 };
@@ -117,7 +117,7 @@ const getSessionsMetaData = async () => {
       };
     }),
   );
-  sessions.sort((a, b) => b.scrapedAt || 0 - (a.scrapedAt || 0));
+  sessions.sort((a, b) => (b.scrapedAt || 0) - (a.scrapedAt || 0));
   return sessions;
 };
 
