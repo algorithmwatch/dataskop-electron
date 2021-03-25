@@ -1,7 +1,9 @@
 import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { VictoryBar, VictoryChart } from 'victory';
+import { getSessionData } from '../db';
 import Base from '../layouts/Base';
 import { getThumbnails } from '../providers/youtube/utils';
 import { randomIntFromInterval } from '../utils/math';
@@ -47,29 +49,54 @@ function Topic() {
   );
 }
 
+function ThumbailsRecommended({ video }) {
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      {video.fields.recommendedVideos.map((x, i) => (
+        <div
+          // eslint-disable-next-line react/no-array-index-key
+          key={i}
+          style={{
+            width: 'auto',
+            minWidth: '2rem',
+            height: '5rem',
+            backgroundColor: 'white',
+            margin: '1rem',
+          }}
+        >
+          <Thumbnail x={x} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function VisualizationPage() {
   const [visType, setVisType] = useState<string>('thumbnail');
 
-  // const [data, setData] = useState<any>([]);
+  const [data, setData] = useState<any>([]);
 
-  // useEffect(() => {
-  //   const loadData = async () => {
-  //     const { sessionId } = useParams();
-  //     setData(await getSessionData(sessionId));
-  //   };
-  //   loadData();
-  // }, []);
+  const { sessionId } = useParams();
 
-  const data = Array.from({ length: 10 }, (_, i) => ({
-    id: '4Y1lZQsyuSQ',
-  }));
+  useEffect(() => {
+    const loadData = async () => {
+      setData(await getSessionData(sessionId));
+    };
+    loadData();
+  }, [sessionId]);
+
+  // const data = Array.from({ length: 10 }, (_, i) => ({
+  //   id: '4Y1lZQsyuSQ',
+  // }));
+
+  console.log(data);
 
   return (
     <Base>
       <h1>Vis</h1>
       <div>
         <button type="button" onClick={() => setVisType('thumbnails')}>
-          thumbnails
+          thumbnails recommended
         </button>
         <button type="button" onClick={() => setVisType('charts')}>
           charts
@@ -78,7 +105,10 @@ export default function VisualizationPage() {
           topics
         </button>
       </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      {visType === 'thumbnails' &&
+        data &&
+        data.map((x, i) => <ThumbailsRecommended key={i} video={x.result} />)}
+      {/* <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         {data.map((x, i) => (
           <div
             // eslint-disable-next-line react/no-array-index-key
@@ -96,7 +126,7 @@ export default function VisualizationPage() {
             {visType === 'topics' && <Topic />}
           </div>
         ))}
-      </div>
+      </div> */}
     </Base>
   );
 }
