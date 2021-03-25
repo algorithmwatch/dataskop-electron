@@ -18,7 +18,7 @@ function Thumbnail({ x }) {
   return <img src={getThumbnails(x.id).small[imgIdx]} alt={x.id} />;
 }
 
-function SmallMultiple() {
+function Metric() {
   const data = [
     { quarter: 1, earnings: 13000 },
     { quarter: 2, earnings: 16500 },
@@ -41,17 +41,70 @@ function SmallMultiple() {
   );
 }
 
-function Topic() {
+function FollowedMetrics() {
+  const data = Array.from({ length: 10 }, (_, i) => ({
+    id: '4Y1lZQsyuSQ',
+  }));
   return (
-    <div>
-      <FontAwesomeIcon icon={faCoffee} color="red" />
+    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      {data.map((x, i) => {
+        return (
+          <div
+            style={{
+              width: 'auto',
+              minWidth: '2rem',
+              height: '5rem',
+              margin: '1rem',
+              border: '2px solid pink',
+            }}
+          >
+            <Metric />
+          </div>
+        );
+      })}
     </div>
   );
 }
 
-function ThumbailsRecommended({ video }) {
+function FollowedTopics() {
+  const data = Array.from({ length: 10 }, (_, i) => ({
+    id: '4Y1lZQsyuSQ',
+  }));
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      {data.map((x, i) => {
+        return (
+          <div
+            style={{
+              width: 'auto',
+              minWidth: '2rem',
+              height: '5rem',
+              margin: '1rem',
+              border: '2px solid pink',
+            }}
+          >
+            <FontAwesomeIcon icon={faCoffee} color="red" />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function RecommendedThumbnails({ video }) {
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      <div
+        style={{
+          width: 'auto',
+          minWidth: '2rem',
+          height: '5rem',
+          margin: '1rem',
+          border: '2px solid pink',
+        }}
+      >
+        <Thumbnail x={video.fields} />
+      </div>
       {video.fields.recommendedVideos.map((x, i) => (
         <div
           // eslint-disable-next-line react/no-array-index-key
@@ -71,6 +124,10 @@ function ThumbailsRecommended({ video }) {
   );
 }
 
+function FollowedThumbnails({ allVideos }) {
+  return <div></div>;
+}
+
 export default function VisualizationPage() {
   const [visType, setVisType] = useState<string>('thumbnail');
 
@@ -85,48 +142,39 @@ export default function VisualizationPage() {
     loadData();
   }, [sessionId]);
 
-  // const data = Array.from({ length: 10 }, (_, i) => ({
-  //   id: '4Y1lZQsyuSQ',
-  // }));
-
   console.log(data);
 
   return (
     <Base>
       <h1>Vis</h1>
       <div>
-        <button type="button" onClick={() => setVisType('thumbnails')}>
-          thumbnails recommended
+        <button
+          type="button"
+          onClick={() => setVisType('recommended-thumbnails')}
+        >
+          recommended thumbnails
         </button>
-        <button type="button" onClick={() => setVisType('charts')}>
+        <button
+          type="button"
+          onClick={() => setVisType('recommended-thumbnails')}
+        >
+          followed thumbnails
+        </button>
+        <button type="button" onClick={() => setVisType('followed-metrics')}>
           charts
         </button>
-        <button type="button" onClick={() => setVisType('topics')}>
+        <button type="button" onClick={() => setVisType('followed-topics')}>
           topics
         </button>
       </div>
-      {visType === 'thumbnails' &&
+      {visType === 'recommended-thumbnails' &&
         data &&
-        data.map((x, i) => <ThumbailsRecommended key={i} video={x.result} />)}
-      {/* <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {data.map((x, i) => (
-          <div
-            // eslint-disable-next-line react/no-array-index-key
-            key={i}
-            style={{
-              width: 'auto',
-              minWidth: '2rem',
-              height: '5rem',
-              backgroundColor: 'white',
-              margin: '1rem',
-            }}
-          >
-            {visType === 'thumbnails' && <Thumbnail x={x} />}
-            {visType === 'charts' && <SmallMultiple />}
-            {visType === 'topics' && <Topic />}
-          </div>
-        ))}
-      </div> */}
+        data.map((x, i) => <RecommendedThumbnails key={i} video={x.result} />)}
+      {visType === 'followed-thumbnails' && data && (
+        <FollowedThumbnails allVideos={data} />
+      )}
+      {visType === 'followed-metrics' && data && <FollowedMetrics />}
+      {visType === 'followed-topics' && data && <FollowedTopics />}
     </Base>
   );
 }
