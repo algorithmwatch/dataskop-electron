@@ -160,7 +160,11 @@ let scrapingView: BrowserView | null = null;
 
 const getScrapingView = (): BrowserView => {
   if (scrapingView == null) {
-    const newView = new BrowserView();
+    const newView = new BrowserView({
+      webPreferences: {
+        contextIsolation: false,
+      },
+    });
     mainWindow?.setBrowserView(newView);
 
     const { width } = mainWindow?.getBounds();
