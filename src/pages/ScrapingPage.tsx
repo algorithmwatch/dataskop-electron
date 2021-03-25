@@ -8,6 +8,7 @@ import routes from '../constants/routes.json';
 import { addData, newSession } from '../db';
 import Base from '../layouts/Base';
 import { allConfigs as ytConfigs } from '../providers/youtube';
+import { postDummyBackend } from '../utils/networking';
 import { delay } from '../utils/time';
 
 // commands to communicate with the browser window in the main screen
@@ -174,6 +175,10 @@ export default function ScrapingPage(): JSX.Element {
       if (value == null) return;
       setProgresFrac(value[0]);
       addData(sessionId, value[1]);
+
+      const succ = await postDummyBackend(value[1]);
+      console.log(succ);
+
       if (done) setIsScrapingFinished(true);
     };
     runScraperOnce();
