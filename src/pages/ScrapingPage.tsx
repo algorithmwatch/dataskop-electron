@@ -139,7 +139,11 @@ export default function ScrapingPage(): JSX.Element {
 
   const startScraping = async () => {
     setIsScrapingStarted(true);
-    const gen = scrapingconfig.scrapingGenerator(goToUrlHtml, getHtmlLazy);
+
+    const gen = scrapingconfig.createProcedure(scrapingconfig.procedureConfig)(
+      goToUrlHtml,
+      getHtmlLazy,
+    );
     setScrapingGen(gen);
     const sId = uuidv4();
     setSessionId(sId);
@@ -206,6 +210,41 @@ export default function ScrapingPage(): JSX.Element {
         perferendis sequi libero laborum esse soluta, ut rerum placeat
         consectetur deleniti.
       </p>
+      <hr />
+      <textarea
+        style={{ width: '500px' }}
+        rows={10}
+        value={scrapingconfig.procedureConfig.seedFixedVideos.join(' ')}
+        onChange={(e) => {
+          try {
+            setScrapingConfig({
+              ...scrapingconfig,
+              procedureConfig: {
+                ...scrapingconfig.procedureConfig,
+                seedFixedVideos: e.target.value.split(' '),
+              },
+            });
+          } catch (error) {
+            console.error(error);
+          }
+        }}
+      />
+      <input
+        id="number"
+        type="number"
+        step="1"
+        value={scrapingconfig.procedureConfig.followVideos}
+        onChange={(e) => {
+          setScrapingConfig({
+            ...scrapingconfig,
+            procedureConfig: {
+              ...scrapingconfig.procedureConfig,
+              followVideos: e.target.value,
+            },
+          });
+        }}
+      />
+      <hr />
       <br />
       <button className="button" type="button" onClick={clearBrowser}>
         reset browser

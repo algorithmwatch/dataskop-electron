@@ -37,35 +37,35 @@ const defaultConfig = {
   startUrl: 'https://www.youtube.com',
   loginUrl: 'https://www.youtube.com/account',
   loginCookie: 'LOGIN_INFO',
-  scrapingGenerator: createProcedure(defaultProcedureConfig),
+  procedureConfig: defaultProcedureConfig,
+  createProcedure,
 };
 
 const simpleConfig = {
   ...defaultConfig,
-  scrollingBottomForComments: 0,
   title: 'youtube simple config',
-  scrapingGenerator: createProcedure({
+  procedureConfig: {
     ...defaultProcedureConfig,
+    scrollingBottomForComments: 0,
     personalScrapers: [],
     seedCreators: [],
-  }),
+  },
 };
 
 // fast test, all functions only need to run once
-const testProcedureConfig = {
-  ...defaultProcedureConfig,
-  personalScraper: Object.values(personalScrapers).concat([
-    scrapePopularVideos,
-    scrapeNationalNewsTopStories,
-  ]),
-  seedCreators: [],
-  seedFixedVideos: ['4Y1lZQsyuSQ'],
-};
 
 const testConfig = {
   ...defaultConfig,
   title: 'youtube test providers',
-  scrapingGenerator: createProcedure(testProcedureConfig),
+  procedureConfig: {
+    ...defaultProcedureConfig,
+    personalScraper: Object.values(personalScrapers).concat([
+      scrapePopularVideos,
+      scrapeNationalNewsTopStories,
+    ]),
+    seedCreators: [],
+    seedFixedVideos: ['4Y1lZQsyuSQ'],
+  },
 };
 
 const allConfigs = [defaultConfig, simpleConfig, testConfig];
