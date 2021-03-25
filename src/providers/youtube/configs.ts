@@ -42,6 +42,7 @@ const defaultConfig = {
 
 const simpleConfig = {
   ...defaultConfig,
+  scrollingBottomForComments: 0,
   title: 'youtube simple config',
   scrapingGenerator: createProcedure({
     ...defaultProcedureConfig,

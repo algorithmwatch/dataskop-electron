@@ -13,7 +13,7 @@ export default {
     rules: [
       {
         test: /\.tsx?$/,
-        exclude: /node_modules\/(?!(parse-yt|ADDNEWMODULEHERE)\/).*/,
+        exclude: /node_modules\/(?!(parse-yt|harke-parser)\/).*/,
         use: {
           loader: 'babel-loader',
           options: {

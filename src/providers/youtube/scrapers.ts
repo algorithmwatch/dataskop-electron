@@ -1,5 +1,6 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
+import { parseVideoPage } from 'harke-parser';
 import {
   parseCommentHistory,
   parseComments,
@@ -89,6 +90,37 @@ const scrapeVideo = async (
   }
 };
 
+const scrapeVideo2 = async (
+  videoId: string,
+  getHtml: GetHtmlFunction,
+  limit: number | null,
+  comments: boolean,
+): Promise<ScrapingResult> => {
+  const url = `https://www.youtube.com/watch?v=${videoId}`;
+  const html = await getHtml(url);
+
+  try {
+    const result = parseVideoPage(html);
+    console.log(result);
+    const resultObj = {
+      result,
+      task: 'YT-recommendedVideos',
+    };
+
+    // if (comments) {
+    //   resultObj.result.commentSection = parseComments(html);
+    // }
+
+    return resultObj;
+  } catch (error) {
+    return {
+      result: { videoId },
+      errorMessage: error.stack,
+      task: 'YT-recommendedVideos',
+    };
+  }
+};
+
 const scrapeWatchedVideos = async (
   getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
@@ -132,7 +164,7 @@ async function* scrapeSeedVideosAndFollow(
   let step = initialStep;
 
   for (const id of seedVideoIds) {
-    const dataFromSeed = await scrapeVideo(id, getHtml, null, comments);
+    const dataFromSeed = await scrapeVideo2(id, getHtml, null, comments);
     step += 1;
     yield [step / maxSteps, dataFromSeed];
 
@@ -143,8 +175,8 @@ async function* scrapeSeedVideosAndFollow(
         // some hack to add trash data, TODO: rework error handling
         followVideo = dataFromSeed;
       } else {
-        followVideo = await scrapeVideo(
-          dataFromSeed.result.recommendedVideos[i].id,
+        followVideo = await scrapeVideo2(
+          dataFromSeed.result.fields.recommendedVideos[i].id,
           getHtml,
           null,
           comments,

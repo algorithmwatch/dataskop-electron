@@ -254,6 +254,7 @@
     "electron-log": "^4.2.4",
     "electron-updater": "^4.3.4",
     "got": "^11.8.0",
+    "harke-parser": "../harke-parser",
     "history": "^5.0.0",
     "parse-yt": "../parse-yt",
     "react": "^17.0.1",
