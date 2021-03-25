@@ -4,7 +4,7 @@ const postDummyBackend = async (data) => {
     'https://lab1.algorithmwatch.org/pushdataOP1MP0Unv0H84ZENIgMA',
     {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify({ slug: data.slug, data: JSON.stringify(data) }),
       headers: { 'Content-Type': 'application/json' },
     },
   );
