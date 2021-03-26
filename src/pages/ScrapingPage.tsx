@@ -9,16 +9,22 @@ import { addData, newSession } from '../db';
 import Base from '../layouts/Base';
 import { allConfigs as ytConfigs } from '../providers/youtube';
 import { postDummyBackend } from '../utils/networking';
+import { splitByWhitespace } from '../utils/strings';
 import { delay } from '../utils/time';
 
 // commands to communicate with the browser window in the main screen
+
+const getCurrentHtml = async () => {
+  return ipcRenderer.invoke('scraping-get-current-html');
+};
 
 const goToUrl = async (url: string, options = {}): Promise<string> => {
   return ipcRenderer.invoke('scraping-load-url', url, options);
 };
 
-const goToUrlHtml = async (url: string): Promise<string> => {
-  return goToUrl(url, { withHtml: true });
+const goToUrlHtml = async (url: string): Promise<GetHtmlFunction> => {
+  await goToUrl(url);
+  return getCurrentHtml;
 };
 
 const getCookies = async (): Promise<Array<unknown>> => {
@@ -27,10 +33,6 @@ const getCookies = async (): Promise<Array<unknown>> => {
 
 const setNavigationCallback = async (cbSlug: string, remove = false) => {
   return ipcRenderer.invoke('scraping-navigation-cb', cbSlug, remove);
-};
-
-const getHtml = async () => {
-  return ipcRenderer.invoke('scraping-get-html');
 };
 
 const scrollDown = async () => {
@@ -57,6 +59,7 @@ export default function ScrapingPage(): JSX.Element {
   const [isScrapingStarted, setIsScrapingStarted] = useState(false);
   const [isScrapingPaused, setIsScrapingPaused] = useState(false);
   const [isScrapingFinished, setIsScrapingFinished] = useState(false);
+  const [scrapingError, setScrapingError] = useState(null);
 
   const [isMuted, setIsMuted] = useState(false);
   const [browserHeight, setBrowserHeight] = useState(500);
@@ -75,8 +78,9 @@ export default function ScrapingPage(): JSX.Element {
     return goToUrl(scrapingconfig.loginUrl);
   };
 
-  const clearBrowser = () => {
+  const resetBrowser = () => {
     goToUrl(scrapingconfig.loginUrl, { clear: true });
+    setUserLoggedIn(false);
   };
 
   const getHtmlLazy = async (
@@ -100,7 +104,7 @@ export default function ScrapingPage(): JSX.Element {
       }
 
       while (true) {
-        const html = await getHtml();
+        const html = await getCurrentHtml();
         // FIXME: not needed to check this every time, find a better way
         if (loadingAbort(html)) {
           stopScrolling = true;
@@ -111,7 +115,7 @@ export default function ScrapingPage(): JSX.Element {
       }
     }
 
-    const html = await getHtml();
+    const html = await getCurrentHtml();
     return html;
   };
 
@@ -133,8 +137,12 @@ export default function ScrapingPage(): JSX.Element {
     cleanUpScraper();
     await goToStart();
 
-    await setNavigationCallback(cbSlug);
-    ipcRenderer.on(cbSlug, checkLoginCb);
+    const loggedIn = await checkForLogIn();
+
+    if (!loggedIn) {
+      await setNavigationCallback(cbSlug);
+      ipcRenderer.on(cbSlug, checkLoginCb);
+    }
   };
 
   const startScraping = async () => {
@@ -166,6 +174,7 @@ export default function ScrapingPage(): JSX.Element {
     setIsScrapingPaused(false);
     setIsScrapingStarted(false);
     setIsScrapingFinished(false);
+    setScrapingError(null);
 
     goToUrl(scrapingconfig.loginUrl);
   };
@@ -175,24 +184,31 @@ export default function ScrapingPage(): JSX.Element {
     const runScraperOnce = async () => {
       if (scrapingGen === null) return;
       if (isScrapingPaused) return;
-      const { value, done } = await scrapingGen.next();
-      if (value == null) return;
-      setProgresFrac(value[0]);
-      addData(sessionId, value[1]);
 
-      const succ = await postDummyBackend(value[1]);
-      console.log(succ);
+      try {
+        const { value, done } = await scrapingGen.next();
+        if (value == null) return;
 
-      if (done) setIsScrapingFinished(true);
+        setProgresFrac(value[0]);
+        addData(sessionId, value[1]);
+
+        const postedSuccess = await postDummyBackend(value[1]);
+        if (!postedSuccess) console.error('error posting data to backend');
+
+        if (done) setIsScrapingFinished(true);
+      } catch (err) {
+        setScrapingError(err);
+        console.error(err);
+        setIsScrapingPaused(true);
+      }
     };
     runScraperOnce();
-  }, [scrapingGen, progresFrac, sessionId, isScrapingPaused]); // Only re-run the effect if these change
+  }, [scrapingGen, progresFrac, sessionId, isScrapingPaused]);
 
+  // initialize & cleanup
   useEffect(() => {
-    // mount
     initScraper();
     return () => {
-      // unmount
       cleanUpScraper();
     };
   }, []);
@@ -200,6 +216,8 @@ export default function ScrapingPage(): JSX.Element {
   useEffect(() => {
     setMutedStatus(isMuted);
   }, [isMuted]);
+
+  console.log(scrapingconfig.procedureConfig);
 
   return (
     <Base>
@@ -211,17 +229,23 @@ export default function ScrapingPage(): JSX.Element {
         consectetur deleniti.
       </p>
       <hr />
+      <p>
+        {scrapingError !== null &&
+          `${scrapingError.name}: ${scrapingError.message}`}
+      </p>
+      <hr />
       <textarea
         style={{ width: '500px' }}
         rows={10}
         value={scrapingconfig.procedureConfig.seedFixedVideos.join(' ')}
         onChange={(e) => {
           try {
+            if (e.target.value == null) return;
             setScrapingConfig({
               ...scrapingconfig,
               procedureConfig: {
                 ...scrapingconfig.procedureConfig,
-                seedFixedVideos: e.target.value.split(' '),
+                seedFixedVideos: splitByWhitespace(e.target.value),
               },
             });
           } catch (error) {
@@ -246,7 +270,7 @@ export default function ScrapingPage(): JSX.Element {
       />
       <hr />
       <br />
-      <button className="button" type="button" onClick={clearBrowser}>
+      <button className="button" type="button" onClick={resetBrowser}>
         reset browser
       </button>
       <button className="button" type="button" onClick={resetScraping}>
@@ -277,25 +301,13 @@ export default function ScrapingPage(): JSX.Element {
         </button>
       )}
 
-      {isMuted && (
-        <button
-          className="button"
-          type="button"
-          onClick={() => setIsMuted(false)}
-        >
-          is muted
-        </button>
-      )}
-
-      {!isMuted && (
-        <button
-          className="button"
-          type="button"
-          onClick={() => setIsMuted(true)}
-        >
-          is not muted
-        </button>
-      )}
+      <button
+        className="button"
+        type="button"
+        onClick={() => setIsMuted(!isMuted)}
+      >
+        is {!isMuted && 'not'} muted
+      </button>
 
       <input
         value={browserHeight}

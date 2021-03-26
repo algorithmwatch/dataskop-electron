@@ -1,4 +1,6 @@
-type GetHtmlFunction = (url: string) => Promise<string>;
+type GetCurrentHtml = () => Promise<string>;
+
+type GetHtmlFunction = (url: string) => Promise<GetCurrentHtml>;
 
 type GetHtmlLazyFunction = (
   url: string,

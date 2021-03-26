@@ -1,4 +1,4 @@
-const getThumbnails = (id) => {
+const getThumbnails = (id: string) => {
   /**
    * Returns the average of two numbers.
     https://yt-thumb.canbeuseful.com/en

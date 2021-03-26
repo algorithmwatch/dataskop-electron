@@ -1,8 +1,6 @@
-interface ScrapingResult {
-  task: string;
-  result: any;
-  errorMessage?: string;
-}
+import { ParserResult } from 'harke-parser/src/types';
+
+interface ScrapingResult extends ParserResult {}
 
 interface ScrapingResultSaved extends ScrapingResult {
   id?: number;

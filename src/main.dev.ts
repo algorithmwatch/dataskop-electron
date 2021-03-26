@@ -224,7 +224,7 @@ ipcMain.handle(
   },
 );
 
-ipcMain.handle('scraping-get-html', async (event) => {
+ipcMain.handle('scraping-get-current-html', async (event) => {
   const view = getScrapingView();
   const html = await view.webContents.executeJavaScript(
     'document.documentElement.innerHTML',

@@ -3,15 +3,14 @@
 import { parseVideoPage } from 'harke-parser';
 import {
   parseCommentHistory,
-  parseComments,
   parseGetPlaylist,
-  parseGetRelated,
-  parseGetVideo,
   parseSearchHistory,
   parseSubscriptions,
   parseWatchHistory,
 } from 'parse-yt';
 import { Video } from 'parse-yt/src/types';
+import { ScrapingResult } from '../../db/types';
+import { delay } from '../../utils/time';
 
 // play list of special lists
 const LIST_ID_POPULAR = 'PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-';
@@ -21,13 +20,11 @@ const LIST_ID_LIKED_VIDEOS = 'LL';
 const scrapePlaylist = async (
   playlistId: string,
   getHtml: GetHtmlFunction,
-  limit?: number,
 ): Promise<Video[]> => {
   const html = await getHtml(
     `https://www.youtube.com/playlist?list=${playlistId}`,
   );
   const { videos } = parseGetPlaylist(html);
-  if (typeof limit !== 'undefined') return videos.slice(0, limit);
   return videos;
 };
 
@@ -58,66 +55,28 @@ const scrapeLikedVideos = async (
   return { result, task: 'YT-likedVideos' };
 };
 
-const scrapeVideoLegacy = async (
-  videoId: string,
-  getHtml: GetHtmlFunction,
-  limit: number | null,
-  comments: boolean,
-): Promise<ScrapingResult> => {
-  const url = `https://www.youtube.com/watch?v=${videoId}`;
-  const html = await getHtml(url);
-
-  try {
-    const recommendedVideos = parseGetRelated(html, limit);
-    const videoInformation = parseGetVideo(html);
-
-    const resultObj = {
-      result: { recommendedVideos, videoInformation },
-      task: 'YT-recommendedVideos',
-    };
-
-    if (comments) {
-      resultObj.result.commentSection = parseComments(html);
-    }
-
-    return resultObj;
-  } catch (error) {
-    return {
-      result: { videoId },
-      errorMessage: error.stack,
-      task: 'YT-recommendedVideos',
-    };
-  }
-};
-
 const scrapeVideo = async (
   videoId: string,
   getHtml: GetHtmlFunction,
-  limit: number | null,
-  comments: boolean,
+  comments = false,
+  timeout = { max: 1000, start: 100, factor: 1.5 },
 ): Promise<ScrapingResult> => {
   const url = `https://www.youtube.com/watch?v=${videoId}`;
-  const html = await getHtml(url);
+  const getCurrentHtml = await getHtml(url);
 
-  try {
-    const result = parseVideoPage(html);
-    const resultObj = {
-      result,
-      task: 'YT-recommendedVideos',
-    };
-
-    // if (comments) {
-    //   resultObj.result.commentSection = parseComments(html);
-    // }
-
-    return resultObj;
-  } catch (error) {
-    return {
-      result: { videoId },
-      errorMessage: error.stack,
-      task: 'YT-recommendedVideos',
-    };
+  let curTimeout = timeout.start;
+  while (curTimeout < timeout.max) {
+    await delay(curTimeout);
+    const currentHtml = await getCurrentHtml();
+    const result = parseVideoPage(currentHtml, comments);
+    console.log(result);
+    if (result.errors.length === 0) {
+      result.slug = `yt-${result.slug}`;
+      return result;
+    }
+    curTimeout *= timeout.factor;
   }
+  throw new Error('parse error');
 };
 
 const scrapeWatchedVideos = async (
@@ -163,26 +122,21 @@ async function* scrapeSeedVideosAndFollow(
   let step = initialStep;
 
   for (const id of seedVideoIds) {
-    const dataFromSeed = await scrapeVideo(id, getHtml, null, comments);
+    const dataFromSeed = await scrapeVideo(id, getHtml, comments);
     step += 1;
+    dataFromSeed.slug += '-seed';
     yield [step / maxSteps, dataFromSeed];
 
     for (const i of [...Array(followVideos).keys()]) {
       let followVideo = null;
 
-      if ('errorMessage' in dataFromSeed) {
-        // some hack to add trash data, TODO: rework error handling
-        followVideo = dataFromSeed;
-      } else {
-        followVideo = await scrapeVideo(
-          dataFromSeed.result.fields.recommendedVideos[i].id,
-          getHtml,
-          null,
-          comments,
-        );
-      }
+      followVideo = await scrapeVideo(
+        dataFromSeed.fields.recommendedVideos[i].id,
+        getHtml,
+        comments,
+      );
 
-      followVideo.task += '-followed';
+      followVideo.slug += '-followed';
       step += 1;
       if (step < maxSteps) {
         yield [step / maxSteps, followVideo];
@@ -203,7 +157,7 @@ async function* scrapeSeedVideos(
 ) {
   let step = initialStep;
   for (const id of seedVideoIds) {
-    const data = await scrapeVideo(id, getHtml, null, comments);
+    const data = await scrapeVideo(id, getHtml, comments);
     step += 1;
 
     if (step < maxSteps) {
