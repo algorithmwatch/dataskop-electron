@@ -6,7 +6,7 @@ import routes from '../constants/routes.json';
 import { getSessionData, getStatisticsForSession } from '../db';
 import Base from '../layouts/Base';
 
-function ResultsDetails({ sessionId }): JSX.Element {
+function ResultsDetails({ sessionId }: { sessionId: string }): JSX.Element {
   const [rows, setRows] = useState<any>([]);
   const [stats, setStats] = useState<any>([]);
 
@@ -31,6 +31,6 @@ function ResultsDetails({ sessionId }): JSX.Element {
 }
 
 export default function ResultsDetailsPage() {
-  const { sessionId } = useParams();
+  const { sessionId }: { sessionId: string } = useParams();
   return <ResultsDetails sessionId={sessionId} />;
 }

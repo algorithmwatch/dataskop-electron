@@ -1,6 +1,6 @@
 import { ParserResult } from 'harke-parser/src/types';
 
-interface ScrapingResult extends ParserResult {}
+type ScrapingResult = ParserResult;
 
 interface ScrapingResultSaved extends ScrapingResult {
   id?: number;

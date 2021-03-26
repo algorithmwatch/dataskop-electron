@@ -5,6 +5,7 @@
 
 import Dexie from 'dexie';
 import { statsForArray } from '../utils/math';
+import { ScrapingResultSaved, ScrapingSessions } from './types';
 
 // Declare Database
 class ScrapingDatabase extends Dexie {
@@ -15,7 +16,7 @@ class ScrapingDatabase extends Dexie {
   public constructor() {
     super('ScrapingDatabase');
     this.version(1).stores({
-      scrapingResults: '++id,sessionId,scrapedAt,task,result,errorMessage',
+      scrapingResults: '++id,sessionId,scrapedAt,slug,result,errorMessage',
       scrapingSessions: '++id,sessionId,startedAt',
     });
     this.scrapingResults = this.table('scrapingResults');
@@ -141,16 +142,18 @@ const getStatisticsForSession = async (sessiondId: string) => {
   let previousTime = startedAt;
 
   for (let i = 0; i < allTasks.length; i += 1) {
-    const task = allTasks[i];
-    const duration = task.scrapedAt - previousTime;
-    if (allTimes.has(task.task)) {
-      const oldTimes = allTimes.get(task.task);
+    const { slug, scrapedAt } = allTasks[i];
+    const duration = scrapedAt - previousTime;
+
+    if (allTimes.has(slug)) {
+      const oldTimes = allTimes.get(slug);
       const newTimes = oldTimes.concat([duration]);
-      allTimes.set(task.task, newTimes);
+      allTimes.set(slug, newTimes);
     } else {
-      allTimes.set(task.task, [duration]);
+      allTimes.set(slug, [duration]);
     }
-    previousTime = task.scrapedAt;
+
+    previousTime = scrapedAt;
   }
 
   const result = {};

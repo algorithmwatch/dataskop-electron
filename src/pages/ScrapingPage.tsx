@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
 import { ipcRenderer } from 'electron';
@@ -8,6 +9,7 @@ import routes from '../constants/routes.json';
 import { addData, newSession } from '../db';
 import Base from '../layouts/Base';
 import { allConfigs as ytConfigs } from '../providers/youtube';
+import { DEBUG } from '../utils/dev';
 import { postDummyBackend } from '../utils/networking';
 import { splitByWhitespace } from '../utils/strings';
 import { delay } from '../utils/time';
@@ -146,6 +148,10 @@ export default function ScrapingPage(): JSX.Element {
   };
 
   const startScraping = async () => {
+    if (DEBUG) {
+      console.log(scrapingconfig.procedureConfig);
+    }
+
     setIsScrapingStarted(true);
 
     const gen = scrapingconfig.createProcedure(scrapingconfig.procedureConfig)(
@@ -216,8 +222,6 @@ export default function ScrapingPage(): JSX.Element {
   useEffect(() => {
     setMutedStatus(isMuted);
   }, [isMuted]);
-
-  console.log(scrapingconfig.procedureConfig);
 
   return (
     <Base>
