@@ -74,6 +74,7 @@ function Topic({ x }) {
         border: '2px solid grey',
       }}
     >
+      {x.category}
       <FontAwesomeIcon icon={faCoffee} color="black" />
     </div>
   );
