@@ -20,12 +20,12 @@ export default function SessionTable({ data }: TableProps): JSX.Element {
         accessor: 'sessionId',
       },
       {
-        Header: 'Task',
-        accessor: 'task',
+        Header: 'slug',
+        accessor: 'slug',
       },
       {
-        Header: 'Result',
-        accessor: 'result',
+        Header: 'fields',
+        accessor: 'fields',
       },
       {
         Header: 'Error',
@@ -35,7 +35,7 @@ export default function SessionTable({ data }: TableProps): JSX.Element {
     [],
   );
 
-  data.forEach((x) => (x.result = JSON.stringify(x.result)));
+  data.forEach((x) => (x.fields = JSON.stringify(x.fields)));
   data.forEach((x) => (x.scrapedAt = new Date(x.scrapedAt).toString()));
 
   const tableInstance = useTable({ columns, data });

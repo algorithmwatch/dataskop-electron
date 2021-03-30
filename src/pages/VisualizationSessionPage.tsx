@@ -1,7 +1,9 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-key */
 import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { VictoryBar, VictoryChart } from 'victory';
@@ -9,6 +11,9 @@ import { getSessionData } from '../db';
 import Base from '../layouts/Base';
 import { getThumbnails } from '../providers/youtube/utils';
 import { randomIntFromInterval } from '../utils/math';
+
+const groupByFollowId = (x) =>
+  Object.values(_.groupBy(x, (y) => y.fields.followId));
 
 function Thumbnail({ x }) {
   const [imgIdx, setImgIdx] = useState(0);
@@ -93,48 +98,90 @@ function FollowedTopics() {
   );
 }
 
-function RecommendedThumbnails({ video }) {
+function ChartRow({ Element, row }) {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+    <div
+      style={{
+        border: '2px solid grey',
+        padding: '0.5rem',
+        margin: '1rem',
+        display: 'flex',
+      }}
+    >
       <div
         style={{
-          width: 'auto',
-          minWidth: '2rem',
-          height: '5rem',
           margin: '1rem',
-          border: '2px solid pink',
+          paddingRight: '1rem',
+          paddingBottom: '0.5rem',
+          borderRight: '2px solid grey',
+          borderBottom: '2px solid grey',
+          display: 'inline-block',
         }}
       >
-        <Thumbnail x={video.fields} />
+        <Element x={row[0]} />
       </div>
-      {video.fields.recommendedVideos.map((x, i) => (
-        <div
-          // eslint-disable-next-line react/no-array-index-key
-          key={i}
-          style={{
-            width: 'auto',
-            minWidth: '2rem',
-            height: '5rem',
-            backgroundColor: 'white',
-            margin: '1rem',
-          }}
-        >
-          <Thumbnail x={x} />
-        </div>
-      ))}
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          flexGrow: 1,
+        }}
+      >
+        {row.slice(1).map((x, i) => (
+          <div
+            // eslint-disable-next-line react/no-array-index-key
+            key={i}
+            style={{
+              width: 'auto',
+              minWidth: '2rem',
+              height: '5rem',
+              backgroundColor: 'white',
+              margin: '1rem',
+            }}
+          >
+            <Element x={x} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
-function FollowedThumbnails({ allVideos }) {
-  return <div></div>;
+function Chart({ visType, data }) {
+  if (visType === 'recommended-thumbnails') {
+    return (
+      <>
+        {data.map((x, i) => (
+          <ChartRow
+            key={i}
+            Element={Thumbnail}
+            row={[x.fields].concat(x.fields.recommendedVideos)}
+          />
+        ))}
+      </>
+    );
+  }
+  if (visType === 'followed-thumbnails') {
+    const followData = groupByFollowId(data);
+
+    return (
+      <>
+        {followData.map((x, i) => (
+          <ChartRow
+            key={i}
+            Element={Thumbnail}
+            row={x.map(({ fields }) => fields)}
+          />
+        ))}
+      </>
+    );
+  }
+  return null;
 }
 
 export default function VisualizationPage() {
   const [visType, setVisType] = useState<string>('thumbnail');
-
   const [data, setData] = useState<any>([]);
-
   const { sessionId } = useParams();
 
   useEffect(() => {
@@ -156,10 +203,7 @@ export default function VisualizationPage() {
         >
           recommended thumbnails
         </button>
-        <button
-          type="button"
-          onClick={() => setVisType('recommended-thumbnails')}
-        >
+        <button type="button" onClick={() => setVisType('followed-thumbnails')}>
           followed thumbnails
         </button>
         <button type="button" onClick={() => setVisType('followed-metrics')}>
@@ -169,14 +213,7 @@ export default function VisualizationPage() {
           topics
         </button>
       </div>
-      {visType === 'recommended-thumbnails' &&
-        data &&
-        data.map((x, i) => <RecommendedThumbnails key={i} video={x.result} />)}
-      {visType === 'followed-thumbnails' && data && (
-        <FollowedThumbnails allVideos={data} />
-      )}
-      {visType === 'followed-metrics' && data && <FollowedMetrics />}
-      {visType === 'followed-topics' && data && <FollowedTopics />}
+      <Chart data={data} visType={visType} />
     </Base>
   );
 }

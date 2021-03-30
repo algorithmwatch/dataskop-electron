@@ -122,9 +122,14 @@ async function* scrapeSeedVideosAndFollow(
   let step = initialStep;
 
   for (const id of seedVideoIds) {
+    const followChainId = `${id}-${Date.now()}`;
     const dataFromSeed = await scrapeVideo(id, getHtml, comments);
     step += 1;
     dataFromSeed.slug += '-seed';
+
+    // assign an unique ID to extract follow chains
+    dataFromSeed.fields.followId = followChainId;
+
     yield [step / maxSteps, dataFromSeed];
 
     for (const i of [...Array(followVideos).keys()]) {
@@ -137,6 +142,7 @@ async function* scrapeSeedVideosAndFollow(
       );
 
       followVideo.slug += '-followed';
+      followVideo.fields.followId = followChainId;
       step += 1;
       if (step < maxSteps) {
         yield [step / maxSteps, followVideo];
