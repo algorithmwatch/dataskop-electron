@@ -1,10 +1,14 @@
-const postDummyBackend = async (data) => {
+const postDummyBackend = async (data, version) => {
   // calling in renderer process, so fetch is available
   const res = await fetch(
     'https://lab1.algorithmwatch.org/pushdataOP1MP0Unv0H84ZENIgMA',
     {
       method: 'POST',
-      body: JSON.stringify({ slug: data.slug, data: JSON.stringify(data) }),
+      body: JSON.stringify({
+        version,
+        slug: data.slug,
+        data: JSON.stringify(data),
+      }),
       headers: { 'Content-Type': 'application/json' },
     },
   );

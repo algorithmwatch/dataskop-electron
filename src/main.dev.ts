@@ -273,3 +273,7 @@ ipcMain.handle('results-export', async (event, data, filename) => {
   if (canceled || !filePath) return;
   writeFileSync(filePath, data);
 });
+
+ipcMain.handle('get-version-number', (event) => {
+  return app.getVersion();
+});
