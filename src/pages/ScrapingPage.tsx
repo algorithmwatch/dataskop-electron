@@ -52,7 +52,7 @@ const removeScrapingView = async () => {
 // the actual scraping window
 
 export default function ScrapingPage(): JSX.Element {
-  const [scrapingconfig, setScrapingConfig] = useState<any>(ytConfigs[0]);
+  const [scrapingconfig, setScrapingConfig] = useState<any>(ytConfigs[1]);
   const [scrapingGen, setScrapingGen] = useState<any>(null);
   const [progresFrac, setProgresFrac] = useState(0);
   const [sessionId, setSessionId] = useState<any>(null);
@@ -152,6 +152,11 @@ export default function ScrapingPage(): JSX.Element {
       console.log(scrapingconfig.procedureConfig);
     }
 
+    if (typeof scrapingconfig.procedureConfig.seedFixedVideos === 'string')
+      scrapingconfig.procedureConfig.seedFixedVideos = splitByWhitespace(
+        scrapingconfig.procedureConfig.seedFixedVideos,
+      );
+
     setIsScrapingStarted(true);
 
     const gen = scrapingconfig.createProcedure(scrapingconfig.procedureConfig)(
@@ -214,6 +219,7 @@ export default function ScrapingPage(): JSX.Element {
   // initialize & cleanup
   useEffect(() => {
     initScraper();
+    setIsMuted(true);
     return () => {
       cleanUpScraper();
     };
@@ -241,7 +247,11 @@ export default function ScrapingPage(): JSX.Element {
       <textarea
         style={{ width: '500px' }}
         rows={10}
-        value={scrapingconfig.procedureConfig.seedFixedVideos.join(' ')}
+        value={
+          typeof scrapingconfig.procedureConfig.seedFixedVideos === 'string'
+            ? scrapingconfig.procedureConfig.seedFixedVideos
+            : scrapingconfig.procedureConfig.seedFixedVideos.join(' ')
+        }
         onChange={(e) => {
           try {
             if (e.target.value == null) return;
@@ -249,7 +259,7 @@ export default function ScrapingPage(): JSX.Element {
               ...scrapingconfig,
               procedureConfig: {
                 ...scrapingconfig.procedureConfig,
-                seedFixedVideos: splitByWhitespace(e.target.value),
+                seedFixedVideos: e.target.value,
               },
             });
           } catch (error) {
@@ -267,7 +277,7 @@ export default function ScrapingPage(): JSX.Element {
             ...scrapingconfig,
             procedureConfig: {
               ...scrapingconfig.procedureConfig,
-              followVideos: e.target.value,
+              followVideos: parseInt(e.target.value, 10),
             },
           });
         }}
