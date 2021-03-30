@@ -244,6 +244,7 @@ export default function ScrapingPage(): JSX.Element {
           `${scrapingError.name}: ${scrapingError.message}`}
       </p>
       <hr />
+      <p>enter youtube ids here</p>
       <textarea
         style={{ width: '500px' }}
         rows={10}
@@ -267,6 +268,7 @@ export default function ScrapingPage(): JSX.Element {
           }
         }}
       />
+      <p>how many to videos to follow</p>
       <input
         id="number"
         type="number"
@@ -323,12 +325,12 @@ export default function ScrapingPage(): JSX.Element {
         is {!isMuted && 'not'} muted
       </button>
 
-      <input
+      {/* <input
         value={browserHeight}
         onChange={(event) => setBrowserHeight(parseInt(event.target.value, 10))}
-      />
+      /> */}
 
-      <div className="dropdown is-hoverable is-up">
+      {/* <div className="dropdown is-hoverable is-up">
         <div className="dropdown-trigger">
           <button
             type="button"
@@ -356,7 +358,7 @@ export default function ScrapingPage(): JSX.Element {
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
 
       {isScrapingStarted && (
         <progress className="progress" value={progresFrac} max="1">

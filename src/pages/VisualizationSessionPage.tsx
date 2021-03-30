@@ -13,7 +13,6 @@ import { VictoryAxis, VictoryBar, VictoryChart } from 'victory';
 import { getSessionData } from '../db';
 import Base from '../layouts/Base';
 import { getThumbnails } from '../providers/youtube/utils';
-import { randomIntFromInterval } from '../utils/math';
 
 const groupByFollowId = (x) =>
   Object.values(_.groupBy(x, (y) => y.fields.followId));
@@ -21,9 +20,9 @@ const groupByFollowId = (x) =>
 function Thumbnail({ x }) {
   const [imgIdx, setImgIdx] = useState(0);
 
-  useEffect(() => {
-    setInterval(() => setImgIdx(randomIntFromInterval(0, 3)), 1000);
-  }, []);
+  // useEffect(() => {
+  //   setInterval(() => setImgIdx(randomIntFromInterval(0, 3)), 1000);
+  // }, []);
 
   return (
     <img
