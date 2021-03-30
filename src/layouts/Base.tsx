@@ -2,14 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import routes from '../constants/routes.json';
 import logo from '../static/logos/dataskop_logo.png';
-import styles from './Base.css';
 
 export default function Base({ children }): JSX.Element {
   return (
     <section className="section">
       <div className="columns">
         <div className="column is-narrow">
-          <img src={logo} className={styles.logo} alt="Dataskop Logo" />
+          <img src={logo} style={{ width: '10rem' }} alt="Dataskop Logo" />
           <aside className="menu">
             <p className="menu-label">Introduction</p>
             <ul className="menu-list">
@@ -38,7 +37,10 @@ export default function Base({ children }): JSX.Element {
           </aside>
         </div>
         <div className="column" style={{ height: '100vh' }}>
-          <div className={styles.container} data-tid="container">
+          <div
+            style={{ overflow: 'scroll', height: '100%' }}
+            data-tid="container"
+          >
             {children}
           </div>
         </div>
