@@ -62,6 +62,18 @@ To package apps for the local platform:
 yarn package
 ```
 
+To debug a production built:
+
+```bash
+yarn cross-env DEBUG_PROD=true yarn package
+```
+
+New pre-release of new minor version:
+
+```bash
+yarn run version:preminor
+```
+
 ## License
 
 MIT
