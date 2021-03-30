@@ -8966,7 +8966,7 @@ parse-json@^5.0.0:
     json-parse-better-errors "^1.0.1"
     lines-and-columns "^1.1.6"
 
-parse-yt@../parse-yt:
+"parse-yt@file:./../parse-yt":
   version "0.0.0"
   dependencies:
     cheerio "^1.0.0-rc.3"
