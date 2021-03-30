@@ -1,12 +1,15 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-key */
 import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { format } from 'd3-format';
 import * as _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { VictoryBar, VictoryChart } from 'victory';
+import Select from 'react-select';
+import { VictoryAxis, VictoryBar, VictoryChart } from 'victory';
 import { getSessionData } from '../db';
 import Base from '../layouts/Base';
 import { getThumbnails } from '../providers/youtube/utils';
@@ -22,83 +25,61 @@ function Thumbnail({ x }) {
     setInterval(() => setImgIdx(randomIntFromInterval(0, 3)), 1000);
   }, []);
 
-  return <img src={getThumbnails(x.id).small[imgIdx]} alt={x.id} />;
+  return (
+    <img
+      src={getThumbnails(x.id).small[imgIdx]}
+      alt={x.id}
+      style={{ width: '100%', height: 'auto' }}
+    />
+  );
 }
 
-function Metric() {
-  const data = [
-    { quarter: 1, earnings: 13000 },
-    { quarter: 2, earnings: 16500 },
-    { quarter: 3, earnings: 14250 },
-    { quarter: 4, earnings: 19000 },
-  ];
+function VideoMetrics({ x, metrics }) {
+  const data = metrics.map((m) => ({ key: m, value: x[m] }));
+
+  console.log(data, x);
 
   return (
-    <VictoryChart domainPadding={20}>
+    <VictoryChart
+      domainPadding={{ x: [30, 30] }}
+      padding={{ left: 100, bottom: 30 }}
+      width={200}
+      height={100}
+    >
+      <VictoryAxis />
+      <VictoryAxis
+        dependentAxis
+        fixLabelOverlap
+        tickFormat={(t) => format('.2s')(t)}
+      />
       <VictoryBar
         horizontal
         style={{
-          data: { fill: '#c43a31' },
+          data: { fill: 'lightblue' },
         }}
         data={data}
-        x="quarter"
-        y="earnings"
+        x="key"
+        y="value"
       />
     </VictoryChart>
   );
 }
 
-function FollowedMetrics() {
-  const data = Array.from({ length: 10 }, (_, i) => ({
-    id: '4Y1lZQsyuSQ',
-  }));
+function Topic({ x }) {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-      {data.map((x, i) => {
-        return (
-          <div
-            style={{
-              width: 'auto',
-              minWidth: '2rem',
-              height: '5rem',
-              margin: '1rem',
-              border: '2px solid pink',
-            }}
-          >
-            <Metric />
-          </div>
-        );
-      })}
+    <div
+      style={{
+        width: 'auto',
+        padding: '2rem',
+        border: '2px solid grey',
+      }}
+    >
+      <FontAwesomeIcon icon={faCoffee} color="black" />
     </div>
   );
 }
 
-function FollowedTopics() {
-  const data = Array.from({ length: 10 }, (_, i) => ({
-    id: '4Y1lZQsyuSQ',
-  }));
-  return (
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-      {data.map((x, i) => {
-        return (
-          <div
-            style={{
-              width: 'auto',
-              minWidth: '2rem',
-              height: '5rem',
-              margin: '1rem',
-              border: '2px solid pink',
-            }}
-          >
-            <FontAwesomeIcon icon={faCoffee} color="red" />
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function ChartRow({ Element, row }) {
+function ChartRow({ Element, row, ...rest }) {
   return (
     <div
       style={{
@@ -115,16 +96,17 @@ function ChartRow({ Element, row }) {
           paddingBottom: '0.5rem',
           borderRight: '2px solid grey',
           borderBottom: '2px solid grey',
-          display: 'inline-block',
+          width: '10rem',
+          height: 'auto',
+          flex: '0 0 auto',
         }}
       >
-        <Element x={row[0]} />
+        <Element x={row[0]} {...rest} />
       </div>
       <div
         style={{
           display: 'flex',
           flexWrap: 'wrap',
-          flexGrow: 1,
         }}
       >
         {row.slice(1).map((x, i) => (
@@ -132,14 +114,12 @@ function ChartRow({ Element, row }) {
             // eslint-disable-next-line react/no-array-index-key
             key={i}
             style={{
-              width: 'auto',
-              minWidth: '2rem',
-              height: '5rem',
-              backgroundColor: 'white',
               margin: '1rem',
+              width: '10rem',
+              height: 'auto',
             }}
           >
-            <Element x={x} />
+            <Element x={x} {...rest} />
           </div>
         ))}
       </div>
@@ -148,6 +128,10 @@ function ChartRow({ Element, row }) {
 }
 
 function Chart({ visType, data }) {
+  const availMetrics = ['upvotes', 'downvotes', 'duration', 'viewCount'];
+  const options = availMetrics.map((x) => ({ value: x, label: x }));
+  const [chosenOptions, setChosen] = useState<any>(options);
+
   if (visType === 'recommended-thumbnails') {
     return (
       <>
@@ -161,6 +145,7 @@ function Chart({ visType, data }) {
       </>
     );
   }
+
   if (visType === 'followed-thumbnails') {
     const followData = groupByFollowId(data);
 
@@ -176,6 +161,46 @@ function Chart({ visType, data }) {
       </>
     );
   }
+
+  if (visType === 'followed-metrics') {
+    const followData = groupByFollowId(data);
+
+    return (
+      <>
+        <Select
+          value={chosenOptions}
+          options={options}
+          isMulti
+          onChange={setChosen}
+        />
+        {followData.map((x, i) => (
+          <ChartRow
+            key={i}
+            Element={VideoMetrics}
+            metrics={chosenOptions.map(({ value }) => value)}
+            row={x.map(({ fields }) => fields)}
+          />
+        ))}
+      </>
+    );
+  }
+
+  if (visType === 'followed-topics') {
+    const followData = groupByFollowId(data);
+
+    return (
+      <>
+        {followData.map((x, i) => (
+          <ChartRow
+            key={i}
+            Element={Topic}
+            row={x.map(({ fields }) => fields)}
+          />
+        ))}
+      </>
+    );
+  }
+
   return null;
 }
 
@@ -207,10 +232,10 @@ export default function VisualizationPage() {
           followed thumbnails
         </button>
         <button type="button" onClick={() => setVisType('followed-metrics')}>
-          charts
+          followed metrics
         </button>
         <button type="button" onClick={() => setVisType('followed-topics')}>
-          topics
+          followed topics
         </button>
       </div>
       <Chart data={data} visType={visType} />
