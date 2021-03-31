@@ -65,11 +65,10 @@ const createWindow = async () => {
     await installExtensions();
   }
 
-  let cspString =
+  // The 'unsafe-eval' is required to execute custom JavaScript in the scraper view. When not allowed it,
+  // the browser view ist not using a custom user agent (that is required to scrape YouTube).
+  const cspString =
     "script-src 'self' 'unsafe-eval' 'unsafe-inline' http://localhost:1212 https://dataskop.net";
-
-  // needed in debug to install dev tools etc
-  if (!DEBUG) cspString = cspString.replace('unsafe-eval', '');
 
   if (process.env)
     session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
