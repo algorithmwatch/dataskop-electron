@@ -1,4 +1,4 @@
-import { ParserResult } from 'harke-parser/src/types';
+import { ParserResult } from '@algorithmwatch/harke-parser/src/types';
 
 type ScrapingResult = ParserResult;
 

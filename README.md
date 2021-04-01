@@ -2,38 +2,46 @@
 
 DataSkop will be a platform for data donations used to examine and scrutinize algorithmic decision-making systems and to strengthen the users' digital autonomy.
 The aim of the project is to empower individuals to handle their data in an informed way, to act safely in digital environments, and to understand and algorithmic systems in use.
+[Read more about DataSkop on our website.](https://algorithmwatch.org/en/project/dataskop/)
 
-[More information about DataSkop.](https://algorithmwatch.org/en/project/dataskop/)
+## Installation for Development
 
 This project was kickstarted with [Electron React Boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate/).
 Electron React Boilerplate uses <a href="https://electron.atom.io/">Electron</a>, <a href="https://facebook.github.io/react/">React</a>, [TypeScript](https://www.typescriptlang.org/), <a href="https://github.com/reactjs/react-router">React Router</a>, <a href="https://webpack.github.io/docs/">Webpack</a> and <a href="https://github.com/gaearon/react-hot-loader">React Hot Loader</a> for rapid application development (HMR).
-Read more information about the boilerplate [in their official documentation](https://electron-react-boilerplate.js.org/docs/installation).
+[Read more about the boilerplate in their official documentation](https://electron-react-boilerplate.js.org/docs/installation).
 
-## Installation
+### Prerequisite
 
-Install [yarn](https://yarnpkg.com/getting-started/install)
+#### Setup Github Token
 
-- **If you have installation or compilation issues with this project, please see [this debugging guide](https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues/400)**
+To install all private packages (location as GitHub Packages):
+
+1. create an auth token: https://github.com/settings/tokens
+2. and add it to you: `~/.npmrc`
+
+```bash
+//npm.pkg.github.com/:_authToken=thetoken
+```
+
+To start the Electron app in dev modus:
+
+Install [yarn](https://yarnpkg.com/getting-started/install).
 
 First, clone the repo via git and install dependencies:
 
 ```bash
 git clone git@github.com:algorithmwatch/dataskop-electron.git
 cd dataskop-electron
-yarn install
+yarn
 ```
 
 We are storing large files in this repositry wit git-lfs.
 So please install git-lfs: https://github.com/git-lfs/git-lfs.
 
-Also check out the [guide for setting up the development](./docs/devsetup.md).
-
-## Development
+### Development
 
 We recommend [VS Code](https://code.visualstudio.com/) as text editor.
 VS Code will automatically format the code and manage imports when you save a file.
-
-To start the Electron app in dev modus:
 
 ```bash
 yarn start

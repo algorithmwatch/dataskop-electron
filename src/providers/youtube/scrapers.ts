@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
-import { parseVideoPage } from 'harke-parser';
+import { parseVideoPage } from '@algorithmwatch/harke-parser';
 import {
   parseCommentHistory,
   parseGetPlaylist,

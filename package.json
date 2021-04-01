@@ -248,6 +248,7 @@
     "yarn-deduplicate": "^3.1.0"
   },
   "dependencies": {
+    "@algorithmwatch/harke-parser": "^0.1.0-3",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",
@@ -258,7 +259,6 @@
     "electron-log": "^4.2.4",
     "electron-updater": "^4.3.4",
     "got": "^11.8.0",
-    "harke-parser": "file:./../harke-parser",
     "history": "^5.0.0",
     "lodash": "^4.17.21",
     "parse-yt": "file:./../parse-yt",
