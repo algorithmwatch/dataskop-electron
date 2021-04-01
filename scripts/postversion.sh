@@ -18,7 +18,7 @@ if [ "$(git diff --name-only --cached | wc -l)" -eq "0" ]; then
   if [ "$(git diff --name-only --cached | wc -l)" -eq "2" ]; then
     git commit --no-verify -m "v$1"
     git tag -a "v$1" HEAD -m "v$1"
-    git push --tags
+    git push --follow-tags
   else
     echo "failed to add both package.json"
   fi
