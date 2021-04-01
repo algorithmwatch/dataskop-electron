@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - "v*"
 
 jobs:
   publish:
@@ -17,15 +19,15 @@ jobs:
       - name: Checkout git repo
         uses: actions/checkout@v1
 
+      - name: setup github secret token
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
+
       - name: Install Node, NPM and Yarn
         uses: actions/setup-node@v1
         with:
           node-version: 15
 
       - name: Install dependencies
-        env:
-          # This is used for uploading release assets to github
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           yarn install
 
