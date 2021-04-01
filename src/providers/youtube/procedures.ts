@@ -1,7 +1,6 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 
-import { isCommentSectionClosed, isNotCommentSpinnerActive } from 'parse-yt';
 import { experimentScrapers } from './scrapers';
 
 const { scrapeSeedVideos, scrapeSeedVideosAndFollow } = experimentScrapers;
@@ -67,15 +66,19 @@ async function* scrapingYoutubeProcedure(
 
   // 3. block: get acutal video + video recommendations
   // use lazy loading if comments are required
-  const getHtmlVideos = !scrapeComments
-    ? getHtml
-    : (url: string) =>
-        getHtmlLazy(
-          url,
-          scrollingBottomForComments,
-          isNotCommentSpinnerActive,
-          isCommentSectionClosed,
-        );
+
+  const getHtmlVideos = getHtml;
+
+  // TODO: if scraping comments again
+
+  // const getHtmlVideos = !scrapeComments
+  //   ? getHtml
+  //   : (url: string) =>
+  //       getHtmlLazy(
+  //         url,
+  //         scrollingBottomForComments,
+
+  //       );
 
   if (isFollowingVideos) {
     return yield* scrapeSeedVideosAndFollow(

@@ -261,7 +261,6 @@
     "got": "^11.8.0",
     "history": "^5.0.0",
     "lodash": "^4.17.21",
-    "parse-yt": "file:./../parse-yt",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",

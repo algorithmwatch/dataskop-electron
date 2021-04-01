@@ -1,14 +1,10 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
-import { parseVideoPage } from '@algorithmwatch/harke-parser';
 import {
-  parseCommentHistory,
-  parseGetPlaylist,
-  parseSearchHistory,
-  parseSubscriptions,
-  parseWatchHistory,
-} from 'parse-yt';
-import { Video } from 'parse-yt/src/types';
+  parsePlaylistPage,
+  parseVideoPage,
+} from '@algorithmwatch/harke-parser';
+import * as _ from 'lodash';
 import { ScrapingResult } from '../../db/types';
 import { delay } from '../../utils/time';
 
@@ -17,99 +13,117 @@ const LIST_ID_POPULAR = 'PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-';
 const LIST_ID_NATIONAL_NEWS_TOP_STORIES = 'PLNjtpXOAJhQJYbpJxMnoLKCUPanyEfv_j';
 const LIST_ID_LIKED_VIDEOS = 'LL';
 
+const waitUntilDone = async (
+  getCurrentHtml,
+  parseHtml,
+  isDoneCheck = null,
+  timeout = { max: 1000, start: 300, factor: 1.3 },
+) => {
+  let curTimeout = timeout.start;
+  let prevResult = null;
+  while (curTimeout < timeout.max) {
+    await delay(curTimeout);
+    const currentHtml = await getCurrentHtml();
+    const result = parseHtml(currentHtml);
+
+    if (
+      result.errors.length === 0 &&
+      _.isEqual(result, prevResult) &&
+      (isDoneCheck === null || isDoneCheck(result))
+    ) {
+      result.slug = `yt-${result.slug}`;
+      return result;
+    }
+    prevResult = result;
+    curTimeout *= timeout.factor;
+  }
+  throw new Error('parse error');
+};
+
 const scrapePlaylist = async (
   playlistId: string,
   getHtml: GetHtmlFunction,
 ): Promise<Video[]> => {
-  const html = await getHtml(
+  const getCurrentHtml = await getHtml(
     `https://www.youtube.com/playlist?list=${playlistId}`,
   );
-  const { videos } = parseGetPlaylist(html);
-  return videos;
+  return waitUntilDone(getCurrentHtml, parsePlaylistPage);
 };
 
 const scrapePopularVideos = async (
   getHtml: GetHtmlFunction,
-  ...rest: number[]
 ): Promise<ScrapingResult> => {
-  const result = await scrapePlaylist(LIST_ID_POPULAR, getHtml, ...rest);
-  return { result, task: 'YT-popularVideos' };
+  const result = await scrapePlaylist(LIST_ID_POPULAR, getHtml);
+  result.slug += '-popular';
+  return result;
 };
 
 const scrapeNationalNewsTopStories = async (
   getHtml: GetHtmlFunction,
-  ...rest: number[]
 ): Promise<ScrapingResult> => {
   const result = await scrapePlaylist(
     LIST_ID_NATIONAL_NEWS_TOP_STORIES,
     getHtml,
-    ...rest,
   );
-  return { result, task: 'YT-nationalNews' };
+  result.slug += '-news-top-stories';
+  return result;
 };
 
 const scrapeLikedVideos = async (
   getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
   const result = await scrapePlaylist(LIST_ID_LIKED_VIDEOS, getHtml);
-  return { result, task: 'YT-likedVideos' };
+  result.slug += '-liked-videos';
+  return result;
 };
 
 const scrapeVideo = async (
   videoId: string,
   getHtml: GetHtmlFunction,
   comments = false,
-  timeout = { max: 1000, start: 100, factor: 1.5 },
 ): Promise<ScrapingResult> => {
+  // comments are currently not implemented
   const url = `https://www.youtube.com/watch?v=${videoId}`;
   const getCurrentHtml = await getHtml(url);
-
-  let curTimeout = timeout.start;
-  while (curTimeout < timeout.max) {
-    await delay(curTimeout);
-    const currentHtml = await getCurrentHtml();
-    const result = parseVideoPage(currentHtml, comments);
-    console.log(result);
-    if (result.errors.length === 0) {
-      result.slug = `yt-${result.slug}`;
-      return result;
-    }
-    curTimeout *= timeout.factor;
-  }
-  throw new Error('parse error');
-};
-
-const scrapeWatchedVideos = async (
-  getHtml: GetHtmlFunction,
-): Promise<ScrapingResult> => {
-  const html = await getHtml('https://www.youtube.com/feed/history');
-  return { result: parseWatchHistory(html), task: 'YT-watchedHistory' };
-};
-
-const scrapeSearchHistory = async (
-  getHtml: GetHtmlFunction,
-): Promise<ScrapingResult> => {
-  const html = await getHtml(
-    'https://www.youtube.com/feed/history/search_history',
+  return waitUntilDone(
+    getCurrentHtml,
+    parseVideoPage,
+    // at least 15 videos
+    (x) => x.fields.recommendedVideos.length > 15,
   );
-  return { result: parseSearchHistory(html), task: 'YT-searchHistory' };
 };
 
-const scrapeCommentHistory = async (
-  getHtml: GetHtmlFunction,
-): Promise<ScrapingResult> => {
-  const html = await getHtml(
-    'https://www.youtube.com/feed/history/comment_history',
-  );
-  return { result: parseCommentHistory(html), task: 'YT-commentHistory' };
-};
+// const scrapeWatchedVideos = async (
+//   getHtml: GetHtmlFunction,
+// ): Promise<ScrapingResult> => {
+//   const html = await getHtml('https://www.youtube.com/feed/history');
+//   return { result: parseWatchHistory(html), task: 'YT-watchedHistory' };
+// };
 
-const scrapeSubscriptions = async (
-  getHtml: GetHtmlFunction,
-): Promise<ScrapingResult> => {
-  const html = await getHtml('https://www.youtube.com/feed/channels');
-  return { result: parseSubscriptions(html), task: 'YT-subscriptions' };
-};
+// const scrapeSearchHistory = async (
+//   getHtml: GetHtmlFunction,
+// ): Promise<ScrapingResult> => {
+//   const html = await getHtml(
+//     'https://www.youtube.com/feed/history/search_history',
+//   );
+//   return { result: parseSearchHistory(html), task: 'YT-searchHistory' };
+// };
+
+// const scrapeCommentHistory = async (
+//   getHtml: GetHtmlFunction,
+// ): Promise<ScrapingResult> => {
+//   const html = await getHtml(
+//     'https://www.youtube.com/feed/history/comment_history',
+//   );
+//   return { result: parseCommentHistory(html), task: 'YT-commentHistory' };
+// };
+
+// const scrapeSubscriptions = async (
+//   getHtml: GetHtmlFunction,
+// ): Promise<ScrapingResult> => {
+//   const html = await getHtml('https://www.youtube.com/feed/channels');
+//   return { result: parseSubscriptions(html), task: 'YT-subscriptions' };
+// };
 
 async function* scrapeSeedVideosAndFollow(
   getHtml: GetHtmlFunction,
@@ -176,12 +190,15 @@ async function* scrapeSeedVideos(
 }
 
 export const personalScrapers = {
-  scrapeWatchedVideos,
   scrapeLikedVideos,
-  scrapeSearchHistory,
-  scrapeCommentHistory,
-  scrapeSubscriptions,
 };
+// export const personalScrapers = {
+//   scrapeWatchedVideos,
+//   scrapeLikedVideos,
+//   scrapeSearchHistory,
+//   scrapeCommentHistory,
+//   scrapeSubscriptions,
+// };
 
 export const experimentScrapers = {
   scrapeSeedVideos,
