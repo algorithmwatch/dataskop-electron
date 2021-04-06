@@ -23,9 +23,6 @@ jobs:
         with:
           node-version: 14
 
-      # https://github.com/marketplace/actions/yarn-install-cache
-      - uses: c-hive/gha-yarn-cache@v1
-
       - name: Install dependencies
         run: yarn install
 
