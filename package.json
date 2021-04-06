@@ -92,7 +92,8 @@
       "provider": "s3",
       "region": "UK",
       "endpoint": "https://s3.uk.cloud.ovh.net",
-      "bucket": "dataskop-electron-releases"
+      "bucket": "dataskop-releases",
+      "channel": "latest"
     }
   },
   "repository": {
