@@ -89,9 +89,10 @@
       "./assets/**"
     ],
     "publish": {
-      "provider": "github",
-      "owner": "algorithmwatch",
-      "repo": "dataskop-electron"
+      "provider": "s3",
+      "region": "UK",
+      "endpoint": "https://s3.uk.cloud.ovh.net",
+      "bucket": "dataskop-electron-releases"
     }
   },
   "repository": {
