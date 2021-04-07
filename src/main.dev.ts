@@ -8,6 +8,7 @@
  * When running `yarn build` or `yarn build-main`, this file is compiled to
  * `./src/main.prod.js` using webpack. This gives us some performance wins.
  */
+import * as Sentry from '@sentry/electron';
 import 'core-js/stable';
 import {
   app,
@@ -28,9 +29,20 @@ import MenuBuilder from './menu';
 const DEBUG =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
+if (process.env.SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+  });
+}
+
 export default class AppUpdater {
   constructor() {
-    log.transports.file.level = 'info';
+    log.transports.file.level = DEBUG ? 'debug' : 'info';
+
+    if (process.env.UPDATE_FEED_URL) {
+      autoUpdater.setFeedURL(process.env.UPDATE_FEED_URL);
+    }
+
     autoUpdater.logger = log;
     autoUpdater.checkForUpdatesAndNotify();
   }
@@ -128,13 +140,20 @@ const createWindow = async () => {
     shell.openExternal(url);
   });
 
-  // Remove this if your app does not use auto updates
-  // eslint-disable-next-line
-  new AppUpdater();
+  ipcMain.on('restart_app', () => {
+    autoUpdater.quitAndInstall();
+  });
+
+  // not sure if timeout is actually required
+  setTimeout(() => {
+    // Remove this if your app does not use auto updates
+    // eslint-disable-next-line
+    new AppUpdater();
+  }, 1000);
 };
 
 /**
- * Add event listeners...
+ * Controlling main window
  */
 
 app.on('window-all-closed', () => {
@@ -153,7 +172,25 @@ app.on('activate', () => {
   if (mainWindow === null) createWindow();
 });
 
-// controlling the scraping window
+/**
+ * Notify UI about new Updates
+ */
+
+autoUpdater.on('update-available', () => {
+  mainWindow?.webContents.send('update_available');
+});
+
+autoUpdater.on('update-downloaded', () => {
+  mainWindow?.webContents.send('update_downloaded');
+});
+
+autoUpdater.on('error', async (event, error) => {
+  mainWindow?.webContents.send('update_error', error);
+});
+
+/**
+ * controlling the scraping window
+ */
 
 let scrapingView: BrowserView | null = null;
 

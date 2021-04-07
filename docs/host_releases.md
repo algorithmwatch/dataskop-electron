@@ -2,7 +2,23 @@
 
 Different configuration to publish and distribute the app releases.
 
+## Deployment via GitHub Actions (CI)
+
+Set the following repository secrets:
+
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `READ_PACKAGES_TOKEN`: GitHub token with scope to read packages
+- `SENTRY_DSN`
+- `UPDATE_FEED_URL`: custom location (if required) for the auto-update feed
+
 ## Versioning
+
+New pre-release of new minor version:
+
+```bash
+yarn run version:preminor
+```
 
 In the default yarn versioning, there are no alpha or beta releases.
 Only prereleases, such as v0.1.0-12.
@@ -32,3 +48,7 @@ Using GitHub's releases feature, adapth the outer `package.json`.
     "repo": "dataskop-electron"
   }
 ```
+
+### Notes
+
+For macOS: zip required to make auto-update work: https://github.com/electron-userland/electron-builder/issues/2199

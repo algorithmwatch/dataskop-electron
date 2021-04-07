@@ -64,23 +64,23 @@ Pay attention to the error messages and run the required commands.
 
 ## Packaging for Production
 
+### Locally
+
 To package apps for the local platform:
 
 ```bash
 yarn package
 ```
 
-To debug a production built:
+To debug a production build:
 
 ```bash
 yarn cross-env DEBUG_PROD=true yarn package
 ```
 
-New pre-release of new minor version:
+### Production
 
-```bash
-yarn run version:preminor
-```
+[Check docs.](./docs/host_releases.md)
 
 ## License
 

@@ -46,9 +46,6 @@
     ],
     "afterSign": ".erb/scripts/Notarize.js",
     "mac": {
-      "target": [
-        "dmg"
-      ],
       "type": "distribution",
       "hardenedRuntime": true,
       "entitlements": "assets/entitlements.mac.plist",
@@ -92,7 +89,7 @@
       "provider": "s3",
       "region": "UK",
       "endpoint": "https://s3.uk.cloud.ovh.net",
-      "bucket": "dataskop-releases",
+      "bucket": "dataskop-development",
       "channel": "latest"
     }
   },
@@ -254,6 +251,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",
+    "@sentry/electron": "^2.4.0",
     "bulma": "^0.9.1",
     "dayjs": "^1.10.4",
     "dexie": "^3.0.2",
