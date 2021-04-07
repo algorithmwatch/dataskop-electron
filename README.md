@@ -82,6 +82,10 @@ yarn cross-env DEBUG_PROD=true yarn package
 
 [Check docs.](./docs/host_releases.md)
 
+### Logs
+
+Use <https://www.npmjs.com/package/electron-log> to store logs.
+
 ## License
 
 MIT
