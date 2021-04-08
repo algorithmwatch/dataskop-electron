@@ -10,7 +10,7 @@ const {
 
 const defaultProcedureConfig = {
   scrollingBottomForComments: 5,
-  followVideos: 1,
+  followVideos: 5,
   seedFixedVideos: ['4Y1lZQsyuSQ', 'yr1YyrolRZY'],
   seedCreators: [
     {

@@ -4,7 +4,7 @@ import {
   parsePlaylistPage,
   parseVideoPage,
 } from '@algorithmwatch/harke-parser';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { ScrapingResult } from '../../db/types';
 import { delay } from '../../utils/time';
 
@@ -146,18 +146,19 @@ async function* scrapeSeedVideosAndFollow(
 
     yield [step / maxSteps, dataFromSeed];
 
+    let toScrapeId = dataFromSeed.fields.recommendedVideos[0].id;
     for (const i of [...Array(followVideos).keys()]) {
       let followVideo = null;
 
-      followVideo = await scrapeVideo(
-        dataFromSeed.fields.recommendedVideos[i].id,
-        getHtml,
-        comments,
-      );
+      followVideo = await scrapeVideo(toScrapeId, getHtml, comments);
 
       followVideo.slug += '-followed';
       followVideo.fields.followId = followChainId;
+
+      // not sure if this `step` stuff is needed
       step += 1;
+      toScrapeId = followVideo.fields.recommendedVideos[0].id;
+
       if (step < maxSteps) {
         yield [step / maxSteps, followVideo];
       } else {

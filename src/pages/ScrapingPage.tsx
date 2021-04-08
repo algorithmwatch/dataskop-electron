@@ -280,7 +280,7 @@ export default function ScrapingPage(): JSX.Element {
           }
         }}
       />
-      <p>how many to videos to follow</p>
+      <p>how many to videos to follow auto-play</p>
       <input
         id="number"
         type="number"
