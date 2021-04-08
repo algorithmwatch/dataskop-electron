@@ -8,7 +8,9 @@ on:
 
 jobs:
   publish:
-    runs-on: macos-latest
+    # macOS code signing only works on macOS
+    # runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout git repo
