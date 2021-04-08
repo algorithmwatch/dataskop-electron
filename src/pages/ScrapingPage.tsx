@@ -209,10 +209,12 @@ export default function ScrapingPage(): JSX.Element {
         setProgresFrac(value[0]);
         addData(sessionId, value[1]);
 
-        if (!DEBUG) {
-          const postedSuccess = await postDummyBackend(value[1], appVersion);
-          if (!postedSuccess) console.error('error posting data to backend');
-        }
+        const postedSuccess = await postDummyBackend(
+          value[1],
+          appVersion,
+          sessionId,
+        );
+        if (!postedSuccess) console.error('error posting data to backend');
 
         if (done) setIsScrapingFinished(true);
       } catch (err) {
