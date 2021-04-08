@@ -42,5 +42,5 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: >
-          yarn cross-env SENTRY_DSN=${{ secrets.SENTRY_DSN }} UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }} yarn build
+          yarn cross-env SENTRY_DSN=${{ secrets.SENTRY_DSN }} UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }} yarn build &&
           yarn electron-builder --publish always --win --mac --linux
