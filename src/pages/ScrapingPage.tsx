@@ -251,7 +251,7 @@ export default function ScrapingPage(): JSX.Element {
         consectetur deleniti.
       </p>
       <hr />
-      <p>
+      <p style={{ color: 'red' }}>
         {scrapingError !== null &&
           `${scrapingError.name}: ${scrapingError.message}`}
       </p>

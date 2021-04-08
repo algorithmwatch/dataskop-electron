@@ -17,7 +17,7 @@ const waitUntilDone = async (
   getCurrentHtml,
   parseHtml,
   isDoneCheck = null,
-  timeout = { max: 1000, start: 300, factor: 1.3 },
+  timeout = { max: 5000, start: 700, factor: 1.3 },
 ) => {
   let curTimeout = timeout.start;
   let prevResult = null;
@@ -29,7 +29,7 @@ const waitUntilDone = async (
     if (
       result.errors.length === 0 &&
       _.isEqual(result, prevResult) &&
-      (isDoneCheck === null || isDoneCheck(result))
+      (isDoneCheck === null || isDoneCheck(result, curTimeout / timeout.max))
     ) {
       result.slug = `yt-${result.slug}`;
       return result;
@@ -37,7 +37,7 @@ const waitUntilDone = async (
     prevResult = result;
     curTimeout *= timeout.factor;
   }
-  throw new Error('parse error');
+  throw new Error(`parse error: ${JSON.stringify(prevResult.errors)}`);
 };
 
 const scrapePlaylist = async (
@@ -88,8 +88,8 @@ const scrapeVideo = async (
   return waitUntilDone(
     getCurrentHtml,
     parseVideoPage,
-    // at least 15 videos
-    (x) => x.fields.recommendedVideos.length > 15,
+    // at least 10 videos, still pass if timeout is reached
+    (x, timeFrac) => timeFrac > 1 || x.fields.recommendedVideos.length > 10,
   );
 };
 
