@@ -236,6 +236,8 @@ export default merge(baseConfig, {
      */
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development',
+      SENTRY_DSN: null,
+      UPDATE_FEED_URL: null,
     }),
 
     new webpack.LoaderOptionsPlugin({
