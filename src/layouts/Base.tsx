@@ -9,9 +9,9 @@ export default function Base({ children }): JSX.Element {
   } = useConfig();
 
   return (
-    <section className="section">
-      <div className="columns">
-        <div className="column">
+    <>
+      <div className="flex flex-row-reverse">
+        <div className="flex-initial m-5">
           {showQuickJumpMenu && (
             <SimpleMenu
               menuItems={[
@@ -22,18 +22,11 @@ export default function Base({ children }): JSX.Element {
             />
           )}
         </div>
-        <div className="column is-narrow">
-          <div>{version}</div>
+        <div className="flex-initial m-5 text-sm text-gray-400">
+          <div>version: {version}</div>
         </div>
       </div>
-      <div className="" style={{ height: '100vh' }}>
-        <div
-          style={{ overflow: 'scroll', height: '100%' }}
-          data-tid="container"
-        >
-          {children}
-        </div>
-      </div>
-    </section>
+      <div className="overflow-y-auto p-10">{children}</div>
+    </>
   );
 }

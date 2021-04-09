@@ -205,7 +205,7 @@ const getScrapingView = (): BrowserView => {
 
     const { width } = mainWindow?.getBounds();
 
-    newView.setBounds({ x: width - 300, y: 0, width: 300, height: 300 });
+    newView.setBounds({ x: width - 300, y: 200, width: 300, height: 300 });
     scrapingView = newView;
   }
   return scrapingView;
