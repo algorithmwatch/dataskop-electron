@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { ipcRenderer } from 'electron';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import ConfirmDialog from '../components/ConfirmDialog';
 import routes from '../constants/routes.json';
 import { clearData, getData, getSessionsMetaData, importRow } from '../db';
 import Base from '../layouts/Base';
@@ -41,13 +42,11 @@ export default function ResultsPage(): JSX.Element {
   return (
     <Base>
       <div>{importedRows}</div>
-      <button
-        className="button"
-        type="button"
-        onClick={() => clearData() && setRows([])}
-      >
-        clear data
-      </button>
+      <ConfirmDialog
+        title="clear data"
+        text="you sure?"
+        handleConfirm={() => clearData() && setRows([])}
+      />
       <button type="button" onClick={async () => invokeExport(await getData())}>
         export data
       </button>

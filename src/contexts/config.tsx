@@ -9,7 +9,7 @@ type Action =
   | { type: 'set-version'; version: string }
   | { type: 'set-debug'; isDebug: boolean };
 type Dispatch = (action: Action) => void;
-type State = { version: string; isDebug: boolean };
+type State = { version: string; isDebug: boolean; showQuickJumpMenu: boolean };
 type ConfigProviderProps = { children: React.ReactNode };
 
 const ConfigStateContext = React.createContext<
@@ -40,6 +40,7 @@ function ConfigProvider({ children }: ConfigProviderProps) {
   const [state, dispatch] = React.useReducer(configReducer, {
     version: 'unspecified',
     isDebug,
+    showQuickJumpMenu: true,
   });
 
   // NOTE: you *might* need to memoize this value
