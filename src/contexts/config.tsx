@@ -5,9 +5,11 @@ import React, { useEffect } from 'react';
 
 // types
 
-type Action = { type: 'set-version'; version: string };
+type Action =
+  | { type: 'set-version'; version: string }
+  | { type: 'set-debug'; isDebug: boolean };
 type Dispatch = (action: Action) => void;
-type State = { version: string };
+type State = { version: string; isDebug: boolean };
 type ConfigProviderProps = { children: React.ReactNode };
 
 const ConfigStateContext = React.createContext<
@@ -17,7 +19,11 @@ const ConfigStateContext = React.createContext<
 function configReducer(state: State, action: Action) {
   switch (action.type) {
     case 'set-version': {
-      return { version: action.version };
+      return { ...state, version: action.version };
+    }
+
+    case 'set-debug': {
+      return { ...state, isDebug: action.isDebug };
     }
 
     default: {
@@ -27,9 +33,13 @@ function configReducer(state: State, action: Action) {
 }
 
 function ConfigProvider({ children }: ConfigProviderProps) {
+  const isDebug =
+    process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+
   // initial value gets overriden with `useEffect`
   const [state, dispatch] = React.useReducer(configReducer, {
     version: 'unspecified',
+    isDebug,
   });
 
   // NOTE: you *might* need to memoize this value

@@ -10,7 +10,6 @@ import { useConfig } from '../contexts/config';
 import { addData, newSession } from '../db';
 import Base from '../layouts/Base';
 import { allConfigs as ytConfigs } from '../providers/youtube';
-import { DEBUG } from '../utils/dev';
 import { postDummyBackend } from '../utils/networking';
 import { splitByWhitespace } from '../utils/strings';
 import { delay } from '../utils/time';
@@ -68,7 +67,7 @@ export default function ScrapingPage(): JSX.Element {
   const [browserHeight, setBrowserHeight] = useState(500);
 
   const {
-    state: { version },
+    state: { version, isDebug },
   } = useConfig();
 
   const checkForLogIn = async () => {
@@ -153,7 +152,7 @@ export default function ScrapingPage(): JSX.Element {
   };
 
   const startScraping = async () => {
-    if (DEBUG) {
+    if (isDebug) {
       console.log(scrapingconfig.procedureConfig);
     }
 
