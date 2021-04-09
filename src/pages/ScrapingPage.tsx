@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import routes from '../constants/routes.json';
+import { useConfig } from '../contexts/config';
 import { addData, newSession } from '../db';
 import Base from '../layouts/Base';
 import { allConfigs as ytConfigs } from '../providers/youtube';
@@ -49,11 +50,6 @@ const removeScrapingView = async () => {
   return ipcRenderer.invoke('scraping-remove-view');
 };
 
-const getVersionNumber = async () => {
-  // in devopment, this returns the electron version instead of the app version.
-  return ipcRenderer.invoke('get-version-number');
-};
-
 // the actual scraping window
 
 export default function ScrapingPage(): JSX.Element {
@@ -68,9 +64,12 @@ export default function ScrapingPage(): JSX.Element {
   const [isScrapingFinished, setIsScrapingFinished] = useState(false);
   const [scrapingError, setScrapingError] = useState(null);
 
-  const [appVersion, setAppVersion] = useState('');
   const [isMuted, setIsMuted] = useState(false);
   const [browserHeight, setBrowserHeight] = useState(500);
+
+  const {
+    state: { version },
+  } = useConfig();
 
   const checkForLogIn = async () => {
     const cookies = await getCookies();
@@ -211,7 +210,7 @@ export default function ScrapingPage(): JSX.Element {
 
         const postedSuccess = await postDummyBackend(
           value[1],
-          appVersion,
+          version,
           sessionId,
         );
         if (!postedSuccess) console.error('error posting data to backend');
@@ -230,8 +229,6 @@ export default function ScrapingPage(): JSX.Element {
   useEffect(() => {
     initScraper();
     setIsMuted(true);
-    // eslint-disable-next-line promise/catch-or-return
-    getVersionNumber().then(setAppVersion);
     return () => {
       cleanUpScraper();
     };

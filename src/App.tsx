@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.global.css';
 import UpdateNotification from './components/UpdateNotification';
 import routes from './constants/routes.json';
+import { ConfigProvider } from './contexts/config';
 import HomePage from './pages/HomePage';
 import ResultsDetailsPage from './pages/ResultsDetailsPage';
 import ResultsPage from './pages/ResultsPage';
@@ -11,7 +12,7 @@ import VisualizationPage from './pages/VisualizationSessionPage';
 
 export default function App() {
   return (
-    <>
+    <ConfigProvider>
       <UpdateNotification />
       <Router>
         <Switch>
@@ -25,6 +26,6 @@ export default function App() {
           <Route path={routes.HOME} component={HomePage} />
         </Switch>
       </Router>
-    </>
+    </ConfigProvider>
   );
 }

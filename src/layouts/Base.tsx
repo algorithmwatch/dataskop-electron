@@ -1,14 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import routes from '../constants/routes.json';
+import { useConfig } from '../contexts/config';
 import logo from '../static/logos/dataskop_logo.png';
 
 export default function Base({ children }): JSX.Element {
+  const {
+    state: { version },
+  } = useConfig();
+
   return (
     <section className="section">
       <div className="columns">
         <div className="column is-narrow">
           <img src={logo} style={{ width: '10rem' }} alt="Dataskop Logo" />
+          <div>{version}</div>
           <aside className="menu">
             <p className="menu-label">Introduction</p>
             <ul className="menu-list">
