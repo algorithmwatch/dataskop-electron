@@ -7,7 +7,7 @@ import { ConfigProvider } from './contexts/config';
 import HomePage from './pages/HomePage';
 import ResultsDetailsPage from './pages/ResultsDetailsPage';
 import ResultsPage from './pages/ResultsPage';
-import ScrapingPage from './pages/ScrapingPage';
+import ScrapingPage from './pages/ScrapingAdvancedPage';
 import VisualizationPage from './pages/VisualizationsPage';
 
 export default function App() {
@@ -16,7 +16,7 @@ export default function App() {
       <UpdateNotification />
       <Router>
         <Switch>
-          <Route path={routes.SCRAPING} component={ScrapingPage} />
+          <Route path={routes.SCRAPING_ADVANCED} component={ScrapingPage} />
           <Route path={routes.RESULTS_DETAILS} component={ResultsDetailsPage} />
           <Route path={routes.RESULTS} component={ResultsPage} />
           <Route

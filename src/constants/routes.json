@@ -1,6 +1,6 @@
 {
   "HOME": "/",
-  "SCRAPING": "/scraping",
+  "SCRAPING_ADVANCED": "/scraping/advanced",
   "RESULTS": "/results",
   "RESULTS_DETAILS": "/results/:sessionId",
   "VISUALIZATION_SESSION": "/visualization/session/:sessionId"

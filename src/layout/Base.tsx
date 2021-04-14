@@ -16,7 +16,7 @@ export default function Base({ children }): JSX.Element {
             <SimpleMenu
               menuItems={[
                 { label: 'start', to: routes.HOME },
-                { label: 'scraping', to: routes.SCRAPING },
+                { label: 'advanced scraping', to: routes.SCRAPING_ADVANCED },
                 { label: 'results', to: routes.RESULTS },
               ]}
             />
