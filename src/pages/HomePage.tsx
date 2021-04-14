@@ -10,12 +10,7 @@ export default function HomePage(): JSX.Element {
           <div>
             <div className="text-xl font-medium text-black">Onboarding</div>
             <p className="text-gray-500">
-              <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quam
-                fugit laboriosam suscipit fuga omnis error asperiores minus! In,
-                ratione perferendis sequi libero laborum esse soluta, ut rerum
-                placeat consectetur deleniti.
-              </p>
+              Hello and welcome to this early development version of DataSkop.
             </p>
           </div>
           <div>
@@ -26,6 +21,7 @@ export default function HomePage(): JSX.Element {
           <ul className="menu-list">
             <li>
               <a
+                className="underline"
                 target="_blank"
                 rel="noreferrer"
                 href="https://algorithmwatch.org/en/project/dataskop/"

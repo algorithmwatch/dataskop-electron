@@ -20,10 +20,13 @@ function ResultsDetails({ sessionId }: { sessionId: string }): JSX.Element {
 
   return (
     <Base>
-      <h2>{sessionId}</h2>
-      <Link to={routes.VISUALIZATION_SESSION.replace(':sessionId', sessionId)}>
-        Vis
+      <Link
+        className="underline text-2xl"
+        to={routes.VISUALIZATION_SESSION.replace(':sessionId', sessionId)}
+      >
+        Show Visualizations
       </Link>
+      <h2>Session: {sessionId}</h2>
       <Stats data={stats} />
       <SessionTable data={rows} />
     </Base>

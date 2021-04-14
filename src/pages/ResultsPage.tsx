@@ -41,7 +41,7 @@ export default function ResultsPage(): JSX.Element {
 
   return (
     <Base>
-      <div>{importedRows}</div>
+      <div>{importedRows > 0 && `${importedRows} rows imported`}</div>
       <ConfirmDialog
         title="clear data"
         text="you sure?"
@@ -57,7 +57,10 @@ export default function ResultsPage(): JSX.Element {
       {rows.map((x) => {
         return (
           <div key={x.id}>
-            <Link to={routes.RESULTS_DETAILS.replace(':sessionId', x.id)}>
+            <Link
+              className="underline"
+              to={routes.RESULTS_DETAILS.replace(':sessionId', x.id)}
+            >
               {`${x.id}, ${new Date(x.scrapedAt)}, Items ${x.count}`}
             </Link>
           </div>
