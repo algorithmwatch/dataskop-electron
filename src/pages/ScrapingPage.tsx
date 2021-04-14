@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
 import { addData, newSession } from '../db';
-import Base from '../layouts/Base';
+import Base from '../layout/Base';
 import { allConfigs as ytConfigs } from '../providers/youtube';
 import { postDummyBackend } from '../utils/networking';
 import { splitByWhitespace } from '../utils/strings';

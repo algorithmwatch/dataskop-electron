@@ -8,7 +8,7 @@ import HomePage from './pages/HomePage';
 import ResultsDetailsPage from './pages/ResultsDetailsPage';
 import ResultsPage from './pages/ResultsPage';
 import ScrapingPage from './pages/ScrapingPage';
-import VisualizationPage from './pages/VisualizationSessionPage';
+import VisualizationPage from './pages/VisualizationsPage';
 
 export default function App() {
   return (

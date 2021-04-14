@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import ConfirmDialog from '../components/ConfirmDialog';
 import routes from '../constants/routes.json';
 import { clearData, getData, getSessionsMetaData, importRow } from '../db';
-import Base from '../layouts/Base';
+import Base from '../layout/Base';
 
 const invokeExport = async (data: ScrapingResultSaved[]) => {
   const filename = `dataskop-${dayjs().format('YYYY-MM-DD-HH-mm-s')}.json`;

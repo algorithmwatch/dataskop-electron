@@ -1,5 +1,5 @@
 import React from 'react';
-import Base from '../layouts/Base';
+import Base from '../layout/Base';
 import logo from '../static/logos/dataskop_logo.png';
 
 export default function HomePage(): JSX.Element {

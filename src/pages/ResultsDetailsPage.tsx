@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import SessionTable from '../components/SessionTable';
-import Stats from '../components/Stats';
+import SessionTable from '../components/results/SessionTable';
+import Stats from '../components/results/Stats';
 import routes from '../constants/routes.json';
 import { getSessionData, getStatisticsForSession } from '../db';
-import Base from '../layouts/Base';
+import Base from '../layout/Base';
 
 function ResultsDetails({ sessionId }: { sessionId: string }): JSX.Element {
   const [rows, setRows] = useState<any>([]);
