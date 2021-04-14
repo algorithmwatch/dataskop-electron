@@ -13,7 +13,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        # os: [ubuntu-latest, macos-latest]
+        os: [macos-latest]
 
     steps:
       - name: Setup wine
@@ -61,12 +62,11 @@ jobs:
 
       - name: Publish releases
         env:
-          # These values are used for auto updates signing
-          # FIXME
-          # APPLE_ID: ${{ secrets.APPLE_ID }}
-          # APPLE_ID_PASS: ${{ secrets.APPLE_ID_PASS }}
-          # CSC_LINK: ${{ secrets.CSC_LINK }}
-          # CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          # These values are used for macOS code signing
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASS: ${{ secrets.APPLE_ID_PASS }}
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
 
           # Required when pushing releases to GitHub
           # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
