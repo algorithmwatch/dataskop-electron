@@ -1,15 +1,15 @@
-import { MenuItem } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
+import { Button, Menu, MenuItem } from '@material-ui/core';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 export default function SimpleMenu({ menuItems }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = (event) => {
+  const history = useHistory();
+
+  function handleClick(event) {
     setAnchorEl(event.currentTarget);
-  };
+  }
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -32,8 +32,14 @@ export default function SimpleMenu({ menuItems }) {
         onClose={handleClose}
       >
         {menuItems.map(({ to, label }) => (
-          <MenuItem key={to}>
-            <Link to={to}>{label}</Link>
+          <MenuItem
+            key={to}
+            onClick={() => {
+              if (history.location.pathname !== to) history.push(to);
+              else setAnchorEl(null);
+            }}
+          >
+            {label}
           </MenuItem>
         ))}
       </Menu>
