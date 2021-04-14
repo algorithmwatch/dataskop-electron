@@ -11,6 +11,7 @@ import { addData, newSession } from '../../db';
 import { postDummyBackend } from '../../utils/networking';
 import { splitByWhitespace } from '../../utils/strings';
 import { delay } from '../../utils/time';
+import ScrapingBrowser from './ScrapingBrowser';
 
 // commands to communicate with the browser window in the main screen
 
@@ -39,10 +40,6 @@ const scrollDown = async () => {
   return ipcRenderer.invoke('scraping-scroll-down');
 };
 
-const setMutedStatus = async (isMuted: boolean) => {
-  return ipcRenderer.invoke('scraping-set-muted', isMuted);
-};
-
 const removeScrapingView = async () => {
   return ipcRenderer.invoke('scraping-remove-view');
 };
@@ -60,8 +57,7 @@ export default function Scraping({ scrapingConfig }): JSX.Element {
   const [isScrapingFinished, setIsScrapingFinished] = useState(false);
   const [scrapingError, setScrapingError] = useState(null);
 
-  const [isMuted, setIsMuted] = useState(false);
-  const [browserHeight, setBrowserHeight] = useState(500);
+  const [isMuted, setIsMuted] = useState(true);
 
   const {
     state: { version, isDebug },
@@ -224,19 +220,14 @@ export default function Scraping({ scrapingConfig }): JSX.Element {
   // initialize & cleanup
   useEffect(() => {
     initScraper();
-    setIsMuted(true);
     return () => {
       cleanUpScraper();
     };
   }, []);
 
-  useEffect(() => {
-    setMutedStatus(isMuted);
-  }, [isMuted]);
-
   return (
     <>
-      <hr />
+      <ScrapingBrowser isMuted={isMuted} />
       <p style={{ color: 'red' }}>
         {scrapingError !== null &&
           `${scrapingError.name}: ${scrapingError.message}`}
@@ -280,11 +271,6 @@ export default function Scraping({ scrapingConfig }): JSX.Element {
       >
         is {!isMuted && 'not'} muted
       </button>
-
-      {/* <input
-        value={browserHeight}
-        onChange={(event) => setBrowserHeight(parseInt(event.target.value, 10))}
-      /> */}
 
       {isScrapingStarted && (
         <progress className="progress" value={progresFrac} max="1">

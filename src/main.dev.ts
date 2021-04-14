@@ -203,9 +203,9 @@ const getScrapingView = (): BrowserView => {
     });
     mainWindow?.setBrowserView(newView);
 
-    const { width } = mainWindow?.getBounds();
+    // muted audio is the default
+    newView.webContents?.setAudioMuted(true);
 
-    newView.setBounds({ x: width - 300, y: 200, width: 300, height: 300 });
     scrapingView = newView;
   }
   return scrapingView;
@@ -286,6 +286,11 @@ ipcMain.handle('scraping-remove-view', async (event) => {
   // Not calling it will result in errors with event handlers.
   view.webContents.destroy();
   scrapingView = null;
+});
+
+ipcMain.handle('scraping-set-bounds', async (event, bounds) => {
+  const view = getScrapingView();
+  view?.setBounds(bounds);
 });
 
 ipcMain.handle('results-import', async (event) => {
