@@ -16,23 +16,25 @@ Electron React Boilerplate uses <a href="https://electron.atom.io/">Electron</a>
 
 To install all private packages (location as GitHub Packages):
 
-1. create an auth token: https://github.com/settings/tokens
-2. and add it to you: `~/.npmrc`
+1. create an auth token with scope to read packages: https://github.com/settings/tokens
+2. and add it to you: `~/.npmrc`: (replace `thetoken` with your token)
 
 ```bash
 //npm.pkg.github.com/:_authToken=thetoken
 ```
 
-To start the Electron app in dev modus:
+Finally, restart your terminal and proceed:
 
-Install [yarn](https://yarnpkg.com/getting-started/install).
+### Installation
 
-First, clone the repo via git and install dependencies:
+First, install [yarn](https://yarnpkg.com/getting-started/install).
+
+Then, clone the repo via git and install dependencies:
 
 ```bash
 git clone git@github.com:algorithmwatch/dataskop-electron.git
 cd dataskop-electron
-yarn
+yarn install
 ```
 
 We are storing large files in this repositry wit git-lfs.
@@ -80,11 +82,11 @@ yarn cross-env DEBUG_PROD=true yarn package
 
 ### Production
 
-[Check docs.](./docs/host_releases.md)
+[Publishing Releases](./docs/publishing.md)
 
-### Logs
+#### Logs
 
-Use <https://www.npmjs.com/package/electron-log> to store logs.
+Use <https://www.npmjs.com/package/electron-log> to store logs on a user's computer.
 
 ## License
 
