@@ -1,5 +1,6 @@
 {
-  "HOME": "/",
+  "START": "/",
+  "EXPLANATION": "/explanation",
   "SCRAPING_ADVANCED": "/scraping/advanced",
   "RESULTS": "/results",
   "RESULTS_DETAILS": "/results/:sessionId",

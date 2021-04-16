@@ -4,10 +4,11 @@ import './App.global.css';
 import UpdateNotification from './components/UpdateNotification';
 import routes from './constants/routes.json';
 import { ConfigProvider } from './contexts/config';
-import HomePage from './pages/HomePage';
+import ExplanationPage from './pages/ExplanationPage';
 import ResultsDetailsPage from './pages/ResultsDetailsPage';
 import ResultsPage from './pages/ResultsPage';
 import ScrapingPage from './pages/ScrapingAdvancedPage';
+import StartPage from './pages/StartPage';
 import VisualizationPage from './pages/VisualizationsPage';
 
 export default function App() {
@@ -23,7 +24,8 @@ export default function App() {
             path={routes.VISUALIZATION_SESSION}
             component={VisualizationPage}
           />
-          <Route path={routes.HOME} component={HomePage} />
+          <Route path={routes.EXPLANATION} component={ExplanationPage} />
+          <Route path={routes.START} component={StartPage} />
         </Switch>
       </Router>
     </ConfigProvider>

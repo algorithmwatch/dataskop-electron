@@ -1,10 +1,11 @@
 import React from 'react';
-import Base from '../layout/Base';
+import routes from '../constants/routes.json';
+import SlideBase from '../layout/SlideBase';
 import logo from '../static/logos/dataskop_logo.png';
 
-export default function HomePage(): JSX.Element {
+export default function StartPage(): JSX.Element {
   return (
-    <Base>
+    <SlideBase footerNav={[{ label: 'Explanation', to: routes.EXPLANATION }]}>
       <>
         <div className="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md mb-10">
           <div>
@@ -32,6 +33,6 @@ export default function HomePage(): JSX.Element {
           </ul>
         </div>
       </>
-    </Base>
+    </SlideBase>
   );
 }
