@@ -1,6 +1,6 @@
 const getThumbnails = (id: string) => {
   /**
-   * Returns the average of two numbers.
+   * Returns all thumbnails to given YT video it.
     https://yt-thumb.canbeuseful.com/en
    */
 
@@ -21,4 +21,5 @@ const getThumbnails = (id: string) => {
   return { small, defaultImage };
 };
 
+// eslint-disable-next-line import/prefer-default-export
 export { getThumbnails };

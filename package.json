@@ -253,7 +253,7 @@
     "yarn-deduplicate": "^3.1.0"
   },
   "dependencies": {
-    "@algorithmwatch/harke-parser": "^0.1.0-3",
+    "@algorithmwatch/harke-parser": "^0.1.0-6",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",

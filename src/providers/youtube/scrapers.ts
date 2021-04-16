@@ -2,7 +2,10 @@
 /* eslint-disable no-restricted-syntax */
 import {
   parsePlaylistPage,
+  parseSearchHistoryPage,
+  parseSubscribedChannelsPage,
   parseVideoPage,
+  parseWatchHistoryPage,
 } from '@algorithmwatch/harke-parser';
 import _ from 'lodash';
 import { ScrapingResult } from '../../db/types';
@@ -31,6 +34,7 @@ const waitUntilDone = async (
       _.isEqual(result, prevResult) &&
       (isDoneCheck === null || isDoneCheck(result, curTimeout / timeout.max))
     ) {
+      // always prepend `yt-`
       result.slug = `yt-${result.slug}`;
       return result;
     }
@@ -93,21 +97,22 @@ const scrapeVideo = async (
   );
 };
 
-// const scrapeWatchedVideos = async (
-//   getHtml: GetHtmlFunction,
-// ): Promise<ScrapingResult> => {
-//   const html = await getHtml('https://www.youtube.com/feed/history');
-//   return { result: parseWatchHistory(html), task: 'YT-watchedHistory' };
-// };
+const scrapeWatchedVideos = async (
+  getHtml: GetHtmlFunction,
+): Promise<ScrapingResult> => {
+  const getCurrentHtml = await getHtml('https://www.youtube.com/feed/history');
+  await delay(1000);
+  return waitUntilDone(getCurrentHtml, parseWatchHistoryPage);
+};
 
-// const scrapeSearchHistory = async (
-//   getHtml: GetHtmlFunction,
-// ): Promise<ScrapingResult> => {
-//   const html = await getHtml(
-//     'https://www.youtube.com/feed/history/search_history',
-//   );
-//   return { result: parseSearchHistory(html), task: 'YT-searchHistory' };
-// };
+const scrapeSearchHistory = async (
+  getHtml: GetHtmlFunction,
+): Promise<ScrapingResult> => {
+  const getCurrentHtml = await getHtml(
+    'https://myactivity.google.com/activitycontrols/youtube',
+  );
+  return waitUntilDone(getCurrentHtml, parseSearchHistoryPage);
+};
 
 // const scrapeCommentHistory = async (
 //   getHtml: GetHtmlFunction,
@@ -118,12 +123,12 @@ const scrapeVideo = async (
 //   return { result: parseCommentHistory(html), task: 'YT-commentHistory' };
 // };
 
-// const scrapeSubscriptions = async (
-//   getHtml: GetHtmlFunction,
-// ): Promise<ScrapingResult> => {
-//   const html = await getHtml('https://www.youtube.com/feed/channels');
-//   return { result: parseSubscriptions(html), task: 'YT-subscriptions' };
-// };
+const scrapeSubscriptions = async (
+  getHtml: GetHtmlFunction,
+): Promise<ScrapingResult> => {
+  const getCurrentHtml = await getHtml('https://www.youtube.com/feed/channels');
+  return waitUntilDone(getCurrentHtml, parseSubscribedChannelsPage);
+};
 
 async function* scrapeSeedVideosAndFollow(
   getHtml: GetHtmlFunction,
@@ -191,15 +196,12 @@ async function* scrapeSeedVideos(
 }
 
 export const personalScrapers = {
+  scrapeWatchedVideos,
   scrapeLikedVideos,
+  scrapeSearchHistory,
+  // scrapeCommentHistory,
+  scrapeSubscriptions,
 };
-// export const personalScrapers = {
-//   scrapeWatchedVideos,
-//   scrapeLikedVideos,
-//   scrapeSearchHistory,
-//   scrapeCommentHistory,
-//   scrapeSubscriptions,
-// };
 
 export const experimentScrapers = {
   scrapeSeedVideos,
