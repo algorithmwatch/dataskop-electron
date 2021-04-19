@@ -8,18 +8,21 @@ const footerNav = [
   {
     label: 'Testbutton1',
     onClick(history: History) {
+      console.warn('tesdfsdf');
       history.push(routes.EXPLANATION);
     },
   },
   {
     label: 'Testbutton2',
     onClick(history: History) {
+      console.warn('tesdfsdf');
       history.push(routes.EXPLANATION);
     },
   },
   {
     label: 'Testbutton3',
     onClick(history: History) {
+      console.warn('tesdfsdf');
       history.push(routes.EXPLANATION);
     },
   },

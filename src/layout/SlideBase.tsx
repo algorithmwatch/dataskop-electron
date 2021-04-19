@@ -1,6 +1,6 @@
-import { Button } from '@material-ui/core';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import Button from '../components/Button';
 import Base from './Base';
 
 function SlideBase({ children, footerNav }): JSX.Element {
@@ -12,9 +12,13 @@ function SlideBase({ children, footerNav }): JSX.Element {
         {children}
       </section>
 
-      <nav className="h-40 flex justify-between">
+      <nav className="h-40 flex justify-between items-center max-w-5xl w-full mx-auto">
         {footerNav.map(({ label, onClick, disabled }) => (
-          <Button key={label} onClick={() => onClick(history)}>
+          <Button
+            key={label}
+            disabled={disabled}
+            onClick={onClick.bind(this, history)}
+          >
             {label}
           </Button>
         ))}
