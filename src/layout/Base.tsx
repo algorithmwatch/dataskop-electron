@@ -1,5 +1,5 @@
 import React from 'react';
-import SimpleMenu from '../components/SimpleMenu';
+import DebugMenu from '../components/DebugMenu';
 import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
 
@@ -9,11 +9,16 @@ export default function Base({ children }): JSX.Element {
   } = useConfig();
 
   return (
-    <>
-      <div className="flex flex-row-reverse">
-        <div className="flex-initial m-5">
+    <div className="flex flex-col h-screen justify-between">
+      {/* <header className="flex"></header> */}
+
+      <main className="px-4 h-full flex flex-col">{children}</main>
+
+      <footer className="px-4 pt-6 pb-4 flex justify-between items-center">
+        {/* debug menu */}
+        <div>
           {showQuickJumpMenu && (
-            <SimpleMenu
+            <DebugMenu
               menuItems={[
                 { label: 'start', to: routes.HOME },
                 { label: 'advanced scraping', to: routes.SCRAPING_ADVANCED },
@@ -22,11 +27,11 @@ export default function Base({ children }): JSX.Element {
             />
           )}
         </div>
-        <div className="flex-initial m-5 text-sm text-gray-400">
+
+        <div className="text-sm text-gray-400">
           <div>version: {version}</div>
         </div>
-      </div>
-      <div className="overflow-y-auto p-10">{children}</div>
-    </>
+      </footer>
+    </div>
   );
 }

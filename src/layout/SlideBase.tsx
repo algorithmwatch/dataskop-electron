@@ -8,14 +8,17 @@ function SlideBase({ children, footerNav }): JSX.Element {
 
   return (
     <Base>
-      {children}
-      <div>
-        {footerNav.map(({ label, to, disabled }) => (
-          <Button key={label} onClick={() => history.push(to)}>
+      <section className="flex-grow flex flex-col justify-center">
+        {children}
+      </section>
+
+      <nav className="h-40 flex justify-between">
+        {footerNav.map(({ label, onClick, disabled }) => (
+          <Button key={label} onClick={() => onClick(history)}>
             {label}
           </Button>
         ))}
-      </div>
+      </nav>
     </Base>
   );
 }

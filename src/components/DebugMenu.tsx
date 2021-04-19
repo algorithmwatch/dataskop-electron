@@ -2,7 +2,7 @@ import { Button, Menu, MenuItem } from '@material-ui/core';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-export default function SimpleMenu({ menuItems }) {
+export default function DebugMenu({ menuItems }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const history = useHistory();
@@ -18,14 +18,16 @@ export default function SimpleMenu({ menuItems }) {
   return (
     <div>
       <Button
-        aria-controls="simple-menu"
+        aria-controls="debug-menu"
         aria-haspopup="true"
         onClick={handleClick}
+        variant="outlined"
+        size="small"
       >
-        Open Menu
+        Debug
       </Button>
       <Menu
-        id="simple-menu"
+        id="debug-menu"
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
@@ -33,7 +35,7 @@ export default function SimpleMenu({ menuItems }) {
       >
         {menuItems.map(({ to, label }) => (
           <MenuItem
-            key={to}
+            key={label}
             onClick={() => {
               if (history.location.pathname !== to) history.push(to);
               else setAnchorEl(null);

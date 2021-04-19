@@ -1,11 +1,33 @@
+import { History } from 'history';
 import React from 'react';
 import routes from '../constants/routes.json';
 import SlideBase from '../layout/SlideBase';
 import logo from '../static/logos/dataskop_logo.png';
 
+const footerNav = [
+  {
+    label: 'Testbutton1',
+    onClick(history: History) {
+      history.push(routes.EXPLANATION);
+    },
+  },
+  {
+    label: 'Testbutton2',
+    onClick(history: History) {
+      history.push(routes.EXPLANATION);
+    },
+  },
+  {
+    label: 'Testbutton3',
+    onClick(history: History) {
+      history.push(routes.EXPLANATION);
+    },
+  },
+];
+
 export default function StartPage(): JSX.Element {
   return (
-    <SlideBase footerNav={[{ label: 'Explanation', to: routes.EXPLANATION }]}>
+    <SlideBase footerNav={footerNav}>
       <>
         <div className="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md mb-10">
           <div>
