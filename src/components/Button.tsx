@@ -17,6 +17,7 @@ export default function Button({
   endIcon,
   children,
   disabled = false,
+  onClick,
 }) {
   // set button content
   const buttonContent = [];
@@ -35,7 +36,7 @@ export default function Button({
   const classNames = `${buttonSize[size]} ${buttonTheme[theme]}`;
 
   return (
-    <button type="button" className={classNames}>
+    <button type="button" className={classNames} onClick={onClick}>
       {buttonContent}
     </button>
   );
