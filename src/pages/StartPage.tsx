@@ -1,4 +1,4 @@
-import { faCoffee } from '@fortawesome/free-solid-svg-icons';
+import { faCaretLeft, faCaretRight } from '@fortawesome/pro-light-svg-icons';
 import { History } from 'history';
 import React from 'react';
 import routes from '../constants/routes.json';
@@ -8,7 +8,7 @@ import logo from '../static/logos/dataskop_logo.png';
 const footerNav = [
   {
     label: 'Testbutton1',
-    startIcon: faCoffee,
+    startIcon: faCaretLeft,
     clickHandler(history: History) {
       console.warn('tesdfsdf');
       history.push(routes.EXPLANATION);
@@ -23,7 +23,7 @@ const footerNav = [
   },
   {
     label: 'Testbutton3',
-    endIcon: faCoffee,
+    endIcon: faCaretRight,
     clickHandler(history: History) {
       console.warn('tesdfsdf');
       history.push(routes.EXPLANATION);
