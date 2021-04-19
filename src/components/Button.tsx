@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 
 const buttonSize = {
@@ -17,26 +18,34 @@ export default function Button({
   endIcon,
   children,
   disabled = false,
-  onClick,
+  clickHandler,
 }) {
   // set button content
   const buttonContent = [];
 
   if (startIcon) {
-    buttonContent.push(<span key="start-icon">{startIcon}</span>);
+    buttonContent.push(
+      <span key="start-icon" className="mr-2">
+        <FontAwesomeIcon icon={startIcon} />
+      </span>,
+    );
   }
 
   buttonContent.push(<span key="content">{children}</span>);
 
   if (endIcon) {
-    buttonContent.push(<span key="end-icon">{endIcon}</span>);
+    buttonContent.push(
+      <span key="end-icon" className="ml-2">
+        <FontAwesomeIcon icon={endIcon} />
+      </span>,
+    );
   }
 
   // set class names
-  const classNames = `${buttonSize[size]} ${buttonTheme[theme]}`;
+  const classNames = `inline-flex flex-nowrap ${buttonSize[size]} ${buttonTheme[theme]}`;
 
   return (
-    <button type="button" className={classNames} onClick={onClick}>
+    <button type="button" className={classNames} onClick={clickHandler}>
       {buttonContent}
     </button>
   );
