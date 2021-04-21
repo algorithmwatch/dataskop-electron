@@ -25,6 +25,17 @@ To install all private packages (location as GitHub Packages):
 
 Finally, restart your terminal and proceed:
 
+#### Setup Font Awesome Pro
+
+Follow this tutorial: <https://fontawesome.com/how-to-use/on-the-web/setup/using-package-managers#installing-pro>
+
+You may add the following (replace the token) to aforementioned `~/.npmrc`:
+
+```bash
+@fortawesome:registry=https://npm.fontawesome.com/
+//npm.fontawesome.com/:_authToken=thetoken
+```
+
 ### Installation
 
 First, install [yarn](https://yarnpkg.com/getting-started/install).
