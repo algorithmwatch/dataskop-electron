@@ -17,6 +17,7 @@ function SlideBase({ children, footerNav }): JSX.Element {
           ({
             label,
             size,
+            theme,
             startIcon,
             endIcon,
             clickHandler,
@@ -29,6 +30,7 @@ function SlideBase({ children, footerNav }): JSX.Element {
               startIcon={startIcon}
               endIcon={endIcon}
               size={size}
+              theme={theme}
               classNames={classNames}
               clickHandler={() => clickHandler(history)}
             >

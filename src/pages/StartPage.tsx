@@ -1,4 +1,4 @@
-import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
+import { faAngleRight } from '@fortawesome/pro-regular-svg-icons';
 import { History } from 'history';
 import React from 'react';
 import routes from '../constants/routes.json';
@@ -6,31 +6,33 @@ import SlideBase from '../layout/SlideBase';
 import logo from '../static/logos/dataskop_logo.png';
 
 const footerNav = [
-  {
-    label: 'Zurück',
-    startIcon: faAngleLeft,
-    classNames: '',
-    disabled: true,
-    clickHandler(history: History) {
-      history.push(routes.EXPLANATION);
-    },
-  },
-  {
-    label: 'Testbutton2',
-    size: 'large',
-    startIcon: faAngleLeft,
-    clickHandler(history: History) {
-      history.push(routes.EXPLANATION);
-    },
-  },
+  // {
+  //   label: 'Zurück',
+  //   startIcon: faAngleLeft,
+  //   classNames: '',
+  //   disabled: true,
+  //   clickHandler(history: History) {
+  //     history.push(routes.EXPLANATION);
+  //   },
+  // },
   {
     label: 'Weiter',
+    // size: 'large',
     endIcon: faAngleRight,
-    classNames: '',
+    classNames: 'mx-auto',
     clickHandler(history: History) {
       history.push(routes.EXPLANATION);
     },
   },
+  // {
+  //   label: 'Weiter',
+  //   endIcon: faAngleRight,
+  //   // classNames: '',
+  //   // theme: 'link',
+  //   clickHandler(history: History) {
+  //     history.push(routes.EXPLANATION);
+  //   },
+  // },
 ];
 
 export default function StartPage(): JSX.Element {

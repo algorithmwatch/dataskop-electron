@@ -47,6 +47,11 @@ export default function Button({
       'border-gray-400 hover:border-gray-900 focus:ring-4 focus:ring-gray-300 focus:ring-opacity-50': !disabled,
       'border-gray-200 text-gray-400': disabled,
     }),
+    link: cn({
+      'focus:outline-none': true,
+      'hover:underline': !disabled,
+      'text-gray-400': disabled,
+    }),
   };
 
   return (
