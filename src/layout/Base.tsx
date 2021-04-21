@@ -12,7 +12,8 @@ export default function Base({ children }): JSX.Element {
     <div className="flex flex-col h-screen justify-between px-6">
       {/* <header className="flex"></header> */}
 
-      <main className="pt-4 h-full flex flex-col">{children}</main>
+      {/*  h-full hides the debug button for long pages */}
+      <main className="pt-4 flex flex-col">{children}</main>
 
       <footer className="pt-6 pb-4 flex justify-between items-center">
         {/* debug menu */}
@@ -20,7 +21,7 @@ export default function Base({ children }): JSX.Element {
           {showQuickJumpMenu && (
             <DebugMenu
               menuItems={[
-                { label: 'start', to: routes.HOME },
+                { label: 'start', to: routes.START },
                 { label: 'advanced scraping', to: routes.SCRAPING_ADVANCED },
                 { label: 'results', to: routes.RESULTS },
               ]}

@@ -20,15 +20,17 @@ function ResultsDetails({ sessionId }: { sessionId: string }): JSX.Element {
 
   return (
     <Base>
-      <Link
-        className="underline text-2xl"
-        to={routes.VISUALIZATION_SESSION.replace(':sessionId', sessionId)}
-      >
-        Show Visualizations
-      </Link>
-      <h2>Session: {sessionId}</h2>
-      <Stats data={stats} />
-      <SessionTable data={rows} />
+      <div className="overflow-y-auto" style={{ height: '90vh' }}>
+        <Link
+          className="underline text-2xl"
+          to={routes.VISUALIZATION_SESSION.replace(':sessionId', sessionId)}
+        >
+          Show Visualizations
+        </Link>
+        <h2>Session: {sessionId}</h2>
+        <Stats data={stats} />
+        <SessionTable data={rows} />
+      </div>
     </Base>
   );
 }

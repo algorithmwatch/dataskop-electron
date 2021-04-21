@@ -41,31 +41,36 @@ export default function ResultsPage(): JSX.Element {
 
   return (
     <Base>
-      <div>{importedRows > 0 && `${importedRows} rows imported`}</div>
-      <ConfirmDialog
-        title="clear data"
-        text="you sure?"
-        handleConfirm={() => clearData() && setRows([])}
-      />
-      <button type="button" onClick={async () => invokeExport(await getData())}>
-        export data
-      </button>
-      <button type="button" onClick={async () => invokeImport(importRowCb)}>
-        import data
-      </button>
-      <h2>Results</h2>
-      {rows.map((x) => {
-        return (
-          <div key={x.id}>
-            <Link
-              className="underline"
-              to={routes.RESULTS_DETAILS.replace(':sessionId', x.id)}
-            >
-              {`${x.id}, ${new Date(x.scrapedAt)}, Items ${x.count}`}
-            </Link>
-          </div>
-        );
-      })}
+      <div className="overflow-y-auto h-5/6">
+        <div>{importedRows > 0 && `${importedRows} rows imported`}</div>
+        <ConfirmDialog
+          title="clear data"
+          text="you sure?"
+          handleConfirm={() => clearData() && setRows([])}
+        />
+        <button
+          type="button"
+          onClick={async () => invokeExport(await getData())}
+        >
+          export data
+        </button>
+        <button type="button" onClick={async () => invokeImport(importRowCb)}>
+          import data
+        </button>
+        <h2>Results</h2>
+        {rows.map((x) => {
+          return (
+            <div key={x.id}>
+              <Link
+                className="underline"
+                to={routes.RESULTS_DETAILS.replace(':sessionId', x.id)}
+              >
+                {`${x.id}, ${new Date(x.scrapedAt)}, Items ${x.count}`}
+              </Link>
+            </div>
+          );
+        })}
+      </div>
     </Base>
   );
 }
