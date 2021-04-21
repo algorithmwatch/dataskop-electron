@@ -1,31 +1,23 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import cn from 'classnames';
 import React from 'react';
-
-const buttonSize = {
-  small: 'px-4 py-2 text-xs',
-  medium: 'px-4 py-2 text-base',
-  large: 'px-6 py-4 text-lg',
-};
-
-const buttonTheme = {
-  outline: 'border border-gray-900',
-};
 
 export default function Button({
   size = 'medium',
   theme = 'outline',
   startIcon,
   endIcon,
-  children,
+  classNames,
   disabled = false,
   clickHandler,
+  children,
 }) {
   // set button content
   const buttonContent = [];
 
   if (startIcon) {
     buttonContent.push(
-      <span key="start-icon" className="mr-2">
+      <span key="start-icon" className={size === 'large' ? 'mr-2.5' : 'mr-2'}>
         <FontAwesomeIcon icon={startIcon} />
       </span>,
     );
@@ -35,17 +27,35 @@ export default function Button({
 
   if (endIcon) {
     buttonContent.push(
-      <span key="end-icon" className="ml-2">
+      <span key="end-icon" className={size === 'large' ? 'ml-2.5' : 'ml-2'}>
         <FontAwesomeIcon icon={endIcon} />
       </span>,
     );
   }
 
-  // set class names
-  const classNames = `inline-flex flex-nowrap ${buttonSize[size]} ${buttonTheme[theme]}`;
+  // set button classes
+
+  const buttonSize = {
+    small: 'px-4 py-2 text-xs',
+    medium: 'px-5 py-4 text-base',
+    large: 'px-6 py-5 text-xl',
+  };
+
+  const buttonTheme = {
+    outline: cn({
+      'border focus:outline-none': true,
+      'border-gray-400 hover:border-gray-900 focus:ring-4 focus:ring-gray-300 focus:ring-opacity-50': !disabled,
+      'border-gray-200 text-gray-400': disabled,
+    }),
+  };
 
   return (
-    <button type="button" className={classNames} onClick={clickHandler}>
+    <button
+      type="button"
+      className={`inline-flex flex-nowrap items-center leading-none rounded-full font-semibold transition duration-150 ease-in-out ${buttonSize[size]} ${buttonTheme[theme]} ${classNames}`}
+      disabled={disabled === true}
+      onClick={clickHandler}
+    >
       {buttonContent}
     </button>
   );

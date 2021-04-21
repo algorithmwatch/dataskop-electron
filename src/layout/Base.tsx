@@ -9,12 +9,12 @@ export default function Base({ children }): JSX.Element {
   } = useConfig();
 
   return (
-    <div className="flex flex-col h-screen justify-between">
+    <div className="flex flex-col h-screen justify-between px-6">
       {/* <header className="flex"></header> */}
 
-      <main className="px-4 pt-4 h-full flex flex-col">{children}</main>
+      <main className="pt-4 h-full flex flex-col">{children}</main>
 
-      <footer className="px-4 pt-6 pb-4 flex justify-between items-center">
+      <footer className="pt-6 pb-4 flex justify-between items-center">
         {/* debug menu */}
         <div>
           {showQuickJumpMenu && (

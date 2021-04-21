@@ -1,4 +1,4 @@
-import { faCaretLeft, faCaretRight } from '@fortawesome/pro-light-svg-icons';
+import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
 import { History } from 'history';
 import React from 'react';
 import routes from '../constants/routes.json';
@@ -7,25 +7,27 @@ import logo from '../static/logos/dataskop_logo.png';
 
 const footerNav = [
   {
-    label: 'Testbutton1',
-    startIcon: faCaretLeft,
+    label: 'Zurück',
+    startIcon: faAngleLeft,
+    classNames: '',
+    disabled: true,
     clickHandler(history: History) {
-      console.warn('tesdfsdf');
       history.push(routes.EXPLANATION);
     },
   },
   {
     label: 'Testbutton2',
+    size: 'large',
+    startIcon: faAngleLeft,
     clickHandler(history: History) {
-      console.warn('tesdfsdf');
       history.push(routes.EXPLANATION);
     },
   },
   {
-    label: 'Testbutton3',
-    endIcon: faCaretRight,
+    label: 'Weiter',
+    endIcon: faAngleRight,
+    classNames: '',
     clickHandler(history: History) {
-      console.warn('tesdfsdf');
       history.push(routes.EXPLANATION);
     },
   },

@@ -14,12 +14,22 @@ function SlideBase({ children, footerNav }): JSX.Element {
 
       <nav className="h-40 flex justify-between items-center max-w-4xl w-full mx-auto">
         {footerNav.map(
-          ({ label, startIcon, endIcon, clickHandler, disabled }) => (
+          ({
+            label,
+            size,
+            startIcon,
+            endIcon,
+            clickHandler,
+            disabled,
+            classNames,
+          }) => (
             <Button
               key={label}
               disabled={disabled}
               startIcon={startIcon}
               endIcon={endIcon}
+              size={size}
+              classNames={classNames}
               clickHandler={() => clickHandler(history)}
             >
               {label}
