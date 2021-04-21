@@ -1,6 +1,5 @@
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
-import React from 'react';
-import { Step, Steps, Wizard } from 'react-albus';
+import React, { useState } from 'react';
 import routes from '../constants/routes.json';
 import SlideBase from '../layout/SlideBase';
 
@@ -38,6 +37,8 @@ function Step3(): JSX.Element {
 }
 
 export default function ExplanationPage(): JSX.Element {
+  const [currentStep, setCurrentStep] = useState(0);
+
   const stepWizard = (
     <Wizard>
       <Steps>
@@ -65,7 +66,8 @@ export default function ExplanationPage(): JSX.Element {
       endIcon: faAngleRight,
       classNames: 'mx-auto',
       clickHandler(history: History) {
-        console.warn('test', stepWizard.type.nextStep);
+        setCurrentStep(currentStep + 1);
+        // console.warn('test', stepWizard.type.nextStep);
         // stepWizard.props.nextStep();
 
         // history.push(routes.EXPLANATION);
@@ -82,5 +84,5 @@ export default function ExplanationPage(): JSX.Element {
     },
   ];
 
-  return <SlideBase footerNav={footerNav}>{stepWizard}</SlideBase>;
+  return <SlideBase footerNav={footerNav}>{currentStep}</SlideBase>;
 }
