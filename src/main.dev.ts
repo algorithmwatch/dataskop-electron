@@ -140,6 +140,13 @@ const createWindow = async () => {
     shell.openExternal(url);
   });
 
+  // https://stackoverflow.com/a/63174933/4028896
+  mainWindow.webContents.on('did-frame-finish-load', async () => {
+    if (DEBUG) {
+      await installExtensions();
+    }
+  });
+
   ipcMain.on('restart_app', () => {
     autoUpdater.quitAndInstall();
   });

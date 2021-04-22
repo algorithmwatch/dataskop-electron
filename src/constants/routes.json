@@ -2,6 +2,8 @@
   "START": "/",
   "EXPLANATION": "/explanation",
   "SCRAPING_ADVANCED": "/scraping/advanced",
+  "SCRAPING_PROFILE": "/scraping/profile",
+  "PROVIDER_LOGIN": "/scraping/login",
   "RESULTS": "/results",
   "RESULTS_DETAILS": "/results/:sessionId",
   "VISUALIZATION_SESSION": "/visualization/session/:sessionId"

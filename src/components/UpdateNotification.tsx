@@ -8,11 +8,7 @@ export default function UpdateNotification(): JSX.Element {
   useEffect(() => {
     ipcRenderer.on('update_available', () => {
       ipcRenderer.removeAllListeners('update_available');
-      if (process.platform === 'darwin') {
-        setText('Download new version outside of this app!');
-      } else {
-        setText('A new update is available. Downloading now...');
-      }
+      setText('A new update is available. Downloading now...');
     });
     ipcRenderer.on('update_downloaded', () => {
       ipcRenderer.removeAllListeners('update_downloaded');

@@ -1,5 +1,6 @@
 import { ipcRenderer } from 'electron';
 import React, { useEffect } from 'react';
+import { defaultConfig } from '../providers/youtube';
 
 // started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
 
@@ -7,9 +8,15 @@ import React, { useEffect } from 'react';
 
 type Action =
   | { type: 'set-version'; version: string }
-  | { type: 'set-debug'; isDebug: boolean };
+  | { type: 'set-debug'; isDebug: boolean }
+  | { type: 'set-scraping-config'; scrapingConfig: any };
 type Dispatch = (action: Action) => void;
-type State = { version: string; isDebug: boolean; showQuickJumpMenu: boolean };
+type State = {
+  version: string;
+  isDebug: boolean;
+  showQuickJumpMenu: boolean;
+  scrapingConfig: any;
+};
 type ConfigProviderProps = { children: React.ReactNode };
 
 const ConfigStateContext = React.createContext<
@@ -26,6 +33,10 @@ function configReducer(state: State, action: Action) {
       return { ...state, isDebug: action.isDebug };
     }
 
+    case 'set-scraping-config': {
+      return { ...state, scrapingConfig: action.scrapingConfig };
+    }
+
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
     }
@@ -39,6 +50,7 @@ function ConfigProvider({ children }: ConfigProviderProps) {
   // initial value gets overriden with `useEffect`
   const [state, dispatch] = React.useReducer(configReducer, {
     version: 'unspecified',
+    scrapingConfig: defaultConfig,
     isDebug,
     showQuickJumpMenu: true,
   });

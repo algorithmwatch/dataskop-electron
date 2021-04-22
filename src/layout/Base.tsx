@@ -24,6 +24,7 @@ export default function Base({ children }): JSX.Element {
                 { label: 'start', to: routes.START },
                 { label: 'advanced scraping', to: routes.SCRAPING_ADVANCED },
                 { label: 'results', to: routes.RESULTS },
+                { label: 'provider login', to: routes.PROVIDER_LOGIN },
               ]}
             />
           )}

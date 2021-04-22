@@ -46,7 +46,10 @@ const removeScrapingView = async () => {
 
 // the actual scraping window
 
-export default function Scraping({ scrapingConfig }): JSX.Element {
+export default function Scraping({
+  scrapingConfig,
+  onLogin = null,
+}): JSX.Element {
   const [scrapingGen, setScrapingGen] = useState<any>(null);
   const [progresFrac, setProgresFrac] = useState(0);
   const [sessionId, setSessionId] = useState<any>(null);
@@ -123,7 +126,9 @@ export default function Scraping({ scrapingConfig }): JSX.Element {
   const checkLoginCb = async (event, arg) => {
     const loggedIn = await checkForLogIn();
     if (loggedIn) {
+      // successfully logged in
       setNavigationCallback(cbSlug, true);
+      if (onLogin !== null) onLogin();
     }
   };
 
@@ -141,6 +146,8 @@ export default function Scraping({ scrapingConfig }): JSX.Element {
     if (!loggedIn) {
       await setNavigationCallback(cbSlug);
       ipcRenderer.on(cbSlug, checkLoginCb);
+    } else {
+      if (onLogin !== null) onLogin();
     }
   };
 
@@ -233,13 +240,19 @@ export default function Scraping({ scrapingConfig }): JSX.Element {
           `${scrapingError.name}: ${scrapingError.message}`}
       </p>
       <br />
-      <button className="button" type="button" onClick={resetBrowser}>
-        reset browser
-      </button>
-      <button className="button" type="button" onClick={resetScraping}>
-        reset scraping
-      </button>
-      <br />
+
+      {isUserLoggedIn && (
+        <>
+          <button className="button" type="button" onClick={resetBrowser}>
+            reset browser
+          </button>
+          <button className="button" type="button" onClick={resetScraping}>
+            reset scraping
+          </button>
+          <br />
+        </>
+      )}
+
       {!isUserLoggedIn && <p>Please login before continuing.</p>}
       {isUserLoggedIn && !isScrapingStarted && (
         <button className="button" type="button" onClick={startScraping}>

@@ -15,12 +15,11 @@ import {
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import Scraping from '../components/scraping/Scraping';
+import { useConfig } from '../contexts/config';
 import Base from '../layout/Base';
-import { allConfigs as ytConfigs } from '../providers/youtube';
+import { allConfigs } from '../providers/youtube';
 
-// the actual scraping window
-
-const ConfigCollapseable = ({ scrapingConfig, setScrapingConfig }) => {
+const ScrapingConfigSelect = ({ scrapingConfig, setScrapingConfig }) => {
   const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => {
@@ -38,7 +37,7 @@ const ConfigCollapseable = ({ scrapingConfig, setScrapingConfig }) => {
             value={scrapingConfig}
             onChange={(event) => setScrapingConfig(event.target.value)}
           >
-            {ytConfigs.map((x) => (
+            {allConfigs.map((x) => (
               <MenuItem key={x.title} value={x}>
                 {x.title}
               </MenuItem>
@@ -65,7 +64,13 @@ const ConfigCollapseable = ({ scrapingConfig, setScrapingConfig }) => {
 };
 
 export default function AdvancedScrapingPage(): JSX.Element {
-  const [scrapingConfig, setScrapingConfig] = useState<any>(ytConfigs[1]);
+  const {
+    state: { scrapingConfig },
+    dispatch,
+  } = useConfig();
+
+  const setScrapingConfig = (scrapingConfig) =>
+    dispatch({ type: 'set-scraping-config', scrapingConfig });
 
   return (
     <Base>
@@ -125,7 +130,7 @@ export default function AdvancedScrapingPage(): JSX.Element {
           </CardContent>
         </Card>
 
-        <ConfigCollapseable
+        <ScrapingConfigSelect
           scrapingConfig={scrapingConfig}
           setScrapingConfig={setScrapingConfig}
         />
