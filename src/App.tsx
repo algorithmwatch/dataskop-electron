@@ -5,9 +5,10 @@ import UpdateNotification from './components/UpdateNotification';
 import routes from './constants/routes.json';
 import { ConfigProvider } from './contexts/config';
 import ExplanationPage from './pages/ExplanationPage';
+import ProviderLoginPage from './pages/ProviderLoginPage';
 import ResultsDetailsPage from './pages/ResultsDetailsPage';
 import ResultsPage from './pages/ResultsPage';
-import ScrapingPage from './pages/ScrapingAdvancedPage';
+import AdvancedScrapingPage from './pages/ScrapingAdvancedPage';
 import StartPage from './pages/StartPage';
 import VisualizationPage from './pages/VisualizationsPage';
 
@@ -17,7 +18,15 @@ export default function App() {
       <UpdateNotification />
       <Router>
         <Switch>
-          <Route path={routes.SCRAPING_ADVANCED} component={ScrapingPage} />
+          <Route
+            path={routes.SCRAPING_ADVANCED}
+            component={AdvancedScrapingPage}
+          />
+          <Route
+            path={routes.SCRAPING_PROFILE}
+            component={AdvancedScrapingPage}
+          />
+          <Route path={routes.PROVIDER_LOGIN} component={ProviderLoginPage} />
           <Route path={routes.RESULTS_DETAILS} component={ResultsDetailsPage} />
           <Route path={routes.RESULTS} component={ResultsPage} />
           <Route

@@ -2,7 +2,7 @@ import React from 'react';
 import routes from '../constants/routes.json';
 import SlideBase from '../layout/SlideBase';
 
-export default function ProfilScrapingPage(): JSX.Element {
+export default function ScrapingProfilePage(): JSX.Element {
   return (
     <SlideBase footerNav={[{ label: 'Login', to: routes.SCRAPING_ADVANCED }]}>
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio
