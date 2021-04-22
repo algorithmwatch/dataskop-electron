@@ -4,19 +4,18 @@ import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
 import SlideBase from '../layout/SlideBase';
 
-export default function ScrapingProfilePage(): JSX.Element {
+export default function ScrapingExperimentPage(): JSX.Element {
   const [sessionId, setSessionId] = useState(null);
 
   const {
     state: { scrapingConfig },
   } = useConfig();
 
-  const onlyProfileScraper = {
+  const onlyExperimentScraper = {
     ...scrapingConfig,
     procedureConfig: {
       ...scrapingConfig.procedureConfig,
-      seedCreators: [],
-      seedFixedVideos: [],
+      personalScrapers: [],
     },
   };
 
@@ -26,9 +25,7 @@ export default function ScrapingProfilePage(): JSX.Element {
           {
             label: 'weiter zu Visualisierung',
             clickHandler: (x) =>
-              x.push(
-                routes.VISUALIZATION_PROFILE.replace(':sessionId', sessionId),
-              ),
+              x.push(routes.RESULTS_DETAILS.replace(':sessionId', sessionId)),
           },
         ]
       : [];
@@ -36,7 +33,7 @@ export default function ScrapingProfilePage(): JSX.Element {
   return (
     <SlideBase footerNav={footerNav}>
       <Scraping
-        scrapingConfig={onlyProfileScraper}
+        scrapingConfig={onlyExperimentScraper}
         onDone={(x) => setSessionId(x)}
       />
     </SlideBase>

@@ -10,18 +10,18 @@ const {
 
 const defaultProcedureConfig = {
   scrollingBottomForComments: 5,
-  followVideos: 5,
+  followVideos: 2,
   seedFixedVideos: ['4Y1lZQsyuSQ', 'yr1YyrolRZY'],
   seedCreators: [
     {
-      approxNumVideos: 5,
+      approxNumVideos: 1,
       seedFunction: async (getHtml: GetHtmlFunction) =>
-        scrapePopularVideos(getHtml, 5),
+        scrapePopularVideos(getHtml),
     },
     {
-      approxNumVideos: 5,
+      approxNumVideos: 1,
       seedFunction: async (getHtml: GetHtmlFunction) =>
-        scrapeNationalNewsTopStories(getHtml, 5),
+        scrapeNationalNewsTopStories(getHtml),
     },
   ],
   personalScrapers: Object.values(personalScrapers),

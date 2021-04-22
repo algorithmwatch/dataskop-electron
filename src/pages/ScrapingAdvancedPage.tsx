@@ -14,7 +14,9 @@ import {
   Select,
 } from '@material-ui/core';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Scraping from '../components/scraping/Scraping';
+import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
 import Base from '../layout/Base';
 import { allConfigs } from '../providers/youtube';
@@ -68,6 +70,8 @@ export default function AdvancedScrapingPage(): JSX.Element {
     state: { scrapingConfig },
     dispatch,
   } = useConfig();
+
+  const [sessionId, setSessionId] = useState(null);
 
   const setScrapingConfig = (scrapingConfig) =>
     dispatch({ type: 'set-scraping-config', scrapingConfig });
@@ -133,8 +137,14 @@ export default function AdvancedScrapingPage(): JSX.Element {
         <ScrapingConfigSelect
           scrapingConfig={scrapingConfig}
           setScrapingConfig={setScrapingConfig}
+          onDone={(x) => setSessionId(x)}
         />
         <Scraping scrapingConfig={scrapingConfig} />
+        {sessionId !== null && (
+          <Link to={routes.RESULTS_DETAILS.replace(':sessionId', sessionId)}>
+            go to result
+          </Link>
+        )}
       </div>
     </Base>
   );

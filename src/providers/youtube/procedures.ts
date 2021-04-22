@@ -42,7 +42,10 @@ async function* scrapingYoutubeProcedure(
   let seedVideoIds: string[] = seedFixedVideos;
   for (const { seedFunction, approxNumVideos } of seedCreators) {
     const resultSeedVideos = await seedFunction(getHtml);
-    const numSeedVideos = resultSeedVideos.result.length;
+    const numSeedVideos = Math.min(
+      resultSeedVideos.fields.videos.length,
+      approxNumVideos,
+    );
 
     // if the projected number of seed videos is not the actual seed values, correct it
     // TODO: is it correct?
@@ -52,16 +55,18 @@ async function* scrapingYoutubeProcedure(
 
     step += 1;
     yield [step / maxSteps, resultSeedVideos];
-    seedVideoIds = seedVideoIds.concat(
-      resultSeedVideos.result.map(({ id }) => id),
-    );
+    seedVideoIds = seedVideoIds
+      .slice(0, numSeedVideos)
+      .concat(resultSeedVideos.fields.videos.map(({ id }) => id));
   }
 
   // 2. block: get background information such as history or subscriptions
   for (const fun of personalScrapers) {
     const data = await fun(getHtml);
     step += 1;
-    yield [step / maxSteps, data];
+    // already return here if there is no further scraping
+    if (step < maxSteps) yield [step / maxSteps, data];
+    else return [step / maxSteps, data];
   }
 
   // 3. block: get acutal video + video recommendations

@@ -5,12 +5,15 @@ import UpdateNotification from './components/UpdateNotification';
 import routes from './constants/routes.json';
 import { ConfigProvider } from './contexts/config';
 import ExplanationPage from './pages/ExplanationPage';
-import ProviderLoginPage from './pages/ProviderLoginPage';
 import ResultsDetailsPage from './pages/ResultsDetailsPage';
 import ResultsPage from './pages/ResultsPage';
 import AdvancedScrapingPage from './pages/ScrapingAdvancedPage';
+import ScrapingExperimentPage from './pages/ScrapingExperimentPage';
 import ScrapingExplanationPage from './pages/ScrapingExplanationPage';
+import ScrapingProfilePage from './pages/ScrapingProfilePage';
+import ProviderLoginPage from './pages/ScrapingProviderLoginPage';
 import StartPage from './pages/StartPage';
+import VisualizationProfilePage from './pages/VisualizationProfilePage';
 import VisualizationPage from './pages/VisualizationsPage';
 
 export default function App() {
@@ -25,7 +28,11 @@ export default function App() {
           />
           <Route
             path={routes.SCRAPING_PROFILE}
-            component={AdvancedScrapingPage}
+            component={ScrapingProfilePage}
+          />
+          <Route
+            path={routes.SCRAPING_EXPERIMENT}
+            component={ScrapingExperimentPage}
           />
           <Route path={routes.PROVIDER_LOGIN} component={ProviderLoginPage} />
           <Route path={routes.RESULTS_DETAILS} component={ResultsDetailsPage} />
@@ -33,6 +40,10 @@ export default function App() {
           <Route
             path={routes.VISUALIZATION_SESSION}
             component={VisualizationPage}
+          />
+          <Route
+            path={routes.VISUALIZATION_PROFILE}
+            component={VisualizationProfilePage}
           />
           <Route path={routes.EXPLANATION} component={ExplanationPage} />
           <Route

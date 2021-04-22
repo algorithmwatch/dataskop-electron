@@ -214,7 +214,10 @@ export default function SmallMultipleChart({ data }) {
           followed topics
         </button>
       </div>
-      <Chart data={data} visType={visType} />
+      <Chart
+        data={data.filter((x) => x.slug.includes('video'))}
+        visType={visType}
+      />
     </>
   );
 }

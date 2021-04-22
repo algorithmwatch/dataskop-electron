@@ -3,9 +3,7 @@
 /* eslint-disable no-await-in-loop */
 import { ipcRenderer } from 'electron';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import routes from '../../constants/routes.json';
 import { useConfig } from '../../contexts/config';
 import { addData, newSession } from '../../db';
 import { postDummyBackend } from '../../utils/networking';
@@ -49,6 +47,8 @@ const removeScrapingView = async () => {
 export default function Scraping({
   scrapingConfig,
   onLogin = null,
+  onDone = null,
+  hideMute = false,
 }): JSX.Element {
   const [scrapingGen, setScrapingGen] = useState<any>(null);
   const [progresFrac, setProgresFrac] = useState(0);
@@ -214,10 +214,15 @@ export default function Scraping({
         );
         if (!postedSuccess) console.error('error posting data to backend');
 
-        if (done) setIsScrapingFinished(true);
+        if (done) {
+          setIsScrapingFinished(true);
+          if (onDone !== null) onDone(sessionId);
+        }
       } catch (err) {
         setScrapingError(err);
         console.error(err);
+        console.error(err.message);
+        console.error(err.stack);
         setIsScrapingPaused(true);
       }
     };
@@ -240,7 +245,6 @@ export default function Scraping({
           `${scrapingError.name}: ${scrapingError.message}`}
       </p>
       <br />
-
       {isUserLoggedIn && (
         <>
           <button className="button" type="button" onClick={resetBrowser}>
@@ -252,7 +256,6 @@ export default function Scraping({
           <br />
         </>
       )}
-
       {!isUserLoggedIn && <p>Please login before continuing.</p>}
       {isUserLoggedIn && !isScrapingStarted && (
         <button className="button" type="button" onClick={startScraping}>
@@ -269,22 +272,16 @@ export default function Scraping({
           resume scraping
         </button>
       )}
-      {isScrapingFinished && (
-        <button className="button" type="button">
-          <Link to={routes.RESULTS_DETAILS.replace(':sessionId', sessionId)}>
-            go to result
-          </Link>
+
+      {!hideMute && (
+        <button
+          className="button"
+          type="button"
+          onClick={() => setIsMuted(!isMuted)}
+        >
+          is {!isMuted && 'not'} muted
         </button>
       )}
-
-      <button
-        className="button"
-        type="button"
-        onClick={() => setIsMuted(!isMuted)}
-      >
-        is {!isMuted && 'not'} muted
-      </button>
-
       {isScrapingStarted && (
         <progress className="progress" value={progresFrac} max="1">
           {progresFrac}

@@ -41,7 +41,7 @@ const waitUntilDone = async (
     prevResult = result;
     curTimeout *= timeout.factor;
   }
-  throw new Error(`parse error: ${JSON.stringify(prevResult.errors)}`);
+  throw new Error(`parse error: ${JSON.stringify(prevResult)}`);
 };
 
 const scrapePlaylist = async (
