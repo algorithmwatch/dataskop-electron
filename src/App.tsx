@@ -9,6 +9,7 @@ import ProviderLoginPage from './pages/ProviderLoginPage';
 import ResultsDetailsPage from './pages/ResultsDetailsPage';
 import ResultsPage from './pages/ResultsPage';
 import AdvancedScrapingPage from './pages/ScrapingAdvancedPage';
+import ScrapingExplanationPage from './pages/ScrapingExplanationPage';
 import StartPage from './pages/StartPage';
 import VisualizationPage from './pages/VisualizationsPage';
 
@@ -34,6 +35,10 @@ export default function App() {
             component={VisualizationPage}
           />
           <Route path={routes.EXPLANATION} component={ExplanationPage} />
+          <Route
+            path={routes.SCRAPING_EXPLANATION}
+            component={ScrapingExplanationPage}
+          />
           <Route path={routes.START} component={StartPage} />
         </Switch>
       </Router>

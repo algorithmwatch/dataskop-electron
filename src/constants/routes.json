@@ -3,6 +3,7 @@
   "EXPLANATION": "/explanation",
   "SCRAPING_ADVANCED": "/scraping/advanced",
   "SCRAPING_PROFILE": "/scraping/profile",
+  "SCRAPING_EXPLANATION": "/scraping/explanation",
   "PROVIDER_LOGIN": "/scraping/login",
   "RESULTS": "/results",
   "RESULTS_DETAILS": "/results/:sessionId",
