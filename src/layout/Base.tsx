@@ -13,7 +13,7 @@ export default function Base({ children }): JSX.Element {
       {/* <header className="flex"></header> */}
 
       {/*  h-full hides the debug button for long pages */}
-      <main className="pt-4 flex flex-col">{children}</main>
+      <main className="pt-4 flex flex-grow flex-col">{children}</main>
 
       <footer className="pt-6 pb-4 flex justify-between items-center">
         {/* debug menu */}
