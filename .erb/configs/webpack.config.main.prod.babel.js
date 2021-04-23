@@ -39,6 +39,7 @@ export default merge(baseConfig, {
     minimizer: [
       new TerserPlugin({
         parallel: true,
+        extractComments: false,
       }),
     ],
   },
