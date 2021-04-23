@@ -14,7 +14,7 @@ type Dispatch = (action: Action) => void;
 type State = {
   version: string;
   isDebug: boolean;
-  showQuickJumpMenu: boolean;
+  showAdvancedMenu: boolean;
   scrapingConfig: any;
 };
 type ConfigProviderProps = { children: React.ReactNode };
@@ -52,7 +52,7 @@ function ConfigProvider({ children }: ConfigProviderProps) {
     version: 'unspecified',
     scrapingConfig: defaultConfig,
     isDebug,
-    showQuickJumpMenu: true,
+    showAdvancedMenu: true,
   });
 
   // NOTE: you *might* need to memoize this value

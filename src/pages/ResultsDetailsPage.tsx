@@ -9,7 +9,7 @@ export default function ResultsDetailsPage() {
     <>
       <Link
         className="underline text-2xl"
-        to={routes.VISUALIZATION_SESSION.replace(':sessionId', sessionId)}
+        to={routes.VISUALIZATION_ADVANCED.replace(':sessionId', sessionId)}
       >
         Show Visualizations
       </Link>

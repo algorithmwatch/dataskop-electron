@@ -45,7 +45,7 @@ export default function App() {
           <Route path={routes.RESULTS_DETAILS} component={ResultsDetailsPage} />
           <Route path={routes.RESULTS} component={ResultsPage} />
           <Route
-            path={routes.VISUALIZATION_SESSION}
+            path={routes.VISUALIZATION_ADVANCED}
             component={VisualizationAdvancedPage}
           />
           <Route

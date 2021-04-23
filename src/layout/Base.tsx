@@ -1,11 +1,11 @@
 import React from 'react';
-import DebugMenu from '../components/DebugMenu';
+import AdvancedMenu from '../components/AdvancedMenu';
 import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
 
 export default function Base({ children }): JSX.Element {
   const {
-    state: { version, showQuickJumpMenu },
+    state: { version, showAdvancedMenu },
   } = useConfig();
 
   return (
@@ -18,8 +18,8 @@ export default function Base({ children }): JSX.Element {
       <footer className="pt-6 pb-4 flex justify-between items-center">
         {/* debug menu */}
         <div>
-          {showQuickJumpMenu && (
-            <DebugMenu
+          {showAdvancedMenu && (
+            <AdvancedMenu
               menuItems={[
                 { label: 'start', to: routes.START },
                 { label: 'advanced scraping', to: routes.SCRAPING_ADVANCED },

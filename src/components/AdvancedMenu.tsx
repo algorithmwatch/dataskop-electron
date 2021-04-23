@@ -2,7 +2,7 @@ import { Button, Menu, MenuItem } from '@material-ui/core';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-export default function DebugMenu({ menuItems }) {
+export default function AdvancedMenu({ menuItems }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const history = useHistory();
@@ -24,7 +24,7 @@ export default function DebugMenu({ menuItems }) {
         variant="outlined"
         size="small"
       >
-        Debug
+        Advanced
       </Button>
       <Menu
         id="debug-menu"
