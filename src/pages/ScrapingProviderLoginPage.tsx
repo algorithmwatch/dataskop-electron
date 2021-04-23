@@ -36,7 +36,7 @@ export default function ProviderLoginPage(): JSX.Element {
 
   return (
     <SlideBase footerNav={footerNav}>
-      {!showLoginWindow && (
+      {!isLoggedIn && !showLoginWindow && (
         <>
           <h1 className="hl-4xl text-center mb-6">Bitte melden Sie sich an</h1>
           <p className="text-lg mx-auto mb-6">
@@ -47,7 +47,6 @@ export default function ProviderLoginPage(): JSX.Element {
               size="large"
               clickHandler={() => {
                 setShowLoginWindow(true);
-                setLoggedIn(true);
               }}
             >
               Anmelden
@@ -58,7 +57,10 @@ export default function ProviderLoginPage(): JSX.Element {
       {showLoginWindow && (
         <Scraping
           scrapingConfig={scrapingConfig}
-          onLogin={() => setLoggedIn(true)}
+          onLogin={() => {
+            setLoggedIn(true);
+            setShowLoginWindow(false);
+          }}
           hideMute
         />
       )}
