@@ -25,7 +25,12 @@ export default function ScrapingExperimentPage(): JSX.Element {
           {
             label: 'weiter zu Visualisierung',
             clickHandler: (x) =>
-              x.push(routes.RESULTS_DETAILS.replace(':sessionId', sessionId)),
+              x.push(
+                routes.VISUALIZATION_EXPERIMENT.replace(
+                  ':sessionId',
+                  sessionId,
+                ),
+              ),
           },
         ]
       : [];

@@ -9,5 +9,7 @@
   "RESULTS": "/results",
   "RESULTS_DETAILS": "/results/:sessionId",
   "VISUALIZATION_SESSION": "/visualization/session/:sessionId",
-  "VISUALIZATION_PROFILE": "/visualization/profile/:sessionId"
+  "VISUALIZATION_PROFILE": "/visualization/profile/:sessionId",
+  "VISUALIZATION_EXPERIMENT": "/visualization/experiment/:sessionId",
+  "DONATION": "/donation"
 }
