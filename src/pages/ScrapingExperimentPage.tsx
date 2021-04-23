@@ -5,7 +5,7 @@ import { useConfig } from '../contexts/config';
 import SlideBase from '../layout/SlideBase';
 
 export default function ScrapingExperimentPage(): JSX.Element {
-  const [sessionId, setSessionId] = useState(null);
+  const [sessionId, setSessionId] = useState<null | string>(null);
 
   const {
     state: { scrapingConfig },
@@ -38,6 +38,7 @@ export default function ScrapingExperimentPage(): JSX.Element {
   return (
     <SlideBase footerNav={footerNav}>
       <Scraping
+        isInteractive={false}
         scrapingConfig={onlyExperimentScraper}
         onDone={(x) => setSessionId(x)}
       />

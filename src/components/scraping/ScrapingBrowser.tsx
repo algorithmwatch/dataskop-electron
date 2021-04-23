@@ -3,11 +3,21 @@ import { round } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { Rnd } from 'react-rnd';
 
-const setMutedStatus = async (isMuted: boolean) => {
+const setMainMuted = async (isMuted: boolean) => {
   return ipcRenderer.invoke('scraping-set-muted', isMuted);
 };
 
-export default function ScrapingBrowser({ isMuted }) {
+const setMainInteractive = async (isInteractive: boolean) => {
+  return ipcRenderer.invoke('scraping-set-interactive', isInteractive);
+};
+
+export default function ScrapingBrowser({
+  isMuted = true,
+  isInteractive = true,
+}: {
+  isMuted: boolean;
+  isInteractive: boolean;
+}) {
   const [bounds, setBounds] = useState({
     x: 500,
     y: 200,
@@ -17,8 +27,13 @@ export default function ScrapingBrowser({ isMuted }) {
   const margin = 30;
 
   useEffect(() => {
-    setMutedStatus(isMuted);
+    setMainMuted(isMuted);
   }, [isMuted]);
+
+  useEffect(() => {
+    console.log(isInteractive);
+    setMainInteractive(isInteractive);
+  }, [isInteractive]);
 
   useEffect(() => {
     const b = { ...bounds };

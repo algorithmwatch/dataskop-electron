@@ -10,21 +10,14 @@
  */
 import * as Sentry from '@sentry/electron';
 import 'core-js/stable';
-import {
-  app,
-  BrowserView,
-  BrowserWindow,
-  dialog,
-  ipcMain,
-  session,
-  shell,
-} from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, session, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import { promises as fsPromises, writeFileSync } from 'fs';
 import path from 'path';
 import 'regenerator-runtime/runtime';
-import MenuBuilder from './menu';
+import MenuBuilder from './main/menu';
+import registerScrapingHandlers from './main/scraping';
 
 const DEBUG =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
@@ -157,6 +150,9 @@ const createWindow = async () => {
     // eslint-disable-next-line
     new AppUpdater();
   }, 1000);
+
+  // register handlers
+  registerScrapingHandlers(mainWindow);
 };
 
 /**
@@ -196,109 +192,8 @@ autoUpdater.on('error', async (event, error) => {
 });
 
 /**
- * controlling the scraping window
+ * comunicate with renderer
  */
-
-let scrapingView: BrowserView | null = null;
-
-const getScrapingView = (): BrowserView => {
-  if (scrapingView == null) {
-    const newView = new BrowserView({
-      webPreferences: {
-        contextIsolation: false,
-      },
-    });
-    mainWindow?.setBrowserView(newView);
-
-    // muted audio is the default
-    newView.webContents?.setAudioMuted(true);
-
-    scrapingView = newView;
-  }
-  return scrapingView;
-};
-
-ipcMain.handle(
-  'scraping-load-url',
-  async (event, url: string, { withHtml = false, clear = false }) => {
-    const view = getScrapingView();
-
-    if (clear) {
-      view.webContents.session.clearStorageData();
-    }
-
-    await view.webContents.loadURL(url, {
-      userAgent: 'Chrome',
-    });
-
-    if (withHtml) {
-      const html = await view.webContents.executeJavaScript(
-        'document.documentElement.innerHTML',
-      );
-      return html;
-    }
-
-    return null;
-  },
-);
-
-ipcMain.handle('scraping-get-cookies', async (event) => {
-  const { webContents } = getScrapingView();
-  const cookies = await webContents.session.cookies.get({});
-  return cookies;
-});
-
-ipcMain.handle(
-  'scraping-navigation-cb',
-  async (event, cbSlug, remove = false) => {
-    const view = getScrapingView();
-
-    // TODO: find a better event?
-    const navEvent = 'page-title-updated';
-    const cb = () => {
-      event.sender.send(cbSlug);
-    };
-
-    if (remove) {
-      view.webContents.removeListener(navEvent, cb);
-    } else {
-      view.webContents.on(navEvent, cb);
-    }
-  },
-);
-
-ipcMain.handle('scraping-get-current-html', async (event) => {
-  const view = getScrapingView();
-  const html = await view.webContents.executeJavaScript(
-    'document.documentElement.innerHTML',
-  );
-  return html;
-});
-
-ipcMain.handle('scraping-scroll-down', async (event) => {
-  const view = getScrapingView();
-  await view.webContents.executeJavaScript('window.scrollBy(0, 100);');
-});
-
-ipcMain.handle('scraping-set-muted', async (event, value) => {
-  const { webContents } = getScrapingView();
-  await webContents?.setAudioMuted(value);
-});
-
-ipcMain.handle('scraping-remove-view', async (event) => {
-  const view = getScrapingView();
-  mainWindow?.removeBrowserView(view);
-
-  // .destroy() does indeed exists and is nesseary to fully remove the view.
-  // Not calling it will result in errors with event handlers.
-  view.webContents.destroy();
-  scrapingView = null;
-});
-
-ipcMain.handle('scraping-set-bounds', async (event, bounds) => {
-  const view = getScrapingView();
-  view?.setBounds(bounds);
-});
 
 ipcMain.handle('results-import', async (event) => {
   const { canceled, filePaths } = await dialog.showOpenDialog({

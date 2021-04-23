@@ -49,6 +49,13 @@ export default function Scraping({
   onLogin = null,
   onDone = null,
   hideMute = false,
+  isInteractive = true,
+}: {
+  scrapingConfig: any;
+  onLogin?: null | (() => void);
+  onDone?: null | ((arg0: string) => void);
+  hideMute?: boolean;
+  isInteractive?: boolean;
 }): JSX.Element {
   const [scrapingGen, setScrapingGen] = useState<any>(null);
   const [progresFrac, setProgresFrac] = useState(0);
@@ -146,9 +153,7 @@ export default function Scraping({
     if (!loggedIn) {
       await setNavigationCallback(cbSlug);
       ipcRenderer.on(cbSlug, checkLoginCb);
-    } else {
-      if (onLogin !== null) onLogin();
-    }
+    } else if (onLogin !== null) onLogin();
   };
 
   const startScraping = async () => {
@@ -239,7 +244,7 @@ export default function Scraping({
 
   return (
     <>
-      <ScrapingBrowser isMuted={isMuted} />
+      <ScrapingBrowser isMuted={isMuted} isInteractive={isInteractive} />
       <p style={{ color: 'red' }}>
         {scrapingError !== null &&
           `${scrapingError.name}: ${scrapingError.message}`}
