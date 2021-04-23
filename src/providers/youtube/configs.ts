@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 import { scrapingYoutubeProcedure } from './procedures';
-import { experimentScrapers, personalScrapers } from './scrapers';
+import { experimentScrapers, profileScrapers } from './scrapers';
 
 const {
   scrapeNationalNewsTopStories,
@@ -11,20 +11,20 @@ const {
 const defaultProcedureConfig = {
   scrollingBottomForComments: 5,
   followVideos: 2,
-  seedFixedVideos: ['4Y1lZQsyuSQ', 'yr1YyrolRZY'],
-  seedCreators: [
+  seedVideosFixed: ['4Y1lZQsyuSQ', 'yr1YyrolRZY'],
+  seedVideosDynamic: [
     {
-      approxNumVideos: 1,
-      seedFunction: async (getHtml: GetHtmlFunction) =>
+      maxVideos: 1,
+      getVideos: async (getHtml: GetHtmlFunction) =>
         scrapePopularVideos(getHtml),
     },
     {
-      approxNumVideos: 1,
-      seedFunction: async (getHtml: GetHtmlFunction) =>
+      maxVideos: 1,
+      getVideos: async (getHtml: GetHtmlFunction) =>
         scrapeNationalNewsTopStories(getHtml),
     },
   ],
-  personalScrapers: Object.values(personalScrapers),
+  profileScrapers: Object.values(profileScrapers),
 };
 
 const createProcedure = (config: ProcedureConfig) => (
@@ -47,8 +47,8 @@ const simpleConfig = {
   procedureConfig: {
     ...defaultProcedureConfig,
     scrollingBottomForComments: 0,
-    personalScrapers: [],
-    seedCreators: [],
+    profileScrapers: [],
+    seedVideosDynamic: [],
   },
 };
 
@@ -59,12 +59,12 @@ const testConfig = {
   title: 'youtube test providers',
   procedureConfig: {
     ...defaultProcedureConfig,
-    personalScraper: Object.values(personalScrapers).concat([
+    personalScraper: Object.values(profileScrapers).concat([
       scrapePopularVideos,
       scrapeNationalNewsTopStories,
     ]),
-    seedCreators: [],
-    seedFixedVideos: ['4Y1lZQsyuSQ'],
+    seedVideosDynamic: [],
+    seedVideosFixed: ['4Y1lZQsyuSQ'],
   },
 };
 

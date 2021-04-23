@@ -16,10 +16,10 @@ async function* scrapingYoutubeProcedure(
 ) {
   const {
     followVideos,
-    seedCreators,
-    personalScrapers,
+    seedVideosDynamic,
+    profileScrapers,
     scrollingBottomForComments,
-    seedFixedVideos,
+    seedVideosFixed,
   } = config;
 
   const isFollowingVideos = !(followVideos == null || followVideos === 0);
@@ -30,26 +30,26 @@ async function* scrapingYoutubeProcedure(
   let step = 0;
   // guess the number of total steps (may get altered later on)
   const approxNumSeedVideos =
-    seedCreators.map((x) => x.approxNumVideos).reduce((pv, cv) => pv + cv, 0) +
-    seedFixedVideos.length;
+    seedVideosDynamic.map((x) => x.maxVideos).reduce((pv, cv) => pv + cv, 0) +
+    seedVideosFixed.length;
 
   let maxSteps =
-    seedCreators.length +
+    seedVideosDynamic.length +
     approxNumSeedVideos * (followVideos + 1) +
-    personalScrapers.length;
+    profileScrapers.length;
 
   // 1. block: get seed videos
-  let seedVideoIds: string[] = seedFixedVideos;
-  for (const { seedFunction, approxNumVideos } of seedCreators) {
-    const resultSeedVideos = await seedFunction(getHtml);
+  let seedVideoIds: string[] = seedVideosFixed;
+  for (const { getVideos, maxVideos } of seedVideosDynamic) {
+    const resultSeedVideos = await getVideos(getHtml);
     const numSeedVideos = Math.min(
       resultSeedVideos.fields.videos.length,
-      approxNumVideos,
+      maxVideos,
     );
 
     // if the projected number of seed videos is not the actual seed values, correct it
     // TODO: is it correct?
-    if (approxNumVideos !== numSeedVideos) {
+    if (maxVideos !== numSeedVideos) {
       maxSteps -= (approxNumSeedVideos - numSeedVideos) * (followVideos + 1);
     }
 
@@ -61,7 +61,7 @@ async function* scrapingYoutubeProcedure(
   }
 
   // 2. block: get background information such as history or subscriptions
-  for (const fun of personalScrapers) {
+  for (const fun of profileScrapers) {
     const data = await fun(getHtml);
     step += 1;
     // already return here if there is no further scraping

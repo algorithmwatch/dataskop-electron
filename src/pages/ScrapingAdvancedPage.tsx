@@ -94,10 +94,10 @@ export default function AdvancedScrapingPage(): JSX.Element {
               style={{ width: '500px' }}
               rows={10}
               value={
-                typeof scrapingConfig.procedureConfig.seedFixedVideos ===
+                typeof scrapingConfig.procedureConfig.seedVideosFixed ===
                 'string'
-                  ? scrapingConfig.procedureConfig.seedFixedVideos
-                  : scrapingConfig.procedureConfig.seedFixedVideos.join(' ')
+                  ? scrapingConfig.procedureConfig.seedVideosFixed
+                  : scrapingConfig.procedureConfig.seedVideosFixed.join(' ')
               }
               onChange={(e) => {
                 try {
@@ -106,7 +106,7 @@ export default function AdvancedScrapingPage(): JSX.Element {
                     ...scrapingConfig,
                     procedureConfig: {
                       ...scrapingConfig.procedureConfig,
-                      seedFixedVideos: e.target.value,
+                      seedVideosFixed: e.target.value,
                     },
                   });
                 } catch (error) {

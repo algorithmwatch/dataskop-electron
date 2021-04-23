@@ -15,8 +15,8 @@ export default function ScrapingProfilePage(): JSX.Element {
     ...scrapingConfig,
     procedureConfig: {
       ...scrapingConfig.procedureConfig,
-      seedCreators: [],
-      seedFixedVideos: [],
+      seedVideosDynamic: [],
+      seedVideosFixed: [],
     },
   };
 

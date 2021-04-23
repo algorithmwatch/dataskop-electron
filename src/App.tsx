@@ -14,9 +14,9 @@ import ScrapingExplanationPage from './pages/ScrapingExplanationPage';
 import ScrapingProfilePage from './pages/ScrapingProfilePage';
 import ProviderLoginPage from './pages/ScrapingProviderLoginPage';
 import StartPage from './pages/StartPage';
+import VisualizationAdvancedPage from './pages/VisualizationAdvancedPage';
 import VisualizationExperimentsPage from './pages/VisualizationExperimentsPage';
 import VisualizationProfilePage from './pages/VisualizationProfilePage';
-import VisualizationPage from './pages/VisualizationsPage';
 
 export default function App() {
   return (
@@ -46,7 +46,7 @@ export default function App() {
           <Route path={routes.RESULTS} component={ResultsPage} />
           <Route
             path={routes.VISUALIZATION_SESSION}
-            component={VisualizationPage}
+            component={VisualizationAdvancedPage}
           />
           <Route
             path={routes.VISUALIZATION_EXPERIMENT}

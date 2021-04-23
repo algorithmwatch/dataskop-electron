@@ -5,7 +5,7 @@ import { useConfig } from '../contexts/config';
 import { getSessionData } from '../db';
 import Base from '../layout/Base';
 
-export default function VisualizationPage() {
+export default function VisualizationAdvancedPage() {
   const [data, setData] = useState<any>([]);
   const { sessionId } = useParams();
   const {

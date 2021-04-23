@@ -195,7 +195,7 @@ async function* scrapeSeedVideos(
   return null;
 }
 
-export const personalScrapers = {
+export const profileScrapers = {
   scrapeWatchedVideos,
   scrapeLikedVideos,
   scrapeSearchHistory,

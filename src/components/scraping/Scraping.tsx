@@ -156,9 +156,9 @@ export default function Scraping({
       console.log(scrapingConfig.procedureConfig);
     }
 
-    if (typeof scrapingConfig.procedureConfig.seedFixedVideos === 'string')
-      scrapingConfig.procedureConfig.seedFixedVideos = splitByWhitespace(
-        scrapingConfig.procedureConfig.seedFixedVideos,
+    if (typeof scrapingConfig.procedureConfig.seedVideosFixed === 'string')
+      scrapingConfig.procedureConfig.seedVideosFixed = splitByWhitespace(
+        scrapingConfig.procedureConfig.seedVideosFixed,
       );
 
     setIsScrapingStarted(true);

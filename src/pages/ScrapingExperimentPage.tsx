@@ -15,7 +15,7 @@ export default function ScrapingExperimentPage(): JSX.Element {
     ...scrapingConfig,
     procedureConfig: {
       ...scrapingConfig.procedureConfig,
-      personalScrapers: [],
+      profileScrapers: [],
     },
   };
 
