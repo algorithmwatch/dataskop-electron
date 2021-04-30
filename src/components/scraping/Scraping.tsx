@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
 import { ipcRenderer } from 'electron';
@@ -12,6 +11,9 @@ import { delay } from '../../utils/time';
 import ScrapingBrowser from './ScrapingBrowser';
 
 // commands to communicate with the browser window in the main screen
+
+// I tried hard to make the interactivity changeable but to no avail.
+// You have to set from the start whether a scraping view is interactive.
 
 const getCurrentHtml = async () => {
   return ipcRenderer.invoke('scraping-get-current-html');
@@ -38,10 +40,6 @@ const scrollDown = async () => {
   return ipcRenderer.invoke('scraping-scroll-down');
 };
 
-const removeScrapingView = async () => {
-  return ipcRenderer.invoke('scraping-remove-view');
-};
-
 // the actual scraping window
 
 export default function Scraping({
@@ -57,15 +55,20 @@ export default function Scraping({
   hideMute?: boolean;
   isInteractive?: boolean;
 }): JSX.Element {
-  const [scrapingGen, setScrapingGen] = useState<any>(null);
+  // create a generation to be able to hold/resumee a scraping proccess
+  const [scrapingGen, setScrapingGen] = useState<Generator | null>(null);
+
+  // store the progres from 0 to 1. See below how a change in `progresFrac` triggers a next scraping step w/ `useEffect`
   const [progresFrac, setProgresFrac] = useState(0);
-  const [sessionId, setSessionId] = useState<any>(null);
+
+  // create a uuid every time you hit start scraping
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   const [isUserLoggedIn, setUserLoggedIn] = useState(false);
   const [isScrapingStarted, setIsScrapingStarted] = useState(false);
   const [isScrapingPaused, setIsScrapingPaused] = useState(false);
   const [isScrapingFinished, setIsScrapingFinished] = useState(false);
-  const [scrapingError, setScrapingError] = useState(null);
+  const [scrapingError, setScrapingError] = useState<Error | null>(null);
 
   const [isMuted, setIsMuted] = useState(true);
 
@@ -139,13 +142,11 @@ export default function Scraping({
     }
   };
 
-  const cleanUpScraper = () => {
-    ipcRenderer.removeListener(cbSlug, checkLoginCb);
-    removeScrapingView();
-  };
-
   const initScraper = async () => {
-    cleanUpScraper();
+    await ipcRenderer.invoke('scraping-init-view', {
+      muted: isMuted,
+      interactive: isInteractive,
+    });
     await goToStart();
 
     const loggedIn = await checkForLogIn();
@@ -155,6 +156,13 @@ export default function Scraping({
       ipcRenderer.on(cbSlug, checkLoginCb);
     } else if (onLogin !== null) onLogin();
   };
+
+  const cleanUpScraper = () => {
+    ipcRenderer.removeListener(cbSlug, checkLoginCb);
+    ipcRenderer.invoke('scraping-remove-view');
+  };
+
+  // controls for the scraping
 
   const startScraping = async () => {
     if (isDebug) {
@@ -196,7 +204,7 @@ export default function Scraping({
     setIsScrapingFinished(false);
     setScrapingError(null);
 
-    goToUrl(scrapingConfig.loginUrl);
+    goToStart();
   };
 
   // gets triggered when e.g. the progress bar is updated (via `frac`)
@@ -207,7 +215,7 @@ export default function Scraping({
 
       try {
         const { value, done } = await scrapingGen.next();
-        if (value == null) return;
+        if (value == null || sessionId == null) return;
 
         setProgresFrac(value[0]);
         addData(sessionId, value[1]);
@@ -226,20 +234,17 @@ export default function Scraping({
       } catch (err) {
         setScrapingError(err);
         console.error(err);
-        console.error(err.message);
-        console.error(err.stack);
         setIsScrapingPaused(true);
       }
     };
     runScraperOnce();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrapingGen, progresFrac, sessionId, isScrapingPaused]);
 
   // initialize & cleanup
   useEffect(() => {
     initScraper();
-    return () => {
-      cleanUpScraper();
-    };
+    return cleanUpScraper;
   }, []);
 
   return (

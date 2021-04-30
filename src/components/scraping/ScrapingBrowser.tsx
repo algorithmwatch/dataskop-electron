@@ -7,9 +7,7 @@ const setMainMuted = async (isMuted: boolean) => {
   return ipcRenderer.invoke('scraping-set-muted', isMuted);
 };
 
-const setMainInteractive = async (isInteractive: boolean) => {
-  return ipcRenderer.invoke('scraping-set-interactive', isInteractive);
-};
+// TODO: add invisible div to prevent interaction
 
 export default function ScrapingBrowser({
   isMuted = true,
@@ -29,11 +27,6 @@ export default function ScrapingBrowser({
   useEffect(() => {
     setMainMuted(isMuted);
   }, [isMuted]);
-
-  useEffect(() => {
-    console.log(isInteractive);
-    setMainInteractive(isInteractive);
-  }, [isInteractive]);
 
   useEffect(() => {
     const b = { ...bounds };
@@ -57,7 +50,13 @@ export default function ScrapingBrowser({
   }, []);
 
   return (
-    <div style={{ position: 'fixed', left: 0, top: 0 }}>
+    <div
+      style={{
+        position: 'fixed',
+        left: 0,
+        top: 0,
+      }}
+    >
       <Rnd
         className="bg-gray-100"
         size={{ width: bounds.width, height: bounds.height }}

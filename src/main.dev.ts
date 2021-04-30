@@ -187,7 +187,7 @@ autoUpdater.on('update-downloaded', () => {
   mainWindow?.webContents.send('update_downloaded');
 });
 
-autoUpdater.on('error', async (event, error) => {
+autoUpdater.on('error', async (_event, error) => {
   mainWindow?.webContents.send('update_error', error);
 });
 
@@ -208,7 +208,7 @@ ipcMain.handle('results-import', async (event) => {
   });
 });
 
-ipcMain.handle('results-export', async (event, data, filename) => {
+ipcMain.handle('results-export', async (_event, data, filename) => {
   if (mainWindow === null) return;
   const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
     defaultPath: filename,
@@ -217,6 +217,6 @@ ipcMain.handle('results-export', async (event, data, filename) => {
   writeFileSync(filePath, data);
 });
 
-ipcMain.handle('get-version-number', (event) => {
+ipcMain.handle('get-version-number', () => {
   return app.getVersion();
 });

@@ -5,6 +5,8 @@ module.exports = {
     'import/no-extraneous-dependencies': 'off',
     // not working well with TypeScript
     'react/require-default-props': 'off',
+    // allow console for debugging
+    'no-console': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,
