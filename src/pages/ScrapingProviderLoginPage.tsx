@@ -56,6 +56,7 @@ export default function ProviderLoginPage(): JSX.Element {
       )}
       {showLoginWindow && (
         <Scraping
+          fixedWindow
           scrapingConfig={scrapingConfig}
           onLogin={() => {
             setLoggedIn(true);

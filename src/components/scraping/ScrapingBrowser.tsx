@@ -5,10 +5,12 @@ import { Rnd } from 'react-rnd';
 
 export default function ScrapingBrowser({
   isMuted = true,
+  fixedWindow = false,
   initPosition = 'center',
   initSizeFactor = 0.6,
 }: {
   isMuted: boolean;
+  fixedWindow: boolean;
   initPosition?: string;
   initSizeFactor?: number;
 }) {
@@ -68,6 +70,8 @@ export default function ScrapingBrowser({
       }}
     >
       <Rnd
+        enableResizing={!fixedWindow}
+        disableDragging={fixedWindow}
         className="bg-gray-100"
         size={pick(bounds, ['width', 'height'])}
         position={pick(bounds, ['x', 'y'])}

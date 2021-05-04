@@ -49,12 +49,14 @@ export default function Scraping({
   onDone = null,
   hideMute = false,
   allowInput = true,
+  fixedWindow = false,
 }: {
   scrapingConfig: any;
   onLogin?: null | (() => void);
   onDone?: null | ((arg0: string) => void);
   hideMute?: boolean;
   allowInput?: boolean;
+  fixedWindow?: boolean;
 }): JSX.Element {
   // create a generation to be able to hold/resumee a scraping proccess
   const [scrapingGen, setScrapingGen] = useState<Generator | null>(null);
@@ -146,7 +148,7 @@ export default function Scraping({
   const initScraper = async () => {
     await ipcRenderer.invoke('scraping-init-view', {
       muted: isMuted,
-      allowInput: allowInput,
+      allowInput,
     });
     await goToStart();
 
@@ -250,7 +252,7 @@ export default function Scraping({
 
   return (
     <>
-      <ScrapingBrowser isMuted={isMuted} allowInput={allowInput} />
+      <ScrapingBrowser isMuted={isMuted} fixedWindow={fixedWindow} />
       <div>
         <p style={{ color: 'red' }}>
           {scrapingError !== null &&
