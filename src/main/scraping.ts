@@ -11,7 +11,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
   ipcMain.handle(
     'scraping-init-view',
-    (_event, { muted = true, interactive = true }) => {
+    (_event, { muted = true, allowInput = true }) => {
       const newView = new BrowserView({
         webPreferences: {
           contextIsolation: false,
@@ -22,10 +22,22 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
       if (muted) newView.webContents?.setAudioMuted(true);
 
-      if (!interactive) {
+      if (!allowInput) {
+        const preventInputCss =
+          'html, body { pointer-events: none; height: 100%; overflow-y: hidden;}';
+
         newView.webContents.on('before-input-event', (event) =>
           event.preventDefault(),
         );
+        newView.webContents.insertCSS(preventInputCss);
+
+        // Not sure if this is necessary but better to disable user input asap (before did-finish-load fires)
+        newView.webContents.on('did-finish-load', () => {
+          newView.webContents.on('before-input-event', (event) =>
+            event.preventDefault(),
+          );
+          newView.webContents.insertCSS(preventInputCss);
+        });
       }
 
       scrapingView = newView;

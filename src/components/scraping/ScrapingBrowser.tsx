@@ -1,20 +1,16 @@
 import { ipcRenderer } from 'electron';
-import { round } from 'lodash';
+import { pick, round } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { Rnd } from 'react-rnd';
 
-// TODO: add invisible div to prevent interaction
-
 export default function ScrapingBrowser({
   isMuted = true,
-  isInteractive = true,
   initPosition = 'center',
   initSizeFactor = 0.6,
 }: {
   isMuted: boolean;
-  isInteractive: boolean;
-  initPosition: string;
-  initSizeFactor: number;
+  initPosition?: string;
+  initSizeFactor?: number;
 }) {
   const margin = 30;
   const [bounds, setBounds] = useState({
@@ -73,12 +69,12 @@ export default function ScrapingBrowser({
     >
       <Rnd
         className="bg-gray-100"
-        size={{ width: bounds.width, height: bounds.height }}
-        position={{ x: bounds.x, y: bounds.y }}
-        onDragStop={(e, d) => {
-          setBounds({ ...bounds, x: d.x, y: d.y });
+        size={pick(bounds, ['width', 'height'])}
+        position={pick(bounds, ['x', 'y'])}
+        onDragStop={(_e, d) => {
+          setBounds({ ...bounds, ...pick(d, ['x', 'y']) });
         }}
-        onResize={(e, direction, ref, delta, position) => {
+        onResize={(_e, _direction, ref, _delta, position) => {
           setBounds({
             width: ref.offsetWidth,
             height: ref.offsetHeight,

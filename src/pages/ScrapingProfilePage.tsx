@@ -37,7 +37,7 @@ export default function ScrapingProfilePage(): JSX.Element {
     <SlideBase footerNav={footerNav}>
       <Scraping
         scrapingConfig={onlyProfileScraper}
-        isInteractive={false}
+        allowInput={false}
         onDone={(x) => setSessionId(x)}
       />
     </SlideBase>

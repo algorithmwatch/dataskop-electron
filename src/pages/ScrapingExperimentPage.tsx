@@ -38,7 +38,7 @@ export default function ScrapingExperimentPage(): JSX.Element {
   return (
     <SlideBase footerNav={footerNav}>
       <Scraping
-        isInteractive={false}
+        allowInput={false}
         scrapingConfig={onlyExperimentScraper}
         onDone={(x) => setSessionId(x)}
       />
