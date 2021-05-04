@@ -62,7 +62,7 @@ export default function ProviderLoginPage(): JSX.Element {
             setLoggedIn(true);
             setShowLoginWindow(false);
           }}
-          hideMute
+          hideControls
         />
       )}
       {isLoggedIn && (

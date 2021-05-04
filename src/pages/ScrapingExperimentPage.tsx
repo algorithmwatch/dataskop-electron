@@ -38,7 +38,9 @@ export default function ScrapingExperimentPage(): JSX.Element {
   return (
     <SlideBase footerNav={footerNav}>
       <Scraping
-        allowInput={false}
+        disableInput
+        hideControls
+        autostart
         scrapingConfig={onlyExperimentScraper}
         onDone={(x) => setSessionId(x)}
       />

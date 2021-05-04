@@ -47,16 +47,18 @@ export default function Scraping({
   scrapingConfig,
   onLogin = null,
   onDone = null,
-  hideMute = false,
-  allowInput = true,
+  hideControls = false,
+  disableInput = false,
   fixedWindow = false,
+  autostart = false,
 }: {
   scrapingConfig: any;
   onLogin?: null | (() => void);
   onDone?: null | ((arg0: string) => void);
-  hideMute?: boolean;
-  allowInput?: boolean;
+  hideControls?: boolean;
+  disableInput?: boolean;
   fixedWindow?: boolean;
+  autostart?: boolean;
 }): JSX.Element {
   // create a generation to be able to hold/resumee a scraping proccess
   const [scrapingGen, setScrapingGen] = useState<Generator | null>(null);
@@ -145,26 +147,6 @@ export default function Scraping({
     }
   };
 
-  const initScraper = async () => {
-    await ipcRenderer.invoke('scraping-init-view', {
-      muted: isMuted,
-      allowInput,
-    });
-    await goToStart();
-
-    const loggedIn = await checkForLogIn();
-
-    if (!loggedIn) {
-      await setNavigationCallback(cbSlug);
-      ipcRenderer.on(cbSlug, checkLoginCb);
-    } else if (onLogin !== null) onLogin();
-  };
-
-  const cleanUpScraper = () => {
-    ipcRenderer.removeListener(cbSlug, checkLoginCb);
-    ipcRenderer.invoke('scraping-remove-view');
-  };
-
   // controls for the scraping
 
   const startScraping = async () => {
@@ -245,7 +227,32 @@ export default function Scraping({
   }, [scrapingGen, progresFrac, sessionId, isScrapingPaused]);
 
   // initialize & cleanup
+
   useEffect(() => {
+    const initScraper = async () => {
+      await ipcRenderer.invoke('scraping-init-view', {
+        muted: isMuted,
+        allowInput: !disableInput,
+      });
+      await goToStart();
+
+      const loggedIn = await checkForLogIn();
+
+      if (!loggedIn) {
+        await setNavigationCallback(cbSlug);
+        ipcRenderer.on(cbSlug, checkLoginCb);
+      } else {
+        if (onLogin !== null) onLogin();
+
+        if (autostart) startScraping();
+      }
+    };
+
+    const cleanUpScraper = () => {
+      ipcRenderer.removeListener(cbSlug, checkLoginCb);
+      ipcRenderer.invoke('scraping-remove-view');
+    };
+
     initScraper();
     return cleanUpScraper;
   }, []);
@@ -259,34 +266,35 @@ export default function Scraping({
             `${scrapingError.name}: ${scrapingError.message}`}
         </p>
         <br />
-        {isUserLoggedIn && (
-          <>
-            <Button onClick={resetBrowser}>reset browser</Button>
-            <Button onClick={resetScraping}>reset scraping</Button>
-            <br />
-          </>
-        )}
-        {!isUserLoggedIn && <p>Please login before continuing.</p>}
-        {isUserLoggedIn && !isScrapingStarted && (
-          <Button onClick={startScraping}>start scraping</Button>
-        )}
-        {!isScrapingFinished && isScrapingStarted && !isScrapingPaused && (
-          <Button onClick={pauseScraping}>pause scraping</Button>
-        )}
-        {!isScrapingFinished && isScrapingStarted && isScrapingPaused && (
-          <Button onClick={resumeScraping}>resume scraping</Button>
-        )}
+        <div className={hideControls ? 'invisible' : ''}>
+          {isUserLoggedIn && (
+            <>
+              <Button onClick={resetBrowser}>reset browser</Button>
+              <Button onClick={resetScraping}>reset scraping</Button>
+              <br />
+            </>
+          )}
+          {!isUserLoggedIn && <p>Please login before continuing.</p>}
+          {isUserLoggedIn && !isScrapingStarted && (
+            <Button onClick={startScraping}>start scraping</Button>
+          )}
+          {!isScrapingFinished && isScrapingStarted && !isScrapingPaused && (
+            <Button onClick={pauseScraping}>pause scraping</Button>
+          )}
+          {!isScrapingFinished && isScrapingStarted && isScrapingPaused && (
+            <Button onClick={resumeScraping}>resume scraping</Button>
+          )}
 
-        {!hideMute && (
           <Button onClick={() => setIsMuted(!isMuted)}>
             is {!isMuted && 'not'} muted
           </Button>
-        )}
-        {isScrapingStarted && (
-          <progress className="progress" value={progresFrac} max="1">
-            {progresFrac}
-          </progress>
-        )}
+
+          {isScrapingStarted && (
+            <progress className="progress" value={progresFrac} max="1">
+              {progresFrac}
+            </progress>
+          )}
+        </div>
       </div>
     </>
   );
