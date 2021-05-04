@@ -3,29 +3,29 @@ import { round } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { Rnd } from 'react-rnd';
 
-const setMainMuted = async (isMuted: boolean) => {
-  return ipcRenderer.invoke('scraping-set-muted', isMuted);
-};
-
 // TODO: add invisible div to prevent interaction
 
 export default function ScrapingBrowser({
   isMuted = true,
   isInteractive = true,
+  initPosition = 'center',
+  initSizeFactor = 0.6,
 }: {
   isMuted: boolean;
   isInteractive: boolean;
+  initPosition: string;
+  initSizeFactor: number;
 }) {
-  const [bounds, setBounds] = useState({
-    x: 500,
-    y: 200,
-    width: 300,
-    height: 300,
-  });
   const margin = 30;
+  const [bounds, setBounds] = useState({
+    width: margin * 2,
+    height: margin * 2,
+    x: margin * 2,
+    y: margin * 2,
+  });
 
   useEffect(() => {
-    setMainMuted(isMuted);
+    ipcRenderer.invoke('scraping-set-muted', isMuted);
   }, [isMuted]);
 
   useEffect(() => {
@@ -41,13 +41,27 @@ export default function ScrapingBrowser({
   useEffect(() => {
     const width = window.innerWidth;
     const height = window.innerHeight;
-    setBounds({
-      width: round(width / 3),
-      height: round((2 * height) / 3),
-      x: round((2 * width) / 3),
-      y: round(height / 3),
-    });
-  }, []);
+
+    const windowDimensions = () => {
+      const leftOverSpace = 1 - initSizeFactor;
+
+      const res = {
+        width: round(width * initSizeFactor),
+        height: round(height * initSizeFactor),
+        x: round(width * leftOverSpace),
+        y: round(height * leftOverSpace),
+      };
+
+      if (initPosition === 'center') {
+        res.x = round(width * leftOverSpace * 0.5);
+        res.y = round(height * leftOverSpace * 0.5);
+      }
+
+      return res;
+    };
+
+    setBounds(windowDimensions());
+  }, [initPosition, initSizeFactor]);
 
   return (
     <div
