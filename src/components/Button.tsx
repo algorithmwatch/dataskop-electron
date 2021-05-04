@@ -5,11 +5,11 @@ import React from 'react';
 export default function Button({
   size = 'medium',
   theme = 'outline',
-  startIcon,
-  endIcon,
-  classNames,
+  startIcon = null,
+  endIcon = null,
+  classNames = '',
   disabled = false,
-  clickHandler,
+  onClick,
   children,
 }) {
   // set button content
@@ -59,7 +59,7 @@ export default function Button({
       type="button"
       className={`inline-flex flex-nowrap items-center leading-none rounded-full font-semibold transition duration-150 ease-in-out ${buttonSize[size]} ${buttonTheme[theme]} ${classNames}`}
       disabled={disabled === true}
-      onClick={clickHandler}
+      onClick={onClick}
     >
       {buttonContent}
     </button>

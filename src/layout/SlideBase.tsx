@@ -32,7 +32,7 @@ function SlideBase({ children, footerNav = [] }): JSX.Element {
               size={size}
               theme={theme}
               classNames={classNames}
-              clickHandler={() => clickHandler(history)}
+              onClick={() => clickHandler(history)}
             >
               {label}
             </Button>

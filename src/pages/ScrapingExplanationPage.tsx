@@ -19,11 +19,11 @@ export default function ScrapingExplanationPage(): JSX.Element {
       <div className="mx-auto flex flex-col space-y-4">
         <Button
           size="large"
-          clickHandler={() => history.push(routes.SCRAPING_PROFILE)}
+          onClick={() => history.push(routes.SCRAPING_PROFILE)}
         >
           Scraping starten
         </Button>
-        <Button size="large" clickHandler={showExplainer}>
+        <Button size="large" onClick={showExplainer}>
           Was ist Scraping?
         </Button>
       </div>

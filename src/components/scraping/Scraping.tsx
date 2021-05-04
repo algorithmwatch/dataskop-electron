@@ -8,6 +8,7 @@ import { addData, newSession } from '../../db';
 import { postDummyBackend } from '../../utils/networking';
 import { splitByWhitespace } from '../../utils/strings';
 import { delay } from '../../utils/time';
+import Button from '../Button';
 import ScrapingBrowser from './ScrapingBrowser';
 
 // commands to communicate with the browser window in the main screen
@@ -250,53 +251,41 @@ export default function Scraping({
   return (
     <>
       <ScrapingBrowser isMuted={isMuted} isInteractive={isInteractive} />
-      <p style={{ color: 'red' }}>
-        {scrapingError !== null &&
-          `${scrapingError.name}: ${scrapingError.message}`}
-      </p>
-      <br />
-      {isUserLoggedIn && (
-        <>
-          <button className="button" type="button" onClick={resetBrowser}>
-            reset browser
-          </button>
-          <button className="button" type="button" onClick={resetScraping}>
-            reset scraping
-          </button>
-          <br />
-        </>
-      )}
-      {!isUserLoggedIn && <p>Please login before continuing.</p>}
-      {isUserLoggedIn && !isScrapingStarted && (
-        <button className="button" type="button" onClick={startScraping}>
-          start scraping
-        </button>
-      )}
-      {!isScrapingFinished && isScrapingStarted && !isScrapingPaused && (
-        <button className="button" type="button" onClick={pauseScraping}>
-          pause scraping
-        </button>
-      )}
-      {!isScrapingFinished && isScrapingStarted && isScrapingPaused && (
-        <button className="button" type="button" onClick={resumeScraping}>
-          resume scraping
-        </button>
-      )}
+      <div>
+        <p style={{ color: 'red' }}>
+          {scrapingError !== null &&
+            `${scrapingError.name}: ${scrapingError.message}`}
+        </p>
+        <br />
+        {isUserLoggedIn && (
+          <>
+            <Button onClick={resetBrowser}>reset browser</Button>
+            <Button onClick={resetScraping}>reset scraping</Button>
+            <br />
+          </>
+        )}
+        {!isUserLoggedIn && <p>Please login before continuing.</p>}
+        {isUserLoggedIn && !isScrapingStarted && (
+          <Button onClick={startScraping}>start scraping</Button>
+        )}
+        {!isScrapingFinished && isScrapingStarted && !isScrapingPaused && (
+          <Button onClick={pauseScraping}>pause scraping</Button>
+        )}
+        {!isScrapingFinished && isScrapingStarted && isScrapingPaused && (
+          <Button onClick={resumeScraping}>resume scraping</Button>
+        )}
 
-      {!hideMute && (
-        <button
-          className="button"
-          type="button"
-          onClick={() => setIsMuted(!isMuted)}
-        >
-          is {!isMuted && 'not'} muted
-        </button>
-      )}
-      {isScrapingStarted && (
-        <progress className="progress" value={progresFrac} max="1">
-          {progresFrac}
-        </progress>
-      )}
+        {!hideMute && (
+          <Button onClick={() => setIsMuted(!isMuted)}>
+            is {!isMuted && 'not'} muted
+          </Button>
+        )}
+        {isScrapingStarted && (
+          <progress className="progress" value={progresFrac} max="1">
+            {progresFrac}
+          </progress>
+        )}
+      </div>
     </>
   );
 }

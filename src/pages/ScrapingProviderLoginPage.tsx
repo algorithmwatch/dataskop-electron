@@ -45,7 +45,7 @@ export default function ProviderLoginPage(): JSX.Element {
           <div className="mx-auto">
             <Button
               size="large"
-              clickHandler={() => {
+              onClick={() => {
                 setShowLoginWindow(true);
               }}
             >
