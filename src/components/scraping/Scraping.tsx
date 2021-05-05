@@ -202,11 +202,18 @@ export default function Scraping({
         const { value, done } = await scrapingGen.next();
         if (value == null || sessionId == null) return;
 
-        setProgresFrac(value[0]);
-        addData(sessionId, value[1]);
+        const [newFrac, result] = value;
+
+        setProgresFrac(newFrac);
+        addData(sessionId, result);
+
+        if (!result.success) {
+          console.error('parsing error:');
+          console.error(result);
+        }
 
         const postedSuccess = await postDummyBackend(
-          value[1],
+          result,
           version,
           sessionId,
         );
@@ -255,6 +262,7 @@ export default function Scraping({
 
     initScraper();
     return cleanUpScraper;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -288,13 +296,12 @@ export default function Scraping({
           <Button onClick={() => setIsMuted(!isMuted)}>
             is {!isMuted && 'not'} muted
           </Button>
-
-          {isScrapingStarted && (
-            <progress className="progress" value={progresFrac} max="1">
-              {progresFrac}
-            </progress>
-          )}
         </div>
+        {isScrapingStarted && (
+          <progress className="progress" value={progresFrac} max="1">
+            {progresFrac}
+          </progress>
+        )}
       </div>
     </>
   );

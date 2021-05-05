@@ -1,6 +1,12 @@
-import { ParserResult } from '@algorithmwatch/harke-parser/src/types';
-
-type ScrapingResult = ParserResult;
+// not re-using the `ParserResult` from `harke-parser` because the slug is not changable
+export interface ScrapingResult {
+  slug: string;
+  fields: {
+    [key: string]: any;
+  };
+  errors: Array<{ field: string; message: string }>;
+  success: boolean;
+}
 
 interface ScrapingResultSaved extends ScrapingResult {
   id?: number;

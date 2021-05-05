@@ -7,6 +7,7 @@ import {
   parseVideoPage,
   parseWatchHistoryPage,
 } from '@algorithmwatch/harke-parser';
+import { ParserResult } from '@algorithmwatch/harke-parser/src/types';
 import _ from 'lodash';
 import { ScrapingResult } from '../../db/types';
 import { delay } from '../../utils/time';
@@ -17,37 +18,56 @@ const LIST_ID_NATIONAL_NEWS_TOP_STORIES = 'PLNjtpXOAJhQJYbpJxMnoLKCUPanyEfv_j';
 const LIST_ID_LIKED_VIDEOS = 'LL';
 
 const waitUntilDone = async (
-  getCurrentHtml,
-  parseHtml,
-  isDoneCheck = null,
+  getCurrentHtml: GetCurrentHtml,
+  parseHtml: (url: string) => ParserResult,
+  isDoneCheck: null | ((arg0: ScrapingResult, arg1: number) => boolean) = null,
   timeout = { max: 5000, start: 700, factor: 1.3 },
+  slugPrefix = 'yt',
 ) => {
   let curTimeout = timeout.start;
-  let prevResult = null;
+
+  // set to some dummy value to please TypeScript
+  let prevResult = {
+    success: false,
+    fields: {},
+    errors: [],
+    slug: '',
+  } as ScrapingResult;
+
   while (curTimeout < timeout.max) {
     await delay(curTimeout);
     const currentHtml = await getCurrentHtml();
-    const result = parseHtml(currentHtml);
+
+    // cast to slightly different `ScrapingResult`
+    const result: ScrapingResult = {
+      success: false,
+      ...parseHtml(currentHtml),
+    };
+    // always prepend the provider's slug
+    result.slug = `${slugPrefix}-${result.slug}`;
 
     if (
       result.errors.length === 0 &&
       _.isEqual(result, prevResult) &&
       (isDoneCheck === null || isDoneCheck(result, curTimeout / timeout.max))
     ) {
-      // always prepend `yt-`
-      result.slug = `yt-${result.slug}`;
+      // mark as success
+      result.success = true;
       return result;
     }
     prevResult = result;
     curTimeout *= timeout.factor;
   }
-  throw new Error(`parse error: ${JSON.stringify(prevResult)}`);
+
+  // prevResult is the last extracted result.
+  // `success` is still set to `false`.
+  return prevResult;
 };
 
 const scrapePlaylist = async (
   playlistId: string,
   getHtml: GetHtmlFunction,
-): Promise<Video[]> => {
+): Promise<ScrapingResult> => {
   const getCurrentHtml = await getHtml(
     `https://www.youtube.com/playlist?list=${playlistId}`,
   );
@@ -93,7 +113,7 @@ const scrapeVideo = async (
     getCurrentHtml,
     parseVideoPage,
     // at least 10 videos, still pass if timeout is reached
-    (x, timeFrac) => timeFrac > 1 || x.fields.recommendedVideos.length > 10,
+    (x, timeFrac) => timeFrac >= 1 || x.fields.recommendedVideos.length > 10,
   );
 };
 

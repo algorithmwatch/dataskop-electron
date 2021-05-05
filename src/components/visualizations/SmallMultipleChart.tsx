@@ -5,6 +5,7 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import Select from 'react-select';
 import { VictoryAxis, VictoryBar, VictoryChart } from 'victory';
+import { ScrapingResult } from '../../db/types';
 import { getThumbnails } from '../../providers/youtube/utils';
 
 export function Thumbnail({ x }) {
@@ -191,7 +192,11 @@ function Chart({ visType, data }) {
   return null;
 }
 
-export default function SmallMultipleChart({ data }) {
+export default function SmallMultipleChart({
+  data,
+}: {
+  data: Array<ScrapingResult>;
+}) {
   const [visType, setVisType] = useState<string>('recommended-thumbnails');
 
   return (
@@ -215,7 +220,7 @@ export default function SmallMultipleChart({ data }) {
         </button>
       </div>
       <Chart
-        data={data.filter((x) => x.slug.includes('video'))}
+        data={data.filter((x) => x.success && x.slug.includes('video-page'))}
         visType={visType}
       />
     </>
