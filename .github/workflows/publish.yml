@@ -83,3 +83,13 @@ jobs:
           if [ "$RUNNER_OS" == "Linux" ]; then TARGET="--linux --win"; else TARGET="--mac"; fi &&
           yarn cross-env SENTRY_DSN=${{ secrets.SENTRY_DSN }} UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }} yarn build &&
           yarn electron-builder --publish always $TARGET
+
+      - name: Keybase Notification
+        if: runner.os == 'Linux'
+        uses: docker://keybaseio/client:stable
+        env:
+          KEYBASE_USERNAME: "updatebot"
+          KEYBASE_PAPERKEY: "${{ secrets.KEYBASE_PAPERKEY }}"
+          KEYBASE_SERVICE: "1"
+        with:
+          args: keybase chat send "all_dataskop" "New Version"
