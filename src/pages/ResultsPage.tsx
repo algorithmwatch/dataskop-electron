@@ -45,20 +45,18 @@ export default function ResultsPage(): JSX.Element {
       <div className="overflow-y-auto h-5/6">
         <div>{importedRows > 0 && `${importedRows} rows imported`}</div>
         <h2 className="text-xl font-bold">Results</h2>
-        <div className="bg-gray-50 overflow-hidden rounded-lg">
-          <div className="px-4 py-5 sm:p-6 space-x-4">
-            <ConfirmDialog
-              title="clear data"
-              text="you sure?"
-              handleConfirm={() => clearData() && setRows([])}
-            />
-            <Button onClick={async () => invokeExport(await getData())}>
-              export data
-            </Button>
-            <Button onClick={async () => invokeImport(importRowCb)}>
-              import data
-            </Button>
-          </div>
+        <div className="bg-gray-50 overflow-hidden rounded-lg px-4 py-5 sm:p-6 space-x-4">
+          <ConfirmDialog
+            title="clear data"
+            text="you sure?"
+            handleConfirm={() => clearData() && setRows([])}
+          />
+          <Button onClick={async () => invokeExport(await getData())}>
+            export data
+          </Button>
+          <Button onClick={async () => invokeImport(importRowCb)}>
+            import data
+          </Button>
         </div>
         <OverviewTable rows={rows} />
       </div>

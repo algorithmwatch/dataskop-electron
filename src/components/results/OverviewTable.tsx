@@ -17,7 +17,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function BasicTable({ rows }) {
+export default function OverviewTable({ rows }) {
   const classes = useStyles();
   const history = useHistory();
 
