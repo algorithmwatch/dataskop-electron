@@ -1,10 +1,10 @@
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import React from 'react';
+import Button from './Button';
 
 export default function ConfirmDialog({ title, text, handleConfirm }) {
   const [open, setOpen] = React.useState(false);
@@ -19,9 +19,7 @@ export default function ConfirmDialog({ title, text, handleConfirm }) {
 
   return (
     <>
-      <button className="button" type="button" onClick={handleClickOpen}>
-        {title}
-      </button>
+      <Button onClick={handleClickOpen}>{title}</Button>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -35,7 +33,7 @@ export default function ConfirmDialog({ title, text, handleConfirm }) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClose} size="small">
             Abort
           </Button>
           <Button
@@ -43,8 +41,6 @@ export default function ConfirmDialog({ title, text, handleConfirm }) {
               handleClose();
               handleConfirm();
             }}
-            color="primary"
-            autoFocus
           >
             Confirm
           </Button>

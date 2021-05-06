@@ -1,10 +1,11 @@
 import dayjs from 'dayjs';
 import { ipcRenderer } from 'electron';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import Button from '../components/Button';
 import ConfirmDialog from '../components/ConfirmDialog';
-import routes from '../constants/routes.json';
+import OverviewTable from '../components/results/OverviewTable';
 import { clearData, getData, getSessionsMetaData, importRow } from '../db';
+import { ScrapingResultSaved } from '../db/types';
 import Base from '../layout/Base';
 
 const invokeExport = async (data: ScrapingResultSaved[]) => {
@@ -28,10 +29,10 @@ export default function ResultsPage(): JSX.Element {
     newRows();
   }, []);
 
-  const importRowCb = async (events, newRowsString) => {
+  const importRowCb = async (events: any, newRowsString: string) => {
     const newRows = JSON.parse(newRowsString);
     const newRowsResults = await Promise.all(
-      newRows.map(async (x) => importRow(x)),
+      newRows.map(async (x: ScrapingResultSaved) => importRow(x)),
     );
 
     setImportedRows(
@@ -43,33 +44,23 @@ export default function ResultsPage(): JSX.Element {
     <Base>
       <div className="overflow-y-auto h-5/6">
         <div>{importedRows > 0 && `${importedRows} rows imported`}</div>
-        <ConfirmDialog
-          title="clear data"
-          text="you sure?"
-          handleConfirm={() => clearData() && setRows([])}
-        />
-        <button
-          type="button"
-          onClick={async () => invokeExport(await getData())}
-        >
-          export data
-        </button>
-        <button type="button" onClick={async () => invokeImport(importRowCb)}>
-          import data
-        </button>
-        <h2>Results</h2>
-        {rows.map((x) => {
-          return (
-            <div key={x.id}>
-              <Link
-                className="underline"
-                to={routes.RESULTS_DETAILS.replace(':sessionId', x.id)}
-              >
-                {`${x.id}, ${new Date(x.scrapedAt)}, Items ${x.count}`}
-              </Link>
-            </div>
-          );
-        })}
+        <h2 className="text-xl font-bold">Results</h2>
+        <div className="bg-gray-50 overflow-hidden rounded-lg">
+          <div className="px-4 py-5 sm:p-6 space-x-4">
+            <ConfirmDialog
+              title="clear data"
+              text="you sure?"
+              handleConfirm={() => clearData() && setRows([])}
+            />
+            <Button onClick={async () => invokeExport(await getData())}>
+              export data
+            </Button>
+            <Button onClick={async () => invokeImport(importRowCb)}>
+              import data
+            </Button>
+          </div>
+        </div>
+        <OverviewTable rows={rows} />
       </div>
     </Base>
   );
