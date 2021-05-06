@@ -32,9 +32,7 @@ jobs:
         run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_PACKAGES_TOKEN }}" >> .npmrc
 
       - name: Setup font awesome pro token
-        run: >
-          echo "@fortawesome:registry=https://npm.fontawesome.com/" >> .npmrc &&
-          echo "//npm.fontawesome.com/:_authToken=${{ secrets.FONT_AWESOME_TOKEN }}" >> .npmrc
+        run: echo "//npm.fontawesome.com/:_authToken=${{ secrets.FONT_AWESOME_TOKEN }}" >> .npmrc
 
       - name: Install Node, NPM and Yarn
         uses: actions/setup-node@v2

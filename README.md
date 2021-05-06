@@ -32,7 +32,6 @@ Follow this tutorial: <https://fontawesome.com/how-to-use/on-the-web/setup/using
 You may add the following (replace the token) to aforementioned `~/.npmrc`:
 
 ```bash
-@fortawesome:registry=https://npm.fontawesome.com/
 //npm.fontawesome.com/:_authToken=thetoken
 ```
 

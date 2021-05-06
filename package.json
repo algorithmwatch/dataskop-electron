@@ -286,9 +286,8 @@
     "victory": "^35.4.11"
   },
   "devEngines": {
-    "node": ">=12.x",
-    "npm": ">=6.x",
-    "yarn": ">=1.21.3"
+    "node": ">=12.x <16.x",
+    "yarn": ">=1.22.10"
   },
   "browserslist": [],
   "prettier": {
