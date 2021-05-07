@@ -1,5 +1,7 @@
+import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
+import Button from '../components/Button';
 import SmallMultipleChart from '../components/visualizations/SmallMultipleChart';
 import { useConfig } from '../contexts/config';
 import { getSessionData } from '../db';
@@ -12,6 +14,11 @@ export default function VisualizationAdvancedPage() {
     state: { isDebug },
   } = useConfig();
 
+  const visCompOptions = ['small-multiple', 'bar-charts'];
+  const [visComp, setVisComp] = useState(visCompOptions[0]);
+
+  const history = useHistory();
+
   useEffect(() => {
     const loadData = async () => {
       setData(await getSessionData(sessionId));
@@ -23,9 +30,33 @@ export default function VisualizationAdvancedPage() {
     console.log(data);
   }
 
+  const handleChange = (event) => {
+    setVisComp(event.target.value);
+  };
+
   return (
     <Base>
-      <SmallMultipleChart data={data} />
+      <div className="space-x-4 mb-10">
+        <Button onClick={() => history.goBack()}>Go back</Button>
+        <FormControl>
+          <InputLabel id="demo-simple-select-label">Visualization</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={visComp}
+            onChange={handleChange}
+          >
+            {visCompOptions.map((x) => (
+              <MenuItem key={x} value={x}>
+                {x}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </div>
+      <div className="overflow-y-auto h-5/6">
+        {visComp === 'small-multiple' && <SmallMultipleChart data={data} />}
+      </div>
     </Base>
   );
 }

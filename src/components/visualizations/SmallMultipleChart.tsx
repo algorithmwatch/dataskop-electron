@@ -7,6 +7,7 @@ import Select from 'react-select';
 import { VictoryAxis, VictoryBar, VictoryChart } from 'victory';
 import { ScrapingResult } from '../../db/types';
 import { getThumbnails } from '../../providers/youtube/utils';
+import Button from '../Button';
 
 export function Thumbnail({ x }) {
   const [imgIdx, setImgIdx] = useState(0);
@@ -203,21 +204,18 @@ export default function SmallMultipleChart({
     <>
       <h1>Visalization</h1>
       <div>
-        <button
-          type="button"
-          onClick={() => setVisType('recommended-thumbnails')}
-        >
+        <Button onClick={() => setVisType('recommended-thumbnails')}>
           recommended thumbnails
-        </button>
-        <button type="button" onClick={() => setVisType('followed-thumbnails')}>
+        </Button>
+        <Button onClick={() => setVisType('followed-thumbnails')}>
           followed thumbnails
-        </button>
-        <button type="button" onClick={() => setVisType('followed-metrics')}>
+        </Button>
+        <Button onClick={() => setVisType('followed-metrics')}>
           followed metrics
-        </button>
-        <button type="button" onClick={() => setVisType('followed-topics')}>
+        </Button>
+        <Button onClick={() => setVisType('followed-topics')}>
           followed topics
-        </button>
+        </Button>
       </div>
       <Chart
         data={data.filter((x) => x.success && x.slug.includes('video-page'))}
