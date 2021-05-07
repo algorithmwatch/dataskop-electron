@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import Button from '../components/Button';
 import SmallMultipleChart from '../components/visualizations/SmallMultipleChart';
+import StatisticsChart from '../components/visualizations/StatisticsChart';
 import { useConfig } from '../contexts/config';
 import { getSessionData } from '../db';
 import Base from '../layout/Base';
@@ -14,7 +15,7 @@ export default function VisualizationAdvancedPage() {
     state: { isDebug },
   } = useConfig();
 
-  const visCompOptions = ['small-multiple', 'bar-charts'];
+  const visCompOptions = ['small-multiple', 'statistics'];
   const [visComp, setVisComp] = useState(visCompOptions[0]);
 
   const history = useHistory();
@@ -56,6 +57,7 @@ export default function VisualizationAdvancedPage() {
       </div>
       <div className="overflow-y-auto h-5/6">
         {visComp === 'small-multiple' && <SmallMultipleChart data={data} />}
+        {visComp === 'statistics' && <StatisticsChart data={data} />}
       </div>
     </Base>
   );
