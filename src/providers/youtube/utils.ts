@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 const getThumbnails = (id: string) => {
   /**
    * Returns all thumbnails to given YT video it.
@@ -21,5 +23,14 @@ const getThumbnails = (id: string) => {
   return { small, defaultImage };
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export { getThumbnails };
+// data wrangling
+
+const groupByFollowId = (x) =>
+  Object.values(_.groupBy(x, (y) => y.fields.followId));
+
+const getVideos = (data) => data.filter((x) => x.slug.includes('video-page'));
+
+const getFollowGroups = (data) =>
+  groupByFollowId(data.filter((x) => x.slug.includes('video-page')));
+
+export { getThumbnails, getFollowGroups, getVideos };
