@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useConfig } from '../../contexts/config';
 import { addNewSession, addScrapingResult } from '../../db';
+import { GetHtmlFunction } from '../../providers/youtube';
 import { postDummyBackend } from '../../utils/networking';
 import { splitByWhitespace } from '../../utils/strings';
 import { delay } from '../../utils/time';

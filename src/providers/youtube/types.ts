@@ -43,3 +43,13 @@ type ScrapingConfig = {
     arg0: ProcedureConfig,
   ) => (x: GetHtmlFunction, y: GetHtmlLazyFunction) => any;
 };
+
+export {
+  GetCurrentHtml,
+  GetHtmlFunction,
+  GetHtmlLazyFunction,
+  SeedCreator,
+  PersonalScraper,
+  ProcedureConfig,
+  ScrapingConfig,
+};

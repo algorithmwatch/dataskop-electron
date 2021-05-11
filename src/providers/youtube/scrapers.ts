@@ -11,6 +11,7 @@ import { ParserResult } from '@algorithmwatch/harke-parser/src/types';
 import _ from 'lodash';
 import { ScrapingResult } from '../../db/types';
 import { delay } from '../../utils/time';
+import { GetCurrentHtml, GetHtmlFunction } from './types';
 
 // play list of special lists
 const LIST_ID_POPULAR = 'PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-';

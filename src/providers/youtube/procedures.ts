@@ -2,6 +2,7 @@
 /* eslint-disable no-restricted-syntax */
 
 import { experimentScrapers } from './scrapers';
+import { GetHtmlFunction, GetHtmlLazyFunction, ProcedureConfig } from './types';
 
 const { scrapeSeedVideos, scrapeSeedVideosAndFollow } = experimentScrapers;
 
