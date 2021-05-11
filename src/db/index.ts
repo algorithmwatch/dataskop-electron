@@ -15,9 +15,9 @@ class ScrapingDatabase extends Dexie {
 
   public constructor() {
     super('ScrapingDatabase');
-    this.version(1).stores({
+    this.version(2).stores({
       scrapingResults: '++id,sessionId,scrapedAt,slug,result,errorMessage',
-      scrapingSessions: '++id,sessionId,startedAt',
+      scrapingSessions: '++id,sessionId,startedAt,configSlug',
     });
     this.scrapingResults = this.table('scrapingResults');
     this.scrapingSessions = this.table('scrapingSessions');
@@ -28,13 +28,17 @@ const db = new ScrapingDatabase();
 
 // https://dexie.org/docs/Dexie/Dexie.transaction()#specify-reusage-of-parent-transaction
 
-const newSession = (sessionId: string) => {
+const addNewSession = (sessionId: string, configSlug: string) => {
   db.transaction('rw', db.scrapingSessions, async () =>
-    db.scrapingSessions.add({ sessionId, startedAt: Date.now() }),
+    db.scrapingSessions.add({
+      sessionId,
+      startedAt: Date.now(),
+      configSlug,
+    }),
   );
 };
 
-const addData = (sessionId: string, data: any) => {
+const addScrapingResult = (sessionId: string, data: any) => {
   db.transaction('rw', db.scrapingResults, async () => {
     const id = await db.scrapingResults.add({
       sessionId,
@@ -70,7 +74,7 @@ const importRow = async (row: ScrapingResultSaved): Promise<number> => {
   });
 };
 
-const getData = () => {
+const getScrapingResults = () => {
   return db.transaction('r', db.scrapingResults, async () => {
     const res = await db.scrapingResults.orderBy('scrapedAt').toArray();
     return res;
@@ -105,20 +109,21 @@ const clearData = () => {
 const getUniqueSessionIds = () =>
   db.scrapingResults.orderBy('sessionId').uniqueKeys();
 
-const getSessionsMetaData = async () => {
+const getSessions = async () => {
   const sessionsIds = await getUniqueSessionIds();
   const sessions = await Promise.all(
     sessionsIds.map(async (x) => {
+      const session = await db.scrapingSessions
+        .where('sessionId')
+        .equals(x)
+        .first();
       return {
         count: await db.scrapingResults.where('sessionId').equals(x).count(),
-        scrapedAt: (
-          await db.scrapingResults.where('sessionId').equals(x).first()
-        )?.scrapedAt,
-        id: x,
+        ...session,
       };
     }),
   );
-  sessions.sort((a, b) => (b.scrapedAt || 0) - (a.scrapedAt || 0));
+  sessions.sort((a, b) => (b?.startedAt || 0) - (a?.startedAt || 0));
   return sessions;
 };
 
@@ -164,12 +169,12 @@ const getStatisticsForSession = async (sessiondId: string) => {
 };
 
 export {
-  addData,
+  addScrapingResult,
   importRow,
-  getData,
+  getScrapingResults,
   clearData,
-  getSessionsMetaData,
+  getSessions,
   getSessionData,
-  newSession,
+  addNewSession,
   getStatisticsForSession,
 };

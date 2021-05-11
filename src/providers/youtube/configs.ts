@@ -1,7 +1,11 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-restricted-syntax */
 import { scrapingYoutubeProcedure } from './procedures';
 import { experimentScrapers, profileScrapers } from './scrapers';
+import {
+  GetHtmlFunction,
+  GetHtmlLazyFunction,
+  ProcedureConfig,
+  ScrapingConfig,
+} from './types';
 
 const {
   scrapeNationalNewsTopStories,
@@ -32,8 +36,9 @@ const createProcedure = (config: ProcedureConfig) => (
   y: GetHtmlLazyFunction,
 ) => scrapingYoutubeProcedure(x, y, config);
 
-const defaultConfig = {
+const defaultConfig: ScrapingConfig = {
   title: 'youtube default config',
+  slug: 'yt-default',
   startUrl: 'https://www.youtube.com',
   loginUrl: 'https://www.youtube.com/account',
   loginCookie: 'LOGIN_INFO',
@@ -41,9 +46,10 @@ const defaultConfig = {
   createProcedure,
 };
 
-const simpleConfig = {
+const simpleConfig: ScrapingConfig = {
   ...defaultConfig,
   title: 'youtube simple config',
+  slug: 'yt-simple',
   procedureConfig: {
     ...defaultProcedureConfig,
     scrollingBottomForComments: 0,
@@ -54,9 +60,10 @@ const simpleConfig = {
 
 // fast test, all functions only need to run once
 
-const testConfig = {
+const testConfig: ScrapingConfig = {
   ...defaultConfig,
   title: 'youtube test providers',
+  slug: 'yt-test',
   procedureConfig: {
     ...defaultProcedureConfig,
     personalScraper: Object.values(profileScrapers).concat([
@@ -65,7 +72,7 @@ const testConfig = {
     ]),
     seedVideosDynamic: [],
     seedVideosFixed: ['4Y1lZQsyuSQ'],
-  },
+  } as ProcedureConfig,
 };
 
 const allConfigs = [defaultConfig, simpleConfig, testConfig];

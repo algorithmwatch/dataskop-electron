@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Button from '../components/Button';
 import ConfirmDialog from '../components/ConfirmDialog';
 import OverviewTable from '../components/results/OverviewTable';
-import { clearData, getData, getSessionsMetaData, importRow } from '../db';
+import { clearData, getScrapingResults, getSessions, importRow } from '../db';
 import { ScrapingResultSaved } from '../db/types';
 import Base from '../layout/Base';
 
@@ -24,7 +24,7 @@ export default function ResultsPage(): JSX.Element {
 
   useEffect(() => {
     const newRows = async () => {
-      setRows(await getSessionsMetaData());
+      setRows(await getSessions());
     };
     newRows();
   }, []);
@@ -51,7 +51,9 @@ export default function ResultsPage(): JSX.Element {
             text="you sure?"
             handleConfirm={() => clearData() && setRows([])}
           />
-          <Button onClick={async () => invokeExport(await getData())}>
+          <Button
+            onClick={async () => invokeExport(await getScrapingResults())}
+          >
             export data
           </Button>
           <Button onClick={async () => invokeImport(importRowCb)}>

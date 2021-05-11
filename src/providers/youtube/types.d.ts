@@ -1,3 +1,5 @@
+import { ScrapingResult } from '../../db/types';
+
 type GetCurrentHtml = () => Promise<string>;
 
 type GetHtmlFunction = (url: string) => Promise<GetCurrentHtml>;
@@ -26,4 +28,18 @@ type ProcedureConfig = {
   // how often to scroll down for lazy loading
   scrollingBottomForComments: number;
   profileScrapers: Array<PersonalScraper>;
+};
+
+type ScrapingConfig = {
+  // a human readable description of the config
+  title: string;
+  // the slug should be unique for a config
+  slug: string;
+  startUrl: string;
+  loginUrl: string;
+  loginCookie: string;
+  procedureConfig: ProcedureConfig;
+  createProcedure: (
+    arg0: ProcedureConfig,
+  ) => (x: GetHtmlFunction, y: GetHtmlLazyFunction) => any;
 };

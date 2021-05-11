@@ -27,6 +27,7 @@ export default function OverviewTable({ rows }) {
         <TableHead>
           <TableRow>
             <TableCell>Session ID</TableCell>
+            <TableCell>Config Slug</TableCell>
             <TableCell>Date</TableCell>
             <TableCell>Number of Items</TableCell>
           </TableRow>
@@ -43,9 +44,10 @@ export default function OverviewTable({ rows }) {
               }
             >
               <TableCell component="th" scope="row">
-                {row.id}
+                {row.sessionId}
               </TableCell>
-              <TableCell>{dayjs(row.scrapedAt).format()}</TableCell>
+              <TableCell>{row.configSlug}</TableCell>
+              <TableCell>{dayjs(row.startedAt).format()}</TableCell>
               <TableCell>{row.count}</TableCell>
             </TableRow>
           ))}

@@ -4,7 +4,7 @@ import { ipcRenderer } from 'electron';
 import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useConfig } from '../../contexts/config';
-import { addData, newSession } from '../../db';
+import { addNewSession, addScrapingResult } from '../../db';
 import { postDummyBackend } from '../../utils/networking';
 import { splitByWhitespace } from '../../utils/strings';
 import { delay } from '../../utils/time';
@@ -168,7 +168,7 @@ export default function Scraping({
     setScrapingGen(gen);
     const sId = uuidv4();
     setSessionId(sId);
-    newSession(sId);
+    addNewSession(sId, scrapingConfig.slug);
   };
 
   const pauseScraping = () => {
@@ -205,7 +205,7 @@ export default function Scraping({
         const [newFrac, result] = value;
 
         setProgresFrac(newFrac);
-        addData(sessionId, result);
+        addScrapingResult(sessionId, result);
 
         if (!result.success) {
           console.error('parsing error:');
