@@ -12,6 +12,14 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
   ipcMain.handle(
     'scraping-init-view',
     (_event, { muted = true, allowInput = true }) => {
+      if (scrapingView !== null) {
+        mainWindow?.removeBrowserView(scrapingView);
+
+        // .destroy() does indeed exists and is nesseary to fully remove the view.
+        // Not calling it will result in errors with event handlers.
+        scrapingView?.webContents.destroy();
+      }
+
       const newView = new BrowserView({
         webPreferences: {
           contextIsolation: false,
