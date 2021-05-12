@@ -61,7 +61,7 @@ Using GitHub's releases feature, adapt the outer `package.json`.
 
 ### macOS
 
-For macOS: zip as build target is required to make auto-update work: https://github.com/electron-userland/electron-builder/issues/2199
+NB: zip as build target is required to make auto-update work: https://github.com/electron-userland/electron-builder/issues/2199
 
 In addition to make auto update work, you need to get developer certificates from Apple, and set appropriate ENV varibales in GitHub actions.
 

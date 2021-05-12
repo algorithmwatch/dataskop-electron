@@ -2,22 +2,21 @@ import { ipcRenderer } from 'electron';
 import React, { useEffect } from 'react';
 import { defaultConfig } from '../providers/youtube';
 
-// started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
-
-// types
-
 type Action =
   | { type: 'set-version'; version: string }
   | { type: 'set-debug'; isDebug: boolean }
+  | { type: 'set-log-html'; logHtml: boolean }
   | { type: 'set-scraping-config'; scrapingConfig: any };
 type Dispatch = (action: Action) => void;
 type State = {
   version: string;
   isDebug: boolean;
   showAdvancedMenu: boolean;
+  logHtml: boolean;
   scrapingConfig: any;
 };
 type ConfigProviderProps = { children: React.ReactNode };
+// started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
 
 const ConfigStateContext = React.createContext<
   { state: State; dispatch: Dispatch } | undefined
@@ -31,6 +30,10 @@ function configReducer(state: State, action: Action) {
 
     case 'set-debug': {
       return { ...state, isDebug: action.isDebug };
+    }
+
+    case 'set-log-html': {
+      return { ...state, isDebug: action.logHtml };
     }
 
     case 'set-scraping-config': {
@@ -49,10 +52,11 @@ function ConfigProvider({ children }: ConfigProviderProps) {
 
   // initial value gets overriden with `useEffect`
   const [state, dispatch] = React.useReducer(configReducer, {
-    version: 'unspecified',
+    version: 'loading...',
     scrapingConfig: defaultConfig,
     isDebug,
     showAdvancedMenu: true,
+    logHtml: true,
   });
 
   // NOTE: you *might* need to memoize this value

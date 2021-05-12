@@ -1,8 +1,10 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
 import { ipcRenderer } from 'electron';
+import log from 'electron-log';
 import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import zlib from 'zlib';
 import { useConfig } from '../../contexts/config';
 import { addNewSession, addScrapingResult } from '../../db';
 import { GetHtmlFunction } from '../../providers/youtube';
@@ -14,10 +16,7 @@ import ScrapingBrowser from './ScrapingBrowser';
 
 // commands to communicate with the browser window in the main screen
 
-// I tried hard to make the interactivity changeable but to no avail.
-// You have to set from the start whether a scraping view is interactive.
-
-const getCurrentHtml = async () => {
+const extractHtml = async () => {
   return ipcRenderer.invoke('scraping-get-current-html');
 };
 
@@ -25,9 +24,24 @@ const goToUrl = async (url: string, options = {}): Promise<string> => {
   return ipcRenderer.invoke('scraping-load-url', url, options);
 };
 
-const goToUrlHtml = async (url: string): Promise<GetHtmlFunction> => {
-  await goToUrl(url);
-  return getCurrentHtml;
+const makeGetHtml = (
+  logHtml: boolean,
+): ((url: string) => Promise<GetHtmlFunction>) => {
+  const getHtml = async (url: string): Promise<GetHtmlFunction> => {
+    await goToUrl(url);
+    if (logHtml) {
+      return async () => {
+        const html = await extractHtml();
+
+        const compressed = zlib.deflateSync(html).toString('base64');
+
+        log.info(url, compressed);
+        return html;
+      };
+    }
+    return extractHtml;
+  };
+  return getHtml;
 };
 
 const getCookies = async (): Promise<Array<unknown>> => {
@@ -43,6 +57,9 @@ const scrollDown = async () => {
 };
 
 // the actual scraping window
+
+// I tried hard to make the interactivity changeable but to no avail.
+// You have to set from the component's initialization whether a scraping view is interactive.
 
 export default function Scraping({
   scrapingConfig,
@@ -79,7 +96,7 @@ export default function Scraping({
   const [isMuted, setIsMuted] = useState(true);
 
   const {
-    state: { version, isDebug },
+    state: { version, isDebug, logHtml },
   } = useConfig();
 
   const checkForLogIn = async () => {
@@ -122,7 +139,7 @@ export default function Scraping({
       }
 
       while (true) {
-        const html = await getCurrentHtml();
+        const html = await extractHtml();
         // FIXME: not needed to check this every time, find a better way
         if (loadingAbort(html)) {
           stopScrolling = true;
@@ -133,7 +150,7 @@ export default function Scraping({
       }
     }
 
-    const html = await getCurrentHtml();
+    const html = await extractHtml();
     return html;
   };
 
@@ -163,7 +180,7 @@ export default function Scraping({
     setIsScrapingStarted(true);
 
     const gen = scrapingConfig.createProcedure(scrapingConfig.procedureConfig)(
-      goToUrlHtml,
+      makeGetHtml(logHtml),
       getHtmlLazy,
     );
     setScrapingGen(gen);

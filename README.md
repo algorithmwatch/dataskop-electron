@@ -74,7 +74,7 @@ yarn test
 
 Pay attention to the error messages and run the required commands.
 
-## Packaging for Production
+## Packaging
 
 ### Locally
 
@@ -92,11 +92,18 @@ yarn cross-env DEBUG_PROD=true yarn package
 
 ### Production
 
-[Publishing Releases](./docs/publishing.md)
+[Read more on how to publish releases for production](./docs/publishing.md)
 
-#### Logs
+## Logging
 
-Use <https://www.npmjs.com/package/electron-log> to store logs on a user's computer.
+Using [electron-log](https://www.npmjs.com/package/electron-log) to store logs on a user's computer.
+
+```bash
+# on macOS
+less ~/Library/Logs/DataSkop/renderer.log
+```
+
+Optionally using <https://sentry.io>.
 
 ## License
 
