@@ -13,8 +13,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        # os: [ubuntu-latest, macos-latest]
         # os: [macos-latest]
+        os: [ubuntu-latest]
 
     steps:
       - name: Setup wine
@@ -27,12 +28,10 @@ jobs:
       - name: Checkout git repo
         uses: actions/checkout@v2
 
-      # add a specially install private packages on
-      - name: Setup GitHub secret token
-        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_PACKAGES_TOKEN }}" >> .npmrc
-
-      - name: Setup font awesome pro token
-        run: echo "//npm.fontawesome.com/:_authToken=${{ secrets.FONT_AWESOME_TOKEN }}" >> .npmrc
+      - name: Setup NPM auth token for font awesome pro & github packages
+        run: >
+          echo "//npm.fontawesome.com/:_authToken=${{ secrets.FONT_AWESOME_TOKEN }}" >> .npmrc &&
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_PACKAGES_TOKEN }}" >> .npmrc
 
       - name: Install Node, NPM and Yarn
         uses: actions/setup-node@v2
@@ -65,28 +64,30 @@ jobs:
 
       - name: Publish releases
         env:
-          # These values are used for macOS code signing
+          # macOS code signing
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_ID_PASS: ${{ secrets.APPLE_ID_PASS }}
           CSC_LINK: ${{ secrets.CSC_LINK }}
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          # Windows code signing
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
 
           # Required when pushing releases to GitHub
           # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-          # Push to S3-compliant Object Storag
+          # Push to S3-compliant Object Storage
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: >
           if [ "$RUNNER_OS" == "Linux" ]; then TARGET="--linux --win"; else TARGET="--mac"; fi &&
           yarn cross-env SENTRY_DSN=${{ secrets.SENTRY_DSN }} UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }} yarn build &&
           yarn electron-builder --publish always $TARGET
-
-      # Add the notification step as the last one
-      - uses: "marvinpinto/action-keybase-notifications@latest"
-        if: runner.os == 'Linux'
-        with:
-          job_status: ${{ job.status }}
-          opensentinel_token: ${{ secrets.OSL_TOKEN }}
-          on_success: "always"
-          on_failure: "never"
+      # # Add the notification step as the last one
+      # - uses: "marvinpinto/action-keybase-notifications@latest"
+      #   if: runner.os == 'Linux'
+      #   with:
+      #     job_status: ${{ job.status }}
+      #     opensentinel_token: ${{ secrets.OSL_TOKEN }}
+      #     on_success: "always"
+      #     on_failure: "never"
