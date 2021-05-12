@@ -13,9 +13,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest]
         # os: [macos-latest]
-        os: [ubuntu-latest]
+        # os: [ubuntu-latest]
 
     steps:
       - name: Setup wine
@@ -83,11 +83,12 @@ jobs:
           if [ "$RUNNER_OS" == "Linux" ]; then TARGET="--linux --win"; else TARGET="--mac"; fi &&
           yarn cross-env SENTRY_DSN=${{ secrets.SENTRY_DSN }} UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }} yarn build &&
           yarn electron-builder --publish always $TARGET
-      # # Add the notification step as the last one
-      # - uses: "marvinpinto/action-keybase-notifications@latest"
-      #   if: runner.os == 'Linux'
-      #   with:
-      #     job_status: ${{ job.status }}
-      #     opensentinel_token: ${{ secrets.OSL_TOKEN }}
-      #     on_success: "always"
-      #     on_failure: "never"
+
+      # Add the notification step as the last one
+      - uses: "marvinpinto/action-keybase-notifications@latest"
+        if: runner.os == 'Linux'
+        with:
+          job_status: ${{ job.status }}
+          opensentinel_token: ${{ secrets.OSL_TOKEN }}
+          on_success: "always"
+          on_failure: "never"
