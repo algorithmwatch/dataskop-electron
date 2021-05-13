@@ -11,5 +11,6 @@
   "VISUALIZATION_ADVANCED": "/visualization/advanced/:sessionId",
   "VISUALIZATION_PROFILE": "/visualization/profile/:sessionId",
   "VISUALIZATION_EXPERIMENT": "/visualization/experiment/:sessionId",
-  "DONATION": "/donation"
+  "DONATION": "/donation",
+  "SETTINGS": "/settings"
 }

@@ -33,7 +33,7 @@ function configReducer(state: State, action: Action) {
     }
 
     case 'set-log-html': {
-      return { ...state, isDebug: action.logHtml };
+      return { ...state, logHtml: action.logHtml };
     }
 
     case 'set-scraping-config': {

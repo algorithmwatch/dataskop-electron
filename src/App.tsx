@@ -13,6 +13,7 @@ import ScrapingExperimentPage from './pages/ScrapingExperimentPage';
 import ScrapingExplanationPage from './pages/ScrapingExplanationPage';
 import ScrapingProfilePage from './pages/ScrapingProfilePage';
 import ProviderLoginPage from './pages/ScrapingProviderLoginPage';
+import SettingsPage from './pages/SettingsPage';
 import StartPage from './pages/StartPage';
 import VisualizationAdvancedPage from './pages/VisualizationAdvancedPage';
 import VisualizationExperimentsPage from './pages/VisualizationExperimentsPage';
@@ -44,6 +45,7 @@ export default function App() {
           <Route path={routes.DONATION} component={DonationPage} />
           <Route path={routes.RESULTS_DETAILS} component={ResultsDetailsPage} />
           <Route path={routes.RESULTS} component={ResultsPage} />
+          <Route path={routes.SETTINGS} component={SettingsPage} />
           <Route
             path={routes.VISUALIZATION_ADVANCED}
             component={VisualizationAdvancedPage}

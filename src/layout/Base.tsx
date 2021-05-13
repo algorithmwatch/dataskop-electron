@@ -29,6 +29,7 @@ export default function Base({ children }): JSX.Element {
                   label: 'experiment scraping',
                   to: routes.SCRAPING_EXPERIMENT,
                 },
+                { label: 'settings', to: routes.SETTINGS },
               ]}
             />
           )}
