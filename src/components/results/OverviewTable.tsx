@@ -36,10 +36,10 @@ export default function OverviewTable({ rows }) {
           {rows.map((row) => (
             <TableRow
               className="cursor-pointer"
-              key={row.id}
+              key={row.sessionId}
               onClick={() =>
                 history.push(
-                  routes.RESULTS_DETAILS.replace(':sessionId', row.id),
+                  routes.RESULTS_DETAILS.replace(':sessionId', row.sessionId),
                 )
               }
             >

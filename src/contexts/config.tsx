@@ -56,7 +56,7 @@ function ConfigProvider({ children }: ConfigProviderProps) {
     scrapingConfig: defaultConfig,
     isDebug,
     showAdvancedMenu: true,
-    logHtml: true,
+    logHtml: false,
   });
 
   // NOTE: you *might* need to memoize this value
