@@ -2,10 +2,10 @@
 /* eslint-disable no-restricted-syntax */
 import {
   parsePlaylistPage,
-  parseSearchHistoryPage,
-  parseSubscribedChannelsPage,
+  parseSearchHistory,
+  parseSubscribedChannels,
   parseVideoPage,
-  parseWatchHistoryPage,
+  parseWatchHistory,
 } from '@algorithmwatch/harke-parser';
 import { ParserResult } from '@algorithmwatch/harke-parser/src/types';
 import _ from 'lodash';
@@ -123,7 +123,7 @@ const scrapeWatchedVideos = async (
 ): Promise<ScrapingResult> => {
   const getCurrentHtml = await getHtml('https://www.youtube.com/feed/history');
   await delay(1000);
-  return waitUntilDone(getCurrentHtml, parseWatchHistoryPage);
+  return waitUntilDone(getCurrentHtml, parseWatchHistory);
 };
 
 const scrapeSearchHistory = async (
@@ -132,7 +132,7 @@ const scrapeSearchHistory = async (
   const getCurrentHtml = await getHtml(
     'https://myactivity.google.com/activitycontrols/youtube',
   );
-  return waitUntilDone(getCurrentHtml, parseSearchHistoryPage);
+  return waitUntilDone(getCurrentHtml, parseSearchHistory);
 };
 
 // const scrapeCommentHistory = async (
@@ -148,7 +148,7 @@ const scrapeSubscriptions = async (
   getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
   const getCurrentHtml = await getHtml('https://www.youtube.com/feed/channels');
-  return waitUntilDone(getCurrentHtml, parseSubscribedChannelsPage);
+  return waitUntilDone(getCurrentHtml, parseSubscribedChannels);
 };
 
 async function* scrapeSeedVideosAndFollow(
