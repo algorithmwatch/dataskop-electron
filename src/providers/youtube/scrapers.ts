@@ -170,10 +170,18 @@ async function* scrapeSeedVideosAndFollow(
     // assign an unique ID to extract follow chains
     dataFromSeed.fields.followId = followChainId;
 
+    // do not follow if there are no recommended videos and abort
+    if (dataFromSeed.fields.recommendedVideos.length === 0) {
+      return [1, dataFromSeed];
+    }
+
     yield [step / maxSteps, dataFromSeed];
 
     let toScrapeId = dataFromSeed.fields.recommendedVideos[0].id;
-    for (const i of [...Array(followVideos).keys()]) {
+
+    // using `for (const .. of ..)` to work with `await`
+    // eslint-disable-next-line no-empty-pattern
+    for (const {} of [...Array(followVideos).keys()]) {
       let followVideo = null;
 
       followVideo = await scrapeVideo(toScrapeId, getHtml, comments);
@@ -181,17 +189,18 @@ async function* scrapeSeedVideosAndFollow(
       followVideo.slug += '-followed';
       followVideo.fields.followId = followChainId;
 
-      // not sure if this `step` stuff is needed
       step += 1;
-      toScrapeId = followVideo.fields.recommendedVideos[0].id;
 
-      if (step < maxSteps) {
+      // proceed if: 1) we didn't meet the max number of steps 2) there are actually recommended videos
+      if (step < maxSteps && followVideo.fields.recommendedVideos.length > 0) {
+        toScrapeId = followVideo.fields.recommendedVideos[0].id;
         yield [step / maxSteps, followVideo];
       } else {
         return [1, followVideo];
       }
     }
   }
+  // Should never be reached.
   return null;
 }
 
