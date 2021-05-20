@@ -14,13 +14,13 @@ const getThumbnails = (id: string) => {
   small.unshift(`https://img.youtube.com/vi/${id}/default.jpg`);
 
   const defaultImage = {
-    mq: `http://img.youtube.com/vi/${id}/mqdefault.jpg`,
-    hq: `http://img.youtube.com/vi/${id}/hqdefault.jpg`,
-    sd: `http://img.youtube.com/vi/${id}/sddefault.jpg`,
-    maxRes: `http://img.youtube.com/vi/${id}/maxresdefault.jpg`,
+    mq: `https://img.youtube.com/vi/${id}/mqdefault.jpg`,
+    hq: `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
+    sd: `https://img.youtube.com/vi/${id}/sddefault.jpg`,
+    maxRes: `https://img.youtube.com/vi/${id}/maxresdefault.jpg`,
   };
 
-  return { small, defaultImage };
+  return { small, default: defaultImage };
 };
 
 // data wrangling
@@ -28,7 +28,8 @@ const getThumbnails = (id: string) => {
 const groupByFollowId = (x) =>
   Object.values(_.groupBy(x, (y) => y.fields.followId));
 
-const getVideos = (data) => data.filter((x) => x.slug.includes('video-page'));
+const getVideos = (data) =>
+  data.filter((x) => x.slug.includes('video-page') && x.success);
 
 const getFollowGroups = (data) =>
   groupByFollowId(data.filter((x) => x.slug.includes('video-page')));

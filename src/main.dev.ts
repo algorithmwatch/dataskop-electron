@@ -8,16 +8,15 @@
  * When running `yarn build` or `yarn build-main`, this file is compiled to
  * `./src/main.prod.js` using webpack. This gives us some performance wins.
  */
-import * as Sentry from '@sentry/electron';
+import Sentry from '@sentry/electron';
 import 'core-js/stable';
-import { app, BrowserWindow, dialog, ipcMain, session, shell } from 'electron';
+import { app, BrowserWindow, ipcMain, session, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
-import { promises as fsPromises, writeFileSync } from 'fs';
 import path from 'path';
 import 'regenerator-runtime/runtime';
+import { registerExportHandlers, registerScrapingHandlers } from './main';
 import MenuBuilder from './main/menu';
-import registerScrapingHandlers from './main/scraping';
 
 const DEBUG =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
@@ -95,8 +94,8 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728,
+    width: 1280,
+    height: 1080,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       nodeIntegration: true,
@@ -153,6 +152,7 @@ const createWindow = async () => {
 
   // register handlers
   registerScrapingHandlers(mainWindow);
+  registerExportHandlers(mainWindow);
 };
 
 /**
@@ -194,28 +194,6 @@ autoUpdater.on('error', async (_event, error) => {
 /**
  * comunicate with renderer
  */
-
-ipcMain.handle('results-import', async (event) => {
-  const { canceled, filePaths } = await dialog.showOpenDialog({
-    properties: ['openFile', 'multiSelections'],
-    filters: [{ name: 'JSON', extensions: ['json'] }],
-  });
-  if (canceled) return;
-
-  filePaths.forEach(async (x) => {
-    const data = await fsPromises.readFile(x, 'utf8');
-    event.sender.send('results-import-data', data);
-  });
-});
-
-ipcMain.handle('results-export', async (_event, data, filename) => {
-  if (mainWindow === null) return;
-  const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
-    defaultPath: filename,
-  });
-  if (canceled || !filePath) return;
-  writeFileSync(filePath, data);
-});
 
 ipcMain.handle('get-version-number', () => {
   return app.getVersion();

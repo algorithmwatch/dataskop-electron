@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { ipcRenderer } from 'electron';
+import { uniq } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import Button from '../components/Button';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -7,10 +8,21 @@ import OverviewTable from '../components/results/OverviewTable';
 import { clearData, getScrapingResults, getSessions, importRow } from '../db';
 import { ScrapingResultSaved } from '../db/types';
 import Base from '../layout/Base';
+import { getVideos } from '../providers/youtube/utils';
 
 const invokeExport = async (data: ScrapingResultSaved[]) => {
   const filename = `dataskop-${dayjs().format('YYYY-MM-DD-HH-mm-s')}.json`;
   ipcRenderer.invoke('results-export', JSON.stringify(data), filename);
+};
+
+const invokeImageExport = async (data: ScrapingResultSaved[]) => {
+  const filename = `dataskop-images-${dayjs().format('YYYY-MM-DD-HH-mm-s')}`;
+  const ytIds = getVideos(data)
+    .map((x: ScrapingResultSaved) => {
+      return x.fields.recommendedVideos.map(({ id }) => id);
+    })
+    .flat();
+  ipcRenderer.invoke('results-export-images', uniq(ytIds), filename);
 };
 
 const invokeImport = async (loadData: Function) => {
@@ -58,6 +70,11 @@ export default function ResultsPage(): JSX.Element {
           </Button>
           <Button onClick={async () => invokeImport(importRowCb)}>
             import data
+          </Button>
+          <Button
+            onClick={async () => invokeImageExport(await getScrapingResults())}
+          >
+            export thumbnails
           </Button>
         </div>
         <OverviewTable rows={rows} />
