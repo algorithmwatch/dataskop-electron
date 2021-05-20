@@ -72,9 +72,9 @@ function ChartRow({ SmallChart, row, ...rest }) {
   return (
     <div
       style={{
-        border: '2px solid grey',
+        // border: '2px solid snow',
         padding: '0.5rem',
-        margin: '1rem',
+        // margin: '1rem',
         display: 'flex',
       }}
     >
@@ -83,9 +83,9 @@ function ChartRow({ SmallChart, row, ...rest }) {
           margin: '1rem',
           paddingRight: '1rem',
           paddingBottom: '0.5rem',
-          borderRight: '2px solid grey',
-          borderBottom: '2px solid grey',
-          width: '10rem',
+          // borderRight: '2px solid grey',
+          // borderBottom: '2px solid grey',
+          width: '6rem',
           height: 'auto',
           flex: '0 0 auto',
         }}
@@ -98,13 +98,13 @@ function ChartRow({ SmallChart, row, ...rest }) {
           flexWrap: 'wrap',
         }}
       >
-        {row.slice(1).map((x, i) => (
+        {row.slice(1, 10).map((x, i) => (
           <div
             // eslint-disable-next-line react/no-array-index-key
             key={i}
             style={{
               margin: '1rem',
-              width: '10rem',
+              width: '5rem',
               height: 'auto',
             }}
           >

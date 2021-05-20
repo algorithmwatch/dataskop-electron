@@ -5,7 +5,7 @@ import { Bin, Bins } from '@visx/mock-data/lib/generators/genBins';
 import { scaleLinear } from '@visx/scale';
 import _ from 'lodash';
 import React from 'react';
-import { getVideos } from '../../providers/youtube/utils';
+import { getThumbnails, getVideos } from '../../providers/youtube/utils';
 
 export const background = 'white';
 
@@ -79,7 +79,7 @@ function preprocessData(videos, colsize) {
     range: [0.9, 1],
     domain: [colorMin, colorMax],
   });
-  return [binData, xScale, yScale, rectColorScale, opacityScale];
+  return [binData, uniqueVideos, xScale, yScale, rectColorScale, opacityScale];
 }
 
 const RecommenderMap = ({ data, events = true }) => {
@@ -94,6 +94,7 @@ const RecommenderMap = ({ data, events = true }) => {
 
   const [
     binData,
+    uniqueVideos,
     xScale,
     yScale,
     rectColorScale,
@@ -117,51 +118,67 @@ const RecommenderMap = ({ data, events = true }) => {
   yScale.range([yMax, 0]);
 
   return width < 10 ? null : (
-    <svg width={width} height={height}>
-      <rect
-        x={0}
-        y={0}
-        width={width}
-        height={height}
-        rx={14}
-        fill={background}
-      />
-      <Group top={margin.top} left={margin.left}>
-        <HeatmapRect
-          data={binData}
-          xScale={(d) => xScale(d) ?? 0}
-          yScale={(d) => yScale(d) ?? 0}
-          colorScale={rectColorScale}
-          opacityScale={opacityScale}
-          binWidth={binWidth}
-          binHeight={binHeight}
-          gap={5}
+    <div>
+      <svg width={width} height={height}>
+        <rect
+          x={0}
+          y={0}
+          width={width}
+          height={height}
+          rx={14}
+          fill={background}
+        />
+        <Group
+          top={margin.top}
+          left={margin.left}
+          onMouseLeave={() => setHigh(null)}
         >
-          {(heatmap) =>
-            heatmap.map((heatmapBins) =>
-              heatmapBins.map((bin) => (
-                <rect
-                  key={`heatmap-rect-${bin.row}-${bin.column}`}
-                  className="visx-heatmap-rect"
-                  width={bin.width}
-                  height={bin.height}
-                  x={bin.x}
-                  y={bin.y}
-                  fill={high !== null && high === bin.count ? 'red' : bin.color}
-                  fillOpacity={bin.opacity}
-                  onClick={() => {
-                    if (!events) return;
-                    const { row, column } = bin;
-                    setHigh(bin.count);
-                    // alert(JSON.stringify({ row, column, bin: bin.bin }));
-                  }}
-                />
-              )),
-            )
-          }
-        </HeatmapRect>
-      </Group>
-    </svg>
+          <HeatmapRect
+            data={binData}
+            xScale={(d) => xScale(d) ?? 0}
+            yScale={(d) => yScale(d) ?? 0}
+            colorScale={rectColorScale}
+            opacityScale={opacityScale}
+            binWidth={binWidth}
+            binHeight={binHeight}
+            gap={5}
+          >
+            {(heatmap) =>
+              heatmap.map((heatmapBins) =>
+                heatmapBins.map((bin) => (
+                  <rect
+                    key={`heatmap-rect-${bin.row}-${bin.column}`}
+                    className="visx-heatmap-rect"
+                    width={bin.width}
+                    height={bin.height}
+                    x={bin.x}
+                    y={bin.y}
+                    fill={
+                      high !== null && high === bin.count ? 'red' : bin.color
+                    }
+                    fillOpacity={bin.opacity}
+                    onMouseEnter={() => {
+                      if (!events) return;
+                      // const { row, column } = bin;
+                      setHigh(bin.count);
+                      // alert(JSON.stringify({ row, column, bin: bin.bin }));
+                    }}
+                    onClick={() => {
+                      if (!events) return;
+                      // const { row, column } = bin;
+                      setHigh(bin.count);
+                      // alert(JSON.stringify({ row, column, bin: bin.bin }));
+                    }}
+                  />
+                )),
+              )
+            }
+          </HeatmapRect>
+        </Group>
+      </svg>
+      <div>{high && uniqueVideos[high]}</div>
+      <div>{high && <img src={getThumbnails(uniqueVideos[high]).mq} />}</div>
+    </div>
   );
 };
 
