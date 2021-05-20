@@ -270,7 +270,7 @@
     "@visx/heatmap": "^1.7.0",
     "@visx/mock-data": "^1.7.0",
     "@visx/responsive": "^1.10.1",
-    "@visx/scale": "^1.7.0",
+    "@visx/scale": "^1.11.1",
     "classnames": "^2.3.1",
     "dayjs": "^1.10.4",
     "dexie": "^3.0.3",
