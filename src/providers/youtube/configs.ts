@@ -66,13 +66,13 @@ const testConfig: ScrapingConfig = {
   slug: 'yt-test',
   procedureConfig: {
     ...defaultProcedureConfig,
-    personalScraper: Object.values(profileScrapers).concat([
+    profileScrapers: Object.values(profileScrapers).concat([
       scrapePopularVideos,
       scrapeNationalNewsTopStories,
     ]),
     seedVideosDynamic: [],
     seedVideosFixed: ['4Y1lZQsyuSQ'],
-  } as ProcedureConfig,
+  },
 };
 
 const allConfigs = [defaultConfig, simpleConfig, testConfig];

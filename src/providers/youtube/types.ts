@@ -16,7 +16,7 @@ type SeedCreator = {
   getVideos: (getHtml: GetHtmlFunction) => Promise<ScrapingResult>;
 };
 
-type PersonalScraper = (getHtml: GetHtmlFunction) => Promise<ScrapingResult>;
+type ProfileScraper = (getHtml: GetHtmlFunction) => Promise<ScrapingResult>;
 
 type ProcedureConfig = {
   // id of videos that are further processed
@@ -27,7 +27,7 @@ type ProcedureConfig = {
   followVideos: number;
   // how often to scroll down for lazy loading
   scrollingBottomForComments: number;
-  profileScrapers: Array<PersonalScraper>;
+  profileScrapers: Array<ProfileScraper>;
 };
 
 type ScrapingConfig = {
@@ -49,7 +49,6 @@ export {
   GetHtmlFunction,
   GetHtmlLazyFunction,
   SeedCreator,
-  PersonalScraper,
   ProcedureConfig,
   ScrapingConfig,
 };
