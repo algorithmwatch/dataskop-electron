@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
 import {
@@ -137,9 +136,11 @@ export default function AdvancedScrapingPage(): JSX.Element {
         <ScrapingConfigSelect
           scrapingConfig={scrapingConfig}
           setScrapingConfig={setScrapingConfig}
+        />
+        <Scraping
+          scrapingConfig={scrapingConfig}
           onDone={(x) => setSessionId(x)}
         />
-        <Scraping scrapingConfig={scrapingConfig} />
         {sessionId !== null && (
           <Link to={routes.RESULTS_DETAILS.replace(':sessionId', sessionId)}>
             go to result
