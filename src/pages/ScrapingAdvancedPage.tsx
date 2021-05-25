@@ -1,7 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
 import {
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -14,11 +13,17 @@ import {
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Button from '../components/Button';
+import { makeGetHtml } from '../components/scraping/controls';
 import Scraping from '../components/scraping/Scraping';
 import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
 import Base from '../layout/Base';
 import { allConfigs } from '../providers/youtube';
+import {
+  activateWatchHistory,
+  deactivateWatchHistory,
+} from '../providers/youtube/actions';
 
 const ScrapingConfigSelect = ({ scrapingConfig, setScrapingConfig }) => {
   const [expanded, setExpanded] = useState(false);
@@ -146,6 +151,12 @@ export default function AdvancedScrapingPage(): JSX.Element {
             go to result
           </Link>
         )}
+        <Button onClick={(x) => activateWatchHistory(makeGetHtml(false))}>
+          Activate Watch History
+        </Button>
+        <Button onClick={(x) => deactivateWatchHistory(makeGetHtml(false))}>
+          Deactivate Watch History
+        </Button>
       </div>
     </Base>
   );

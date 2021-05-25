@@ -130,4 +130,10 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
   ipcMain.handle('scraping-set-bounds', async (_event, bounds) => {
     scrapingView?.setBounds(bounds);
   });
+
+  ipcMain.handle('scraping-click-element', async (_event, selector) => {
+    await scrapingView?.webContents.executeJavaScript(
+      `document.querySelector("${selector}").click()`,
+    );
+  });
 }
