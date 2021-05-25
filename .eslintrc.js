@@ -7,6 +7,8 @@ module.exports = {
     'react/require-default-props': 'off',
     // allow console for debugging
     'no-console': 'off',
+    // not useful for iterative software development
+    'import/prefer-default-export': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

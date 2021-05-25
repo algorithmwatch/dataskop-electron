@@ -106,5 +106,4 @@ async function* scrapingYoutubeProcedure(
   );
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export { scrapingYoutubeProcedure };
