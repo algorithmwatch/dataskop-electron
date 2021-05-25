@@ -8,7 +8,9 @@
  * When running `yarn build` or `yarn build-main`, this file is compiled to
  * `./src/main.prod.js` using webpack. This gives us some performance wins.
  */
-import Sentry from '@sentry/electron';
+
+// Do not (!) change the import to: `import Sentry from '@sentry/electron'`
+import * as Sentry from '@sentry/electron';
 import 'core-js/stable';
 import { app, BrowserWindow, ipcMain, session, shell } from 'electron';
 import log from 'electron-log';
