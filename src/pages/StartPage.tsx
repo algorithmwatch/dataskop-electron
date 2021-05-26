@@ -3,7 +3,7 @@ import { History } from 'history';
 import React from 'react';
 import routes from '../constants/routes.json';
 import SlideBase from '../layout/SlideBase';
-import logo from '../static/logos/dataskop_logo.png';
+import logo from '../static/logos/dslogo.svg';
 
 const footerNav = [
   // {

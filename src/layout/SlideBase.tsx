@@ -3,11 +3,15 @@ import { useHistory } from 'react-router-dom';
 import Button from '../components/Button';
 import Base from './Base';
 
-function SlideBase({ children, footerNav = [] }): JSX.Element {
+function SlideBase({
+  children,
+  footerNav = [],
+  isDarkMode = false,
+}): JSX.Element {
   const history = useHistory();
 
   return (
-    <Base>
+    <Base isDarkMode={isDarkMode}>
       <section className="flex-grow flex flex-col justify-center">
         {children}
       </section>

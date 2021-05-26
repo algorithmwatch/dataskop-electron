@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AdvancedMenu from '../components/AdvancedMenu';
 import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
 
-export default function Base({ children }): JSX.Element {
+export default function Base({ children, isDarkMode = false }): JSX.Element {
   const {
     state: { version, showAdvancedMenu },
   } = useConfig();
+
+  useEffect(() => {
+    if (isDarkMode === true) {
+      document.documentElement.classList.add('dark');
+      console.warn('darkmode enabled');
+    } else if (isDarkMode === false) {
+      document.documentElement.classList.remove('dark');
+      console.warn('darkmode disabled');
+    }
+  }, [isDarkMode]);
 
   return (
     <div className="flex flex-col h-screen justify-between px-6">

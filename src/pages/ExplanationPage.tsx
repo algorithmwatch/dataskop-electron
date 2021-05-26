@@ -108,7 +108,7 @@ export default function ExplanationPage(): JSX.Element {
   }
 
   return (
-    <SlideBase footerNav={footerNav}>
+    <SlideBase footerNav={footerNav} isDarkMode>
       <Stepper
         steps={steps}
         currentStepIndex={currentStepIndex}
