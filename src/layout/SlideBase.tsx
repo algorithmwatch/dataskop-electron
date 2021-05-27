@@ -1,12 +1,21 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-import Button from '../components/Button';
+import React, { ReactNode } from 'react';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
+import Button, { ButtonProps } from '../components/Button';
 import Base from './Base';
+
+interface FooterNavItem extends ButtonProps {
+  label: string;
+  clickHandler: (history: RouteComponentProps['history']) => void;
+}
 
 function SlideBase({
   children,
   footerNav = [],
   isDarkMode = false,
+}: {
+  children: ReactNode;
+  footerNav?: FooterNavItem[];
+  isDarkMode?: boolean;
 }): JSX.Element {
   const history = useHistory();
 

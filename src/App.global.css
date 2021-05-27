@@ -10,5 +10,7 @@
 @layer base {
   body {
     @apply bg-yellow-100 dark:bg-blue-900;
+    background-image: url('static/images/bg.png');
+    background-size: 90%;
   }
 }

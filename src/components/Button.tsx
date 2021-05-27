@@ -1,17 +1,29 @@
+import { IconDefinition } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cn from 'classnames';
-import React from 'react';
+import React, { MouseEvent, ReactNode } from 'react';
+
+export interface ButtonProps {
+  size?: 'small' | 'medium' | 'large';
+  theme?: 'outline' | 'link' | 'blue';
+  startIcon?: IconDefinition;
+  endIcon?: IconDefinition;
+  classNames?: string;
+  disabled?: boolean;
+  onClick?: (event: MouseEvent) => void;
+  children: ReactNode;
+}
 
 export default function Button({
   size = 'medium',
   theme = 'outline',
-  startIcon = null,
-  endIcon = null,
+  startIcon,
+  endIcon,
   classNames = '',
   disabled = false,
   onClick,
   children,
-}) {
+}: ButtonProps): JSX.Element {
   // set button content
   const buttonContent = [];
 
@@ -36,7 +48,7 @@ export default function Button({
   // set button classes
 
   const buttonSize = {
-    small: 'px-4 py-2 text-xs',
+    small: 'px-4 py-3 text-sm',
     medium: 'px-5 py-4 text-base',
     large: 'px-6 py-5 text-xl',
   };
@@ -52,12 +64,15 @@ export default function Button({
       'hover:underline': !disabled,
       'text-gray-400': disabled,
     }),
+    blue: cn({
+      'bg-blue-500 text-white hover:bg-blue-600': true,
+    }),
   };
 
   return (
     <button
       type="button"
-      className={`inline-flex flex-nowrap items-center leading-none rounded-full font-semibold transition duration-150 ease-in-out ${buttonSize[size]} ${buttonTheme[theme]} ${classNames}`}
+      className={`inline-flex flex-nowrap items-center leading-none font-semibold transition duration-150 ease-in-out ${buttonSize[size]} ${buttonTheme[theme]} ${classNames}`}
       disabled={disabled === true}
       onClick={onClick}
     >
