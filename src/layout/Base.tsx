@@ -1,8 +1,9 @@
 import { faBars } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import AdvancedMenu from '../components/AdvancedMenu';
 import Button from '../components/Button';
+import Sidebar from '../components/Sidebar';
 import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
 import logo from '../static/logos/dslogo.svg';
@@ -17,19 +18,18 @@ export default function Base({
   const {
     state: { version, showAdvancedMenu },
   } = useConfig();
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
 
   useEffect(() => {
     if (isDarkMode === true) {
       document.documentElement.classList.add('dark');
-      console.warn('darkmode enabled');
-    } else if (isDarkMode === false) {
+    } else {
       document.documentElement.classList.remove('dark');
-      console.warn('darkmode disabled');
     }
   }, [isDarkMode]);
 
   return (
-    <div className="flex flex-col h-screen justify-between px-6">
+    <div className="relative flex flex-col h-screen justify-between px-6">
       <header className="flex py-4 items-center">
         <div>
           <img src={logo} style={{ width: '8rem' }} alt="Dataskop Logo" />
@@ -43,11 +43,17 @@ export default function Base({
           <button
             type="button"
             className="focus:outline-none text-yellow-800 hover:text-yellow-900"
+            onClick={() => setMenuIsOpen(true)}
           >
             <FontAwesomeIcon icon={faBars} size="lg" />
           </button>
         </div>
       </header>
+
+      <Sidebar
+        isOpen={menuIsOpen}
+        onIsOpenChange={(val: boolean) => setMenuIsOpen(val)}
+      />
 
       {/*  h-full hides the debug button for long pages */}
       <main className="pt-4 flex flex-grow flex-col">{children}</main>
