@@ -63,7 +63,7 @@ export default function Sidebar({
         {/* menu footer */}
         <div className="pl-8 mb-4 relative">
           {showAdvancedMenu && (
-            <div className="absolute right-4 bottom-0">
+            <div className="absolute right-8 bottom-0">
               <AdvancedMenu
                 menuItems={[
                   { label: 'start', to: routes.START },
@@ -90,7 +90,7 @@ export default function Sidebar({
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
       <div
         tabIndex={-1}
-        className={`absolute inset-0 bg-yellow-1200 bg-opacity-50 z-40 ${
+        className={`absolute inset-0 bg-yellow-1400 bg-opacity-50 z-40 ${
           !isOpen && 'hidden'
         }`}
         onClick={() => onIsOpenChange(false)}

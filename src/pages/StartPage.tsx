@@ -3,7 +3,6 @@ import { History } from 'history';
 import React from 'react';
 import routes from '../constants/routes.json';
 import SlideBase from '../layout/SlideBase';
-import logo from '../static/logos/dslogo.svg';
 
 const footerNav = [
   // {
@@ -39,18 +38,15 @@ export default function StartPage(): JSX.Element {
   return (
     <SlideBase footerNav={footerNav}>
       <>
-        <div className="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md mb-10">
+        <div className="p-6 max-w-lg mx-auto mb-10 text-center">
           <div>
-            <div className="text-xl font-medium text-black">Onboarding</div>
-            <p className="text-gray-500">
+            <div className="text-xl font-medium">Onboarding</div>
+            <p className="text-yellow-1200">
               Hello and welcome to this early development version of DataSkop.
             </p>
           </div>
-          <div>
-            <img src={logo} style={{ width: '10rem' }} alt="Dataskop Logo" />
-          </div>
         </div>
-        <div className="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md">
+        <div className="p-6 max-w-lg mx-auto">
           <ul className="menu-list">
             <li>
               <a

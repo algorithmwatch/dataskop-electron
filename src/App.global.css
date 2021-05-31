@@ -9,7 +9,7 @@
 
 @layer base {
   body {
-    @apply bg-yellow-100 dark:bg-blue-900 overflow-hidden;
+    @apply bg-yellow-100 dark:bg-blue-900 overflow-hidden text-yellow-1500;
     background-image: url('static/images/bg.png');
     background-size: 90%;
   }

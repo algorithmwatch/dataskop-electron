@@ -31,8 +31,8 @@ export default function Stepper({ steps, currentStepIndex = 0, updateIndex }) {
             onClick={() => updateStepIndex(key)}
             className={classNames({
               'w-5 h-5 rounded-full border focus:outline-none': true,
-              'border-gray-400 bg-gray-400': currentStep.key === key,
-              'border-gray-400': currentStep.key !== key,
+              'border-yellow-500 bg-yellow-500': currentStep.key === key,
+              'border-yellow-500': currentStep.key !== key,
             })}
           />
         ))}

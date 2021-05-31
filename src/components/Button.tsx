@@ -55,12 +55,12 @@ export default function Button({
 
   const buttonTheme = {
     outline: cn({
-      'border focus:outline-none': true,
-      'border-gray-400 hover:border-gray-900 focus:ring-4 focus:ring-gray-300 focus:ring-opacity-50': !disabled,
-      'border-gray-200 text-gray-400': disabled,
+      'border-2 focus:outline-none text-yellow-1500': true,
+      'border-yellow-700 hover:text-yellow-1000 focus:ring-4 focus:ring-yellow-500 focus:ring-opacity-50': !disabled,
+      'border-yellow-1200 text-yellow-1200 opacity-20': disabled,
     }),
     link: cn({
-      'focus:outline-none': true,
+      'text-yellow-1500 focus:outline-none': true,
       'hover:underline': !disabled,
       'text-gray-400': disabled,
     }),
