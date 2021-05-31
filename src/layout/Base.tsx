@@ -1,11 +1,8 @@
 import { faBars } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { ReactNode, useEffect, useState } from 'react';
-import AdvancedMenu from '../components/AdvancedMenu';
 import Button from '../components/Button';
 import Sidebar from '../components/Sidebar';
-import routes from '../constants/routes.json';
-import { useConfig } from '../contexts/config';
 import logo from '../static/logos/dslogo.svg';
 
 export default function Base({
@@ -15,9 +12,6 @@ export default function Base({
   children: ReactNode;
   isDarkMode?: boolean;
 }): JSX.Element {
-  const {
-    state: { version, showAdvancedMenu },
-  } = useConfig();
   const [menuIsOpen, setMenuIsOpen] = useState(false);
 
   useEffect(() => {
@@ -58,30 +52,8 @@ export default function Base({
       {/*  h-full hides the debug button for long pages */}
       <main className="pt-4 flex flex-grow flex-col">{children}</main>
 
-      <footer className="pt-6 pb-4 flex justify-between items-center">
-        {/* debug menu */}
-        <div>
-          {showAdvancedMenu && (
-            <AdvancedMenu
-              menuItems={[
-                { label: 'start', to: routes.START },
-                { label: 'advanced scraping', to: routes.SCRAPING_ADVANCED },
-                { label: 'results', to: routes.RESULTS },
-                { label: 'provider login', to: routes.PROVIDER_LOGIN },
-                {
-                  label: 'experiment scraping',
-                  to: routes.SCRAPING_EXPERIMENT,
-                },
-                { label: 'settings', to: routes.SETTINGS },
-              ]}
-            />
-          )}
-        </div>
-
-        <div className="text-sm text-gray-400">
-          <div>version: {version}</div>
-        </div>
-      </footer>
+      {/* <footer className="pt-6 pb-4 flex justify-between items-center">
+      </footer> */}
     </div>
   );
 }

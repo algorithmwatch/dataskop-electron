@@ -1,7 +1,14 @@
+import {
+  faChartPieAlt,
+  faInfoCircle,
+  faPaperPlane,
+} from '@fortawesome/pro-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import React from 'react';
-// import { IconDefinition } from '@fortawesome/pro-regular-svg-icons';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import routes from '../constants/routes.json';
+import { useConfig } from '../contexts/config';
+import AdvancedMenu from './AdvancedMenu';
 
 export default function Sidebar({
   isOpen = false,
@@ -10,17 +17,75 @@ export default function Sidebar({
   isOpen?: boolean;
   onIsOpenChange: (value: boolean) => void;
 }): JSX.Element | null {
+  const {
+    state: { version, showAdvancedMenu },
+  } = useConfig();
+
   const classes = classNames({
     'w-80 absolute inset-y-0 -right-80 bg-yellow-300 z-50 transition duration-200 ease-in-out transform': true,
+    'flex flex-col justify-between': true,
     '-translate-x-80': isOpen,
   });
+
+  const menu = [
+    {
+      label: 'Menüpunkt 1',
+      icon: faChartPieAlt,
+    },
+    {
+      label: 'Menüpunkt 2',
+      icon: faPaperPlane,
+    },
+    {
+      label: 'Menüpunkt 3',
+      icon: faInfoCircle,
+    },
+  ];
 
   return (
     <>
       <div className={classes}>
-        <div>Menüpunkt 1</div>
-        <div>Menüpunkt 2</div>
-        <div>Menüpunkt 3</div>
+        <div className="pl-8 mt-16 flex flex-col space-y-6 items-start">
+          {menu.map(({ label, icon }) => (
+            <button
+              key={label}
+              type="button"
+              className="text-yellow-1500 text-lg focus:outline-none hover:text-yellow-1200"
+            >
+              {icon && (
+                <FontAwesomeIcon icon={icon} className="mr-3" size="lg" />
+              )}
+              <span className="font-bold">{label}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* menu footer */}
+        <div className="pl-8 mb-4 relative">
+          {showAdvancedMenu && (
+            <div className="absolute right-4 bottom-0">
+              <AdvancedMenu
+                menuItems={[
+                  { label: 'start', to: routes.START },
+                  { label: 'advanced scraping', to: routes.SCRAPING_ADVANCED },
+                  { label: 'results', to: routes.RESULTS },
+                  { label: 'provider login', to: routes.PROVIDER_LOGIN },
+                  {
+                    label: 'experiment scraping',
+                    to: routes.SCRAPING_EXPERIMENT,
+                  },
+                  { label: 'settings', to: routes.SETTINGS },
+                ]}
+              />
+            </div>
+          )}
+
+          <div className="text-sm text-yellow-1100">
+            DataSkop
+            <br />
+            Version: {version}
+          </div>
+        </div>
       </div>
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
       <div
@@ -32,6 +97,4 @@ export default function Sidebar({
       />
     </>
   );
-
-  return null;
 }
