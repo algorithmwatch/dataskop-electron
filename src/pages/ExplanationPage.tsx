@@ -1,8 +1,9 @@
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
 import { History } from 'history';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Stepper from '../components/Stepper';
 import routes from '../constants/routes.json';
+import { useConfig } from '../contexts/config';
 import SlideBase from '../layout/SlideBase';
 
 function Step1(): JSX.Element {
@@ -73,7 +74,6 @@ export default function ExplanationPage(): JSX.Element {
   const handleUpdateIndex = (index) => {
     setCurrentStepIndex(index);
   };
-
   const footerNav = [
     {
       label: 'Zurück',
@@ -95,6 +95,11 @@ export default function ExplanationPage(): JSX.Element {
       },
     },
   ];
+  const { dispatch } = useConfig();
+
+  useEffect(() => {
+    dispatch({ type: 'set-current-step-index', currentStepIndex: 1 });
+  });
 
   if (hasNextIndex) {
     footerNav.push({

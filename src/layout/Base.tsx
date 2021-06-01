@@ -1,4 +1,9 @@
-import { faBars } from '@fortawesome/pro-regular-svg-icons';
+import {
+  faBars,
+  faChartPieAlt,
+  faInfoCircle,
+  faPaperPlane,
+} from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { ReactNode, useEffect, useState } from 'react';
 import Button from '../components/Button';
@@ -13,6 +18,20 @@ export default function Base({
   isDarkMode?: boolean;
 }): JSX.Element {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
+  const sidebarMenu = [
+    {
+      label: 'Menüpunkt 1',
+      icon: faChartPieAlt,
+    },
+    {
+      label: 'Menüpunkt 2',
+      icon: faPaperPlane,
+    },
+    {
+      label: 'Menüpunkt 3',
+      icon: faInfoCircle,
+    },
+  ];
 
   useEffect(() => {
     if (isDarkMode === true) {
@@ -45,6 +64,7 @@ export default function Base({
       </header>
 
       <Sidebar
+        menuItems={sidebarMenu}
         isOpen={menuIsOpen}
         onIsOpenChange={(val: boolean) => setMenuIsOpen(val)}
       />

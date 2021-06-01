@@ -1,8 +1,4 @@
-import {
-  faChartPieAlt,
-  faInfoCircle,
-  faPaperPlane,
-} from '@fortawesome/pro-regular-svg-icons';
+import { IconDefinition } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import React from 'react';
@@ -11,9 +7,14 @@ import { useConfig } from '../contexts/config';
 import AdvancedMenu from './AdvancedMenu';
 
 export default function Sidebar({
+  menuItems = [],
   isOpen = false,
   onIsOpenChange,
 }: {
+  menuItems: {
+    label: string;
+    icon: IconDefinition;
+  }[];
   isOpen?: boolean;
   onIsOpenChange: (value: boolean) => void;
 }): JSX.Element | null {
@@ -27,26 +28,11 @@ export default function Sidebar({
     '-translate-x-80': isOpen,
   });
 
-  const menu = [
-    {
-      label: 'Menüpunkt 1',
-      icon: faChartPieAlt,
-    },
-    {
-      label: 'Menüpunkt 2',
-      icon: faPaperPlane,
-    },
-    {
-      label: 'Menüpunkt 3',
-      icon: faInfoCircle,
-    },
-  ];
-
   return (
     <>
       <div className={classes}>
         <div className="pl-8 mt-16 flex flex-col space-y-6 items-start">
-          {menu.map(({ label, icon }) => (
+          {menuItems.map(({ label, icon }) => (
             <button
               key={label}
               type="button"

@@ -35,7 +35,11 @@ export default function Button({
     );
   }
 
-  buttonContent.push(<span key="content">{children}</span>);
+  buttonContent.push(
+    <span key="content" className="select-none">
+      {children}
+    </span>,
+  );
 
   if (endIcon) {
     buttonContent.push(
