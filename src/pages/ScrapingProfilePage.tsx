@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Scraping from '../components/scraping/Scraping';
-import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
 import SlideBase from '../layout/SlideBase';
+import routes from '../router/constants.json';
 
 export default function ScrapingProfilePage(): JSX.Element {
   const [sessionId, setSessionId] = useState(null);

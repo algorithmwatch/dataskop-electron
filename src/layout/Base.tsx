@@ -6,8 +6,10 @@ import {
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { ReactNode, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import Button from '../components/Button';
 import Sidebar from '../components/Sidebar';
+import { useConfig } from '../contexts/config';
 import logo from '../static/logos/dslogo.svg';
 
 export default function Base({
@@ -30,6 +32,30 @@ export default function Base({
     {
       label: 'Menüpunkt 3',
       icon: faInfoCircle,
+    },
+  ];
+  const history = useHistory();
+  const {
+    state: { currentStepIndex },
+  } = useConfig();
+  const processIndicatorSteps = [
+    {
+      label: 'Section 1',
+    },
+    {
+      label: 'Section 2',
+    },
+    {
+      label: 'Section 3',
+    },
+    {
+      label: 'Section 4',
+    },
+    {
+      label: 'Section 5',
+    },
+    {
+      label: 'Section 6',
     },
   ];
 
@@ -72,8 +98,7 @@ export default function Base({
       {/*  h-full hides the debug button for long pages */}
       <main className="pt-4 flex flex-grow flex-col">{children}</main>
 
-      {/* <footer className="pt-6 pb-4 flex justify-between items-center">
-      </footer> */}
+      {/* <footer></footer> */}
     </div>
   );
 }

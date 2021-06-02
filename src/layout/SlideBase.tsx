@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import Button, { ButtonProps } from '../components/Button';
-import ProcessIndicator from '../components/ProcessIndicator';
 import { useConfig } from '../contexts/config';
 import Base from './Base';
 
@@ -81,10 +80,10 @@ function SlideBase({
       </nav>
 
       {/* Process Indicator */}
-      <ProcessIndicator
+      {/* <ProcessIndicator
         steps={processIndicatorSteps}
         currentStep={currentStepIndex}
-      />
+      /> */}
     </Base>
   );
 }

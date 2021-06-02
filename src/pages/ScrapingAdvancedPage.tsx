@@ -16,7 +16,6 @@ import { Link } from 'react-router-dom';
 import Button from '../components/Button';
 import { makeGetHtml } from '../components/scraping/controls';
 import Scraping from '../components/scraping/Scraping';
-import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
 import Base from '../layout/Base';
 import { allConfigs } from '../providers/youtube';
@@ -24,6 +23,7 @@ import {
   activateWatchHistory,
   deactivateWatchHistory,
 } from '../providers/youtube/actions';
+import routes from '../router/constants.json';
 
 const ScrapingConfigSelect = ({ scrapingConfig, setScrapingConfig }) => {
   const [expanded, setExpanded] = useState(false);

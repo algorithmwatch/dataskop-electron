@@ -3,9 +3,9 @@ import { History } from 'history';
 import React, { useState } from 'react';
 import Button from '../components/Button';
 import Scraping from '../components/scraping/Scraping';
-import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
 import SlideBase from '../layout/SlideBase';
+import routes from '../router/constants.json';
 
 export default function ProviderLoginPage(): JSX.Element {
   const [isLoggedIn, setLoggedIn] = useState(false);

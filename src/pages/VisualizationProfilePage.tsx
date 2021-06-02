@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import ResultsDetails from '../components/results/ResultDetails';
-import routes from '../constants/routes.json';
 import SlideBase from '../layout/SlideBase';
+import routes from '../router/constants.json';
 
 export default function VisualizationProfilePage(): JSX.Element {
   const { sessionId }: { sessionId: string } = useParams();

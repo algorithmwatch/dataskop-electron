@@ -2,8 +2,8 @@ import { IconDefinition } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import React from 'react';
-import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
+import routes from '../router/constants.json';
 import AdvancedMenu from './AdvancedMenu';
 
 export default function Sidebar({
@@ -29,7 +29,7 @@ export default function Sidebar({
   });
 
   return (
-    <>
+    <div>
       <div className={classes}>
         <div className="pl-8 mt-16 flex flex-col space-y-6 items-start">
           {menuItems.map(({ label, icon }) => (
@@ -81,6 +81,6 @@ export default function Sidebar({
         }`}
         onClick={() => onIsOpenChange(false)}
       />
-    </>
+    </div>
   );
 }

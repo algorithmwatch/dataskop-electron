@@ -1,10 +1,4 @@
-import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
-import { History } from 'history';
-import React, { useEffect, useState } from 'react';
-import Stepper from '../components/Stepper';
-import routes from '../constants/routes.json';
-import { useConfig } from '../contexts/config';
-import SlideBase from '../layout/SlideBase';
+import React from 'react';
 
 function Step1(): JSX.Element {
   return (
@@ -53,72 +47,75 @@ function Step3(): JSX.Element {
   );
 }
 
-export default function ExplanationPage(): JSX.Element {
-  const steps = [
-    {
-      key: 'step1',
-      component: Step1,
-    },
-    {
-      key: 'step2',
-      component: Step2,
-    },
-    {
-      key: 'step3',
-      component: Step3,
-    },
-  ];
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const nextStepIndex = currentStepIndex + 1;
-  const hasNextIndex = nextStepIndex < steps.length;
-  const handleUpdateIndex = (index) => {
-    setCurrentStepIndex(index);
-  };
-  const footerNav = [
-    {
-      label: 'Zurück',
-      startIcon: faAngleLeft,
-      theme: 'link',
-      clickHandler(history: History) {
-        history.go(-1);
-      },
-    },
-    {
-      label: 'Weiter',
-      endIcon: faAngleRight,
-      clickHandler(history: History) {
-        if (hasNextIndex) {
-          setCurrentStepIndex(nextStepIndex);
-        } else {
-          history.push(routes.PROVIDER_LOGIN);
-        }
-      },
-    },
-  ];
-  const { dispatch } = useConfig();
+function ExplanationPage(): JSX.Element {
+  // const steps = [
+  //   {
+  //     key: 'step1',
+  //     component: Step1,
+  //   },
+  //   {
+  //     key: 'step2',
+  //     component: Step2,
+  //   },
+  //   {
+  //     key: 'step3',
+  //     component: Step3,
+  //   },
+  // ];
+  // const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  // const nextStepIndex = currentStepIndex + 1;
+  // const hasNextIndex = nextStepIndex < steps.length;
+  // const handleUpdateIndex = (index) => {
+  //   setCurrentStepIndex(index);
+  // };
+  // const footerNav = [
+  //   {
+  //     label: 'Zurück',
+  //     startIcon: faAngleLeft,
+  //     theme: 'link',
+  //     clickHandler(history: History) {
+  //       history.go(-1);
+  //     },
+  //   },
+  //   {
+  //     label: 'Weiter',
+  //     endIcon: faAngleRight,
+  //     clickHandler(history: History) {
+  //       if (hasNextIndex) {
+  //         setCurrentStepIndex(nextStepIndex);
+  //       } else {
+  //         history.push(routes.PROVIDER_LOGIN);
+  //       }
+  //     },
+  //   },
+  // ];
+  // const { dispatch } = useConfig();
 
-  useEffect(() => {
-    dispatch({ type: 'set-current-step-index', currentStepIndex: 1 });
-  });
+  // useEffect(() => {
+  //   dispatch({ type: 'set-current-step-index', currentStepIndex: 1 });
+  // });
 
-  if (hasNextIndex) {
-    footerNav.push({
-      label: 'Überspringen',
-      endIcon: faAngleRight,
-      theme: 'link',
-      clickHandler(history: History) {
-        history.push(routes.PROVIDER_LOGIN);
-      },
-    });
-  }
+  // if (hasNextIndex) {
+  //   footerNav.push({
+  //     label: 'Überspringen',
+  //     endIcon: faAngleRight,
+  //     theme: 'link',
+  //     clickHandler(history: History) {
+  //       history.push(routes.PROVIDER_LOGIN);
+  //     },
+  //   });
+  // }
 
   return (
-    <SlideBase footerNav={footerNav}>
-      <Stepper
+    <>
+      das ist ein test
+      {/* <Stepper
         steps={steps}
         currentStepIndex={currentStepIndex}
         updateIndex={handleUpdateIndex}
-      />
-    </SlideBase>
+      /> */}
+    </>
   );
 }
+
+export default ExplanationPage;

@@ -11,7 +11,7 @@ export interface ButtonProps {
   classNames?: string;
   disabled?: boolean;
   onClick?: (event: MouseEvent) => void;
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export default function Button({
