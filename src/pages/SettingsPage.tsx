@@ -1,7 +1,6 @@
 import { Checkbox, FormControlLabel } from '@material-ui/core';
 import React from 'react';
 import { useConfig } from '../contexts/config';
-import Base from '../layout/Base';
 
 export default function SettingsPage(): JSX.Element {
   const {
@@ -14,7 +13,7 @@ export default function SettingsPage(): JSX.Element {
   };
 
   return (
-    <Base>
+    <>
       <h1>Settings</h1>
       <FormControlLabel
         control={
@@ -27,6 +26,6 @@ export default function SettingsPage(): JSX.Element {
         }
         label="Log HTML"
       />
-    </Base>
+    </>
   );
 }

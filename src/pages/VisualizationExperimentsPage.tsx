@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { RouteComponentProps, useParams } from 'react-router-dom';
+import FooterNav from '../components/FooterNav';
 import SmallMultipleChart from '../components/visualizations/SmallMultipleChart';
 import { useConfig } from '../contexts/config';
 import { getSessionData } from '../db';
-import SlideBase from '../layout/SlideBase';
 import routes from '../router/constants.json';
 
 export default function VisualizationExperimentsPage(): JSX.Element {
@@ -25,16 +25,19 @@ export default function VisualizationExperimentsPage(): JSX.Element {
     console.log(data);
   }
 
-  const footerNav = [
+  const footerNavItems = [
     {
       label: 'weiter zu Donation',
-      clickHandler: (x) => x.push(routes.DONATION),
+      clickHandler(history: RouteComponentProps['history']) {
+        history.push(routes.DONATION);
+      },
     },
   ];
 
   return (
-    <SlideBase footerNav={footerNav}>
+    <>
       <SmallMultipleChart data={data} />
-    </SlideBase>
+      <FooterNav items={footerNavItems} />
+    </>
   );
 }

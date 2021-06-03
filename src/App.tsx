@@ -4,7 +4,7 @@ import './App.global.css';
 import UpdateNotification from './components/UpdateNotification';
 import { ConfigProvider } from './contexts/config';
 import BaseLayout from './layout/Base';
-import routes from './router';
+import { routes } from './router';
 
 export default function App() {
   return (
@@ -14,11 +14,9 @@ export default function App() {
         <BaseLayout>
           <Switch>
             {routes.map((route) => (
-              <Route
-                key={route.path}
-                path={route.path}
-                component={route.component}
-              />
+              <Route key={route.path} path={route.path}>
+                <route.component />
+              </Route>
             ))}
           </Switch>
         </BaseLayout>

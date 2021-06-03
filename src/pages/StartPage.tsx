@@ -4,39 +4,37 @@ import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import routes from '../router/constants.json';
 
-const footerNavItems: FooterNavItem[] = [
-  // {
-  //   label: 'Zurück',
-  //   startIcon: faAngleLeft,
-  //   classNames: '',
-  //   disabled: true,
-  //   clickHandler(history: History) {
-  //     history.push(routes.EXPLANATION);
-  //   },
-  // },
-  {
-    label: 'Weiter',
-    // size: 'large',
-    endIcon: faAngleRight,
-    classNames: 'mx-auto',
-    clickHandler(history: RouteComponentProps['history']) {
-      console.warn('test', routes);
-      history.push(routes.EXPLANATION);
-      console.warn('test2', this);
-    },
-  },
-  // {
-  //   label: 'Weiter',
-  //   endIcon: faAngleRight,
-  //   // classNames: '',
-  //   // theme: 'link',
-  //   clickHandler(history: History) {
-  //     history.push(routes.EXPLANATION);
-  //   },
-  // },
-];
-
 export default function StartPage(): JSX.Element {
+  const footerNavItems: FooterNavItem[] = [
+    // {
+    //   label: 'Zurück',
+    //   startIcon: faAngleLeft,
+    //   classNames: '',
+    //   disabled: true,
+    //   clickHandler(history: History) {
+    //     history.push(routes.EXPLANATION);
+    //   },
+    // },
+    {
+      label: 'Weiter',
+      // size: 'large',
+      endIcon: faAngleRight,
+      classNames: 'mx-auto',
+      clickHandler(history: RouteComponentProps['history']) {
+        history.push(routes.EXPLANATION);
+      },
+    },
+    // {
+    //   label: 'Weiter',
+    //   endIcon: faAngleRight,
+    //   // classNames: '',
+    //   // theme: 'link',
+    //   clickHandler(history: History) {
+    //     history.push(routes.EXPLANATION);
+    //   },
+    // },
+  ];
+
   return (
     <>
       <div className="p-6 max-w-lg mx-auto mb-10 text-center">
@@ -64,7 +62,5 @@ export default function StartPage(): JSX.Element {
 
       <FooterNav items={footerNavItems} />
     </>
-    // <SlideBase footerNav={footerNav}>
-    // </SlideBase>
   );
 }

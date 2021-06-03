@@ -7,7 +7,6 @@ import ConfirmDialog from '../components/ConfirmDialog';
 import OverviewTable from '../components/results/OverviewTable';
 import { clearData, getScrapingResults, getSessions, importRow } from '../db';
 import { ScrapingResultSaved } from '../db/types';
-import Base from '../layout/Base';
 import { getVideos } from '../providers/youtube/utils';
 
 const invokeExport = async (data: ScrapingResultSaved[]) => {
@@ -53,7 +52,7 @@ export default function ResultsPage(): JSX.Element {
   };
 
   return (
-    <Base>
+    <>
       <div className="overflow-y-auto h-5/6">
         <div>{importedRows > 0 && `${importedRows} rows imported`}</div>
         <h2 className="text-xl font-bold">Results</h2>
@@ -79,6 +78,6 @@ export default function ResultsPage(): JSX.Element {
         </div>
         <OverviewTable rows={rows} />
       </div>
-    </Base>
+    </>
   );
 }

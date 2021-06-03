@@ -13,11 +13,14 @@ function ProcessIndicator({
   const barWidth = (100 * currentStep) / (steps.length - 1);
 
   return (
-    <div className="relative h-4 w-full bg-yellow-100">
+    <div className="relative h-3 w-full bg-yellow-100">
       {/* vertical lines */}
-      <div className="z-10 absolute inset-0 h-4 w-full flex justify-between">
+      <div className="z-10 absolute inset-0 h-3 w-full flex justify-between">
         {steps.map(({ label, description }) => (
-          <div key={label} className="h-full w-0.5 bg-black" />
+          <div
+            key={label}
+            className="h-full w-0.5 bg-black first:bg-transparent last:bg-transparent"
+          />
         ))}
       </div>
 

@@ -1,10 +1,10 @@
 import { faAngleLeft } from '@fortawesome/pro-regular-svg-icons';
-import { History } from 'history';
 import React, { useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import Button from '../components/Button';
+import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import Scraping from '../components/scraping/Scraping';
 import { useConfig } from '../contexts/config';
-import SlideBase from '../layout/SlideBase';
 import routes from '../router/constants.json';
 
 export default function ProviderLoginPage(): JSX.Element {
@@ -13,29 +13,30 @@ export default function ProviderLoginPage(): JSX.Element {
   const {
     state: { scrapingConfig },
   } = useConfig();
-  const footerNav = [];
+  const footerNavItems: FooterNavItem[] = [];
 
   if (!isLoggedIn) {
-    footerNav.push({
+    footerNavItems.push({
       label: 'Zurück',
       startIcon: faAngleLeft,
       theme: 'link',
-      clickHandler(history: History) {
+      clickHandler(history: RouteComponentProps['history']) {
         history.go(-1);
       },
     });
   } else {
-    footerNav.push({
+    footerNavItems.push({
       label: 'Weiter',
       size: 'large',
       classNames: 'mx-auto',
-      clickHandler: (history: History) =>
-        history.push(routes.SCRAPING_EXPLANATION),
+      clickHandler(history: RouteComponentProps['history']) {
+        history.push(routes.SCRAPING_EXPLANATION);
+      },
     });
   }
 
   return (
-    <SlideBase footerNav={footerNav}>
+    <>
       {!isLoggedIn && !showLoginWindow && (
         <>
           <h1 className="hl-4xl text-center mb-6">Bitte melden Sie sich an</h1>
@@ -73,6 +74,7 @@ export default function ProviderLoginPage(): JSX.Element {
           </p>
         </>
       )}
-    </SlideBase>
+      <FooterNav items={footerNavItems} />
+    </>
   );
 }

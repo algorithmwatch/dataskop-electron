@@ -1,26 +1,29 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { RouteComponentProps, useParams } from 'react-router-dom';
+import FooterNav from '../components/FooterNav';
 import ResultsDetails from '../components/results/ResultDetails';
-import SlideBase from '../layout/SlideBase';
 import routes from '../router/constants.json';
 
 export default function VisualizationProfilePage(): JSX.Element {
   const { sessionId }: { sessionId: string } = useParams();
 
-  const footerNav = [
+  const footerNavItems = [
     {
       label: 'weiter zu Exp scraping',
-      clickHandler: (x) => x.push(routes.SCRAPING_EXPERIMENT),
+      clickHandler(history: RouteComponentProps['history']) {
+        history.push(routes.SCRAPING_EXPERIMENT);
+      },
     },
   ];
 
   return (
-    <SlideBase footerNav={footerNav}>
+    <>
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio
       molestiae laboriosam adipisci odio molestias eligendi, illo fugit ad
       impedit repellendus nulla beatae unde quasi eaque ea consequatur
       recusandae velit necessitatibus!
       <ResultsDetails sessionId={sessionId} />
-    </SlideBase>
+      <FooterNav items={footerNavItems} />
+    </>
   );
 }

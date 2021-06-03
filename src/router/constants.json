@@ -1,11 +1,11 @@
 {
   "START": "/",
   "EXPLANATION": "/explanation",
+  "PROVIDER_LOGIN": "/scraping/login",
   "SCRAPING_ADVANCED": "/scraping/advanced",
   "SCRAPING_PROFILE": "/scraping/profile",
   "SCRAPING_EXPERIMENT": "/scraping/experiment",
   "SCRAPING_EXPLANATION": "/scraping/explanation",
-  "PROVIDER_LOGIN": "/scraping/login",
   "RESULTS": "/results",
   "RESULTS_DETAILS": "/results/:sessionId",
   "VISUALIZATION_ADVANCED": "/visualization/advanced/:sessionId",

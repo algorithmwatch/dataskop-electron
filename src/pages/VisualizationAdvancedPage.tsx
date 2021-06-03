@@ -7,7 +7,6 @@ import SmallMultipleChart from '../components/visualizations/SmallMultipleChart'
 import StatisticsChart from '../components/visualizations/StatisticsChart';
 import { useConfig } from '../contexts/config';
 import { getSessionData } from '../db';
-import Base from '../layout/Base';
 
 export default function VisualizationAdvancedPage() {
   const [data, setData] = useState<any>([]);
@@ -37,7 +36,7 @@ export default function VisualizationAdvancedPage() {
   };
 
   return (
-    <Base>
+    <>
       <div className="space-x-4 mb-10">
         <Button onClick={() => history.goBack()}>Go back</Button>
         <FormControl>
@@ -61,6 +60,6 @@ export default function VisualizationAdvancedPage() {
         {visComp === 'statistics' && <StatisticsChart data={data} />}
         {visComp === 'recommender-map' && <RecommenderMap data={data} />}
       </div>
-    </Base>
+    </>
   );
 }

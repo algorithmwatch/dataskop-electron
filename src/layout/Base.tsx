@@ -6,20 +6,20 @@ import {
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { ReactNode, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Button from '../components/Button';
+import ProcessIndicator from '../components/ProcessIndicator';
 import Sidebar from '../components/Sidebar';
-import { useConfig } from '../contexts/config';
+import { getRouteConfigByPath } from '../router';
 import logo from '../static/logos/dslogo.svg';
 
 export default function Base({
   children,
-  isDarkMode = false,
 }: {
   children: ReactNode;
-  isDarkMode?: boolean;
 }): JSX.Element {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const sidebarMenu = [
     {
       label: 'Menüpunkt 1',
@@ -34,10 +34,6 @@ export default function Base({
       icon: faInfoCircle,
     },
   ];
-  const history = useHistory();
-  const {
-    state: { currentStepIndex },
-  } = useConfig();
   const processIndicatorSteps = [
     {
       label: 'Section 1',
@@ -58,18 +54,34 @@ export default function Base({
       label: 'Section 6',
     },
   ];
+  // read config for current route
+  const routeConfig = getRouteConfigByPath(useLocation().pathname);
+  console.warn(routeConfig);
 
   useEffect(() => {
+    const isDarkMode =
+      routeConfig && typeof routeConfig.isDarkMode !== 'undefined'
+        ? routeConfig.isDarkMode
+        : false;
+    const stepIndex =
+      routeConfig && typeof routeConfig.stepIndex !== 'undefined'
+        ? routeConfig.stepIndex
+        : -1;
+
     if (isDarkMode === true) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-  }, [isDarkMode]);
+
+    if (stepIndex >= 0) {
+      setCurrentStepIndex(stepIndex);
+    }
+  }, [routeConfig]);
 
   return (
-    <div className="relative flex flex-col h-screen justify-between px-6">
-      <header className="flex py-4 items-center">
+    <div className="relative flex flex-col h-screen justify-between">
+      <header className="flex items-center py-4 px-6">
         <div>
           <img src={logo} style={{ width: '8rem' }} alt="Dataskop Logo" />
         </div>
@@ -96,9 +108,14 @@ export default function Base({
       />
 
       {/*  h-full hides the debug button for long pages */}
-      <main className="pt-4 flex flex-grow flex-col">{children}</main>
+      <main className="flex flex-grow flex-col pt-4 px-6">{children}</main>
 
-      {/* <footer></footer> */}
+      <footer>
+        <ProcessIndicator
+          steps={processIndicatorSteps}
+          currentStep={currentStepIndex}
+        />
+      </footer>
     </div>
   );
 }

@@ -17,7 +17,6 @@ import Button from '../components/Button';
 import { makeGetHtml } from '../components/scraping/controls';
 import Scraping from '../components/scraping/Scraping';
 import { useConfig } from '../contexts/config';
-import Base from '../layout/Base';
 import { allConfigs } from '../providers/youtube';
 import {
   activateWatchHistory,
@@ -81,7 +80,7 @@ export default function AdvancedScrapingPage(): JSX.Element {
     dispatch({ type: 'set-scraping-config', scrapingConfig });
 
   return (
-    <Base>
+    <>
       <div className="overflow-y-auto">
         <Card>
           <CardHeader title="Scraping Advanced Configuration" />
@@ -158,6 +157,6 @@ export default function AdvancedScrapingPage(): JSX.Element {
           Deactivate Watch History
         </Button>
       </div>
-    </Base>
+    </>
   );
 }

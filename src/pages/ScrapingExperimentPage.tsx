@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
+import FooterNav from '../components/FooterNav';
 import Scraping from '../components/scraping/Scraping';
 import { useConfig } from '../contexts/config';
-import SlideBase from '../layout/SlideBase';
 import routes from '../router/constants.json';
 
 export default function ScrapingExperimentPage(): JSX.Element {
@@ -19,24 +20,25 @@ export default function ScrapingExperimentPage(): JSX.Element {
     },
   };
 
-  const footerNav =
+  const footerNavItems =
     sessionId !== null
       ? [
           {
             label: 'weiter zu Visualisierung',
-            clickHandler: (x) =>
-              x.push(
+            clickHandler(history: RouteComponentProps['history']) {
+              history.push(
                 routes.VISUALIZATION_EXPERIMENT.replace(
                   ':sessionId',
                   sessionId,
                 ),
-              ),
+              );
+            },
           },
         ]
       : [];
 
   return (
-    <SlideBase footerNav={footerNav}>
+    <>
       <Scraping
         disableInput
         hideControls
@@ -44,6 +46,7 @@ export default function ScrapingExperimentPage(): JSX.Element {
         scrapingConfig={onlyExperimentScraper}
         onDone={(x) => setSessionId(x)}
       />
-    </SlideBase>
+      <FooterNav items={footerNavItems} />
+    </>
   );
 }

@@ -1,4 +1,9 @@
-import React from 'react';
+import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
+import React, { useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
+import FooterNav, { FooterNavItem } from '../components/FooterNav';
+import Stepper from '../components/Stepper';
+import routes from '../router/constants.json';
 
 function Step1(): JSX.Element {
   return (
@@ -48,72 +53,66 @@ function Step3(): JSX.Element {
 }
 
 function ExplanationPage(): JSX.Element {
-  // const steps = [
-  //   {
-  //     key: 'step1',
-  //     component: Step1,
-  //   },
-  //   {
-  //     key: 'step2',
-  //     component: Step2,
-  //   },
-  //   {
-  //     key: 'step3',
-  //     component: Step3,
-  //   },
-  // ];
-  // const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  // const nextStepIndex = currentStepIndex + 1;
-  // const hasNextIndex = nextStepIndex < steps.length;
-  // const handleUpdateIndex = (index) => {
-  //   setCurrentStepIndex(index);
-  // };
-  // const footerNav = [
-  //   {
-  //     label: 'Zurück',
-  //     startIcon: faAngleLeft,
-  //     theme: 'link',
-  //     clickHandler(history: History) {
-  //       history.go(-1);
-  //     },
-  //   },
-  //   {
-  //     label: 'Weiter',
-  //     endIcon: faAngleRight,
-  //     clickHandler(history: History) {
-  //       if (hasNextIndex) {
-  //         setCurrentStepIndex(nextStepIndex);
-  //       } else {
-  //         history.push(routes.PROVIDER_LOGIN);
-  //       }
-  //     },
-  //   },
-  // ];
-  // const { dispatch } = useConfig();
-
-  // useEffect(() => {
-  //   dispatch({ type: 'set-current-step-index', currentStepIndex: 1 });
-  // });
-
-  // if (hasNextIndex) {
-  //   footerNav.push({
-  //     label: 'Überspringen',
-  //     endIcon: faAngleRight,
-  //     theme: 'link',
-  //     clickHandler(history: History) {
-  //       history.push(routes.PROVIDER_LOGIN);
-  //     },
-  //   });
-  // }
+  const steps = [
+    {
+      key: 'step1',
+      component: Step1,
+    },
+    {
+      key: 'step2',
+      component: Step2,
+    },
+    {
+      key: 'step3',
+      component: Step3,
+    },
+  ];
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const nextStepIndex = currentStepIndex + 1;
+  const hasNextIndex = nextStepIndex < steps.length;
+  const handleUpdateIndex = (index) => {
+    setCurrentStepIndex(index);
+  };
+  const footerNavItems: FooterNavItem[] = [
+    {
+      label: 'Zurück',
+      startIcon: faAngleLeft,
+      theme: 'link',
+      clickHandler(history: RouteComponentProps['history']) {
+        history.push(routes.START);
+      },
+    },
+    {
+      label: 'Weiter',
+      endIcon: faAngleRight,
+      clickHandler(history: RouteComponentProps['history']) {
+        if (hasNextIndex) {
+          setCurrentStepIndex(nextStepIndex);
+        } else {
+          history.push(routes.PROVIDER_LOGIN);
+        }
+      },
+    },
+  ];
+  if (hasNextIndex) {
+    footerNavItems.push({
+      label: 'Überspringen',
+      endIcon: faAngleRight,
+      theme: 'link',
+      clickHandler(history: RouteComponentProps['history']) {
+        history.push(routes.PROVIDER_LOGIN);
+      },
+    });
+  }
 
   return (
     <>
-      das ist ein test
-      {/* <Stepper
+      <Stepper
         steps={steps}
         currentStepIndex={currentStepIndex}
         updateIndex={handleUpdateIndex}
-      /> */}
+      />
+      <FooterNav items={footerNavItems} />
     </>
   );
 }
