@@ -24,13 +24,41 @@ class ScrapingDatabase extends Dexie {
   }
 }
 
-const db = new ScrapingDatabase();
+const initDb = () => new ScrapingDatabase();
+
+let globalDb: ScrapingDatabase | null = null;
+
+// hotfix: https://github.com/dfahlander/Dexie.js/issues/613#issuecomment-841608979
+const db = (): ScrapingDatabase => {
+  if (!globalDb) {
+    globalDb = initDb();
+  }
+
+  const idb = globalDb.backendDB();
+
+  if (idb) {
+    try {
+      // Check if if connection to idb did not close in the meantime by access indexDb directly
+      idb.transaction('scrapingResults').abort();
+    } catch (e) {
+      globalDb.close();
+      globalDb = initDb();
+    }
+  }
+
+  return globalDb;
+};
+
+const closeDb = () => {
+  globalDb?.close();
+  globalDb = null;
+};
 
 // https://dexie.org/docs/Dexie/Dexie.transaction()#specify-reusage-of-parent-transaction
 
 const addNewSession = (sessionId: string, configSlug: string) => {
-  db.transaction('rw', db.scrapingSessions, async () =>
-    db.scrapingSessions.add({
+  db().transaction('rw', db().scrapingSessions, async () =>
+    db().scrapingSessions.add({
       sessionId,
       startedAt: Date.now(),
       configSlug,
@@ -39,8 +67,8 @@ const addNewSession = (sessionId: string, configSlug: string) => {
 };
 
 const addScrapingResult = (sessionId: string, data: any) => {
-  db.transaction('rw', db.scrapingResults, async () => {
-    const id = await db.scrapingResults.add({
+  db().transaction('rw', db().scrapingResults, async () => {
+    const id = await db().scrapingResults.add({
       sessionId,
       ...data,
       scrapedAt: Date.now(),
@@ -53,15 +81,15 @@ const importRow = async (row: ScrapingResultSaved): Promise<number> => {
   /**
    * import already scraped data and try to keep the original id if possible.
    */
-  return db.transaction('rw', db.scrapingResults, async () => {
+  return db().transaction('rw', db().scrapingResults, async () => {
     const { id } = row;
 
     if (id != null) {
       delete row.id;
-      const existingRow = await db.scrapingResults.get(id);
+      const existingRow = await db().scrapingResults.get(id);
       if (existingRow === null) {
         // no row with this id exists, so re-use the id
-        await db.scrapingResults.add(row, id);
+        await db().scrapingResults.add(row, id);
         return 1;
       }
       // row was already entered
@@ -69,22 +97,22 @@ const importRow = async (row: ScrapingResultSaved): Promise<number> => {
     }
 
     // id is undefined so generate new id
-    await db.scrapingResults.add(row);
+    await db().scrapingResults.add(row);
     return 1;
   });
 };
 
 const getScrapingResults = () => {
-  return db.transaction('r', db.scrapingResults, async () => {
-    const res = await db.scrapingResults.orderBy('scrapedAt').toArray();
+  return db().transaction('r', db().scrapingResults, async () => {
+    const res = await db().scrapingResults.orderBy('scrapedAt').toArray();
     return res;
   });
 };
 
 const getSessionData = (sessiondId: string) => {
-  return db.transaction('r', db.scrapingResults, async () => {
-    const res = await db.scrapingResults
-      .where('sessionId')
+  return db().transaction('r', db().scrapingResults, async () => {
+    const res = await db()
+      .scrapingResults.where('sessionId')
       .equals(sessiondId)
       .toArray();
     return res;
@@ -92,8 +120,8 @@ const getSessionData = (sessiondId: string) => {
 };
 
 const clearData = () => {
-  db.scrapingResults
-    .clear()
+  db()
+    .scrapingResults.clear()
     .then(() => {
       console.log('Rows successfully deleted');
       return true;
@@ -107,18 +135,18 @@ const clearData = () => {
 
 // https://github.com/dfahlander/Dexie.js/issues/415#issuecomment-268772586
 const getUniqueSessionIds = () =>
-  db.scrapingResults.orderBy('sessionId').uniqueKeys();
+  db().scrapingResults.orderBy('sessionId').uniqueKeys();
 
 const getSessions = async () => {
   const sessionsIds = await getUniqueSessionIds();
   const sessions = await Promise.all(
     sessionsIds.map(async (x) => {
-      const session = await db.scrapingSessions
-        .where('sessionId')
+      const session = await db()
+        .scrapingSessions.where('sessionId')
         .equals(x)
         .first();
       return {
-        count: await db.scrapingResults.where('sessionId').equals(x).count(),
+        count: await db().scrapingResults.where('sessionId').equals(x).count(),
         ...session,
       };
     }),
@@ -128,15 +156,15 @@ const getSessions = async () => {
 };
 
 const getStatisticsForSession = async (sessiondId: string) => {
-  const allTasks = await db.scrapingResults
-    .where('sessionId')
+  const allTasks = await db()
+    .scrapingResults.where('sessionId')
     .equals(sessiondId)
     .toArray();
 
   allTasks.sort((a, b) => a.scrapedAt - b.scrapedAt);
 
-  const firstResult = await db.scrapingSessions
-    .where('sessionId')
+  const firstResult = await db()
+    .scrapingSessions.where('sessionId')
     .equals(sessiondId)
     .first();
 
@@ -169,6 +197,7 @@ const getStatisticsForSession = async (sessiondId: string) => {
 };
 
 export {
+  closeDb,
   addScrapingResult,
   importRow,
   getScrapingResults,

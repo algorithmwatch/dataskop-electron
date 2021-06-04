@@ -17,6 +17,7 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import 'regenerator-runtime/runtime';
+import { closeDb } from './db';
 import { registerExportHandlers, registerScrapingHandlers } from './main';
 import MenuBuilder from './main/menu';
 
@@ -179,6 +180,11 @@ app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) createWindow();
+});
+
+app.on('before-quit', (event) => {
+  // Not 100% sure if this is needed. There have been some issues with
+  closeDb();
 });
 
 /**
