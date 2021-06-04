@@ -1,7 +1,4 @@
 {
-  "START": "/",
-  "EXPLANATION": "/explanation",
-  "PROVIDER_LOGIN": "/scraping/login",
   "SCRAPING_ADVANCED": "/scraping/advanced",
   "SCRAPING_PROFILE": "/scraping/profile",
   "SCRAPING_EXPERIMENT": "/scraping/experiment",
@@ -12,5 +9,8 @@
   "VISUALIZATION_PROFILE": "/visualization/profile/:sessionId",
   "VISUALIZATION_EXPERIMENT": "/visualization/experiment/:sessionId",
   "DONATION": "/donation",
-  "SETTINGS": "/settings"
+  "SETTINGS": "/settings",
+  "PROVIDER_LOGIN": "/scraping/login",
+  "EXPLANATION": "/explanation",
+  "START": "/start"
 }

@@ -2,7 +2,7 @@ import { faAngleRight } from '@fortawesome/pro-regular-svg-icons';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
-import routes from '../router/constants.json';
+import routes from '../constants/routes.json';
 
 export default function StartPage(): JSX.Element {
   const footerNavItems: FooterNavItem[] = [

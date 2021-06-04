@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import Button from '../components/Button';
-import routes from '../router/constants.json';
+import routes from '../constants/routes.json';
 
 export default function ScrapingExplanationPage(): JSX.Element {
   const history = useHistory();

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import Stepper from '../components/Stepper';
-import routes from '../router/constants.json';
+import routes from '../constants/routes.json';
 
 function Step1(): JSX.Element {
   return (

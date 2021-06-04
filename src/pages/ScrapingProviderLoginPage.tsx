@@ -4,8 +4,8 @@ import { RouteComponentProps } from 'react-router-dom';
 import Button from '../components/Button';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import Scraping from '../components/scraping/Scraping';
+import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
-import routes from '../router/constants.json';
 
 export default function ProviderLoginPage(): JSX.Element {
   const [isLoggedIn, setLoggedIn] = useState(false);

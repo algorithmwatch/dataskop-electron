@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import dayjs from 'dayjs';
 import React from 'react';
 import { useHistory } from 'react-router';
-import routes from '../../router/constants.json';
+import routes from '../../constants/routes.json';
 
 const useStyles = makeStyles({
   table: {

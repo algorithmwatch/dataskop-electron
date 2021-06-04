@@ -2,7 +2,7 @@ import React from 'react';
 import { RouteComponentProps, useParams } from 'react-router-dom';
 import FooterNav from '../components/FooterNav';
 import ResultsDetails from '../components/results/ResultDetails';
-import routes from '../router/constants.json';
+import routes from '../constants/routes.json';
 
 export default function VisualizationProfilePage(): JSX.Element {
   const { sessionId }: { sessionId: string } = useParams();

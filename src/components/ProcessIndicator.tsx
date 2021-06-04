@@ -19,14 +19,14 @@ function ProcessIndicator({
         {steps.map(({ label, description }) => (
           <div
             key={label}
-            className="h-full w-0.5 bg-black first:bg-transparent last:bg-transparent"
+            className="h-full w-0.5 bg-yellow-400 first:bg-transparent last:bg-transparent"
           />
         ))}
       </div>
 
       {/* bar */}
       <div
-        className="z-0 absolute left-0 inset-y-0 bg-yellow-700 h-full"
+        className="z-0 absolute left-0 inset-y-0 bg-yellow-700 h-full transition-all duration-500 ease-in-out"
         style={{ width: `${barWidth}%` }}
       />
     </div>

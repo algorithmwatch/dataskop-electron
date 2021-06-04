@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, useParams } from 'react-router-dom';
 import FooterNav from '../components/FooterNav';
 import SmallMultipleChart from '../components/visualizations/SmallMultipleChart';
+import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
 import { getSessionData } from '../db';
-import routes from '../router/constants.json';
 
 export default function VisualizationExperimentsPage(): JSX.Element {
   const { sessionId }: { sessionId: string } = useParams();

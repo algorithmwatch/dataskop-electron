@@ -2,8 +2,8 @@ import { IconDefinition } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import React from 'react';
+import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
-import routes from '../router/constants.json';
 import AdvancedMenu from './AdvancedMenu';
 
 export default function Sidebar({
@@ -53,9 +53,15 @@ export default function Sidebar({
               <AdvancedMenu
                 menuItems={[
                   { label: 'start', to: routes.START },
-                  { label: 'advanced scraping', to: routes.SCRAPING_ADVANCED },
+                  {
+                    label: 'advanced scraping',
+                    to: routes.SCRAPING_ADVANCED,
+                  },
                   { label: 'results', to: routes.RESULTS },
-                  { label: 'provider login', to: routes.PROVIDER_LOGIN },
+                  {
+                    label: 'provider login',
+                    to: routes.PROVIDER_LOGIN,
+                  },
                   {
                     label: 'experiment scraping',
                     to: routes.SCRAPING_EXPERIMENT,

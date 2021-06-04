@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import FooterNav from '../components/FooterNav';
 import Scraping from '../components/scraping/Scraping';
+import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
-import routes from '../router/constants.json';
 
 export default function ScrapingProfilePage(): JSX.Element {
   const [sessionId, setSessionId] = useState(null);
