@@ -1,7 +1,7 @@
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import zlib from 'zlib';
-import { GetHtmlFunction } from '../../providers/youtube';
+import { GetCurrentHtml, GetHtmlFunction } from '../../providers/youtube';
 
 // commands to communicate with the browser window in the main screen
 
@@ -13,10 +13,8 @@ const goToUrl = async (url: string, options = {}): Promise<string> => {
   return ipcRenderer.invoke('scraping-load-url', url, options);
 };
 
-const makeGetHtml = (
-  logHtml: boolean,
-): ((url: string) => Promise<GetHtmlFunction>) => {
-  const getHtml = async (url: string): Promise<GetHtmlFunction> => {
+const makeGetHtml = (logHtml: boolean): GetHtmlFunction => {
+  const getHtml = async (url: string): Promise<GetCurrentHtml> => {
     await goToUrl(url);
     if (logHtml) {
       return async () => {
