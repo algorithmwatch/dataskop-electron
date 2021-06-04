@@ -3,6 +3,7 @@
   "SCRAPING_PROFILE": "/scraping/profile",
   "SCRAPING_EXPERIMENT": "/scraping/experiment",
   "SCRAPING_EXPLANATION": "/scraping/explanation",
+  "SCRAPING_CONFIG_EDITOR": "/scraping/editor",
   "RESULTS": "/results",
   "RESULTS_DETAILS": "/results/:sessionId",
   "VISUALIZATION_ADVANCED": "/visualization/advanced/:sessionId",

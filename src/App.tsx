@@ -15,6 +15,7 @@ import ExplanationPage from './pages/ExplanationPage';
 import ResultsDetailsPage from './pages/ResultsDetailsPage';
 import ResultsPage from './pages/ResultsPage';
 import AdvancedScrapingPage from './pages/ScrapingAdvancedPage';
+import ScrapingConfigEditorPage from './pages/ScrapingConfigEditorPage';
 import ScrapingExperimentPage from './pages/ScrapingExperimentPage';
 import ScrapingExplanationPage from './pages/ScrapingExplanationPage';
 import ScrapingProfilePage from './pages/ScrapingProfilePage';
@@ -35,6 +36,10 @@ export default function App() {
             <Route
               path={routes.SCRAPING_ADVANCED}
               component={AdvancedScrapingPage}
+            />
+            <Route
+              path={routes.SCRAPING_CONFIG_EDITOR}
+              component={ScrapingConfigEditorPage}
             />
             <Route
               path={routes.SCRAPING_PROFILE}

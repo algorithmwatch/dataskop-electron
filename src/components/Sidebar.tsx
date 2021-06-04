@@ -53,9 +53,10 @@ export default function Sidebar({
               <AdvancedMenu
                 menuItems={[
                   { label: 'start', to: routes.START },
+                  { label: 'advanced scraping', to: routes.SCRAPING_ADVANCED },
                   {
-                    label: 'advanced scraping',
-                    to: routes.SCRAPING_ADVANCED,
+                    label: 'scraping config editor',
+                    to: routes.SCRAPING_CONFIG_EDITOR,
                   },
                   { label: 'results', to: routes.RESULTS },
                   {
