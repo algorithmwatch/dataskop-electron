@@ -21,7 +21,11 @@ function ProcessIndicator({
         <div className="z-10 absolute inset-0 h-2 w-full flex justify-between">
           {steps.map(({ label, description }) => (
             <div key={label} className="h-full w-0.5 bg-yellow-1500">
-              <Tippy content={<span>{label}</span>} theme="process-info">
+              <Tippy
+                content={<span>{label}</span>}
+                theme="process-info"
+                placement="top-start"
+              >
                 <div className="h-full -mx-6 " />
               </Tippy>
             </div>

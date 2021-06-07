@@ -2,7 +2,7 @@ import {
   faBars,
   faChartPieAlt,
   faInfoCircle,
-  faPaperPlane,
+  faPaperPlane
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { ReactNode, useEffect, useState } from 'react';

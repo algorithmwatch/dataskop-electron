@@ -23,9 +23,11 @@ export default function Sidebar({
   } = useConfig();
 
   const classes = classNames({
-    'w-80 absolute inset-y-0 -right-80 bg-yellow-300 z-50 transition duration-200 ease-in-out transform': true,
+    'w-80 fixed inset-y-0 bg-yellow-300 z-50': true,
+    'transition-all duration-200 ease-in-out': true,
     'flex flex-col justify-between': true,
-    '-translate-x-80': isOpen,
+    '-right-80': !isOpen,
+    'right-0': isOpen,
   });
 
   return (
@@ -51,6 +53,7 @@ export default function Sidebar({
           {showAdvancedMenu && (
             <div className="absolute right-8 bottom-0">
               <AdvancedMenu
+                onItemClicked={() => onIsOpenChange(false)}
                 menuItems={[
                   { label: 'start', to: routes.START },
                   { label: 'advanced scraping', to: routes.SCRAPING_ADVANCED },
@@ -80,14 +83,14 @@ export default function Sidebar({
           </div>
         </div>
       </div>
-      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
-      <div
-        tabIndex={-1}
-        className={`absolute inset-0 bg-yellow-1400 bg-opacity-50 z-40 ${
-          !isOpen && 'hidden'
-        }`}
-        onClick={() => onIsOpenChange(false)}
-      />
+      {isOpen && (
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+        <div
+          tabIndex={-1}
+          className="absolute inset-0 bg-yellow-1400 bg-opacity-50 z-40"
+          onClick={() => onIsOpenChange(false)}
+        />
+      )}
     </div>
   );
 }

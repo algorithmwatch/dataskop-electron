@@ -2,7 +2,7 @@ import { Button, Menu, MenuItem } from '@material-ui/core';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-export default function AdvancedMenu({ menuItems }) {
+export default function AdvancedMenu({ menuItems, onItemClicked }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const history = useHistory();
@@ -37,8 +37,15 @@ export default function AdvancedMenu({ menuItems }) {
           <MenuItem
             key={label}
             onClick={() => {
-              if (history.location.pathname !== to) history.push(to);
-              else setAnchorEl(null);
+              if (history.location.pathname !== to) {
+                history.push(to);
+              }
+
+              if (typeof onItemClicked === 'function') {
+                onItemClicked();
+              }
+
+              setAnchorEl(null);
             }}
           >
             {label}
