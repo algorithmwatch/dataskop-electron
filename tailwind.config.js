@@ -83,7 +83,11 @@ module.exports = {
         '1500': '#1f1a00',
       },
     },
-    extend: {},
+    extend: {
+      borderWidth: {
+        24: '24px',
+      },
+    },
   },
   variants: {
     extend: {},

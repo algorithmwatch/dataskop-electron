@@ -1,3 +1,4 @@
+import Tippy from '@tippyjs/react';
 import React from 'react';
 
 function ProcessIndicator({
@@ -11,24 +12,28 @@ function ProcessIndicator({
   }[];
 }): JSX.Element {
   const barWidth = (100 * currentStep) / (steps.length - 1);
+  const barWidthPlusPadding = `calc(${barWidth}% + 1.5rem)`;
 
   return (
-    <div className="relative h-3 w-full bg-yellow-100">
-      {/* vertical lines */}
-      <div className="z-10 absolute inset-0 h-3 w-full flex justify-between">
-        {steps.map(({ label, description }) => (
-          <div
-            key={label}
-            className="h-full w-0.5 bg-yellow-400 first:bg-transparent last:bg-transparent"
-          />
-        ))}
-      </div>
+    <div className="px-6">
+      <div className="relative h-2 w-full">
+        {/* vertical lines */}
+        <div className="z-10 absolute inset-0 h-2 w-full flex justify-between">
+          {steps.map(({ label, description }) => (
+            <div key={label} className="h-full w-0.5 bg-yellow-1500">
+              <Tippy content={<span>{label}</span>} theme="process-info">
+                <div className="h-full -mx-6 " />
+              </Tippy>
+            </div>
+          ))}
+        </div>
 
-      {/* bar */}
-      <div
-        className="z-0 absolute left-0 inset-y-0 bg-yellow-700 h-full transition-all duration-500 ease-in-out"
-        style={{ width: `${barWidth}%` }}
-      />
+        {/* bar */}
+        <div
+          className="z-0 absolute -left-6 inset-y-0 bg-yellow-700 h-full transition-all duration-500 ease-in-out"
+          style={{ width: barWidthPlusPadding }}
+        />
+      </div>
     </div>
   );
 }

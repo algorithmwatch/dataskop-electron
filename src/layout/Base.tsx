@@ -49,7 +49,10 @@ const processIndicatorSteps = [
 ];
 
 const routeSetting: {
-  [key: string]: { stepIndex: number; isDarkMode: boolean };
+  [key: string]: {
+    stepIndex: number;
+    isDarkMode: boolean;
+  };
 } = {
   [routes.START]: {
     stepIndex: 0,
