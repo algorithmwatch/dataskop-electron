@@ -11,6 +11,7 @@ import Button from '../components/Button';
 import ProcessIndicator from '../components/ProcessIndicator';
 import Sidebar from '../components/Sidebar';
 import routes from '../constants/routes.json';
+import { useConfig } from '../contexts/config';
 import logo from '../static/logos/dslogo.svg';
 
 const sidebarMenu = [
@@ -76,6 +77,9 @@ export default function Base({
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const { pathname } = useLocation();
+  const {
+    state: { scrapingProgress },
+  } = useConfig();
 
   // read config for current route
   useEffect(() => {
@@ -104,10 +108,27 @@ export default function Base({
         <div>
           <img src={logo} style={{ width: '8rem' }} alt="Dataskop Logo" />
         </div>
-        <div className="ml-auto mr-6">
-          <Button key="my-data" size="small" theme="blue" onClick={() => false}>
-            Meine Daten
-          </Button>
+        <div className="flex items-center ml-auto mr-6">
+          {/* Scraping progress bar */}
+          {scrapingProgress.isActive && (
+            <div className="mr-4">
+              <progress value={scrapingProgress.value} max="1" className="">
+                {scrapingProgress.value}
+              </progress>
+            </div>
+          )}
+
+          {/* MyData vault */}
+          <div>
+            <Button
+              key="my-data"
+              size="small"
+              theme="blue"
+              onClick={() => false}
+            >
+              Meine Daten
+            </Button>
+          </div>
         </div>
         <div>
           <button

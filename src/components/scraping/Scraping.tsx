@@ -3,7 +3,7 @@
 import { ipcRenderer } from 'electron';
 import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { useConfig } from '../../contexts/config';
+import { ScrapingProgressBar, useConfig } from '../../contexts/config';
 import { addNewSession, addScrapingResult } from '../../db';
 import { postDummyBackend } from '../../utils/networking';
 import { splitByWhitespace } from '../../utils/strings';
@@ -44,9 +44,6 @@ export default function Scraping({
   // create a generation to be able to hold/resumee a scraping proccess
   const [scrapingGen, setScrapingGen] = useState<Generator | null>(null);
 
-  // store the progres from 0 to 1. See below how a change in `progresFrac` triggers a next scraping step w/ `useEffect`
-  const [progresFrac, setProgresFrac] = useState(0);
-
   // create a uuid every time you hit start scraping
   const [sessionId, setSessionId] = useState<string | null>(null);
 
@@ -59,8 +56,12 @@ export default function Scraping({
   const [isMuted, setIsMuted] = useState(true);
 
   const {
-    state: { version, isDebug, logHtml },
+    state: { version, isDebug, logHtml, scrapingProgress },
+    dispatch,
   } = useConfig();
+
+  const setScrapingProgressBar = (options: ScrapingProgressBar) =>
+    dispatch({ type: 'set-scraping-progress-bar', scrapingProgress: options });
 
   const checkForLogIn = async () => {
     const cookies = await getCookies();
@@ -163,7 +164,7 @@ export default function Scraping({
   const resetScraping = () => {
     setScrapingGen(null);
     setSessionId(null);
-    setProgresFrac(0);
+    setScrapingProgressBar({ isActive: false, label: '', value: 0 });
 
     setIsScrapingPaused(false);
     setIsScrapingStarted(false);
@@ -185,7 +186,7 @@ export default function Scraping({
 
         const [newFrac, result] = value;
 
-        setProgresFrac(newFrac);
+        setScrapingProgressBar({ isActive: true, label: '', value: newFrac });
         addScrapingResult(sessionId, result);
 
         if (!result.success) {
@@ -212,7 +213,7 @@ export default function Scraping({
     };
     runScraperOnce();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrapingGen, progresFrac, sessionId, isScrapingPaused]);
+  }, [scrapingGen, scrapingProgress.value, sessionId, isScrapingPaused]);
 
   // initialize & cleanup
 
@@ -279,8 +280,8 @@ export default function Scraping({
           </Button>
         </div>
         {isScrapingStarted && (
-          <progress className="progress" value={progresFrac} max="1">
-            {progresFrac}
+          <progress className="progress" value={scrapingProgress.value} max="1">
+            {scrapingProgress.value}
           </progress>
         )}
       </div>

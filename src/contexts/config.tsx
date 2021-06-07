@@ -2,12 +2,21 @@ import { ipcRenderer } from 'electron';
 import React, { useEffect } from 'react';
 import { defaultConfig } from '../providers/youtube';
 
+export type ScrapingProgressBar = {
+  isActive: boolean;
+  value: number; // progres from 0 to 1
+  label: string;
+};
+
 type Action =
   | { type: 'set-version'; version: string }
   | { type: 'set-debug'; isDebug: boolean }
   | { type: 'set-log-html'; logHtml: boolean }
-  | { type: 'set-scraping-config'; scrapingConfig: any };
-// | { type: 'set-current-step-index'; stepIndex: number };
+  | { type: 'set-scraping-config'; scrapingConfig: any }
+  | {
+      type: 'set-scraping-progress-bar';
+      scrapingProgress: ScrapingProgressBar;
+    };
 type Dispatch = (action: Action) => void;
 type State = {
   version: string;
@@ -15,7 +24,7 @@ type State = {
   showAdvancedMenu: boolean;
   logHtml: boolean;
   scrapingConfig: any;
-  // stepIndex: number;
+  scrapingProgress: ScrapingProgressBar;
 };
 type ConfigProviderProps = { children: React.ReactNode };
 // started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
@@ -42,9 +51,9 @@ function configReducer(state: State, action: Action) {
       return { ...state, scrapingConfig: action.scrapingConfig };
     }
 
-    // case 'set-current-step-index': {
-    //   return { ...state, stepIndex: action.stepIndex };
-    // }
+    case 'set-scraping-progress-bar': {
+      return { ...state, scrapingProgress: action.scrapingProgress };
+    }
 
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
@@ -63,7 +72,11 @@ function ConfigProvider({ children }: ConfigProviderProps) {
     isDebug,
     showAdvancedMenu: true,
     logHtml: false,
-    // stepIndex: 0,
+    scrapingProgress: {
+      isActive: false,
+      value: 0,
+      label: '',
+    },
   });
 
   // NOTE: you *might* need to memoize this value
