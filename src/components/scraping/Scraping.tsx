@@ -203,6 +203,7 @@ export default function Scraping({
 
         if (done) {
           setIsScrapingFinished(true);
+          setScrapingProgressBar({ isActive: false, label: '', value: 0 });
           if (onDone !== null) onDone(sessionId);
         }
       } catch (err) {
