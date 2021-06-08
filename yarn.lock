@@ -1276,10 +1276,10 @@
   resolved "https://registry.yarnpkg.com/@glidejs/glide/-/glide-3.4.1.tgz#8ad21f3169076e32bbfd75ed0753807662c25e90"
   integrity sha512-C34AEcK1HjSyxilRToUL54I6KAoodojUbeRlXoruobZuG0eGm8xfDL+3kgkWj7AJK4EZtunSOYfoqMp70eDtwg==
 
-"@headlessui/react@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.0.0.tgz#661b50ebfd25041abb45d8eedd85e7559056bcaf"
-  integrity sha512-mjqRJrgkbcHQBfAHnqH0yRxO/y/22jYrdltpE7WkurafREKZ+pj5bPBwYHMt935Sdz/n16yRcVmsSCqDFHee9A==
+"@headlessui/react@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.2.0.tgz#e48652bfce82ddf73d7f331faeb9db6526ee6874"
+  integrity sha512-19DkLz8gDgbi+WvkoTzi9vs0NK9TJf94vbYhMzB4LYJo03Kili0gmvXT9CiKZoxXZ7YAvy/b1U1oQKEnjWrqxw==
 
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
