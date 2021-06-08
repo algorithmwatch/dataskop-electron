@@ -4,11 +4,10 @@ import { ipcRenderer } from 'electron';
 import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { ScrapingProgressBar, useConfig } from '../../contexts/config';
+import { useScraping } from '../../contexts/scraping';
 import { addNewSession, addScrapingResult } from '../../db';
 import { postDummyBackend } from '../../utils/networking';
-import { splitByWhitespace } from '../../utils/strings';
 import { delay } from '../../utils/time';
-import Button from '../Button';
 import {
   extractHtml,
   getCookies,
@@ -16,27 +15,23 @@ import {
   makeGetHtml,
   scrollDown,
   setNavigationCallback,
-} from './controls';
-import ScrapingBrowser from './ScrapingBrowser';
+} from './ipc';
+import ScrapingBrowser from './ScrapingWindow';
 
 // the actual scraping window
 
 // I tried hard to make the interactivity changeable but to no avail.
 // You have to set from the component's initialization whether a scraping view is interactive.
 
-export default function Scraping({
-  scrapingConfig,
+export default function ScrapingManager({
   onLogin = null,
   onDone = null,
-  hideControls = false,
   disableInput = false,
   fixedWindow = false,
   autostart = false,
 }: {
-  scrapingConfig: any;
   onLogin?: null | (() => void);
   onDone?: null | ((arg0: string) => void);
-  hideControls?: boolean;
   disableInput?: boolean;
   fixedWindow?: boolean;
   autostart?: boolean;
@@ -44,21 +39,22 @@ export default function Scraping({
   // create a generation to be able to hold/resumee a scraping proccess
   const [scrapingGen, setScrapingGen] = useState<Generator | null>(null);
 
-  // create a uuid every time you hit start scraping
-  const [sessionId, setSessionId] = useState<string | null>(null);
-
-  const [isUserLoggedIn, setUserLoggedIn] = useState(false);
-  const [isScrapingStarted, setIsScrapingStarted] = useState(false);
-  const [isScrapingPaused, setIsScrapingPaused] = useState(false);
-  const [isScrapingFinished, setIsScrapingFinished] = useState(false);
-  const [scrapingError, setScrapingError] = useState<Error | null>(null);
-
-  const [isMuted, setIsMuted] = useState(true);
+  const {
+    state: { version, isDebug },
+  } = useConfig();
 
   const {
-    state: { version, isDebug, logHtml, scrapingProgress },
+    state: {
+      isScrapingPaused,
+      isMuted,
+      logHtml,
+      scrapingProgress,
+      sessionId,
+      isScrapingStarted,
+      scrapingConfig,
+    },
     dispatch,
-  } = useConfig();
+  } = useScraping();
 
   const setScrapingProgressBar = (options: ScrapingProgressBar) =>
     dispatch({ type: 'set-scraping-progress-bar', scrapingProgress: options });
@@ -69,17 +65,12 @@ export default function Scraping({
     const isLoggedIn = cookies.some(
       (x: any) => x.name === scrapingConfig.loginCookie,
     );
-    setUserLoggedIn(isLoggedIn);
+    dispatch({ type: 'set-user-logged-in', isUserLoggedIn: isLoggedIn });
     return isLoggedIn;
   };
 
   const goToStart = () => {
     return goToUrl(scrapingConfig.loginUrl);
-  };
-
-  const resetBrowser = () => {
-    goToUrl(scrapingConfig.loginUrl, { clear: true });
-    setUserLoggedIn(false);
   };
 
   const getHtmlLazy = async (
@@ -95,9 +86,11 @@ export default function Scraping({
     let stopScrolling = false;
     // scroll some large value down
     // to simulate proper scrolling, wait between each time scrolling
-    for (const x of [...Array(scrollBottom)]) {
+    // eslint-disable-next-line no-empty-pattern
+    for (const {} of [...Array(scrollBottom)]) {
       if (stopScrolling) break;
-      for (const x of [...Array(5)]) {
+      // eslint-disable-next-line no-empty-pattern
+      for (const {} of [...Array(5)]) {
         await scrollDown();
         await delay(10);
       }
@@ -120,7 +113,7 @@ export default function Scraping({
 
   const cbSlug = 'scraping-navigation-happened';
 
-  const checkLoginCb = async (event, arg) => {
+  const checkLoginCb = async () => {
     const loggedIn = await checkForLogIn();
     if (loggedIn) {
       // successfully logged in
@@ -131,48 +124,53 @@ export default function Scraping({
 
   // controls for the scraping
 
-  const startScraping = async () => {
-    if (isDebug) {
-      console.log(scrapingConfig.procedureConfig);
-    }
+  useEffect(() => {
+    const startScraping = async () => {
+      if (isDebug) {
+        console.log(scrapingConfig);
+      }
 
-    if (typeof scrapingConfig.procedureConfig.seedVideosFixed === 'string')
-      scrapingConfig.procedureConfig.seedVideosFixed = splitByWhitespace(
-        scrapingConfig.procedureConfig.seedVideosFixed,
+      const gens = scrapingConfig.createProcedureGenerators(
+        scrapingConfig.steps,
       );
 
-    setIsScrapingStarted(true);
+      // eslint-disable-next-line consistent-return
+      async function* gen() {
+        let i = 0;
 
-    const gen = scrapingConfig.createProcedure(scrapingConfig.procedureConfig)(
-      makeGetHtml(logHtml),
-      getHtmlLazy,
-    );
-    setScrapingGen(gen);
-    const sId = uuidv4();
-    setSessionId(sId);
-    addNewSession(sId, scrapingConfig.slug);
-  };
+        for (const g of gens) {
+          const xx = g(makeGetHtml(logHtml), getHtmlLazy);
+          console.log(xx);
 
-  const pauseScraping = () => {
-    setIsScrapingPaused(true);
-  };
+          while (true) {
+            const { value, done } = await xx.next();
 
-  const resumeScraping = () => {
-    setIsScrapingPaused(false);
-  };
+            const fracFixed = value[0] * (1 / gens.length) + i / gens.length;
 
-  const resetScraping = () => {
-    setScrapingGen(null);
-    setSessionId(null);
-    setScrapingProgressBar({ isActive: false, label: '', value: 0 });
+            const valueFixed = [fracFixed].concat(value.slice(1));
 
-    setIsScrapingPaused(false);
-    setIsScrapingStarted(false);
-    setIsScrapingFinished(false);
-    setScrapingError(null);
+            console.log(value, valueFixed, done);
+            if (done && i + 1 === gens.length) return valueFixed;
+            yield valueFixed;
 
-    goToStart();
-  };
+            if (done) break;
+          }
+          i += 1;
+          // return yield* g(makeGetHtml(logHtml), getHtmlLazy);
+        }
+      }
+
+      setScrapingGen(gen);
+      // create a uuid every time you hit start scraping
+      const sId = uuidv4();
+      dispatch({ type: 'set-session-id', sessionId: sId });
+
+      addNewSession(sId, scrapingConfig.slug);
+    };
+
+    if (isScrapingStarted) startScraping();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isScrapingStarted]);
 
   // gets triggered when e.g. the progress bar is updated (via `frac`)
   useEffect(() => {
@@ -202,14 +200,13 @@ export default function Scraping({
         if (!postedSuccess) console.error('error posting data to backend');
 
         if (done) {
-          setIsScrapingFinished(true);
+          dispatch({ type: 'set-scraping-finished', isScrapingFinished: true });
           setScrapingProgressBar({ isActive: false, label: '', value: 0 });
           if (onDone !== null) onDone(sessionId);
         }
       } catch (err) {
-        setScrapingError(err);
+        dispatch({ type: 'set-scraping-error', scrapingError: err });
         console.error(err);
-        setIsScrapingPaused(true);
       }
     };
     runScraperOnce();
@@ -234,7 +231,9 @@ export default function Scraping({
       } else {
         if (onLogin !== null) onLogin();
 
-        if (autostart) startScraping();
+        if (autostart) {
+          dispatch({ type: 'set-scraping-started', isScrapingStarted: true });
+        }
       }
     };
 
@@ -248,44 +247,5 @@ export default function Scraping({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <>
-      <ScrapingBrowser isMuted={isMuted} fixedWindow={fixedWindow} />
-      <div>
-        <p style={{ color: 'red' }}>
-          {scrapingError !== null &&
-            `${scrapingError.name}: ${scrapingError.message}`}
-        </p>
-        <br />
-        <div className={hideControls ? 'invisible' : ''}>
-          {isUserLoggedIn && (
-            <>
-              <Button onClick={resetBrowser}>reset browser</Button>
-              <Button onClick={resetScraping}>reset scraping</Button>
-              <br />
-            </>
-          )}
-          {!isUserLoggedIn && <p>Please login before continuing.</p>}
-          {isUserLoggedIn && !isScrapingStarted && (
-            <Button onClick={startScraping}>start scraping</Button>
-          )}
-          {!isScrapingFinished && isScrapingStarted && !isScrapingPaused && (
-            <Button onClick={pauseScraping}>pause scraping</Button>
-          )}
-          {!isScrapingFinished && isScrapingStarted && isScrapingPaused && (
-            <Button onClick={resumeScraping}>resume scraping</Button>
-          )}
-
-          <Button onClick={() => setIsMuted(!isMuted)}>
-            is {!isMuted && 'not'} muted
-          </Button>
-        </div>
-        {isScrapingStarted && (
-          <progress className="progress" value={scrapingProgress.value} max="1">
-            {scrapingProgress.value}
-          </progress>
-        )}
-      </div>
-    </>
-  );
+  return <ScrapingBrowser isMuted={isMuted} fixedWindow={fixedWindow} />;
 }

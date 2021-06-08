@@ -2,7 +2,7 @@ import {
   faBars,
   faChartPieAlt,
   faInfoCircle,
-  faPaperPlane
+  faPaperPlane,
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { ReactNode, useEffect, useState } from 'react';
@@ -11,7 +11,7 @@ import Button from '../components/Button';
 import ProcessIndicator from '../components/ProcessIndicator';
 import Sidebar from '../components/Sidebar';
 import routes from '../constants/routes.json';
-import { useConfig } from '../contexts/config';
+import { useScraping } from '../contexts/scraping';
 import logo from '../static/logos/dslogo.svg';
 
 const sidebarMenu = [
@@ -79,7 +79,7 @@ export default function Base({
   const { pathname } = useLocation();
   const {
     state: { scrapingProgress },
-  } = useConfig();
+  } = useScraping();
 
   // read config for current route
   useEffect(() => {

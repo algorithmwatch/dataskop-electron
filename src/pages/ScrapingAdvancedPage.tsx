@@ -13,10 +13,10 @@ import {
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../components/Button';
-import { makeGetHtml } from '../components/scraping/controls';
-import Scraping from '../components/scraping/Scraping';
+import { makeGetHtml } from '../components/scraping/ipc';
+import ScrapingControls from '../components/scraping/ScrapingControls';
 import routes from '../constants/routes.json';
-import { useConfig } from '../contexts/config';
+import { useScraping } from '../contexts/scraping';
 import { allConfigs } from '../providers/youtube';
 import {
   activateWatchHistory,
@@ -71,11 +71,9 @@ const ScrapingConfigSelect = ({ scrapingConfig, setScrapingConfig }) => {
 
 export default function AdvancedScrapingPage(): JSX.Element {
   const {
-    state: { scrapingConfig },
+    state: { scrapingConfig, sessionId },
     dispatch,
-  } = useConfig();
-
-  const [sessionId, setSessionId] = useState(null);
+  } = useScraping();
 
   const setScrapingConfig = (scrapingConfig) =>
     dispatch({ type: 'set-scraping-config', scrapingConfig });
@@ -87,10 +85,7 @@ export default function AdvancedScrapingPage(): JSX.Element {
           scrapingConfig={scrapingConfig}
           setScrapingConfig={setScrapingConfig}
         />
-        <Scraping
-          scrapingConfig={scrapingConfig}
-          onDone={(x) => setSessionId(x)}
-        />
+        <ScrapingControls />
         {sessionId !== null && (
           <Link to={routes.RESULTS_DETAILS.replace(':sessionId', sessionId)}>
             go to result

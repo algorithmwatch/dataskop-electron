@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import Button from '../components/Button';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
-import Scraping from '../components/scraping/Scraping';
+import Scraping from '../components/scraping/ScrapingManager';
 import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
 

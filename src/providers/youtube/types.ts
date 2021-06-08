@@ -18,7 +18,8 @@ type SeedCreator = {
 
 type ProfileScraper = (getHtml: GetHtmlFunction) => Promise<ScrapingResult>;
 
-type ProcedureConfig = {
+type VideoProcedureConfig = {
+  type: 'videos';
   // id of videos that are further processed
   seedVideosFixed: Array<string>;
   // function that provides seed videos, including the approx. amount of videos (for the progress bar)
@@ -27,8 +28,14 @@ type ProcedureConfig = {
   followVideos: number;
   // how often to scroll down for lazy loading
   scrollingBottomForComments: number;
+};
+
+type ProfileProcedureConfig = {
+  type: 'profile';
   profileScrapers: Array<ProfileScraper>;
 };
+
+type ProcedureConfig = VideoProcedureConfig | ProfileProcedureConfig;
 
 type ScrapingConfig = {
   // a human readable description of the config
@@ -38,10 +45,10 @@ type ScrapingConfig = {
   startUrl: string;
   loginUrl: string;
   loginCookie: string;
-  procedureConfig: ProcedureConfig;
-  createProcedure: (
-    arg0: ProcedureConfig,
-  ) => (x: GetHtmlFunction, y: GetHtmlLazyFunction) => any;
+  steps: ProcedureConfig[];
+  createProcedureGenerators: (
+    arg0: ProcedureConfig[],
+  ) => ((x: GetHtmlFunction, y: GetHtmlLazyFunction) => any)[];
 };
 
 export {
@@ -51,4 +58,6 @@ export {
   SeedCreator,
   ProcedureConfig,
   ScrapingConfig,
+  VideoProcedureConfig,
+  ProfileProcedureConfig,
 };
