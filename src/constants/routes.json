@@ -8,7 +8,7 @@
   "RESULTS_DETAILS": "/results/:sessionId",
   "VISUALIZATION_ADVANCED": "/visualization/advanced/:sessionId",
   "VISUALIZATION_PROFILE": "/visualization/profile/:sessionId",
-  "VISUALIZATION_EXPERIMENT": "/visualization/experiment/:sessionId",
+  "VISUALIZATION_EXPERIMENT": "/visualization/experiment",
   "DONATION": "/donation",
   "SETTINGS": "/settings",
   "PROVIDER_LOGIN": "/scraping/login",

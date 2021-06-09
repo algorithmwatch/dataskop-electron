@@ -1,33 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import { RouteComponentProps, useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { RouteComponentProps, useLocation } from 'react-router-dom';
+import Explainer from '../components/Explainer';
 import FooterNav from '../components/FooterNav';
-import SmallMultipleChart from '../components/visualizations/SmallMultipleChart';
+import NewsTop5 from '../components/visualizations/NewsTop5';
 import routes from '../constants/routes.json';
-import { useConfig } from '../contexts/config';
-import { getSessionData } from '../db';
 
 export default function VisualizationExperimentsPage(): JSX.Element {
-  const { sessionId }: { sessionId: string } = useParams();
+  const [explainerIsOpen, setExplainerIsOpen] = useState(true);
+  const { state } = useLocation();
+  const { sessionId, type }: { sessionId: string; type: string } = state;
 
-  const [data, setData] = useState<any>([]);
-  const {
-    state: { isDebug },
-  } = useConfig();
+  if (!sessionId || !type) return null;
 
-  useEffect(() => {
-    const loadData = async () => {
-      setData(await getSessionData(sessionId));
-    };
-    loadData();
-  }, [sessionId]);
+  // const [data, setData] = useState<any>([]);
+  // const {
+  //   state: { isDebug },
+  // } = useConfig();
 
-  if (isDebug) {
-    console.log(data);
-  }
+  // useEffect(() => {
+  //   const loadData = async () => {
+  //     setData(await getSessionData(sessionId));
+  //   };
+  //   loadData();
+  // }, [sessionId]);
+
+  // if (isDebug) {
+  //   console.log(data);
+  // }
 
   const footerNavItems = [
     {
       label: 'weiter zu Donation',
+      classNames: 'ml-auto',
       clickHandler(history: RouteComponentProps['history']) {
         history.push(routes.DONATION);
       },
@@ -36,7 +40,13 @@ export default function VisualizationExperimentsPage(): JSX.Element {
 
   return (
     <>
-      <SmallMultipleChart data={data} />
+      <Explainer
+        isOpen={explainerIsOpen}
+        onIsOpenChange={(val: boolean) => setExplainerIsOpen(val)}
+      >
+        Hallo haha
+      </Explainer>
+      {type === 'newstop5' && <NewsTop5 />}
       <FooterNav items={footerNavItems} />
     </>
   );

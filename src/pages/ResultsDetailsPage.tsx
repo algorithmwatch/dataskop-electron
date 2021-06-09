@@ -22,6 +22,16 @@ export default function ResultsDetailsPage() {
         >
           Show visualizations
         </Button>
+        <Button
+          onClick={() =>
+            history.push({
+              pathname: routes.VISUALIZATION_EXPERIMENT,
+              state: { sessionId, type: 'newstop5' },
+            })
+          }
+        >
+          News Top-5
+        </Button>
       </div>
       <ResultsDetails sessionId={sessionId} />
     </>

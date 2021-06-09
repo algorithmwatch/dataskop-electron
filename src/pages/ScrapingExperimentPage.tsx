@@ -26,12 +26,10 @@ export default function ScrapingExperimentPage(): JSX.Element {
           {
             label: 'weiter zu Visualisierung',
             clickHandler(history: RouteComponentProps['history']) {
-              history.push(
-                routes.VISUALIZATION_EXPERIMENT.replace(
-                  ':sessionId',
-                  sessionId,
-                ),
-              );
+              history.push({
+                pathname: routes.VISUALIZATION_EXPERIMENT,
+                state: { sessionId, type: 'newstop5' },
+              });
             },
           },
         ]

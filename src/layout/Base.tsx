@@ -148,7 +148,9 @@ export default function Base({
       />
 
       {/*  h-full hides the debug button for long pages */}
-      <main className="flex flex-grow flex-col pt-4">{children}</main>
+      <main className="flex flex-grow flex-col overflow-y-auto overflow-x-hidden pt-4">
+        {children}
+      </main>
 
       <footer>
         <ProcessIndicator
