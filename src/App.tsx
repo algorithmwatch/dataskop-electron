@@ -6,7 +6,7 @@ import {
   Switch,
 } from 'react-router-dom';
 import './App.global.css';
-import ScrapingManager from './components/scraping/ScrapingManager';
+import ScrapingAttached from './components/scraping/ScrapingAttached';
 import UpdateNotification from './components/UpdateNotification';
 import routes from './constants/routes.json';
 import { ConfigProvider } from './contexts/config';
@@ -89,7 +89,7 @@ export default function App() {
           </BaseLayout>
         </Router>
         {/* has to come here _after_ the pages in the router */}
-        <ScrapingManager />
+        <ScrapingAttached />
       </ScrapingProvider>
     </ConfigProvider>
   );

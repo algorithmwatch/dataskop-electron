@@ -10,7 +10,7 @@ import {
   MenuItem,
   Select,
 } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../components/Button';
 import { makeGetHtml } from '../components/scraping/ipc';
@@ -77,6 +77,12 @@ export default function AdvancedScrapingPage(): JSX.Element {
 
   const setScrapingConfig = (scrapingConfig) =>
     dispatch({ type: 'set-scraping-config', scrapingConfig });
+
+  useEffect(() => {
+    dispatch({ type: 'set-is-attached', isAttached: true });
+    return () => dispatch({ type: 'set-is-attached', isAttached: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>

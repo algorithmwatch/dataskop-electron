@@ -9,6 +9,7 @@ export type ScrapingProgressBar = {
 };
 
 type Action =
+  | { type: 'set-is-attached'; isAttached: boolean }
   | { type: 'set-log-html'; logHtml: boolean }
   | { type: 'set-scraping-config'; scrapingConfig: ScrapingConfig }
   | {
@@ -27,6 +28,7 @@ type Action =
 
 type Dispatch = (action: Action) => void;
 type State = {
+  isAttached: boolean;
   logHtml: boolean;
   scrapingConfig: ScrapingConfig;
   scrapingProgress: ScrapingProgressBar;
@@ -49,6 +51,7 @@ const ScrapingStateContext = React.createContext<
 >(undefined);
 
 const initialState = {
+  isAttached: false,
   logHtml: false,
   scrapingConfig: defaultConfig,
   scrapingProgress: {
@@ -68,6 +71,10 @@ const initialState = {
 
 function scrapingReducer(state: State, action: Action) {
   switch (action.type) {
+    case 'set-is-attached': {
+      return { ...state, isAttached: action.isAttached };
+    }
+
     case 'set-log-html': {
       return { ...state, logHtml: action.logHtml };
     }
