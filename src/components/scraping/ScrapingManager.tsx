@@ -1,11 +1,12 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
 import { ipcRenderer } from 'electron';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { ScrapingProgressBar, useConfig } from '../../contexts/config';
 import { useScraping } from '../../contexts/scraping';
 import { addNewSession, addScrapingResult } from '../../db';
+import { createSingleGenerator } from '../../providers/youtube/procedures';
 import { postDummyBackend } from '../../utils/networking';
 import { delay } from '../../utils/time';
 import {
@@ -36,9 +37,6 @@ export default function ScrapingManager({
   fixedWindow?: boolean;
   autostart?: boolean;
 }): JSX.Element {
-  // create a generation to be able to hold/resumee a scraping proccess
-  const [scrapingGen, setScrapingGen] = useState<Generator | null>(null);
-
   const {
     state: { version, isDebug },
   } = useConfig();
@@ -52,6 +50,7 @@ export default function ScrapingManager({
       sessionId,
       isScrapingStarted,
       scrapingConfig,
+      stepGenerator,
     },
     dispatch,
   } = useScraping();
@@ -130,37 +129,14 @@ export default function ScrapingManager({
         console.log(scrapingConfig);
       }
 
-      const gens = scrapingConfig.createProcedureGenerators(
+      const gen = createSingleGenerator(
         scrapingConfig.steps,
+        makeGetHtml(logHtml),
+        getHtmlLazy,
       );
 
-      // eslint-disable-next-line consistent-return
-      async function* gen() {
-        let i = 0;
+      dispatch({ type: 'set-step-generator', stepGenerator: gen });
 
-        for (const g of gens) {
-          const xx = g(makeGetHtml(logHtml), getHtmlLazy);
-          console.log(xx);
-
-          while (true) {
-            const { value, done } = await xx.next();
-
-            const fracFixed = value[0] * (1 / gens.length) + i / gens.length;
-
-            const valueFixed = [fracFixed].concat(value.slice(1));
-
-            console.log(value, valueFixed, done);
-            if (done && i + 1 === gens.length) return valueFixed;
-            yield valueFixed;
-
-            if (done) break;
-          }
-          i += 1;
-          // return yield* g(makeGetHtml(logHtml), getHtmlLazy);
-        }
-      }
-
-      setScrapingGen(gen);
       // create a uuid every time you hit start scraping
       const sId = uuidv4();
       dispatch({ type: 'set-session-id', sessionId: sId });
@@ -175,11 +151,11 @@ export default function ScrapingManager({
   // gets triggered when e.g. the progress bar is updated (via `frac`)
   useEffect(() => {
     const runScraperOnce = async () => {
-      if (scrapingGen === null) return;
+      if (stepGenerator === null) return;
       if (isScrapingPaused) return;
 
       try {
-        const { value, done } = await scrapingGen.next();
+        const { value, done } = await stepGenerator.next();
         if (value == null || sessionId == null) return;
 
         const [newFrac, result] = value;
@@ -211,7 +187,7 @@ export default function ScrapingManager({
     };
     runScraperOnce();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrapingGen, scrapingProgress.value, sessionId, isScrapingPaused]);
+  }, [stepGenerator, scrapingProgress.value, sessionId, isScrapingPaused]);
 
   // initialize & cleanup
 

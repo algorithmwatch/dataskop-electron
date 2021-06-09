@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import { defaultConfig, ScrapingConfig } from '../providers/youtube';
 
@@ -21,7 +22,8 @@ type Action =
   | { type: 'set-scraping-finished'; isScrapingFinished: boolean }
   | { type: 'set-muted'; isMuted: boolean }
   | { type: 'set-scraping-error'; scrapingError: Error | null }
-  | { type: 'reset-state' };
+  | { type: 'reset-scraping' }
+  | { type: 'set-step-generator'; stepGenerator: AsyncGenerator | null };
 
 type Dispatch = (action: Action) => void;
 type State = {
@@ -35,6 +37,8 @@ type State = {
   isScrapingFinished: boolean;
   isMuted: boolean;
   scrapingError: Error | null;
+  // create a generation to be able to hold/resumee a scraping proccess
+  stepGenerator: AsyncGenerator | null;
 };
 
 type ScrapingProviderProps = { children: React.ReactNode };
@@ -57,8 +61,9 @@ const initialState = {
   isScrapingStarted: false,
   isScrapingPaused: false,
   isScrapingFinished: false,
-  isMuted: false,
+  isMuted: true,
   scrapingError: null,
+  stepGenerator: null,
 };
 
 function scrapingReducer(state: State, action: Action) {
@@ -107,8 +112,24 @@ function scrapingReducer(state: State, action: Action) {
       };
     }
 
-    case 'reset-state': {
-      return { ...initialState, logHtml: state.logHtml };
+    case 'set-step-generator': {
+      return { ...state, stepGenerator: action.stepGenerator };
+    }
+
+    // only select state that does not re-render the browser window
+    case 'reset-scraping': {
+      return {
+        ...state,
+        ..._.pick(initialState, [
+          'sessionid',
+          'scrapingProgress',
+          'isScrapingStarted',
+          'isScrapingPaused',
+          'isScrapingFinished',
+          'scrapingError',
+          'stepGenerator',
+        ]),
+      };
     }
 
     default: {

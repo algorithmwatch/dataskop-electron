@@ -1,4 +1,3 @@
-import { createProcedureGenerators } from './procedures';
 import { experimentScrapers, profileScrapers } from './scrapers';
 import {
   GetHtmlFunction,
@@ -48,7 +47,6 @@ const defaultConfig: ScrapingConfig = {
   loginUrl: 'https://www.youtube.com/account',
   loginCookie: 'LOGIN_INFO',
   steps: [defaultProfileScraper, defaultVideoExperimentScraper],
-  createProcedureGenerators,
 };
 
 const simpleConfig: ScrapingConfig = {

@@ -46,9 +46,6 @@ type ScrapingConfig = {
   loginUrl: string;
   loginCookie: string;
   steps: ProcedureConfig[];
-  createProcedureGenerators: (
-    arg0: ProcedureConfig[],
-  ) => ((x: GetHtmlFunction, y: GetHtmlLazyFunction) => any)[];
 };
 
 export {

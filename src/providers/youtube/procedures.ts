@@ -148,4 +148,38 @@ const createProcedureGenerators = (
   return result;
 };
 
-export { createProcedureGenerators };
+const createSingleGenerator = (
+  steps: ProcedureConfig[],
+  getHtml: GetHtmlFunction,
+  getHtmlLazy: GetHtmlLazyFunction,
+) => {
+  const genMakers = createProcedureGenerators(steps);
+
+  async function* gen() {
+    let i = 0;
+
+    for (const g of genMakers) {
+      const singleGen = g(getHtml, getHtmlLazy);
+
+      while (true) {
+        const { value, done } = await singleGen.next();
+
+        const fracFixed =
+          value[0] * (1 / genMakers.length) + i / genMakers.length;
+
+        const valueFixed = [fracFixed].concat(value.slice(1));
+
+        if (done && i + 1 === genMakers.length) return valueFixed;
+        yield valueFixed;
+
+        if (done) break;
+      }
+      i += 1;
+    }
+    // should never happen
+    return [1, null];
+  }
+  return gen();
+};
+
+export { createSingleGenerator, createProcedureGenerators };

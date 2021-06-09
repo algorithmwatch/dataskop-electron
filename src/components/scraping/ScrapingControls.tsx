@@ -49,7 +49,7 @@ export default function ScrapingControls({
   };
 
   const resetScraping = () => {
-    dispatch({ type: 'reset-state' });
+    dispatch({ type: 'reset-scraping' });
 
     goToStart();
   };
