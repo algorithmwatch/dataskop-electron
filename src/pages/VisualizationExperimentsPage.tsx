@@ -40,13 +40,17 @@ export default function VisualizationExperimentsPage(): JSX.Element {
 
   return (
     <>
-      <Explainer
-        isOpen={explainerIsOpen}
-        onIsOpenChange={(val: boolean) => setExplainerIsOpen(val)}
-      >
-        Hallo haha
-      </Explainer>
-      {type === 'newstop5' && <NewsTop5 />}
+      {type === 'newstop5' && (
+        <>
+          <NewsTop5 />
+          <Explainer
+            isOpen={explainerIsOpen}
+            onIsOpenChange={(val: boolean) => setExplainerIsOpen(val)}
+          >
+            Hallo haha
+          </Explainer>
+        </>
+      )}
       <FooterNav items={footerNavItems} />
     </>
   );

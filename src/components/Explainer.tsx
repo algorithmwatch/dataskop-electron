@@ -27,7 +27,7 @@ export default function Explainer({
     'border-yellow-800': isToggleHover,
   });
   const toggleClasses = classNames({
-    'w-10 h-10 absolute top-24 focus:outline-none ': true,
+    'w-10 h-10 absolute top-24 focus:outline-none': true,
     'transition-all duration-200 ease-in-out': true,
     '-right-6': isOpen,
     '-right-12': !isOpen,
