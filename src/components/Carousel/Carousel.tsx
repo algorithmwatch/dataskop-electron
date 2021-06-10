@@ -1,7 +1,7 @@
 import {
   faChevronCircleLeft,
   faChevronCircleRight,
-  IconDefinition
+  IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Glide from '@glidejs/glide';
@@ -10,7 +10,7 @@ import React, {
   forwardRef,
   useEffect,
   useImperativeHandle,
-  useRef
+  useRef,
 } from 'react';
 import { Options } from './types';
 
@@ -68,6 +68,8 @@ export const Carousel = forwardRef(
           <ArrowButton icon={faChevronCircleLeft} dir="<" />
           <ArrowButton icon={faChevronCircleRight} dir=">" />
         </div>
+        <div className="absolute right-0 inset-y-0 w-28 bg-gradient-to-r from-transparent to-yellow-100" />
+        <div className="absolute left-0 inset-y-0 w-28 bg-gradient-to-r from-yellow-100 to-transparent" />
       </div>
     );
   },
