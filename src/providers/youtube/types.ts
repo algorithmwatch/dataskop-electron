@@ -50,7 +50,15 @@ type ProfileProcedureConfig = {
   profileScrapers: Array<ProfileScraper>;
 };
 
-type ProcedureConfig = VideoProcedureConfig | ProfileProcedureConfig;
+type SearchProcedureConfig = {
+  type: 'search';
+  queries: string[];
+};
+
+type ProcedureConfig =
+  | VideoProcedureConfig
+  | ProfileProcedureConfig
+  | SearchProcedureConfig;
 
 type ScrapingConfig = {
   // a human readable description of the config
@@ -74,4 +82,5 @@ export {
   ProfileProcedureConfig,
   SeedVideo,
   SeedVideoRepeat,
+  SearchProcedureConfig,
 };

@@ -1,16 +1,14 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-restricted-syntax */
-
 import { clearStorage } from '../../components/scraping/ipc';
 import { getSessionData } from '../../db';
 import { delay } from '../../utils/time';
 import { submitConfirmForm } from './actions/confirmCookies';
-import { experimentScrapers } from './scrapers';
+import { experimentScrapers, scrapeVideoSearch } from './scrapers';
 import {
   GetHtmlFunction,
   GetHtmlLazyFunction,
   ProcedureConfig,
   ProfileProcedureConfig,
+  SearchProcedureConfig,
   SeedCreator,
   SeedVideo,
   SeedVideoRepeat,
@@ -149,6 +147,7 @@ async function* scrapingVideosProcedure(
       maxSteps -= (approxNumSeedVideos - numSeedVideos) * (followVideos + 1);
     }
 
+    // frac must be above 0 to trigger the next call
     step += 1;
     yield [step / maxSteps, resultSeedVideos];
 
@@ -198,9 +197,20 @@ async function* scrapingVideosProcedure(
   );
 }
 
-// const createProcedure =
-//   (config: ProcedureConfig) => (x: GetHtmlFunction, y: GetHtmlLazyFunction) =>
-//     scrapingYoutubeProcedure(x, y, config);
+async function* scrapingSearchProcedure(
+  getHtml: GetHtmlFunction,
+  getHtmlLazy: GetHtmlLazyFunction,
+  sessionId: string,
+  config: SearchProcedureConfig,
+) {
+  const { queries } = config;
+  for (const [i, q] of queries.entries()) {
+    const result = await scrapeVideoSearch(getHtml, q);
+    if (i === queries.length - 1) return [1, result];
+    // frac must be above 0 to trigger the next call
+    yield [(i + 1) / queries.length, result];
+  }
+}
 
 const createProcedureGenMakers = (
   steps: ProcedureConfig[],
@@ -231,6 +241,15 @@ const createProcedureGenMakers = (
         y: GetHtmlLazyFunction,
         sessiondId: string,
       ) => scrapingProfileProcedure(x, y, sessiondId, step);
+
+      result.push(f);
+    }
+    if (step.type === 'search') {
+      const f = (
+        x: GetHtmlFunction,
+        y: GetHtmlLazyFunction,
+        sessiondId: string,
+      ) => scrapingSearchProcedure(x, y, sessiondId, step);
 
       result.push(f);
     }

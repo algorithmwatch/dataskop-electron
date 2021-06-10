@@ -1,8 +1,10 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 import {
+  buildSearchUrl,
   parsePlaylistPage,
   parseSearchHistory,
+  parseSearchResultsVideos,
   parseSubscribedChannels,
   parseVideoPage,
   parseWatchHistory,
@@ -27,6 +29,8 @@ const waitUntilDone = async (
 ) => {
   let curTimeout = timeout.start;
 
+  console.log('x');
+
   // set to some dummy value to please TypeScript
   let prevResult = {
     success: false,
@@ -36,6 +40,7 @@ const waitUntilDone = async (
   } as ScrapingResult;
 
   while (curTimeout < timeout.max) {
+    console.log('x');
     await delay(curTimeout);
     const currentHtml = await getCurrentHtml();
 
@@ -151,6 +156,12 @@ const scrapeSubscriptions = async (
   return waitUntilDone(getCurrentHtml, parseSubscribedChannels);
 };
 
+const scrapeVideoSearch = async (getHtml, query) => {
+  const url = buildSearchUrl(query);
+  const getCurrentHtml = await getHtml(url);
+  return waitUntilDone(getCurrentHtml, parseSearchResultsVideos);
+};
+
 async function* scrapeSeedVideosAndFollow(
   getHtml: GetHtmlFunction,
   seedVideos: SeedVideo[],
@@ -248,3 +259,5 @@ export const experimentScrapers = {
   scrapePopularVideos,
   scrapeNationalNewsTopStories,
 };
+
+export { scrapeVideoSearch };
