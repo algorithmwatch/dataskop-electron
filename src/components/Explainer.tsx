@@ -16,36 +16,41 @@ export default function Explainer({
   children: React.ReactNode;
 }): JSX.Element | null {
   const [isToggleHover, setIsToggleHover] = useState(false);
-  const containerClasses = classNames({
-    'w-2/3 fixed inset-y-0 bg-white z-30': true,
-    'transition-all duration-200 ease-in-out': true,
-    'flex flex-col justify-between': true,
-    'box-content border-r-8': true,
-    '-left-2/3': !isOpen,
-    'left-0': isOpen,
-    'border-yellow-600': !isToggleHover,
-    'border-yellow-800': isToggleHover,
-  });
-  const toggleClasses = classNames({
-    'w-10 h-10 absolute top-24 focus:outline-none': true,
-    'transition-all duration-200 ease-in-out': true,
-    '-right-6': isOpen,
-    '-right-12': !isOpen,
-    'bg-yellow-600': !isToggleHover,
-    'bg-yellow-800': isToggleHover,
-  });
 
   return (
-    <div>
-      <div className={containerClasses}>
+    <div
+      className={classNames({
+        'absolute inset-0 z-50 overflow-y-scroll bg-yellow-1400 bg-opacity-50':
+          isOpen,
+      })}
+    >
+      <div
+        className={classNames({
+          'w-2/3 inset-y-0 min-h-full bg-white z-30': true,
+          '-left-2/3 absolute': !isOpen,
+          'left-0 relative': isOpen,
+          'transition-all duration-200 ease-in-out': true,
+          'flex flex-col justify-between': true,
+          'box-content border-r-8': true,
+          'border-yellow-600': !isToggleHover,
+          'border-yellow-800': isToggleHover,
+        })}
+      >
         {/* Open/close toggle */}
         {/* eslint-disable-next-line jsx-a11y/mouse-events-have-key-events */}
         <button
           type="button"
-          className={toggleClasses}
           onClick={() => onIsOpenChange(!isOpen)}
           onMouseOver={() => setIsToggleHover(true)}
           onMouseOut={() => setIsToggleHover(false)}
+          className={classNames({
+            'w-10 h-10 absolute top-24 focus:outline-none': true,
+            'transition-all duration-200 ease-in-out': true,
+            '-right-6': isOpen,
+            '-right-12': !isOpen,
+            'bg-yellow-600': !isToggleHover,
+            'bg-yellow-800': isToggleHover,
+          })}
         >
           <FontAwesomeIcon
             icon={isOpen ? faChevronLeft : faChevronRight}
@@ -55,9 +60,7 @@ export default function Explainer({
         </button>
 
         {/* Content */}
-        <div className="pl-8 mt-16 flex flex-col space-y-6 items-start">
-          {children}
-        </div>
+        <div className="px-8 py-16">{children}</div>
       </div>
 
       {/* Backdrop */}
@@ -65,7 +68,7 @@ export default function Explainer({
         // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
         <div
           tabIndex={-1}
-          className="absolute inset-0 bg-yellow-1400 bg-opacity-50 z-20"
+          className="fixed inset-0 h-full z-10"
           onClick={() => onIsOpenChange(false)}
         />
       )}
