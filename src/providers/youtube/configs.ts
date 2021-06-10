@@ -2,6 +2,7 @@ import { experimentScrapers, profileScrapers } from './scrapers';
 import {
   ProfileProcedureConfig,
   ScrapingConfig,
+  SearchProcedureConfig,
   VideoProcedureConfig,
 } from './types';
 
@@ -38,7 +39,7 @@ const simpleVideoExperimentScaper = {
   followVideos: 0,
 };
 
-const logOutConfig = {
+const logOutExperimentConfig = {
   ...simpleVideoExperimentScaper,
   doLogout: true,
   seedVideosFixed: [],
@@ -46,10 +47,15 @@ const logOutConfig = {
   seedVideosRepeat: [
     {
       previousResult: 'yt-playlist-page-national-news-top-stories',
-      step: 0,
+      step: 1,
       maxVideos: 5,
     },
   ],
+};
+
+const searchStep: SearchProcedureConfig = {
+  type: 'search',
+  queries: ['antifa', 'berlin'],
 };
 
 const defaultProfileScraper: ProfileProcedureConfig = {
@@ -58,26 +64,39 @@ const defaultProfileScraper: ProfileProcedureConfig = {
 };
 
 const defaultConfig: ScrapingConfig = {
-  title: 'youtube default config',
+  title: 'youtube default: profile, videos, logout',
   slug: 'yt-default',
   startUrl: 'https://www.youtube.com',
   loginUrl: 'https://www.youtube.com/account',
   loginCookie: 'LOGIN_INFO',
-  steps: [defaultProfileScraper, defaultVideoExperimentScraper],
+  steps: [
+    defaultProfileScraper,
+    defaultVideoExperimentScraper,
+    searchStep,
+    logOutExperimentConfig,
+    searchStep,
+  ],
 };
 
 const simpleConfig: ScrapingConfig = {
   ...defaultConfig,
-  title: 'youtube simple config',
+  title: 'youtube simple: videos',
   slug: 'yt-simple',
-  steps: [simpleVideoExperimentScaper, logOutConfig],
+  steps: [simpleVideoExperimentScaper],
+};
+
+const searchConfig: ScrapingConfig = {
+  ...defaultConfig,
+  title: 'youtube search: some queries',
+  slug: 'yt-search',
+  steps: [searchStep],
 };
 
 // fast test, all functions only need to run once
 
 const testConfig: ScrapingConfig = {
   ...defaultConfig,
-  title: 'youtube test providers',
+  title: 'youtube test: test all involved functions once',
   slug: 'yt-test',
   steps: [
     {
@@ -95,6 +114,6 @@ const testConfig: ScrapingConfig = {
   ],
 };
 
-const allConfigs = [defaultConfig, simpleConfig, testConfig];
+const allConfigs = [defaultConfig, simpleConfig, searchConfig, testConfig];
 
-export { defaultConfig, simpleConfig, testConfig, allConfigs };
+export { defaultConfig, simpleConfig, testConfig, searchConfig, allConfigs };
