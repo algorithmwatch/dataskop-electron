@@ -1,174 +1,142 @@
-// Reason for dexie:
-// https://biancadanforth.github.io/git/2017/08/11/storage-one-of-the-final-frontiers.html
-
-// followed: https://github.com/dfahlander/Dexie.js/#hello-world-typescript
-
-import Dexie from 'dexie';
+import { ipcRenderer } from 'electron';
+import _ from 'lodash';
+import { JSONFile, Low } from 'lowdb';
+import { join } from 'path';
 import { statsForArray } from '../utils/math';
 import { ScrapingResultSaved, ScrapingSessions } from './types';
 
-// Declare Database
-class ScrapingDatabase extends Dexie {
-  public scrapingResults: Dexie.Table<ScrapingResultSaved, number>;
-
-  public scrapingSessions: Dexie.Table<ScrapingSessions, number>;
-
-  public constructor() {
-    super('ScrapingDatabase');
-    this.version(2).stores({
-      scrapingResults: '++id,sessionId,scrapedAt,slug,result,errorMessage',
-      scrapingSessions: '++id,sessionId,startedAt,configSlug',
-    });
-    this.scrapingResults = this.table('scrapingResults');
-    this.scrapingSessions = this.table('scrapingSessions');
-  }
-}
-
-const initDb = () => new ScrapingDatabase();
-
-let globalDb: ScrapingDatabase | null = null;
-
-// hotfix: https://github.com/dfahlander/Dexie.js/issues/613#issuecomment-841608979
-const db = (): ScrapingDatabase => {
-  if (!globalDb) {
-    globalDb = initDb();
-  }
-
-  const idb = globalDb.backendDB();
-
-  if (idb) {
-    try {
-      // Check if if connection to idb did not close in the meantime by access indexDb directly
-      idb.transaction('scrapingResults').abort();
-    } catch (e) {
-      globalDb.close();
-      globalDb = initDb();
-    }
-  }
-
-  return globalDb;
+type Data = {
+  scrapingSessions: ScrapingSessions[];
+  scrapingResults: ScrapingResultSaved[];
 };
 
-const closeDb = () => {
-  globalDb?.close();
-  globalDb = null;
+let db: Low<Data> | null = null;
+
+const initDb = async () => {
+  const userFolder = await ipcRenderer.invoke('get-path-user-data');
+  const file = join(userFolder, 'db.json');
+  const adapter = new JSONFile<Data>(file);
+  db = new Low<Data>(adapter);
 };
 
-// https://dexie.org/docs/Dexie/Dexie.transaction()#specify-reusage-of-parent-transaction
+initDb();
 
-const addNewSession = (sessionId: string, configSlug: string) => {
-  db().transaction('rw', db().scrapingSessions, async () =>
-    db().scrapingSessions.add({
-      sessionId,
-      startedAt: Date.now(),
-      configSlug,
-    }),
-  );
+const setUpDb = async () => {
+  if (db === null) throw Error('db is not initialized');
+
+  await db.read();
+
+  db.data ||= { scrapingSessions: [], scrapingResults: [] };
+  return db.data;
 };
 
-const addScrapingResult = (sessionId: string, data: any) => {
-  db().transaction('rw', db().scrapingResults, async () => {
-    const id = await db().scrapingResults.add({
-      sessionId,
-      ...data,
-      scrapedAt: Date.now(),
-    });
-    return id;
-  });
+const addNewSession = async (sessionId: string, configSlug: string) => {
+  const obj = {
+    sessionId,
+    startedAt: Date.now(),
+    configSlug,
+  };
+
+  const readyDb = await setUpDb();
+
+  readyDb.scrapingSessions.push(obj);
+  if (db === null) throw Error('db is not initialized');
+
+  return db.write();
 };
 
-const importRow = async (row: ScrapingResultSaved): Promise<number> => {
-  /**
-   * import already scraped data and try to keep the original id if possible.
-   */
-  return db().transaction('rw', db().scrapingResults, async () => {
-    const { id } = row;
+const addScrapingResult = async (sessionId: string, data: any) => {
+  const obj = {
+    sessionId,
+    ...data,
+    scrapedAt: Date.now(),
+  };
 
-    if (id != null) {
-      delete row.id;
-      const existingRow = await db().scrapingResults.get(id);
-      if (existingRow === null) {
-        // no row with this id exists, so re-use the id
-        await db().scrapingResults.add(row, id);
-        return 1;
-      }
-      // row was already entered
-      if (existingRow === row) return 0;
-    }
+  const readyDb = await setUpDb();
 
-    // id is undefined so generate new id
-    await db().scrapingResults.add(row);
-    return 1;
-  });
+  readyDb.scrapingResults.push(obj);
+  if (db === null) throw Error('db is not initialized');
+
+  return db.write();
 };
 
-const getScrapingResults = () => {
-  return db().transaction('r', db().scrapingResults, async () => {
-    const res = await db().scrapingResults.orderBy('scrapedAt').toArray();
-    return res;
-  });
+const getScrapingResults = async () => {
+  const data = await setUpDb();
+  return _.orderBy(data.scrapingResults, 'scrapedAt');
 };
 
-const getSessionData = (sessiondId: string) => {
-  return db().transaction('r', db().scrapingResults, async () => {
-    const res = await db()
-      .scrapingResults.where('sessionId')
-      .equals(sessiondId)
-      .toArray();
-    return res;
-  });
+const getAllData = async () => {
+  return setUpDb();
 };
 
-const clearData = () => {
-  db()
-    .scrapingResults.clear()
-    .then(() => {
-      console.log('Rows successfully deleted');
-      return true;
-    })
-    .catch((err) => {
-      console.error(`Could not delete rows ${err}`);
-      return false;
-    });
-  return true;
+const importResultRows = async (
+  rows: ScrapingResultSaved[],
+): Promise<number> => {
+  const old = await getScrapingResults();
+
+  const sum = _.uniqWith(old.concat(rows), _.isEqual);
+
+  // db.data can't be null
+  if (db === null || db.data === null) throw Error('db is not initialized');
+  db.data.scrapingResults = sum;
+  await db.write();
+
+  return sum.length - old.length;
 };
 
-// https://github.com/dfahlander/Dexie.js/issues/415#issuecomment-268772586
-const getUniqueSessionIds = () =>
-  db().scrapingResults.orderBy('sessionId').uniqueKeys();
+const importSessionRows = async (rows: ScrapingSessions[]): Promise<number> => {
+  const old = (await setUpDb()).scrapingSessions;
+
+  const sum = _.uniqWith(old.concat(rows), _.isEqual);
+
+  // db.data can't be null
+  if (db === null || db.data === null) throw Error('db is not initialized');
+  db.data.scrapingSessions = sum;
+  await db.write();
+
+  return sum.length - old.length;
+};
+
+const getSessionData = async (sessiondId: string) => {
+  const data = await setUpDb();
+  return data.scrapingResults.filter((x) => x.sessionId === sessiondId);
+};
+
+const clearData = async () => {
+  if (db === null) throw Error('db is not initialized');
+
+  if (db.data === null) return;
+  db.data = { scrapingSessions: [], scrapingResults: [] };
+  await db.write();
+};
 
 const getSessions = async () => {
-  const sessionsIds = await getUniqueSessionIds();
-  const sessions = await Promise.all(
-    sessionsIds.map(async (x) => {
-      const session = await db()
-        .scrapingSessions.where('sessionId')
-        .equals(x)
-        .first();
-      return {
-        count: await db().scrapingResults.where('sessionId').equals(x).count(),
-        ...session,
-      };
-    }),
-  );
-  sessions.sort((a, b) => (b?.startedAt || 0) - (a?.startedAt || 0));
+  const data = await setUpDb();
+
+  const sessionsCount = _.countBy(data.scrapingResults, 'sessionId');
+  const sessions = data.scrapingSessions.map((x) => ({
+    ...x,
+    count: sessionsCount[x.sessionId] ?? 0,
+  }));
+
+  sessions.sort((a, b) => (b?.startedAt ?? 0) - (a?.startedAt ?? 0));
   return sessions;
 };
 
 const getStatisticsForSession = async (sessiondId: string) => {
-  const allTasks = await db()
-    .scrapingResults.where('sessionId')
-    .equals(sessiondId)
-    .toArray();
+  const data = await setUpDb();
+
+  const allTasks = data.scrapingResults.filter(
+    (x) => x.sessionId === sessiondId,
+  );
 
   allTasks.sort((a, b) => a.scrapedAt - b.scrapedAt);
 
-  const firstResult = await db()
-    .scrapingSessions.where('sessionId')
-    .equals(sessiondId)
-    .first();
+  const firstResult = data.scrapingSessions.filter(
+    (x) => x.sessionId === sessiondId,
+  )[0];
 
-  if (!firstResult) throw new Error('no records for sessionId found');
+  if (!firstResult) return {};
 
   const { startedAt } = firstResult;
   const allTimes = new Map();
@@ -197,9 +165,10 @@ const getStatisticsForSession = async (sessiondId: string) => {
 };
 
 export {
-  closeDb,
+  getAllData,
   addScrapingResult,
-  importRow,
+  importResultRows,
+  importSessionRows,
   getScrapingResults,
   clearData,
   getSessions,
