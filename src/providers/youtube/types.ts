@@ -13,10 +13,15 @@ type GetHtmlLazyFunction = (
 
 type SeedCreator = {
   maxVideos: number;
-  getVideos: (getHtml: GetHtmlFunction) => Promise<ScrapingResult>;
+  slug: string;
 };
 
 type ProfileScraper = (getHtml: GetHtmlFunction) => Promise<ScrapingResult>;
+
+type SeedVideo = {
+  id: string;
+  creator: string;
+};
 
 type VideoProcedureConfig = {
   type: 'videos';
@@ -59,4 +64,5 @@ export {
   ScrapingConfig,
   VideoProcedureConfig,
   ProfileProcedureConfig,
+  SeedVideo,
 };

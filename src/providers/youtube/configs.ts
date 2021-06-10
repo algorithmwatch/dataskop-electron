@@ -1,6 +1,5 @@
 import { experimentScrapers, profileScrapers } from './scrapers';
 import {
-  GetHtmlFunction,
   ProfileProcedureConfig,
   ScrapingConfig,
   VideoProcedureConfig,
@@ -8,7 +7,6 @@ import {
 
 const { scrapeNationalNewsTopStories, scrapePopularVideos } =
   experimentScrapers;
-
 const emptyVideoProcedureConfig: VideoProcedureConfig = {
   type: 'videos',
   scrollingBottomForComments: 0,
@@ -25,13 +23,11 @@ const defaultVideoExperimentScraper = {
   seedVideosDynamic: [
     {
       maxVideos: 1,
-      getVideos: async (getHtml: GetHtmlFunction) =>
-        scrapePopularVideos(getHtml),
+      slug: 'popular-videos',
     },
     {
-      maxVideos: 1,
-      getVideos: async (getHtml: GetHtmlFunction) =>
-        scrapeNationalNewsTopStories(getHtml),
+      maxVideos: 3,
+      slug: 'national-news-top-stories',
     },
   ],
 };
@@ -46,9 +42,8 @@ const logOutConfig = {
   doLogout: true,
   seedVideosDynamic: [
     {
-      maxVideos: 1,
-      getVideos: async (getHtml: GetHtmlFunction) =>
-        scrapePopularVideos(getHtml),
+      maxVideos: 3,
+      slug: 'national-news-top-stories',
     },
   ],
 };

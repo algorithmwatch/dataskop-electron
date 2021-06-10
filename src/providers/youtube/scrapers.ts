@@ -11,7 +11,7 @@ import { ParserResult } from '@algorithmwatch/harke-parser/src/types';
 import _ from 'lodash';
 import { ScrapingResult } from '../../db/types';
 import { delay } from '../../utils/time';
-import { GetCurrentHtml, GetHtmlFunction } from './types';
+import { GetCurrentHtml, GetHtmlFunction, SeedVideo } from './types';
 
 // play list of special lists
 const LIST_ID_POPULAR = 'PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-';
@@ -153,7 +153,7 @@ const scrapeSubscriptions = async (
 
 async function* scrapeSeedVideosAndFollow(
   getHtml: GetHtmlFunction,
-  seedVideoIds: string[],
+  seedVideos: SeedVideo[],
   initialStep: number,
   maxSteps: number,
   followVideos: number,
@@ -161,18 +161,23 @@ async function* scrapeSeedVideosAndFollow(
 ) {
   let step = initialStep;
 
-  for (const id of seedVideoIds) {
+  for (const { id, creator } of seedVideos) {
     const followChainId = `${id}-${Date.now()}`;
     const dataFromSeed = await scrapeVideo(id, getHtml, comments);
     step += 1;
-    dataFromSeed.slug += '-seed';
 
     // assign an unique ID to extract follow chains
     dataFromSeed.fields.followId = followChainId;
+    dataFromSeed.fields.seedCreator = creator;
 
-    // do not follow if there are no recommended videos and abort
+    // do not follow if there are no recommended videos
     if (dataFromSeed.fields.recommendedVideos.length === 0) {
-      return [1, dataFromSeed];
+      // skip over the follow steps
+      step += followVideos;
+
+      // reached the end already?
+      if (step >= maxSteps) return [1, dataFromSeed];
+      break;
     }
 
     yield [step / maxSteps, dataFromSeed];
@@ -206,14 +211,17 @@ async function* scrapeSeedVideosAndFollow(
 
 async function* scrapeSeedVideos(
   getHtml: GetHtmlFunction,
-  seedVideoIds: string[],
+  seedVideoIds: SeedVideo[],
   initialStep: number,
   maxSteps: number,
   comments: boolean,
 ) {
   let step = initialStep;
-  for (const id of seedVideoIds) {
+  for (const { id, creator } of seedVideoIds) {
     const data = await scrapeVideo(id, getHtml, comments);
+
+    data.fields.seedCreator = creator;
+
     step += 1;
 
     if (step < maxSteps) {

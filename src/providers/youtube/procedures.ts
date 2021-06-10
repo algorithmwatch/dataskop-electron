@@ -10,10 +10,28 @@ import {
   GetHtmlLazyFunction,
   ProcedureConfig,
   ProfileProcedureConfig,
+  SeedVideo,
   VideoProcedureConfig,
 } from './types';
 
-const { scrapeSeedVideos, scrapeSeedVideosAndFollow } = experimentScrapers;
+const {
+  scrapeNationalNewsTopStories,
+  scrapePopularVideos,
+  scrapeSeedVideos,
+  scrapeSeedVideosAndFollow,
+} = experimentScrapers;
+
+const scrapeDynamic = (getHtml, slug) => {
+  if (slug === 'popular-videos') {
+    return scrapePopularVideos(getHtml);
+  }
+
+  if (slug === 'national-news-top-stories') {
+    return scrapeNationalNewsTopStories(getHtml);
+  }
+
+  throw Error('wrong');
+};
 
 async function* scrapingProfileProcedure(
   getHtml: GetHtmlFunction,
@@ -60,9 +78,9 @@ async function* scrapingVideosProcedure(
 
   if (doLogout) {
     await clearStorage();
-    await delay(3000);
+    await delay(5000);
     await submitConfirmForm(getHtml);
-    await delay(3000);
+    await delay(5000);
   }
 
   let step = 0;
@@ -75,9 +93,12 @@ async function* scrapingVideosProcedure(
     seedVideosDynamic.length + approxNumSeedVideos * (followVideos + 1);
 
   // 1. block: get seed videos
-  let seedVideoIds: string[] = seedVideosFixed;
-  for (const { getVideos, maxVideos } of seedVideosDynamic) {
-    const resultSeedVideos = await getVideos(getHtml);
+  let seedVideos: SeedVideo[] = seedVideosFixed.map((x) => ({
+    id: x,
+    creator: 'fixed',
+  }));
+  for (const { slug, maxVideos } of seedVideosDynamic) {
+    const resultSeedVideos = await scrapeDynamic(getHtml, slug);
     const numSeedVideos = Math.min(
       resultSeedVideos.fields.videos.length,
       maxVideos,
@@ -91,9 +112,12 @@ async function* scrapingVideosProcedure(
 
     step += 1;
     yield [step / maxSteps, resultSeedVideos];
-    seedVideoIds = seedVideoIds
-      .slice(0, numSeedVideos)
-      .concat(resultSeedVideos.fields.videos.map(({ id }) => id));
+    seedVideos = seedVideos.slice(0, numSeedVideos).concat(
+      resultSeedVideos.fields.videos.map(({ id }: { id: string }) => ({
+        id,
+        creator: slug,
+      })),
+    );
   }
 
   // 2. block: get acutal video + video recommendations
@@ -115,7 +139,7 @@ async function* scrapingVideosProcedure(
   if (isFollowingVideos) {
     return yield* scrapeSeedVideosAndFollow(
       getHtmlVideos,
-      seedVideoIds,
+      seedVideos,
       step,
       maxSteps,
       followVideos,
@@ -125,7 +149,7 @@ async function* scrapingVideosProcedure(
 
   return yield* scrapeSeedVideos(
     getHtmlVideos,
-    seedVideoIds,
+    seedVideos,
     step,
     maxSteps,
     scrapeComments,
