@@ -129,14 +129,16 @@ export default function ScrapingManager({
         console.log(scrapingConfig);
       }
 
+      // create a uuid every time you hit start scraping
+      const sId = uuidv4();
+
       const gen = createSingleGenerator(
         scrapingConfig.steps,
         makeGetHtml(logHtml),
         getHtmlLazy,
+        sId,
       );
 
-      // create a uuid every time you hit start scraping
-      const sId = uuidv4();
       dispatch({
         type: 'scraping-has-started',
         stepGenerator: gen,

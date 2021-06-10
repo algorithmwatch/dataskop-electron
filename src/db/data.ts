@@ -37,10 +37,10 @@ const addNewSession = async (sessionId: string, configSlug: string) => {
     configSlug,
   };
 
-  const readyDb = await setUpDb();
+  await setUpDb();
 
-  readyDb.scrapingSessions.push(obj);
-  if (db === null) throw Error('db is not initialized');
+  if (db === null || db.data === null) throw Error('db is not initialized');
+  db.data.scrapingSessions.push(obj);
 
   return db.write();
 };
@@ -57,10 +57,10 @@ const addScrapingResult = async (
     scrapedAt: Date.now(),
   };
 
-  const readyDb = await setUpDb();
+  await setUpDb();
 
-  readyDb.scrapingResults.push(obj);
-  if (db === null) throw Error('db is not initialized');
+  if (db === null || db.data === null) throw Error('db is not initialized');
+  db.data.scrapingResults.push(obj);
 
   return db.write();
 };
@@ -102,9 +102,18 @@ const importSessionRows = async (rows: ScrapingSessions[]): Promise<number> => {
   return sum.length - old.length;
 };
 
-const getSessionData = async (sessiondId: string) => {
+const getSessionData = async (
+  sessiondId: string,
+  filter: { slug?: null | string; step?: null | number } = {},
+) => {
+  const { slug, step } = filter;
   const data = await setUpDb();
-  return data.scrapingResults.filter((x) => x.sessionId === sessiondId);
+  return data.scrapingResults.filter(
+    (x) =>
+      x.sessionId === sessiondId &&
+      (slug == null || x.slug === slug) &&
+      (step == null || x.step === step),
+  );
 };
 
 const clearData = async () => {

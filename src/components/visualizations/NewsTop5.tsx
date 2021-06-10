@@ -1,6 +1,6 @@
 import { faNewspaper } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { groupBy } from 'lodash';
+import _ from 'lodash';
 import React, { useState } from 'react';
 import { ScrapingResultSaved } from '../../db/types';
 import { Carousel, Slide } from '../Carousel/Carousel';
@@ -56,13 +56,19 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved }) {
   //   'yt-playlist-page-news-top-stories',
   // ];
 
-  const filtered = data.filter(
-    (x) => x.fields.seedCreator === 'national-news-top-stories',
+  const filtered1 = data.filter(
+    (x) =>
+      x.fields.seedCreator ===
+      'repeat: yt-playlist-page-national-news-top-stories',
   );
-  const grouped = groupBy(filtered, 'fields.id');
-  console.warn('data', data);
-  console.warn('filtered', filtered);
-  console.warn('grouped', grouped);
+  const filtered2 = data.filter(
+    (x) =>
+      x.fields.seedCreator === 'yt-playlist-page-national-news-top-stories',
+  );
+
+  const zipped = _.zip(filtered1, filtered2);
+
+  console.warn('zipped', zipped);
 
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
   const carouselOptions: Options = {

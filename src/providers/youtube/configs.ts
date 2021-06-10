@@ -13,6 +13,7 @@ const emptyVideoProcedureConfig: VideoProcedureConfig = {
   followVideos: 0,
   seedVideosFixed: [],
   seedVideosDynamic: [],
+  seedVideosRepeat: [],
   doLogout: false,
 };
 
@@ -22,12 +23,12 @@ const defaultVideoExperimentScraper = {
   seedVideosFixed: ['4Y1lZQsyuSQ', 'yr1YyrolRZY'],
   seedVideosDynamic: [
     {
-      maxVideos: 1,
-      slug: 'popular-videos',
+      maxVideos: 0,
+      slug: 'yt-playlist-page-popular-videos',
     },
     {
-      maxVideos: 3,
-      slug: 'national-news-top-stories',
+      maxVideos: 5,
+      slug: 'yt-playlist-page-national-news-top-stories',
     },
   ],
 };
@@ -40,10 +41,13 @@ const simpleVideoExperimentScaper = {
 const logOutConfig = {
   ...simpleVideoExperimentScaper,
   doLogout: true,
-  seedVideosDynamic: [
+  seedVideosFixed: [],
+  seedVideosDynamic: [],
+  seedVideosRepeat: [
     {
-      maxVideos: 3,
-      slug: 'national-news-top-stories',
+      previousResult: 'yt-playlist-page-national-news-top-stories',
+      step: 0,
+      maxVideos: 5,
     },
   ],
 };

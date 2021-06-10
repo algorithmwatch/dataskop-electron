@@ -79,7 +79,7 @@ const scrapePopularVideos = async (
   getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
   const result = await scrapePlaylist(LIST_ID_POPULAR, getHtml);
-  result.slug += '-popular';
+  result.slug += '-popular-videos';
   return result;
 };
 
@@ -90,7 +90,7 @@ const scrapeNationalNewsTopStories = async (
     LIST_ID_NATIONAL_NEWS_TOP_STORIES,
     getHtml,
   );
-  result.slug += '-news-top-stories';
+  result.slug += '-national-news-top-stories';
   return result;
 };
 

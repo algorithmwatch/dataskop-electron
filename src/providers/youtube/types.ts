@@ -16,6 +16,12 @@ type SeedCreator = {
   slug: string;
 };
 
+type SeedVideoRepeat = {
+  step: number;
+  previousResult: string;
+  maxVideos: number;
+};
+
 type ProfileScraper = (getHtml: GetHtmlFunction) => Promise<ScrapingResult>;
 
 type SeedVideo = {
@@ -29,6 +35,8 @@ type VideoProcedureConfig = {
   seedVideosFixed: Array<string>;
   // function that provides seed videos, including the approx. amount of videos (for the progress bar)
   seedVideosDynamic: Array<SeedCreator>;
+  // scrape some previous results again
+  seedVideosRepeat: Array<SeedVideoRepeat>;
   // how many videos to follow for each seed video
   followVideos: number;
   // how often to scroll down for lazy loading
@@ -65,4 +73,5 @@ export {
   VideoProcedureConfig,
   ProfileProcedureConfig,
   SeedVideo,
+  SeedVideoRepeat,
 };

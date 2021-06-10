@@ -2,6 +2,7 @@
 /* eslint-disable no-restricted-syntax */
 
 import { clearStorage } from '../../components/scraping/ipc';
+import { getSessionData } from '../../db';
 import { delay } from '../../utils/time';
 import { submitConfirmForm } from './actions/confirmCookies';
 import { experimentScrapers } from './scrapers';
@@ -10,7 +11,9 @@ import {
   GetHtmlLazyFunction,
   ProcedureConfig,
   ProfileProcedureConfig,
+  SeedCreator,
   SeedVideo,
+  SeedVideoRepeat,
   VideoProcedureConfig,
 } from './types';
 
@@ -21,21 +24,42 @@ const {
   scrapeSeedVideosAndFollow,
 } = experimentScrapers;
 
-const scrapeDynamic = (getHtml, slug) => {
-  if (slug === 'popular-videos') {
+const scrapeDynamicSeedVideos = async (
+  getHtml: GetHtmlFunction,
+  seedDynamic: SeedCreator,
+) => {
+  const { slug } = seedDynamic;
+
+  if (slug === 'yt-playlist-page-popular-videos') {
     return scrapePopularVideos(getHtml);
   }
 
-  if (slug === 'national-news-top-stories') {
+  if (slug === 'yt-playlist-page-national-news-top-stories') {
     return scrapeNationalNewsTopStories(getHtml);
   }
 
   throw Error('wrong');
 };
 
+const getSeedVideosRepeat = async (
+  sessionId: string,
+  scrapeAgain: SeedVideoRepeat,
+): Promise<SeedVideo[]> => {
+  console.log(scrapeAgain, sessionId);
+  const { previousResult, step, maxVideos } = scrapeAgain;
+  const oldData = await getSessionData(sessionId, {
+    slug: previousResult,
+    step,
+  });
+  return oldData[0].fields.videos
+    .slice(0, maxVideos)
+    .map(({ id }) => ({ id, creator: `repeat: ${previousResult}` }));
+};
+
 async function* scrapingProfileProcedure(
   getHtml: GetHtmlFunction,
   getHtmlLazy: GetHtmlLazyFunction,
+  sessiondId: string,
   config: ProfileProcedureConfig,
 ) {
   const { profileScrapers } = config;
@@ -61,13 +85,15 @@ async function* scrapingProfileProcedure(
 async function* scrapingVideosProcedure(
   getHtml: GetHtmlFunction,
   getHtmlLazy: GetHtmlLazyFunction,
+  sessionId: string,
   config: VideoProcedureConfig,
 ) {
   const {
     followVideos,
-    seedVideosDynamic,
-    scrollingBottomForComments,
     seedVideosFixed,
+    seedVideosDynamic,
+    seedVideosRepeat,
+    scrollingBottomForComments,
     doLogout,
   } = config;
 
@@ -93,12 +119,25 @@ async function* scrapingVideosProcedure(
     seedVideosDynamic.length + approxNumSeedVideos * (followVideos + 1);
 
   // 1. block: get seed videos
-  let seedVideos: SeedVideo[] = seedVideosFixed.map((x) => ({
+  const seedVideos: SeedVideo[] = seedVideosFixed.map((x) => ({
     id: x,
     creator: 'fixed',
   }));
-  for (const { slug, maxVideos } of seedVideosDynamic) {
-    const resultSeedVideos = await scrapeDynamic(getHtml, slug);
+
+  // get videos from previous results
+  for (const rep of seedVideosRepeat) {
+    const newSeed = await getSeedVideosRepeat(sessionId, rep);
+    console.log(newSeed);
+    maxSteps += newSeed.length;
+    seedVideos.push(...newSeed);
+  }
+
+  for (const seedDynamic of seedVideosDynamic) {
+    const { slug, maxVideos } = seedDynamic;
+    const resultSeedVideos = await scrapeDynamicSeedVideos(
+      getHtml,
+      seedDynamic,
+    );
     const numSeedVideos = Math.min(
       resultSeedVideos.fields.videos.length,
       maxVideos,
@@ -112,12 +151,15 @@ async function* scrapingVideosProcedure(
 
     step += 1;
     yield [step / maxSteps, resultSeedVideos];
-    seedVideos = seedVideos.slice(0, numSeedVideos).concat(
-      resultSeedVideos.fields.videos.map(({ id }: { id: string }) => ({
+
+    const newSeed = resultSeedVideos.fields.videos
+      .slice(0, numSeedVideos)
+      .map(({ id }: { id: string }) => ({
         id,
         creator: slug,
-      })),
-    );
+      }));
+
+    seedVideos.push(...newSeed);
   }
 
   // 2. block: get acutal video + video recommendations
@@ -162,19 +204,33 @@ async function* scrapingVideosProcedure(
 
 const createProcedureGenMakers = (
   steps: ProcedureConfig[],
-): ((x: GetHtmlFunction, y: GetHtmlLazyFunction) => any)[] => {
-  const result: ((x: GetHtmlFunction, y: GetHtmlLazyFunction) => any)[] = [];
+): ((
+  x: GetHtmlFunction,
+  y: GetHtmlLazyFunction,
+  sessiondId: string,
+) => any)[] => {
+  const result: ((
+    x: GetHtmlFunction,
+    y: GetHtmlLazyFunction,
+    sessiondId: string,
+  ) => any)[] = [];
 
   for (const step of steps) {
     if (step.type === 'videos') {
-      const f = (x: GetHtmlFunction, y: GetHtmlLazyFunction) =>
-        scrapingVideosProcedure(x, y, step);
+      const f = (
+        x: GetHtmlFunction,
+        y: GetHtmlLazyFunction,
+        sessiondId: string,
+      ) => scrapingVideosProcedure(x, y, sessiondId, step);
 
       result.push(f);
     }
     if (step.type === 'profile') {
-      const f = (x: GetHtmlFunction, y: GetHtmlLazyFunction) =>
-        scrapingProfileProcedure(x, y, step);
+      const f = (
+        x: GetHtmlFunction,
+        y: GetHtmlLazyFunction,
+        sessiondId: string,
+      ) => scrapingProfileProcedure(x, y, sessiondId, step);
 
       result.push(f);
     }
@@ -187,6 +243,7 @@ const createSingleGenerator = (
   steps: ProcedureConfig[],
   getHtml: GetHtmlFunction,
   getHtmlLazy: GetHtmlLazyFunction,
+  sessionId: string,
 ) => {
   const genMakers = createProcedureGenMakers(steps);
 
@@ -194,7 +251,7 @@ const createSingleGenerator = (
     let i = 0;
 
     for (const genM of genMakers) {
-      const singleGen = genM(getHtml, getHtmlLazy);
+      const singleGen = genM(getHtml, getHtmlLazy, sessionId);
 
       while (true) {
         const { value, done } = await singleGen.next();
