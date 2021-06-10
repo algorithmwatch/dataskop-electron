@@ -68,8 +68,8 @@ export const Carousel = forwardRef(
           <ArrowButton icon={faChevronCircleLeft} dir="<" />
           <ArrowButton icon={faChevronCircleRight} dir=">" />
         </div>
-        <div className="absolute right-0 inset-y-0 w-28 bg-gradient-to-r from-transparent to-yellow-100" />
-        <div className="absolute left-0 inset-y-0 w-28 bg-gradient-to-r from-yellow-100 to-transparent" />
+        <div className="hidden lg:block absolute right-0 inset-y-0 w-20 bg-gradient-to-r from-transparent to-yellow-100" />
+        <div className="hidden lg:block absolute left-0 inset-y-0 w-20 bg-gradient-to-r from-yellow-100 to-transparent" />
       </div>
     );
   },
