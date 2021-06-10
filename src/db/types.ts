@@ -9,6 +9,7 @@ interface ScrapingResult extends Omit<ParserResult, 'slug'> {
 interface ScrapingResultSaved extends ScrapingResult {
   sessionId: string;
   scrapedAt: number; // number of millisecconds in UTC
+  step: number;
 }
 
 interface ScrapingSessions {

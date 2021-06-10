@@ -45,9 +45,14 @@ const addNewSession = async (sessionId: string, configSlug: string) => {
   return db.write();
 };
 
-const addScrapingResult = async (sessionId: string, data: any) => {
+const addScrapingResult = async (
+  sessionId: string,
+  step: number,
+  data: any,
+) => {
   const obj = {
     sessionId,
+    step,
     ...data,
     scrapedAt: Date.now(),
   };

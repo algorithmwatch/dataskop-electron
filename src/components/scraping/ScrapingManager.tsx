@@ -160,12 +160,12 @@ export default function ScrapingManager({
         const { value, done } = await stepGenerator.next();
         if (value == null || sessionId == null) return;
 
-        const [newFrac, result] = value;
+        const [newFrac, step, result] = value;
 
         setScrapingProgressBar({ isActive: true, label: '', value: newFrac });
 
         // async, don't wait until data is stored on disk
-        addScrapingResult(sessionId, result);
+        addScrapingResult(sessionId, step, result);
 
         if (!result.success) {
           console.error('parsing error:');

@@ -36,6 +36,7 @@ function Row({ row }) {
         <TableCell component="th" scope="row">
           {row.slug}
         </TableCell>
+        <TableCell align="right">{row.step}</TableCell>
         <TableCell align="right">{row.scrapedAt}</TableCell>
         <TableCell align="right">{row.success ? 'yes' : 'no'}</TableCell>
         <TableCell align="right">{JSON.stringify(row.errors)}</TableCell>
@@ -69,6 +70,7 @@ export default function DetailsTable({ rows }) {
           <TableRow>
             <TableCell />
             <TableCell>slug</TableCell>
+            <TableCell align="right">step</TableCell>
             <TableCell align="right">scraped at</TableCell>
             <TableCell align="right">success</TableCell>
             <TableCell align="right">errors</TableCell>

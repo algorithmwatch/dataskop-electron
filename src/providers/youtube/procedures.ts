@@ -136,7 +136,7 @@ async function* scrapingVideosProcedure(
 //   (config: ProcedureConfig) => (x: GetHtmlFunction, y: GetHtmlLazyFunction) =>
 //     scrapingYoutubeProcedure(x, y, config);
 
-const createProcedureGenerators = (
+const createProcedureGenMakers = (
   steps: ProcedureConfig[],
 ): ((x: GetHtmlFunction, y: GetHtmlLazyFunction) => any)[] => {
   const result: ((x: GetHtmlFunction, y: GetHtmlLazyFunction) => any)[] = [];
@@ -164,21 +164,23 @@ const createSingleGenerator = (
   getHtml: GetHtmlFunction,
   getHtmlLazy: GetHtmlLazyFunction,
 ) => {
-  const genMakers = createProcedureGenerators(steps);
+  const genMakers = createProcedureGenMakers(steps);
 
   async function* gen() {
     let i = 0;
 
-    for (const g of genMakers) {
-      const singleGen = g(getHtml, getHtmlLazy);
+    for (const genM of genMakers) {
+      const singleGen = genM(getHtml, getHtmlLazy);
 
       while (true) {
         const { value, done } = await singleGen.next();
 
+        // transform [frac, data] to [normalizedFrac, step, data]
+
         const fracFixed =
           value[0] * (1 / genMakers.length) + i / genMakers.length;
 
-        const valueFixed = [fracFixed].concat(value.slice(1));
+        const valueFixed = [fracFixed, i].concat(value.slice(1));
 
         if (done && i + 1 === genMakers.length) return valueFixed;
         yield valueFixed;
@@ -188,9 +190,9 @@ const createSingleGenerator = (
       i += 1;
     }
     // should never happen
-    return [1, null];
+    return [1, 0, null];
   }
   return gen();
 };
 
-export { createSingleGenerator, createProcedureGenerators };
+export { createSingleGenerator, createProcedureGenMakers };
