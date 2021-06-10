@@ -1,32 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, useLocation } from 'react-router-dom';
-import Explainer from '../components/Explainer';
 import FooterNav from '../components/FooterNav';
 import NewsTop5 from '../components/visualizations/NewsTop5';
 import routes from '../constants/routes.json';
+import { useConfig } from '../contexts/config';
+import { getSessionData } from '../db';
 
-export default function VisualizationExperimentsPage(): JSX.Element {
-  const [explainerIsOpen, setExplainerIsOpen] = useState(true);
-  const { state } = useLocation();
-  const { sessionId, type }: { sessionId: string; type: string } = state;
+interface LocationState {
+  sessionId: string;
+  type: string;
+}
+
+export default function VisualizationExperimentsPage() {
+    const { state } = useLocation<LocationState>();
+  const { sessionId, type } = state;
 
   if (!sessionId || !type) return null;
 
-  // const [data, setData] = useState<any>([]);
-  // const {
-  //   state: { isDebug },
-  // } = useConfig();
+  const [data, setData] = useState<any>([]);
+  const {
+    state: { isDebug },
+  } = useConfig();
 
-  // useEffect(() => {
-  //   const loadData = async () => {
-  //     setData(await getSessionData(sessionId));
-  //   };
-  //   loadData();
-  // }, [sessionId]);
+  useEffect(() => {
+    const loadData = async () => {
+      setData(await getSessionData(sessionId));
+    };
+    loadData();
+  }, [sessionId]);
 
-  // if (isDebug) {
-  //   console.log(data);
-  // }
+  if (isDebug) {
+    console.log(data);
+  }
 
   const footerNavItems = [
     {
@@ -41,15 +46,7 @@ export default function VisualizationExperimentsPage(): JSX.Element {
   return (
     <>
       {type === 'newstop5' && (
-        <>
-          <NewsTop5 />
-          <Explainer
-            isOpen={explainerIsOpen}
-            onIsOpenChange={(val: boolean) => setExplainerIsOpen(val)}
-          >
-            Hallo haha
-          </Explainer>
-        </>
+        <NewsTop5 data={data} />
       )}
       <FooterNav items={footerNavItems} />
     </>

@@ -52,7 +52,7 @@ export default function Button({
   // set button classes
 
   const buttonSize = {
-    small: 'px-4 py-3 text-sm',
+    small: 'px-3 py-2.5 text-sm',
     medium: 'px-5 py-4 text-base',
     large: 'px-6 py-5 text-xl',
   };
@@ -60,7 +60,8 @@ export default function Button({
   const buttonTheme = {
     outline: cn({
       'border-2 focus:outline-none text-yellow-1500': true,
-      'border-yellow-700 hover:text-yellow-1000 focus:ring-4 focus:ring-yellow-500 focus:ring-opacity-50': !disabled,
+      'border-yellow-700 hover:text-yellow-1200 focus:ring-4 focus:ring-yellow-500 focus:ring-opacity-50':
+        !disabled,
       'border-yellow-1200 text-yellow-1200 opacity-20': disabled,
     }),
     link: cn({
@@ -69,7 +70,9 @@ export default function Button({
       'text-gray-400': disabled,
     }),
     blue: cn({
-      'bg-blue-500 text-white hover:bg-blue-600': true,
+      'border-2 focus:outline-none text-white': true,
+      'border-blue-500 bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50':
+        !disabled,
     }),
   };
 
