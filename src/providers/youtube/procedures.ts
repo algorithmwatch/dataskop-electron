@@ -1,6 +1,9 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 
+import { clearStorage } from '../../components/scraping/ipc';
+import { delay } from '../../utils/time';
+import { submitConfirmForm } from './actions/confirmCookies';
 import { experimentScrapers } from './scrapers';
 import {
   GetHtmlFunction,
@@ -22,7 +25,7 @@ async function* scrapingProfileProcedure(
   let step = 0;
   const maxSteps = profileScrapers.length;
 
-  // 2. block: get background information such as history or subscriptions
+  // get background information such as history or subscriptions
   for (const fun of profileScrapers) {
     const data = await fun(getHtml);
     step += 1;
@@ -47,12 +50,20 @@ async function* scrapingVideosProcedure(
     seedVideosDynamic,
     scrollingBottomForComments,
     seedVideosFixed,
+    doLogout,
   } = config;
 
   const isFollowingVideos = !(followVideos == null || followVideos === 0);
   const scrapeComments = !(
     scrollingBottomForComments == null || scrollingBottomForComments === 0
   );
+
+  if (doLogout) {
+    await clearStorage();
+    await delay(3000);
+    await submitConfirmForm(getHtml);
+    await delay(3000);
+  }
 
   let step = 0;
   // guess the number of total steps (may get altered later on)

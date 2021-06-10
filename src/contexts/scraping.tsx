@@ -17,14 +17,17 @@ type Action =
       scrapingProgress: ScrapingProgressBar;
     }
   | { type: 'set-user-logged-in'; isUserLoggedIn: boolean }
-  | { type: 'set-session-id'; sessionId: string | null }
   | { type: 'set-scraping-started'; isScrapingStarted: boolean }
   | { type: 'set-scraping-paused'; isScrapingPaused: boolean }
   | { type: 'set-scraping-finished'; isScrapingFinished: boolean }
   | { type: 'set-muted'; isMuted: boolean }
   | { type: 'set-scraping-error'; scrapingError: Error | null }
   | { type: 'reset-scraping' }
-  | { type: 'set-step-generator'; stepGenerator: AsyncGenerator | null };
+  | {
+      type: 'scraping-has-started';
+      sessionId: string | null;
+      stepGenerator: AsyncGenerator | null;
+    };
 
 type Dispatch = (action: Action) => void;
 type State = {
@@ -91,10 +94,6 @@ function scrapingReducer(state: State, action: Action) {
       return { ...state, isUserLoggedIn: action.isUserLoggedIn };
     }
 
-    case 'set-session-id': {
-      return { ...state, sessionId: action.sessionId };
-    }
-
     case 'set-scraping-started': {
       return { ...state, isScrapingStarted: action.isScrapingStarted };
     }
@@ -119,8 +118,12 @@ function scrapingReducer(state: State, action: Action) {
       };
     }
 
-    case 'set-step-generator': {
-      return { ...state, stepGenerator: action.stepGenerator };
+    case 'scraping-has-started': {
+      return {
+        ...state,
+        sessionId: action.sessionId,
+        stepGenerator: action.stepGenerator,
+      };
     }
 
     // only select state that does not re-render the browser window

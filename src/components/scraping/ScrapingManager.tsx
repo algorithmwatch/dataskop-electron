@@ -135,13 +135,15 @@ export default function ScrapingManager({
         getHtmlLazy,
       );
 
-      dispatch({ type: 'set-step-generator', stepGenerator: gen });
-
       // create a uuid every time you hit start scraping
       const sId = uuidv4();
-      dispatch({ type: 'set-session-id', sessionId: sId });
+      dispatch({
+        type: 'scraping-has-started',
+        stepGenerator: gen,
+        sessionId: sId,
+      });
 
-      addNewSession(sId, scrapingConfig.slug);
+      await addNewSession(sId, scrapingConfig.slug);
     };
 
     if (isScrapingStarted) startScraping();
@@ -161,6 +163,8 @@ export default function ScrapingManager({
         const [newFrac, result] = value;
 
         setScrapingProgressBar({ isActive: true, label: '', value: newFrac });
+
+        // async, don't wait until data is stored on disk
         addScrapingResult(sessionId, result);
 
         if (!result.success) {
@@ -187,7 +191,7 @@ export default function ScrapingManager({
     };
     runScraperOnce();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stepGenerator, scrapingProgress.value, sessionId, isScrapingPaused]);
+  }, [scrapingProgress.value, sessionId, isScrapingPaused]);
 
   // initialize & cleanup
 

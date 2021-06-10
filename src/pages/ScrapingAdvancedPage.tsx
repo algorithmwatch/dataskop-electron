@@ -21,7 +21,7 @@ import { allConfigs } from '../providers/youtube';
 import {
   activateWatchHistory,
   deactivateWatchHistory,
-} from '../providers/youtube/actions';
+} from '../providers/youtube/actions/manageWatchHistory';
 
 const ScrapingConfigSelect = ({ scrapingConfig, setScrapingConfig }) => {
   const [expanded, setExpanded] = useState(false);

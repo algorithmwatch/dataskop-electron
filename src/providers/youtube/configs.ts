@@ -15,6 +15,7 @@ const emptyVideoProcedureConfig: VideoProcedureConfig = {
   followVideos: 0,
   seedVideosFixed: [],
   seedVideosDynamic: [],
+  doLogout: false,
 };
 
 const defaultVideoExperimentScraper = {
@@ -31,6 +32,23 @@ const defaultVideoExperimentScraper = {
       maxVideos: 1,
       getVideos: async (getHtml: GetHtmlFunction) =>
         scrapeNationalNewsTopStories(getHtml),
+    },
+  ],
+};
+
+const simpleVideoExperimentScaper = {
+  ...defaultVideoExperimentScraper,
+  followVideos: 0,
+};
+
+const logOutConfig = {
+  ...simpleVideoExperimentScaper,
+  doLogout: true,
+  seedVideosDynamic: [
+    {
+      maxVideos: 1,
+      getVideos: async (getHtml: GetHtmlFunction) =>
+        scrapePopularVideos(getHtml),
     },
   ],
 };
@@ -53,7 +71,7 @@ const simpleConfig: ScrapingConfig = {
   ...defaultConfig,
   title: 'youtube simple config',
   slug: 'yt-simple',
-  steps: [defaultVideoExperimentScraper],
+  steps: [simpleVideoExperimentScaper, logOutConfig],
 };
 
 // fast test, all functions only need to run once

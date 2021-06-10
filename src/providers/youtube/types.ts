@@ -28,6 +28,8 @@ type VideoProcedureConfig = {
   followVideos: number;
   // how often to scroll down for lazy loading
   scrollingBottomForComments: number;
+  // if true, logout user before first scraping
+  doLogout: boolean;
 };
 
 type ProfileProcedureConfig = {
