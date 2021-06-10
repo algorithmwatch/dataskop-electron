@@ -2,12 +2,14 @@ import { ipcRenderer } from 'electron';
 import _ from 'lodash';
 import { JSONFile, Low } from 'lowdb';
 import { join } from 'path';
+import { ScrapingConfig } from '../providers/youtube';
 import { statsForArray } from '../utils/math';
 import { ScrapingResultSaved, ScrapingSessions } from './types';
 
 type Data = {
   scrapingSessions: ScrapingSessions[];
   scrapingResults: ScrapingResultSaved[];
+  scrapingConfigs: ScrapingConfig[];
 };
 
 let db: Low<Data> | null = null;
@@ -26,7 +28,11 @@ const setUpDb = async () => {
 
   await db.read();
 
-  db.data ||= { scrapingSessions: [], scrapingResults: [] };
+  db.data ||= {
+    scrapingSessions: [],
+    scrapingResults: [],
+    scrapingConfigs: [],
+  };
   return db.data;
 };
 
@@ -68,6 +74,23 @@ const addScrapingResult = async (
 const getScrapingResults = async () => {
   const data = await setUpDb();
   return _.orderBy(data.scrapingResults, 'scrapedAt');
+};
+
+const addOrUpdateStoredScrapingConfig = async (config: ScrapingConfig) => {
+  await setUpDb();
+  if (db === null || db.data === null) throw Error('db is not initialized');
+
+  const newData =
+    db.data.scrapingConfigs?.filter((x) => x.slug !== config.slug) || [];
+  newData.unshift(config);
+
+  db.data.scrapingConfigs = newData;
+  return db.write();
+};
+
+const getStoredScrapingConfigs = async () => {
+  const data = await setUpDb();
+  return data.scrapingConfigs;
 };
 
 const getAllData = async () => {
@@ -120,7 +143,11 @@ const clearData = async () => {
   if (db === null) throw Error('db is not initialized');
 
   if (db.data === null) return;
-  db.data = { scrapingSessions: [], scrapingResults: [] };
+  db.data = {
+    scrapingSessions: [],
+    scrapingResults: [],
+    scrapingConfigs: db.data.scrapingConfigs,
+  };
   await db.write();
 };
 
@@ -189,4 +216,6 @@ export {
   getSessionData,
   addNewSession,
   getStatisticsForSession,
+  addOrUpdateStoredScrapingConfig,
+  getStoredScrapingConfigs,
 };

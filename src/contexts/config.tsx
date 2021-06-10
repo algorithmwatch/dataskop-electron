@@ -1,12 +1,6 @@
 import { ipcRenderer } from 'electron';
 import React, { useEffect } from 'react';
 
-export type ScrapingProgressBar = {
-  isActive: boolean;
-  value: number; // progres from 0 to 1
-  label: string;
-};
-
 type Action =
   | { type: 'set-version'; version: string }
   | { type: 'set-debug'; isDebug: boolean };

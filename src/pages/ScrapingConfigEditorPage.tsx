@@ -1,14 +1,42 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
-import { Card, CardContent, CardHeader } from '@material-ui/core';
-import React from 'react';
-import { useConfig } from '../contexts/config';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@material-ui/core';
+import dayjs from 'dayjs';
+import React, { useState } from 'react';
+import ReactJson from 'react-json-view';
+import Button from '../components/Button';
+import {
+  addOrUpdateStoredScrapingConfig,
+  getStoredScrapingConfigs,
+} from '../db';
+import { defaultConfig, ScrapingConfig } from '../providers/youtube';
 
 export default function ScrapingConfigEditorPage(): JSX.Element {
-  const {
-    state: { scrapingConfig },
-    dispatch,
-  } = useConfig();
+  const [rows, setRows] = useState<ScrapingConfig[]>([]);
+  const [editJson, setEditJson] = useState<ScrapingConfig | null>(null);
+
+  const newConfig = async () => {
+    const config = defaultConfig;
+    config.slug = `youtube-${dayjs().format('YYYY-MM-DD-HH-mm-s')}`;
+    await addOrUpdateStoredScrapingConfig(config);
+    setRows(await getStoredScrapingConfigs());
+  };
+
+  const updateConfig = async (e) => {
+    if (e.updated_src === null) return;
+    await addOrUpdateStoredScrapingConfig(e.updated_src);
+    setRows(await getStoredScrapingConfigs());
+  };
 
   return (
     <>
@@ -20,51 +48,44 @@ export default function ScrapingConfigEditorPage(): JSX.Element {
               This is an advancaded configuration tool for the scraping. This
               tool is not used for the end user of DataSkop.
             </p>
+            <Button onClick={newConfig}>New Config</Button>
           </CardContent>
           <CardContent>
-            <p>enter youtube ids here</p>
-            <textarea
-              className="bg-gray-200"
-              style={{ width: '500px' }}
-              rows={10}
-              value={
-                typeof scrapingConfig.procedureConfig.seedVideosFixed ===
-                'string'
-                  ? scrapingConfig.procedureConfig.seedVideosFixed
-                  : scrapingConfig.procedureConfig.seedVideosFixed.join(' ')
-              }
-              onChange={(e) => {
-                try {
-                  if (e.target.value == null) return;
-                  setScrapingConfig({
-                    ...scrapingConfig,
-                    procedureConfig: {
-                      ...scrapingConfig.procedureConfig,
-                      seedVideosFixed: e.target.value,
-                    },
-                  });
-                } catch (error) {
-                  console.error(error);
-                }
-              }}
-            />
-            <p>how many to videos to follow auto-play</p>
-            <input
-              className="bg-gray-200"
-              id="number"
-              type="number"
-              step="1"
-              value={scrapingConfig.procedureConfig.followVideos}
-              onChange={(e) => {
-                setScrapingConfig({
-                  ...scrapingConfig,
-                  procedureConfig: {
-                    ...scrapingConfig.procedureConfig,
-                    followVideos: parseInt(e.target.value, 10),
-                  },
-                });
-              }}
-            />
+            {editJson && (
+              <ReactJson
+                src={editJson}
+                onAdd={updateConfig}
+                onEdit={updateConfig}
+              />
+            )}
+          </CardContent>
+          <CardContent>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Title</TableCell>
+                    <TableCell align="right">Slug</TableCell>
+                    <TableCell align="right">Steps</TableCell>
+                    <TableCell align="right">Edit</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row) => (
+                    <TableRow key={row.slug}>
+                      <TableCell component="th" scope="row">
+                        {row.title}
+                      </TableCell>
+                      <TableCell align="right">{row.slug}</TableCell>
+                      <TableCell align="right">{row.steps.length}</TableCell>
+                      <TableCell align="right">
+                        <Button onClick={() => setEditJson(row)}>Edit</Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </CardContent>
         </Card>
       </div>

@@ -1,4 +1,4 @@
-import { ParserResult } from '@algorithmwatch/harke-parser/src/types';
+import { ParserResult } from '@algorithmwatch/harke-parser';
 
 // re-defining the slug of `ParserResult` from `harke-parser` because the slug is not changable
 interface ScrapingResult extends Omit<ParserResult, 'slug'> {
