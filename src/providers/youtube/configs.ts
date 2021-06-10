@@ -1,19 +1,25 @@
-import { scrapingYoutubeProcedure } from './procedures';
 import { experimentScrapers, profileScrapers } from './scrapers';
 import {
   GetHtmlFunction,
-  GetHtmlLazyFunction,
-  ProcedureConfig,
+  ProfileProcedureConfig,
   ScrapingConfig,
+  VideoProcedureConfig,
 } from './types';
 
-const {
-  scrapeNationalNewsTopStories,
-  scrapePopularVideos,
-} = experimentScrapers;
+const { scrapeNationalNewsTopStories, scrapePopularVideos } =
+  experimentScrapers;
 
-const defaultProcedureConfig = {
-  scrollingBottomForComments: 5,
+const emptyVideoProcedureConfig: VideoProcedureConfig = {
+  type: 'videos',
+  scrollingBottomForComments: 0,
+  followVideos: 0,
+  seedVideosFixed: [],
+  seedVideosDynamic: [],
+  doLogout: false,
+};
+
+const defaultVideoExperimentScraper = {
+  ...emptyVideoProcedureConfig,
   followVideos: 2,
   seedVideosFixed: ['4Y1lZQsyuSQ', 'yr1YyrolRZY'],
   seedVideosDynamic: [
@@ -28,13 +34,29 @@ const defaultProcedureConfig = {
         scrapeNationalNewsTopStories(getHtml),
     },
   ],
-  profileScrapers: Object.values(profileScrapers),
 };
 
-const createProcedure = (config: ProcedureConfig) => (
-  x: GetHtmlFunction,
-  y: GetHtmlLazyFunction,
-) => scrapingYoutubeProcedure(x, y, config);
+const simpleVideoExperimentScaper = {
+  ...defaultVideoExperimentScraper,
+  followVideos: 0,
+};
+
+const logOutConfig = {
+  ...simpleVideoExperimentScaper,
+  doLogout: true,
+  seedVideosDynamic: [
+    {
+      maxVideos: 1,
+      getVideos: async (getHtml: GetHtmlFunction) =>
+        scrapePopularVideos(getHtml),
+    },
+  ],
+};
+
+const defaultProfileScraper: ProfileProcedureConfig = {
+  type: 'profile',
+  profileScrapers: Object.values(profileScrapers),
+};
 
 const defaultConfig: ScrapingConfig = {
   title: 'youtube default config',
@@ -42,20 +64,14 @@ const defaultConfig: ScrapingConfig = {
   startUrl: 'https://www.youtube.com',
   loginUrl: 'https://www.youtube.com/account',
   loginCookie: 'LOGIN_INFO',
-  procedureConfig: defaultProcedureConfig,
-  createProcedure,
+  steps: [defaultProfileScraper, defaultVideoExperimentScraper],
 };
 
 const simpleConfig: ScrapingConfig = {
   ...defaultConfig,
   title: 'youtube simple config',
   slug: 'yt-simple',
-  procedureConfig: {
-    ...defaultProcedureConfig,
-    scrollingBottomForComments: 0,
-    profileScrapers: [],
-    seedVideosDynamic: [],
-  },
+  steps: [simpleVideoExperimentScaper, logOutConfig],
 };
 
 // fast test, all functions only need to run once
@@ -64,15 +80,20 @@ const testConfig: ScrapingConfig = {
   ...defaultConfig,
   title: 'youtube test providers',
   slug: 'yt-test',
-  procedureConfig: {
-    ...defaultProcedureConfig,
-    profileScrapers: Object.values(profileScrapers).concat([
-      scrapePopularVideos,
-      scrapeNationalNewsTopStories,
-    ]),
-    seedVideosDynamic: [],
-    seedVideosFixed: ['4Y1lZQsyuSQ'],
-  },
+  steps: [
+    {
+      ...defaultProfileScraper,
+      profileScrapers: Object.values(profileScrapers).concat([
+        scrapePopularVideos,
+        scrapeNationalNewsTopStories,
+      ]),
+    },
+    {
+      ...defaultVideoExperimentScraper,
+      seedVideosDynamic: [],
+      seedVideosFixed: ['4Y1lZQsyuSQ'],
+    },
+  ],
 };
 
 const allConfigs = [defaultConfig, simpleConfig, testConfig];

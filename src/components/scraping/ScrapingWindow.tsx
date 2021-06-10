@@ -3,7 +3,7 @@ import { pick, round } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { Rnd } from 'react-rnd';
 
-export default function ScrapingBrowser({
+export default function ScrapingWindow({
   isMuted = true,
   fixedWindow = false,
   initPosition = 'center',

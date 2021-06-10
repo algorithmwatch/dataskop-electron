@@ -201,7 +201,7 @@ async function* scrapeSeedVideosAndFollow(
     }
   }
   // Should never be reached.
-  return null;
+  return [1, null];
 }
 
 async function* scrapeSeedVideos(
@@ -222,7 +222,8 @@ async function* scrapeSeedVideos(
       return [1, data];
     }
   }
-  return null;
+  // Should never be reached.
+  return [1, null];
 }
 
 export const profileScrapers = {

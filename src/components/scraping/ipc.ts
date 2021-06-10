@@ -13,6 +13,8 @@ const goToUrl = async (url: string, options = {}): Promise<string> => {
   return ipcRenderer.invoke('scraping-load-url', url, options);
 };
 
+const clearStorage = () => ipcRenderer.invoke('scraping-clear-storage');
+
 const makeGetHtml = (logHtml: boolean): GetHtmlFunction => {
   const getHtml = async (url: string): Promise<GetCurrentHtml> => {
     await goToUrl(url);
@@ -43,11 +45,17 @@ const scrollDown = async () => {
   return ipcRenderer.invoke('scraping-scroll-down');
 };
 
-const clickElement = async (selector) => {
+const clickElement = async (selector: string) => {
   return ipcRenderer.invoke('scraping-click-element', selector);
 };
 
+const submitForm = async (selector: string) => {
+  return ipcRenderer.invoke('scraping-submit-form', selector);
+};
+
 export {
+  submitForm,
+  clearStorage,
   makeGetHtml,
   getCookies,
   setNavigationCallback,

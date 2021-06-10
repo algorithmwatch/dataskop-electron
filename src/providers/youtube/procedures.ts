@@ -1,32 +1,69 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 
+import { clearStorage } from '../../components/scraping/ipc';
+import { delay } from '../../utils/time';
+import { submitConfirmForm } from './actions/confirmCookies';
 import { experimentScrapers } from './scrapers';
-import { GetHtmlFunction, GetHtmlLazyFunction, ProcedureConfig } from './types';
+import {
+  GetHtmlFunction,
+  GetHtmlLazyFunction,
+  ProcedureConfig,
+  ProfileProcedureConfig,
+  VideoProcedureConfig,
+} from './types';
 
 const { scrapeSeedVideos, scrapeSeedVideosAndFollow } = experimentScrapers;
 
+async function* scrapingProfileProcedure(
+  getHtml: GetHtmlFunction,
+  getHtmlLazy: GetHtmlLazyFunction,
+  config: ProfileProcedureConfig,
+) {
+  const { profileScrapers } = config;
+
+  let step = 0;
+  const maxSteps = profileScrapers.length;
+
+  // get background information such as history or subscriptions
+  for (const fun of profileScrapers) {
+    const data = await fun(getHtml);
+    step += 1;
+    // already return here if there is no further scraping
+    if (step < maxSteps) yield [step / maxSteps, data];
+    else return [step / maxSteps, data];
+  }
+
+  return [1, null];
+}
 /**
  *  some background on `yield*`:
  *  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield%2A
  */
-async function* scrapingYoutubeProcedure(
+async function* scrapingVideosProcedure(
   getHtml: GetHtmlFunction,
   getHtmlLazy: GetHtmlLazyFunction,
-  config: ProcedureConfig,
+  config: VideoProcedureConfig,
 ) {
   const {
     followVideos,
     seedVideosDynamic,
-    profileScrapers,
     scrollingBottomForComments,
     seedVideosFixed,
+    doLogout,
   } = config;
 
   const isFollowingVideos = !(followVideos == null || followVideos === 0);
   const scrapeComments = !(
     scrollingBottomForComments == null || scrollingBottomForComments === 0
   );
+
+  if (doLogout) {
+    await clearStorage();
+    await delay(3000);
+    await submitConfirmForm(getHtml);
+    await delay(3000);
+  }
 
   let step = 0;
   // guess the number of total steps (may get altered later on)
@@ -35,9 +72,7 @@ async function* scrapingYoutubeProcedure(
     seedVideosFixed.length;
 
   let maxSteps =
-    seedVideosDynamic.length +
-    approxNumSeedVideos * (followVideos + 1) +
-    profileScrapers.length;
+    seedVideosDynamic.length + approxNumSeedVideos * (followVideos + 1);
 
   // 1. block: get seed videos
   let seedVideoIds: string[] = seedVideosFixed;
@@ -61,16 +96,7 @@ async function* scrapingYoutubeProcedure(
       .concat(resultSeedVideos.fields.videos.map(({ id }) => id));
   }
 
-  // 2. block: get background information such as history or subscriptions
-  for (const fun of profileScrapers) {
-    const data = await fun(getHtml);
-    step += 1;
-    // already return here if there is no further scraping
-    if (step < maxSteps) yield [step / maxSteps, data];
-    else return [step / maxSteps, data];
-  }
-
-  // 3. block: get acutal video + video recommendations
+  // 2. block: get acutal video + video recommendations
   // use lazy loading if comments are required
 
   const getHtmlVideos = getHtml;
@@ -106,4 +132,67 @@ async function* scrapingYoutubeProcedure(
   );
 }
 
-export { scrapingYoutubeProcedure };
+// const createProcedure =
+//   (config: ProcedureConfig) => (x: GetHtmlFunction, y: GetHtmlLazyFunction) =>
+//     scrapingYoutubeProcedure(x, y, config);
+
+const createProcedureGenMakers = (
+  steps: ProcedureConfig[],
+): ((x: GetHtmlFunction, y: GetHtmlLazyFunction) => any)[] => {
+  const result: ((x: GetHtmlFunction, y: GetHtmlLazyFunction) => any)[] = [];
+
+  for (const step of steps) {
+    if (step.type === 'videos') {
+      const f = (x: GetHtmlFunction, y: GetHtmlLazyFunction) =>
+        scrapingVideosProcedure(x, y, step);
+
+      result.push(f);
+    }
+    if (step.type === 'profile') {
+      const f = (x: GetHtmlFunction, y: GetHtmlLazyFunction) =>
+        scrapingProfileProcedure(x, y, step);
+
+      result.push(f);
+    }
+  }
+
+  return result;
+};
+
+const createSingleGenerator = (
+  steps: ProcedureConfig[],
+  getHtml: GetHtmlFunction,
+  getHtmlLazy: GetHtmlLazyFunction,
+) => {
+  const genMakers = createProcedureGenMakers(steps);
+
+  async function* gen() {
+    let i = 0;
+
+    for (const genM of genMakers) {
+      const singleGen = genM(getHtml, getHtmlLazy);
+
+      while (true) {
+        const { value, done } = await singleGen.next();
+
+        // transform [frac, data] to [normalizedFrac, step, data]
+
+        const fracFixed =
+          value[0] * (1 / genMakers.length) + i / genMakers.length;
+
+        const valueFixed = [fracFixed, i].concat(value.slice(1));
+
+        if (done && i + 1 === genMakers.length) return valueFixed;
+        yield valueFixed;
+
+        if (done) break;
+      }
+      i += 1;
+    }
+    // should never happen
+    return [1, 0, null];
+  }
+  return gen();
+};
+
+export { createSingleGenerator, createProcedureGenMakers };

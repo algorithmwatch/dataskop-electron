@@ -52,6 +52,11 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     },
   );
 
+  ipcMain.handle('scraping-clear-storage', () => {
+    const view = scrapingView;
+    view?.webContents.session.clearStorageData();
+  });
+
   ipcMain.handle(
     'scraping-load-url',
     async (_event, url: string, { withHtml = false, clear = false }) => {
@@ -134,6 +139,12 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
   ipcMain.handle('scraping-click-element', async (_event, selector) => {
     await scrapingView?.webContents.executeJavaScript(
       `document.querySelector("${selector}").click()`,
+    );
+  });
+
+  ipcMain.handle('scraping-submit-form', async (_event, selector) => {
+    await scrapingView?.webContents.executeJavaScript(
+      `document.querySelector("${selector}").submit()`,
     );
   });
 }

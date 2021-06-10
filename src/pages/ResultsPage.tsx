@@ -5,12 +5,20 @@ import React, { useEffect, useState } from 'react';
 import Button from '../components/Button';
 import ConfirmDialog from '../components/ConfirmDialog';
 import OverviewTable from '../components/results/OverviewTable';
-import { clearData, getScrapingResults, getSessions, importRow } from '../db';
+import {
+  clearData,
+  getAllData,
+  getScrapingResults,
+  getSessions,
+  importResultRows,
+  importSessionRows,
+} from '../db';
 import { ScrapingResultSaved } from '../db/types';
 import { getVideos } from '../providers/youtube/utils';
 
-const invokeExport = async (data: ScrapingResultSaved[]) => {
+const invokeExport = async () => {
   const filename = `dataskop-${dayjs().format('YYYY-MM-DD-HH-mm-s')}.json`;
+  const data = await getAllData();
   ipcRenderer.invoke('results-export', JSON.stringify(data), filename);
 };
 
@@ -24,7 +32,10 @@ const invokeImageExport = async (data: ScrapingResultSaved[]) => {
   ipcRenderer.invoke('results-export-images', uniq(ytIds), filename);
 };
 
-const invokeImport = async (loadData: Function) => {
+const invokeImport = async (loadData: {
+  (events: any, newRowsString: string): Promise<void>;
+  (event: Electron.IpcRendererEvent, ...args: any[]): void;
+}) => {
   ipcRenderer.on('results-import-data', loadData);
   ipcRenderer.invoke('results-import');
 };
@@ -38,17 +49,14 @@ export default function ResultsPage(): JSX.Element {
       setRows(await getSessions());
     };
     newRows();
-  }, []);
+  }, [importedRows]);
 
-  const importRowCb = async (events: any, newRowsString: string) => {
-    const newRows = JSON.parse(newRowsString);
-    const newRowsResults = await Promise.all(
-      newRows.map(async (x: ScrapingResultSaved) => importRow(x)),
-    );
+  const importRowCb = async (_events: any, newRowsString: string) => {
+    const { scrapingResults, scrapingSessions } = JSON.parse(newRowsString);
+    const numImportedRows = await importResultRows(scrapingResults);
+    await importSessionRows(scrapingSessions);
 
-    setImportedRows(
-      importedRows + newRowsResults.reduce((x0, x1) => x0 + x1, 0),
-    );
+    setImportedRows(numImportedRows);
   };
 
   return (
@@ -62,11 +70,7 @@ export default function ResultsPage(): JSX.Element {
             text="you sure?"
             handleConfirm={() => clearData() && setRows([])}
           />
-          <Button
-            onClick={async () => invokeExport(await getScrapingResults())}
-          >
-            export data
-          </Button>
+          <Button onClick={async () => invokeExport()}>export data</Button>
           <Button onClick={async () => invokeImport(importRowCb)}>
             import data
           </Button>

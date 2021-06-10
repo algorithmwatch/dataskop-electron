@@ -1,10 +1,10 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 import cheerio from 'cheerio';
-import { clickElement } from '../../components/scraping/controls';
-import { getUniquePath } from '../../utils/cheerio-unique-selector';
-import { delay } from '../../utils/time';
-import { GetHtmlFunction } from './types';
+import { clickElement } from '../../../components/scraping/ipc';
+import { getUniquePath } from '../../../utils/cheerio-unique-selector';
+import { delay } from '../../../utils/time';
+import { GetHtmlFunction } from '../types';
 
 const changeWatchHistoryUrl = 'https://www.youtube.com/feed/history';
 
