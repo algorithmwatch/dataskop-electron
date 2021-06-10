@@ -89,6 +89,10 @@ module.exports = {
       },
       inset: {
         '-78': '-19.5rem',
+        '-192': '-48rem',
+      },
+      width: {
+        192: '48rem',
       },
     },
   },

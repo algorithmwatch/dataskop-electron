@@ -26,10 +26,10 @@ export default function Explainer({
     >
       <div
         className={classNames({
-          'w-2/3 inset-y-0 min-h-full bg-white z-30': true,
-          '-left-2/3 absolute': !isOpen,
+          'w-192 inset-y-0 bg-white z-30': true,
+          '-left-192 absolute': !isOpen,
           'left-0 relative': isOpen,
-          'transition-all duration-200 ease-in-out': true,
+          'transition-all duration-500 ease-in-out': true,
           'flex flex-col justify-between': true,
           'box-content border-r-8': true,
           'border-yellow-600': !isToggleHover,
@@ -60,7 +60,7 @@ export default function Explainer({
         </button>
 
         {/* Content */}
-        <div className="px-8 py-16">{children}</div>
+        <div className="px-12 py-16">{children}</div>
       </div>
 
       {/* Backdrop */}
