@@ -1,3 +1,4 @@
+import { Channel, RecommendedVideo } from '@algorithmwatch/harke-parser';
 import { faNewspaper } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import _ from 'lodash';
@@ -7,12 +8,27 @@ import { Carousel, Slide } from '../Carousel/Carousel';
 import { Options } from '../Carousel/types';
 import Explainer from '../Explainer';
 
-function Visual() {
+interface NewsTop5DataItem {
+  video: {
+    id: string;
+    title: string;
+    channel: Channel;
+  };
+  signedInVideos: RecommendedVideo[];
+  signedOutVideos: RecommendedVideo[];
+}
+
+function Visual({ session }: { session: NewsTop5DataItem }) {
   return (
     <div className="h-full flex bg-yellow-200 w-full max-w-3xl mx-auto p-6">
       <div className="mr-8 w-80">
         <strong>Ausgangsvideo</strong>
-        <div className="w-80 h-44 mt-2 bg-gray-300" />
+        <div className="w-80 h-44 mt-2 bg-gray-300">
+          <img
+            src={`https://img.youtube.com/vi/${session.video.id}/hqdefault.jpg`}
+            alt=""
+          />
+        </div>
         <div className="mt-2 flex">
           <div className="flex items-center">
             <div className="bg-gray-300 rounded-full w-10 h-10" />
@@ -50,32 +66,43 @@ function Visual() {
   );
 }
 
-export default function NewsTop5({ data }: { data: ScrapingResultSaved }) {
-  // const slugs = [
-  //   'yt-playlist-page-popular',
-  //   'yt-playlist-page-news-top-stories',
-  // ];
+export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
+  const filtered = (() => {
+    const signedInData = data.filter(
+      (x) =>
+        x.fields.seedCreator === 'yt-playlist-page-national-news-top-stories',
+    );
+    const signedOutData = data.filter(
+      (x) =>
+        x.fields.seedCreator ===
+        'repeat: yt-playlist-page-national-news-top-stories',
+    );
 
-  const filtered1 = data.filter(
-    (x) =>
-      x.fields.seedCreator ===
-      'repeat: yt-playlist-page-national-news-top-stories',
-  );
-  const filtered2 = data.filter(
-    (x) =>
-      x.fields.seedCreator === 'yt-playlist-page-national-news-top-stories',
-  );
+    return _.zip(signedOutData, signedInData);
+  })();
+  const transformed: NewsTop5DataItem[] = (() =>
+    filtered.map((x) => ({
+      video: {
+        id: x[0]?.fields.id,
+        title: x[0]?.fields.title,
+        channel: x[0]?.fields.channel,
+      },
+      signedInVideos: x.find((y) => y?.step === 0)?.fields.recommendedVideos,
+      signedOutVideos: x.find((y) => y?.step === 1)?.fields.recommendedVideos,
+    })))();
 
-  const zipped = _.zip(filtered1, filtered2);
-
-  console.warn('zipped', zipped);
+  console.warn('transformed', transformed);
 
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
   const carouselOptions: Options = {
     focusAt: 'center',
     gap: 0,
-    peek: 300,
+    peek: 250,
     breakpoints: {
+      // 1500: {
+      // peek: 400,
+      // gap: 40,
+      // },
       1400: {
         peek: 250,
         gap: 40,
@@ -186,15 +213,12 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved }) {
         </div>
       </Explainer>
       <Carousel options={carouselOptions}>
-        <Slide>
-          <Visual />
-        </Slide>
-        <Slide>
-          <Visual />
-        </Slide>
-        <Slide>
-          <Visual />
-        </Slide>
+        {transformed.length &&
+          transformed.map((session) => (
+            <Slide key={session.video.title}>
+              <Visual session={session} />
+            </Slide>
+          ))}
       </Carousel>
     </>
   );
