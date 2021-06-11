@@ -25,13 +25,13 @@ const getThumbnails = (id: string) => {
 
 // data wrangling
 
-const groupByFollowId = (x) =>
+const groupByFollowId = (x: any[]) =>
   Object.values(_.groupBy(x, (y) => y.fields.followId));
 
-const getVideos = (data) =>
+const getVideos = (data: any[]) =>
   data.filter((x) => x.slug.includes('video-page') && x.success);
 
-const getFollowGroups = (data) =>
+const getFollowGroups = (data: any[]) =>
   groupByFollowId(data.filter((x) => x.slug.includes('video-page')));
 
 export { getThumbnails, getFollowGroups, getVideos };

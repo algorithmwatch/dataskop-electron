@@ -1,35 +1,41 @@
-import { ScrapingResult } from '../../db/types';
+export type GetCurrentHtml = () => Promise<string>;
 
-type GetCurrentHtml = () => Promise<string>;
+export type GetHtmlFunction = (url: string) => Promise<GetCurrentHtml>;
 
-type GetHtmlFunction = (url: string) => Promise<GetCurrentHtml>;
-
-type GetHtmlLazyFunction = (
+export type GetHtmlLazyFunction = (
   url: string,
   scrollBottom: number,
   loadingDone: (html: string) => boolean,
   loadingAbort: (html: string) => boolean,
 ) => Promise<string>;
 
-type SeedCreator = {
+export type SeedCreator = {
   maxVideos: number;
   slug: string;
 };
 
-type SeedVideoRepeat = {
+export type SeedVideoRepeat = {
   step: number;
   previousResult: string;
   maxVideos: number;
 };
 
-type ProfileScraper = (getHtml: GetHtmlFunction) => Promise<ScrapingResult>;
+export type ProfileScraper =
+  | 'yt-user-watch-history'
+  | 'yt-playlist-page-liked-videos'
+  | 'yt-user-search-history'
+  | 'yt-user-subscribed-channels';
 
-type SeedVideo = {
+export type SeedScraper =
+  | 'yt-playlist-page-popular-videos'
+  | 'yt-playlist-page-national-news-top-stories';
+
+export type SeedVideo = {
   id: string;
-  creator: string;
+  creator: SeedScraper | 'fixed' | string;
 };
 
-type VideoProcedureConfig = {
+export type VideoProcedureConfig = {
   type: 'videos';
   // id of videos that are further processed
   seedVideosFixed: Array<string>;
@@ -45,22 +51,23 @@ type VideoProcedureConfig = {
   doLogout: boolean;
 };
 
-type ProfileProcedureConfig = {
+export type ProfileProcedureConfig = {
   type: 'profile';
   profileScrapers: Array<ProfileScraper>;
 };
 
-type SearchProcedureConfig = {
+export type SearchProcedureConfig = {
   type: 'search';
   queries: string[];
 };
 
-type ProcedureConfig =
-  | VideoProcedureConfig
+export type ProcedureConfig =
   | ProfileProcedureConfig
+  | VideoProcedureConfig
   | SearchProcedureConfig;
 
-type ScrapingConfig = {
+// need to export it here directly to make it work with JSON scheme creation
+export type ScrapingConfig = {
   // a human readable description of the config
   title: string;
   // the slug should be unique for a config
@@ -69,18 +76,4 @@ type ScrapingConfig = {
   loginUrl: string;
   loginCookie: string;
   steps: ProcedureConfig[];
-};
-
-export {
-  GetCurrentHtml,
-  GetHtmlFunction,
-  GetHtmlLazyFunction,
-  SeedCreator,
-  ProcedureConfig,
-  ScrapingConfig,
-  VideoProcedureConfig,
-  ProfileProcedureConfig,
-  SeedVideo,
-  SeedVideoRepeat,
-  SearchProcedureConfig,
 };

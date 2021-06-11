@@ -13,7 +13,13 @@ import { ParserResult } from '@algorithmwatch/harke-parser/src/types';
 import _ from 'lodash';
 import { ScrapingResult } from '../../db/types';
 import { delay } from '../../utils/time';
-import { GetCurrentHtml, GetHtmlFunction, SeedVideo } from './types';
+import {
+  GetCurrentHtml,
+  GetHtmlFunction,
+  ProfileScraper,
+  SeedScraper,
+  SeedVideo,
+} from './types';
 
 // play list of special lists
 const LIST_ID_POPULAR = 'PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-';
@@ -156,7 +162,7 @@ const scrapeSubscriptions = async (
   return waitUntilDone(getCurrentHtml, parseSubscribedChannels);
 };
 
-const scrapeVideoSearch = async (getHtml, query) => {
+const scrapeVideoSearch = async (getHtml: GetHtmlFunction, query: string) => {
   const url = buildSearchUrl(query);
   const getCurrentHtml = await getHtml(url);
   return waitUntilDone(getCurrentHtml, parseSearchResultsVideos);
@@ -245,19 +251,21 @@ async function* scrapeSeedVideos(
   return [1, null];
 }
 
-export const profileScrapers = {
-  scrapeWatchedVideos,
-  scrapeLikedVideos,
-  scrapeSearchHistory,
+export const profileScraperSlugToFun: {
+  [key in ProfileScraper]: (arg0: GetHtmlFunction) => Promise<ScrapingResult>;
+} = {
+  'yt-user-watch-history': scrapeWatchedVideos,
+  'yt-playlist-page-liked-videos': scrapeLikedVideos,
+  'yt-user-search-history': scrapeSearchHistory,
   // scrapeCommentHistory,
-  scrapeSubscriptions,
+  'yt-user-subscribed-channels': scrapeSubscriptions,
 };
 
-export const experimentScrapers = {
-  scrapeSeedVideos,
-  scrapeSeedVideosAndFollow,
-  scrapePopularVideos,
-  scrapeNationalNewsTopStories,
+export const experimentScrapersSlugToFun: {
+  [key in SeedScraper]: (arg0: GetHtmlFunction) => Promise<ScrapingResult>;
+} = {
+  'yt-playlist-page-popular-videos': scrapePopularVideos,
+  'yt-playlist-page-national-news-top-stories': scrapeNationalNewsTopStories,
 };
 
-export { scrapeVideoSearch };
+export { scrapeVideoSearch, scrapeSeedVideos, scrapeSeedVideosAndFollow };

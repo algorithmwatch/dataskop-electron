@@ -2,48 +2,29 @@ import { clearStorage } from '../../components/scraping/ipc';
 import { getSessionData } from '../../db';
 import { delay } from '../../utils/time';
 import { submitConfirmForm } from './actions/confirmCookies';
-import { experimentScrapers, scrapeVideoSearch } from './scrapers';
+import {
+  experimentScrapersSlugToFun,
+  profileScraperSlugToFun,
+  scrapeSeedVideos,
+  scrapeSeedVideosAndFollow,
+  scrapeVideoSearch,
+} from './scrapers';
 import {
   GetHtmlFunction,
   GetHtmlLazyFunction,
   ProcedureConfig,
   ProfileProcedureConfig,
   SearchProcedureConfig,
-  SeedCreator,
+  SeedScraper,
   SeedVideo,
   SeedVideoRepeat,
   VideoProcedureConfig,
 } from './types';
 
-const {
-  scrapeNationalNewsTopStories,
-  scrapePopularVideos,
-  scrapeSeedVideos,
-  scrapeSeedVideosAndFollow,
-} = experimentScrapers;
-
-const scrapeDynamicSeedVideos = async (
-  getHtml: GetHtmlFunction,
-  seedDynamic: SeedCreator,
-) => {
-  const { slug } = seedDynamic;
-
-  if (slug === 'yt-playlist-page-popular-videos') {
-    return scrapePopularVideos(getHtml);
-  }
-
-  if (slug === 'yt-playlist-page-national-news-top-stories') {
-    return scrapeNationalNewsTopStories(getHtml);
-  }
-
-  throw Error('wrong');
-};
-
 const getSeedVideosRepeat = async (
   sessionId: string,
   scrapeAgain: SeedVideoRepeat,
 ): Promise<SeedVideo[]> => {
-  console.log(scrapeAgain, sessionId);
   const { previousResult, step, maxVideos } = scrapeAgain;
   const oldData = await getSessionData(sessionId, {
     slug: previousResult,
@@ -66,8 +47,8 @@ async function* scrapingProfileProcedure(
   const maxSteps = profileScrapers.length;
 
   // get background information such as history or subscriptions
-  for (const fun of profileScrapers) {
-    const data = await fun(getHtml);
+  for (const slug of profileScrapers) {
+    const data = await profileScraperSlugToFun[slug](getHtml);
     step += 1;
     // already return here if there is no further scraping
     if (step < maxSteps) yield [step / maxSteps, data];
@@ -125,17 +106,17 @@ async function* scrapingVideosProcedure(
   // get videos from previous results
   for (const rep of seedVideosRepeat) {
     const newSeed = await getSeedVideosRepeat(sessionId, rep);
-    console.log(newSeed);
     maxSteps += newSeed.length;
     seedVideos.push(...newSeed);
   }
 
   for (const seedDynamic of seedVideosDynamic) {
     const { slug, maxVideos } = seedDynamic;
-    const resultSeedVideos = await scrapeDynamicSeedVideos(
+    const theslug = slug as SeedScraper;
+    const resultSeedVideos = await experimentScrapersSlugToFun[theslug](
       getHtml,
-      seedDynamic,
     );
+
     const numSeedVideos = Math.min(
       resultSeedVideos.fields.videos.length,
       maxVideos,

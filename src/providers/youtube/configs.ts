@@ -1,13 +1,12 @@
-import { experimentScrapers, profileScrapers } from './scrapers';
+import { profileScraperSlugToFun } from './scrapers';
 import {
   ProfileProcedureConfig,
+  ProfileScraper,
   ScrapingConfig,
   SearchProcedureConfig,
   VideoProcedureConfig,
 } from './types';
 
-const { scrapeNationalNewsTopStories, scrapePopularVideos } =
-  experimentScrapers;
 const emptyVideoProcedureConfig: VideoProcedureConfig = {
   type: 'videos',
   scrollingBottomForComments: 0,
@@ -60,7 +59,7 @@ const searchStep: SearchProcedureConfig = {
 
 const defaultProfileScraper: ProfileProcedureConfig = {
   type: 'profile',
-  profileScrapers: Object.values(profileScrapers),
+  profileScrapers: Object.keys(profileScraperSlugToFun) as ProfileScraper[],
 };
 
 const defaultConfig: ScrapingConfig = {
@@ -101,14 +100,9 @@ const testConfig: ScrapingConfig = {
   steps: [
     {
       ...defaultProfileScraper,
-      profileScrapers: Object.values(profileScrapers).concat([
-        scrapePopularVideos,
-        scrapeNationalNewsTopStories,
-      ]),
     },
     {
       ...defaultVideoExperimentScraper,
-      seedVideosDynamic: [],
       seedVideosFixed: ['4Y1lZQsyuSQ'],
     },
   ],
