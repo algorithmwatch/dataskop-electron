@@ -6,3 +6,17 @@ updates:
       interval: "daily"
     allow:
       - dependency-type: "production"
+      - dependency-name: "electron"
+      - dependency-name: "electron-builder"
+      - dependency-name: "tailwindcss"
+      - dependency-name: "prettier"
+      - dependency-name: "typescript"
+    ignore:
+      # Ignore all updates since the updates comes very frequently
+      - dependency-name: "victory"
+      - dependency-name: "electron"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "tailwindcss"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
