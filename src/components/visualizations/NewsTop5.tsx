@@ -23,7 +23,7 @@ function Visual({ session }: { session: NewsTop5DataItem }) {
     <div className="h-full flex bg-yellow-200 w-full max-w-3xl mx-auto p-6">
       <div className="mr-8 w-80">
         <strong>Ausgangsvideo</strong>
-        <div className="w-80 h-44 mt-2 bg-gray-300">
+        <div className="w-80 h-44 mt-2 bg-gray-300 overflow-hidden flex place-items-center">
           <img
             src={`https://img.youtube.com/vi/${session.video.id}/hqdefault.jpg`}
             alt=""
@@ -39,26 +39,40 @@ function Visual({ session }: { session: NewsTop5DataItem }) {
         </div>
       </div>
       <div className="flex">
-        <div className="mr-16">
+        <div className="mr-12">
           <strong>Angemeldet</strong>
           <div className="mt-2 space-y-2">
-            <div className="w-36 h-20 bg-gray-300" />
-            <div className="w-36 h-20 bg-gray-300" />
-            <div className="w-36 h-20 bg-gray-300" />
-            <div className="w-36 h-20 bg-gray-300" />
-            <div className="w-36 h-20 bg-gray-300" />
-            <div className="w-36 h-20 bg-gray-300" />
+            {session.signedInVideos
+              .slice(0, 6)
+              .map(({ channelName, duration, id, percWatched, title }) => (
+                <div
+                  key={id}
+                  className="w-36 h-20 bg-gray-300 overflow-hidden flex place-items-center"
+                >
+                  <img
+                    src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
+                    alt=""
+                  />
+                </div>
+              ))}
           </div>
         </div>
         <div className="">
           <strong>Nicht angemeldet</strong>
           <div className="mt-2 space-y-2">
-            <div className="w-36 h-20 bg-gray-300" />
-            <div className="w-36 h-20 bg-gray-300" />
-            <div className="w-36 h-20 bg-gray-300" />
-            <div className="w-36 h-20 bg-gray-300" />
-            <div className="w-36 h-20 bg-gray-300" />
-            <div className="w-36 h-20 bg-gray-300" />
+            {session.signedOutVideos
+              .slice(0, 6)
+              .map(({ channelName, duration, id, percWatched, title }) => (
+                <div
+                  key={id}
+                  className="w-36 h-20 bg-gray-300 overflow-hidden flex place-items-center"
+                >
+                  <img
+                    src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
+                    alt=""
+                  />
+                </div>
+              ))}
           </div>
         </div>
       </div>

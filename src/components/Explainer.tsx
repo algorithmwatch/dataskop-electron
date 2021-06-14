@@ -45,7 +45,7 @@ export default function Explainer({
           onMouseOut={() => setIsToggleHover(false)}
           className={classNames({
             'w-10 h-10 absolute top-24 focus:outline-none': true,
-            'transition-all duration-200 ease-in-out': true,
+            'transition-colors duration-200 ease-in-out': true,
             '-right-6': isOpen,
             '-right-12': !isOpen,
             'bg-yellow-600': !isToggleHover,

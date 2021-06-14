@@ -21,17 +21,20 @@ const ArrowButton = ({
   icon: IconDefinition;
   dir: '<' | '>';
 }) => {
-  const classes = classNames({
-    glide__arrow: true,
-    'absolute block top-2/4 z-10 opacity-100 cursor-pointer transition-all -translate-y-1/2 focus:outline-none select-none':
-      true,
-    'left-8': dir === '<',
-    'right-8': dir === '>',
-  });
-
   return (
-    <button type="button" className={classes} data-glide-dir={dir}>
-      <FontAwesomeIcon icon={icon} size="2x" className="text-blue-500" />
+    <button
+      type="button"
+      className={classNames({
+        glide__arrow: true,
+        'absolute flex top-2/4 z-10 opacity-100 cursor-pointer transition-shadow -translate-y-1/2 focus:outline-none active:outline-none select-none bg-white rounded-full':
+          true,
+        'left-8': dir === '<',
+        'right-8': dir === '>',
+        'focus:ring-4 focus:ring-blue-400 focus:ring-opacity-50': true,
+      })}
+      data-glide-dir={dir}
+    >
+      <FontAwesomeIcon icon={icon} className="text-4xl text-blue-500" />
     </button>
   );
 };
