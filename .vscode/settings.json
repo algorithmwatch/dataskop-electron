@@ -5,9 +5,16 @@
     ".prettierrc": "jsonc",
     ".eslintignore": "ignore"
   },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+  },
+  // disable builtin formaters
   "javascript.validate.enable": false,
   "javascript.format.enable": false,
   "typescript.format.enable": false,
+  // exluce binaries etc. for search
   "search.exclude": {
     ".git": true,
     ".eslintcache": true,
@@ -23,7 +30,7 @@
     "yarn.lock": true,
     "*.{css,sass,scss}.d.ts": true
   },
-  "editor.formatOnSave": true,
+  // automatically manage import / export
   "[typescript]": {
     "editor.codeActionsOnSave": {
       "source.organizeImports": true

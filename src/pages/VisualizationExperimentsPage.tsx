@@ -12,7 +12,7 @@ interface LocationState {
 }
 
 export default function VisualizationExperimentsPage() {
-    const { state } = useLocation<LocationState>();
+  const { state } = useLocation<LocationState>();
   const { sessionId, type } = state;
 
   if (!sessionId || !type) return null;
@@ -45,9 +45,7 @@ export default function VisualizationExperimentsPage() {
 
   return (
     <>
-      {type === 'newstop5' && (
-        <NewsTop5 data={data} />
-      )}
+      {type === 'newstop5' && <NewsTop5 data={data} />}
       <FooterNav items={footerNavItems} />
     </>
   );

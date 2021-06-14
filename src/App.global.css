@@ -10,36 +10,40 @@
 @layer base {
   body {
     @apply bg-yellow-100 dark:bg-blue-900 overflow-hidden text-yellow-1500;
-    background-image: url("static/images/bg.png");
+    background-image: url('static/images/bg.png');
     background-size: 90%;
   }
 }
 
 /* TippyJS  */
 
-@import "tippy.js/dist/tippy.css";
-.tippy-box[data-theme~="process-info"] {
+@import 'tippy.js/dist/tippy.css';
+.tippy-box[data-theme~='process-info'] {
   @apply text-yellow-100 bg-yellow-1500 shadow-md rounded-none px-1 py-0.5;
 }
-.tippy-box[data-theme~="process-info"][data-placement^="top"] > .tippy-arrow:before {
-  border-top-color: theme("colors.yellow.1500");
+.tippy-box[data-theme~='process-info'][data-placement^='top']
+  > .tippy-arrow:before {
+  border-top-color: theme('colors.yellow.1500');
 }
-.tippy-box[data-theme~="process-info"][data-placement^="bottom"] > .tippy-arrow:before {
-  border-bottom-color: theme("colors.yellow.1500");
+.tippy-box[data-theme~='process-info'][data-placement^='bottom']
+  > .tippy-arrow:before {
+  border-bottom-color: theme('colors.yellow.1500');
 }
-.tippy-box[data-theme~="process-info"][data-placement^="left"] > .tippy-arrow:before {
-  border-left-color: theme("colors.yellow.1500");
+.tippy-box[data-theme~='process-info'][data-placement^='left']
+  > .tippy-arrow:before {
+  border-left-color: theme('colors.yellow.1500');
 }
-.tippy-box[data-theme~="process-info"][data-placement^="right"] > .tippy-arrow:before {
-  border-right-color: theme("colors.yellow.1500");
+.tippy-box[data-theme~='process-info'][data-placement^='right']
+  > .tippy-arrow:before {
+  border-right-color: theme('colors.yellow.1500');
 }
-.tippy-box[data-theme~="process-info"] > .tippy-backdrop {
+.tippy-box[data-theme~='process-info'] > .tippy-backdrop {
   @apply bg-yellow-1500;
 }
 
 /* GlideJS */
 
-@import "@glidejs/glide/dist/css/glide.core.min.css";
+@import '@glidejs/glide/dist/css/glide.core.min.css';
 /* .glide__bullets {
   position: absolute;
   z-index: 2;

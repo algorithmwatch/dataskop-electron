@@ -92,14 +92,8 @@ const RecommenderMap = ({ data, events = true }) => {
 
   const videos = getVideos(data);
 
-  const [
-    binData,
-    uniqueVideos,
-    xScale,
-    yScale,
-    rectColorScale,
-    opacityScale,
-  ] = preprocessData(videos, colsize);
+  const [binData, uniqueVideos, xScale, yScale, rectColorScale, opacityScale] =
+    preprocessData(videos, colsize);
 
   // bounds
   const size =
