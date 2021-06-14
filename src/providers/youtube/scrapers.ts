@@ -3,13 +3,13 @@
 import {
   buildSearchUrl,
   parsePlaylistPage,
+  ParserResult,
   parseSearchHistory,
   parseSearchResultsVideos,
   parseSubscribedChannels,
   parseVideoPage,
   parseWatchHistory,
-} from '@algorithmwatch/harke-parser';
-import { ParserResult } from '@algorithmwatch/harke-parser/src/types';
+} from '@algorithmwatch/harke';
 import _ from 'lodash';
 import { ScrapingResult } from '../../db/types';
 import { delay } from '../../utils/time';
@@ -35,8 +35,6 @@ const waitUntilDone = async (
 ) => {
   let curTimeout = timeout.start;
 
-  console.log('x');
-
   // set to some dummy value to please TypeScript
   let prevResult = {
     success: false,
@@ -46,7 +44,6 @@ const waitUntilDone = async (
   } as ScrapingResult;
 
   while (curTimeout < timeout.max) {
-    console.log('x');
     await delay(curTimeout);
     const currentHtml = await getCurrentHtml();
 

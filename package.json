@@ -19,7 +19,8 @@
     "start": "node -r @babel/register ./.erb/scripts/CheckPortInUse.js && cross-env yarn start:renderer",
     "start:main": "cross-env NODE_ENV=development electron -r ./.erb/scripts/BabelRegister ./src/main.dev.ts",
     "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/configs/webpack.config.renderer.dev.babel.js",
-    "test": "jest"
+    "test": "jest",
+    "schema": "./node_modules/.bin/ts-json-schema-generator --path './src/providers/youtube/types.ts' --type 'ScrapingConfig' --out './src/providers/youtube/scraping-config-validation.json' && prettier --write './src/providers/youtube/scraping-config-validation.json'"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -175,8 +176,6 @@
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
     "@types/d3-format": "^2.0.0",
-    "@types/enzyme": "^3.10.5",
-    "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/history": "4.7.6",
     "@types/jest": "^26.0.15",
     "@types/lodash": "^4.14.168",
@@ -210,9 +209,6 @@
     "electron-devtools-installer": "^3.1.1",
     "electron-notarize": "^1.0.0",
     "electron-rebuild": "^2.3.2",
-    "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "^1.15.3",
-    "enzyme-to-json": "^3.5.0",
     "eslint": "^7.5.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-airbnb-typescript": "^12.0.0",
@@ -244,6 +240,7 @@
     "style-loader": "^2.0.0",
     "tailwindcss": "^2.1.4",
     "terser-webpack-plugin": "^5.0.3",
+    "ts-json-schema-generator": "^0.93.0",
     "typescript": "^4.3.2",
     "url-loader": "^4.1.0",
     "webpack": "^5.5.1",
@@ -254,7 +251,7 @@
     "yarn-deduplicate": "^3.1.0"
   },
   "dependencies": {
-    "@algorithmwatch/harke-parser": "^0.1.0-13",
+    "@algorithmwatch/harke": "^0.1.0-14",
     "@fortawesome/fontawesome-pro": "^5.15.3",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",

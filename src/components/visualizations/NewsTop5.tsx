@@ -1,4 +1,4 @@
-import { Channel, RecommendedVideo } from '@algorithmwatch/harke-parser';
+import { Channel, RecommendedVideo } from '@algorithmwatch/harke';
 import { faNewspaper } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';

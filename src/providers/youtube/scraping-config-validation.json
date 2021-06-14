@@ -1,0 +1,172 @@
+{
+  "$ref": "#/definitions/ScrapingConfig",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ProcedureConfig": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ProfileProcedureConfig"
+        },
+        {
+          "$ref": "#/definitions/VideoProcedureConfig"
+        },
+        {
+          "$ref": "#/definitions/SearchProcedureConfig"
+        }
+      ]
+    },
+    "ProfileProcedureConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "profileScrapers": {
+          "items": {
+            "$ref": "#/definitions/ProfileScraper"
+          },
+          "type": "array"
+        },
+        "type": {
+          "const": "profile",
+          "type": "string"
+        }
+      },
+      "required": ["type", "profileScrapers"],
+      "type": "object"
+    },
+    "ProfileScraper": {
+      "enum": [
+        "yt-user-watch-history",
+        "yt-playlist-page-liked-videos",
+        "yt-user-search-history",
+        "yt-user-subscribed-channels"
+      ],
+      "type": "string"
+    },
+    "ScrapingConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "loginCookie": {
+          "type": "string"
+        },
+        "loginUrl": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "startUrl": {
+          "type": "string"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/definitions/ProcedureConfig"
+          },
+          "type": "array"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "slug",
+        "startUrl",
+        "loginUrl",
+        "loginCookie",
+        "steps"
+      ],
+      "type": "object"
+    },
+    "SearchProcedureConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "queries": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "type": {
+          "const": "search",
+          "type": "string"
+        }
+      },
+      "required": ["type", "queries"],
+      "type": "object"
+    },
+    "SeedCreator": {
+      "additionalProperties": false,
+      "properties": {
+        "maxVideos": {
+          "type": "number"
+        },
+        "slug": {
+          "type": "string"
+        }
+      },
+      "required": ["maxVideos", "slug"],
+      "type": "object"
+    },
+    "SeedVideoRepeat": {
+      "additionalProperties": false,
+      "properties": {
+        "maxVideos": {
+          "type": "number"
+        },
+        "previousResult": {
+          "type": "string"
+        },
+        "step": {
+          "type": "number"
+        }
+      },
+      "required": ["step", "previousResult", "maxVideos"],
+      "type": "object"
+    },
+    "VideoProcedureConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "doLogout": {
+          "type": "boolean"
+        },
+        "followVideos": {
+          "type": "number"
+        },
+        "scrollingBottomForComments": {
+          "type": "number"
+        },
+        "seedVideosDynamic": {
+          "items": {
+            "$ref": "#/definitions/SeedCreator"
+          },
+          "type": "array"
+        },
+        "seedVideosFixed": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "seedVideosRepeat": {
+          "items": {
+            "$ref": "#/definitions/SeedVideoRepeat"
+          },
+          "type": "array"
+        },
+        "type": {
+          "const": "videos",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "seedVideosFixed",
+        "seedVideosDynamic",
+        "seedVideosRepeat",
+        "followVideos",
+        "scrollingBottomForComments",
+        "doLogout"
+      ],
+      "type": "object"
+    }
+  }
+}
