@@ -113,7 +113,7 @@ const scrapeLikedVideos = async (
 const scrapeVideo = async (
   videoId: string,
   getHtml: GetHtmlFunction,
-  comments = false,
+  _comments = false,
 ): Promise<ScrapingResult> => {
   // comments are currently not implemented
   const url = `https://www.youtube.com/watch?v=${videoId}`;

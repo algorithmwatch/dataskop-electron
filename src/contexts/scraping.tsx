@@ -143,7 +143,7 @@ function scrapingReducer(state: State, action: Action) {
     }
 
     default: {
-      throw new Error(`Unhandled action type: ${action.type}`);
+      throw new Error(`Unhandled action type: ${action}`);
     }
   }
 }

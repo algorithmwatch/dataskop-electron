@@ -6,6 +6,9 @@ export default function UpdateNotification(): JSX.Element {
   const [showRestart, setShowRestart] = useState(false);
 
   useEffect(() => {
+    // Not available in Test environment.
+    if (ipcRenderer == null) return;
+
     ipcRenderer.on('update_available', () => {
       ipcRenderer.removeAllListeners('update_available');
       setText('A new update is available. Downloading now...');

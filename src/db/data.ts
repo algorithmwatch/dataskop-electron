@@ -1,6 +1,8 @@
 import { ipcRenderer } from 'electron';
 import _ from 'lodash';
-import { JSONFile, Low } from 'lowdb';
+// lowdb is a ESM module and this causes some problems right now
+// import { JSONFile, Low } from 'lowdb';
+import { JSONFile, Low } from 'lowdb/lib/index';
 import { join } from 'path';
 import { ScrapingConfig } from '../providers/youtube';
 import { statsForArray } from '../utils/math';
@@ -198,7 +200,7 @@ const getStatisticsForSession = async (sessiondId: string) => {
     previousTime = scrapedAt;
   }
 
-  const result = {};
+  const result: { [key: string]: any } = {};
   allTimes.forEach((value, key: string) => {
     result[key] = statsForArray(value);
   });
