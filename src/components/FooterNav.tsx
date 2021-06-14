@@ -11,7 +11,7 @@ function FooterNav({ items = [] }: { items: FooterNavItem[] }): JSX.Element {
   const history = useHistory();
 
   return (
-    <nav className="h-32 flex justify-between items-center max-w-4xl w-full mx-auto">
+    <nav className="h-32 flex-shrink-0 flex justify-between items-center max-w-4xl w-full mx-auto">
       {items.map(
         ({
           label,

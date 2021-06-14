@@ -1,6 +1,7 @@
 import { Channel, RecommendedVideo } from '@algorithmwatch/harke-parser';
 import { faNewspaper } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Tippy from '@tippyjs/react';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import { ScrapingResultSaved } from '../../db/types';
@@ -18,9 +19,35 @@ interface NewsTop5DataItem {
   signedOutVideos: RecommendedVideo[];
 }
 
-function Visual({ session }: { session: NewsTop5DataItem }) {
+function VideoList({ items }: { items: RecommendedVideo[] }) {
   return (
-    <div className="h-full flex bg-yellow-200 w-full max-w-3xl mx-auto p-6">
+    <div className="mt-2 space-y-2">
+      {items.map(({ channelName, duration, id, percWatched, title }) => (
+        <div
+          key={id}
+          className="w-24 h-12 bg-gray-300 overflow-hidden flex place-items-center"
+        >
+          <Tippy
+            content={<span>{title}</span>}
+            theme="process-info"
+            placement="left"
+          >
+            <img
+              src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
+              alt=""
+            />
+          </Tippy>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Visual({ session }: { session: NewsTop5DataItem }) {
+  const [displayCount, setDisplayCount] = useState(10);
+
+  return (
+    <div className="flex bg-yellow-200 w-full max-w-3xl mx-auto p-6">
       <div className="mr-8 w-80">
         <strong>Ausgangsvideo</strong>
         <div className="w-80 h-44 mt-2 bg-gray-300 overflow-hidden flex place-items-center">
@@ -37,43 +64,28 @@ function Visual({ session }: { session: NewsTop5DataItem }) {
             Das ist ein langer Videotitel, hier kommt noch mehr Text
           </div>
         </div>
+
+        <div className="mt-4">
+          <input
+            className="border border-yellow-1100 bg-yellow-200 rounded-none pl-2 text-sm"
+            type="number"
+            min="5"
+            max="16"
+            value={displayCount}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setDisplayCount(Number(event.target.value))
+            }
+          />
+        </div>
       </div>
       <div className="flex">
-        <div className="mr-12">
+        <div className="mr-8">
           <strong>Angemeldet</strong>
-          <div className="mt-2 space-y-2">
-            {session.signedInVideos
-              .slice(0, 6)
-              .map(({ channelName, duration, id, percWatched, title }) => (
-                <div
-                  key={id}
-                  className="w-36 h-20 bg-gray-300 overflow-hidden flex place-items-center"
-                >
-                  <img
-                    src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
-                    alt=""
-                  />
-                </div>
-              ))}
-          </div>
+          <VideoList items={session.signedInVideos.slice(0, displayCount)} />
         </div>
         <div className="">
           <strong>Nicht angemeldet</strong>
-          <div className="mt-2 space-y-2">
-            {session.signedOutVideos
-              .slice(0, 6)
-              .map(({ channelName, duration, id, percWatched, title }) => (
-                <div
-                  key={id}
-                  className="w-36 h-20 bg-gray-300 overflow-hidden flex place-items-center"
-                >
-                  <img
-                    src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
-                    alt=""
-                  />
-                </div>
-              ))}
-          </div>
+          <VideoList items={session.signedOutVideos.slice(0, displayCount)} />
         </div>
       </div>
     </div>
