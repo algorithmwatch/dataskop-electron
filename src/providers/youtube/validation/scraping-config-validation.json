@@ -1,20 +1,7 @@
 {
-  "$ref": "#/definitions/ScrapingConfig",
+  "$ref": "#/definitions/YtScrapingConfig",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
-    "ProcedureConfig": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/ProfileProcedureConfig"
-        },
-        {
-          "$ref": "#/definitions/VideoProcedureConfig"
-        },
-        {
-          "$ref": "#/definitions/SearchProcedureConfig"
-        }
-      ]
-    },
     "ProfileProcedureConfig": {
       "additionalProperties": false,
       "properties": {
@@ -40,41 +27,6 @@
         "yt-user-subscribed-channels"
       ],
       "type": "string"
-    },
-    "ScrapingConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "loginCookie": {
-          "type": "string"
-        },
-        "loginUrl": {
-          "type": "string"
-        },
-        "slug": {
-          "type": "string"
-        },
-        "startUrl": {
-          "type": "string"
-        },
-        "steps": {
-          "items": {
-            "$ref": "#/definitions/ProcedureConfig"
-          },
-          "type": "array"
-        },
-        "title": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "title",
-        "slug",
-        "startUrl",
-        "loginUrl",
-        "loginCookie",
-        "steps"
-      ],
-      "type": "object"
     },
     "SearchProcedureConfig": {
       "additionalProperties": false,
@@ -166,6 +118,46 @@
         "scrollingBottomForComments",
         "doLogout"
       ],
+      "type": "object"
+    },
+    "YtProcedureConfig": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ProfileProcedureConfig"
+        },
+        {
+          "$ref": "#/definitions/VideoProcedureConfig"
+        },
+        {
+          "$ref": "#/definitions/SearchProcedureConfig"
+        }
+      ]
+    },
+    "YtScrapingConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "const": "youtube",
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/definitions/YtProcedureConfig"
+          },
+          "type": "array"
+        },
+        "title": {
+          "type": "string"
+        },
+        "version": {
+          "const": 1,
+          "type": "number"
+        }
+      },
+      "required": ["provider", "slug", "steps", "title", "version"],
       "type": "object"
     }
   }

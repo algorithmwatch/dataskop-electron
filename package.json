@@ -20,7 +20,7 @@
     "start:main": "cross-env NODE_ENV=development electron -r ./.erb/scripts/BabelRegister ./src/main.dev.ts",
     "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/configs/webpack.config.renderer.dev.babel.js",
     "test": "jest",
-    "schema": "./node_modules/.bin/ts-json-schema-generator --path './src/providers/youtube/types.ts' --type 'ScrapingConfig' --out './src/providers/youtube/scraping-config-validation.json' && prettier --write './src/providers/youtube/scraping-config-validation.json'"
+    "ytschema": "./node_modules/.bin/ts-json-schema-generator --path './src/providers/youtube/types.ts' --type 'YtScrapingConfig' --out './src/providers/youtube/validation/scraping-config-validation.json' && prettier --write './src/providers/youtube/validation/scraping-config-validation.json'"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -251,6 +251,7 @@
     "@visx/mock-data": "^1.7.0",
     "@visx/responsive": "^1.10.1",
     "@visx/scale": "^1.11.1",
+    "ajv": "^8.6.0",
     "classnames": "^2.3.1",
     "dayjs": "^1.10.5",
     "electron-debug": "^3.2.0",

@@ -18,10 +18,12 @@ import Button from '../components/Button';
 import { getStoredScrapingConfigs, modifyScrapingConfig } from '../db';
 import { ScrapingConfig } from '../providers/types';
 import { defaultConfig } from '../providers/youtube';
+import { getValidErrors } from '../providers/youtube/validation/validate';
 
 export default function ScrapingConfigEditorPage(): JSX.Element {
   const [rows, setRows] = useState<ScrapingConfig[]>([]);
   const [editJson, setEditJson] = useState<ScrapingConfig | null>(null);
+  const [error, setError] = useState<any>(null);
 
   const loadData = async () => {
     setRows(await getStoredScrapingConfigs());
@@ -36,8 +38,15 @@ export default function ScrapingConfigEditorPage(): JSX.Element {
 
   const updateConfig = async (e) => {
     if (e.updated_src === null) return;
-    await modifyScrapingConfig(e.updated_src);
-    loadData();
+
+    const newError = getValidErrors(e.updated_src);
+    if (newError === null) {
+      await modifyScrapingConfig(e.updated_src);
+      loadData();
+      setError(null);
+    } else {
+      setError(newError);
+    }
   };
 
   useEffect(() => {
@@ -55,6 +64,13 @@ export default function ScrapingConfigEditorPage(): JSX.Element {
               tool is not used for the end user of DataSkop.
             </p>
             <Button onClick={newConfig}>New Config</Button>
+          </CardContent>
+          <CardContent>
+            {error && (
+              <div className="text-red-700 whitespace-pre">
+                {JSON.stringify(error, null, 2)}
+              </div>
+            )}
           </CardContent>
           <CardContent>
             {editJson && (
