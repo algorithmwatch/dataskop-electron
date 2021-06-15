@@ -15,6 +15,9 @@ const config = {
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
       '<rootDir>/.erb/mocks/fileMock.js',
     '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
+    // lowdb is a ESM module and this causes some problems right now.
+    // To make it work with jest, import the .js files directly.
+    lowdb: 'lowdb/lib/index',
   },
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json'],
   moduleDirectories: ['node_modules', 'src/node_modules'],
