@@ -12,7 +12,14 @@
 // Do not (!) change the import to: `import Sentry from '@sentry/electron'`
 import * as Sentry from '@sentry/electron';
 import 'core-js/stable';
-import { app, BrowserWindow, ipcMain, session, shell } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  powerSaveBlocker,
+  session,
+  shell,
+} from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
@@ -155,6 +162,9 @@ const createWindow = async () => {
     // eslint-disable-next-line
     new AppUpdater();
   }, 1000);
+
+  // allow scraping to happend in brackground
+  powerSaveBlocker.start('prevent-app-suspension');
 
   // register handlers
   registerScrapingHandlers(mainWindow);
