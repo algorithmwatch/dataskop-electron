@@ -148,25 +148,37 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
 
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
   const carouselOptions: Options = {
-    focusAt: 'center',
-    gap: 0,
-    peek: 250,
+    // focusAt: 'center',
+    // gap: 40,
+    // peek: 350,
     breakpoints: {
-      // 1500: {
-      // peek: 400,
-      // gap: 40,
-      // },
-      1400: {
-        peek: 250,
+      2000: {
+        peek: 500,
+        gap: 0,
+      },
+      1800: {
+        peek: 400,
+        gap: 0,
+      },
+      1600: {
+        peek: 350,
         gap: 40,
+      },
+      1500: {
+        peek: 300,
+        gap: 40,
+      },
+      1400: {
+        peek: 300,
+        gap: 60,
       },
       1300: {
-        peek: 200,
-        gap: 40,
+        peek: 250,
+        gap: 60,
       },
       1200: {
-        peek: 175,
-        gap: 40,
+        peek: 200,
+        gap: 60,
       },
       1100: {
         peek: 0,

@@ -1,6 +1,6 @@
 import {
   faChevronLeft,
-  faChevronRight,
+  faChevronRight
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
@@ -29,7 +29,7 @@ export default function Explainer({
           'w-192 inset-y-0 bg-white z-30': true,
           '-left-192 absolute': !isOpen,
           'left-0 relative': isOpen,
-          'transition-all duration-500 ease-in-out': true,
+          'transition-all duration-300 ease-in-out': true,
           'flex flex-col justify-between': true,
           'box-content border-r-8': true,
           'border-yellow-600': !isToggleHover,
@@ -37,27 +37,33 @@ export default function Explainer({
         })}
       >
         {/* Open/close toggle */}
-        {/* eslint-disable-next-line jsx-a11y/mouse-events-have-key-events */}
-        <button
-          type="button"
-          onClick={() => onIsOpenChange(!isOpen)}
-          onMouseOver={() => setIsToggleHover(true)}
-          onMouseOut={() => setIsToggleHover(false)}
+        <div
           className={classNames({
-            'w-10 h-10 absolute top-24 focus:outline-none': true,
-            'transition-colors duration-200 ease-in-out': true,
-            '-right-6': isOpen,
-            '-right-12': !isOpen,
-            'bg-yellow-600': !isToggleHover,
-            'bg-yellow-800': isToggleHover,
+            'absolute top-20': true,
+            'right-4': isOpen,
+            '-right-2': !isOpen,
           })}
         >
-          <FontAwesomeIcon
-            icon={isOpen ? faChevronLeft : faChevronRight}
-            className="text-yellow-1500"
-            size="lg"
-          />
-        </button>
+          {/* eslint-disable-next-line jsx-a11y/mouse-events-have-key-events */}
+          <button
+            type="button"
+            onClick={() => onIsOpenChange(!isOpen)}
+            onMouseOver={() => setIsToggleHover(true)}
+            onMouseOut={() => setIsToggleHover(false)}
+            className={classNames({
+              'w-10 h-10 fixed focus:outline-none': true,
+              'transition-colors duration-300 ease-in-out': true,
+              'bg-yellow-600': !isToggleHover,
+              'bg-yellow-800': isToggleHover,
+            })}
+          >
+            <FontAwesomeIcon
+              icon={isOpen ? faChevronLeft : faChevronRight}
+              className="text-yellow-1500"
+              size="lg"
+            />
+          </button>
+        </div>
 
         {/* Content */}
         <div className="px-12 py-16">{children}</div>
