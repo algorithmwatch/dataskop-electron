@@ -28,7 +28,12 @@ function VideoList({ items }: { items: RecommendedVideo[] }) {
           className="w-24 h-12 bg-gray-300 overflow-hidden flex place-items-center"
         >
           <Tippy
-            content={<span>{title}</span>}
+            content={
+              <>
+                <div className="font-bold">{title}</div>
+                <div>{channelName}</div>
+              </>
+            }
             theme="process-info"
             placement="left"
           >
@@ -118,6 +123,7 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
     })))();
 
   console.warn('transformed', transformed);
+  console.warn('filtered', filtered);
 
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
   const carouselOptions: Options = {
