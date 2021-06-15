@@ -1,3 +1,5 @@
+import { ScrapingConfig } from '../types';
+
 export type GetCurrentHtml = () => Promise<string>;
 
 export type GetHtmlFunction = (url: string) => Promise<GetCurrentHtml>;
@@ -61,19 +63,14 @@ export type SearchProcedureConfig = {
   queries: string[];
 };
 
-export type ProcedureConfig =
+export type YtProcedureConfig =
   | ProfileProcedureConfig
   | VideoProcedureConfig
   | SearchProcedureConfig;
 
 // need to export it here directly to make it work with JSON scheme creation
-export type ScrapingConfig = {
-  // a human readable description of the config
-  title: string;
-  // the slug should be unique for a config
-  slug: string;
-  startUrl: string;
-  loginUrl: string;
-  loginCookie: string;
-  steps: ProcedureConfig[];
-};
+export interface YtScrapingConfig extends ScrapingConfig {
+  version: 1;
+  provider: 'youtube';
+  steps: YtProcedureConfig[];
+}

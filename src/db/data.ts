@@ -2,7 +2,7 @@ import { ipcRenderer } from 'electron';
 import _ from 'lodash';
 import { JSONFile, Low } from 'lowdb';
 import { join } from 'path';
-import { ScrapingConfig } from '../providers/youtube';
+import { ScrapingConfig } from '../providers/types';
 import { statsForArray } from '../utils/math';
 import { ScrapingResultSaved, ScrapingSessions } from './types';
 
@@ -76,13 +76,13 @@ const getScrapingResults = async () => {
   return _.orderBy(data.scrapingResults, 'scrapedAt');
 };
 
-const addOrUpdateStoredScrapingConfig = async (config: ScrapingConfig) => {
+const modifyScrapingConfig = async (config: ScrapingConfig, remove = false) => {
   await setUpDb();
   if (db === null || db.data === null) throw Error('db is not initialized');
 
   const newData =
     db.data.scrapingConfigs?.filter((x) => x.slug !== config.slug) || [];
-  newData.unshift(config);
+  if (!remove) newData.unshift(config);
 
   db.data.scrapingConfigs = newData;
   return db.write();
@@ -216,6 +216,6 @@ export {
   getSessionData,
   addNewSession,
   getStatisticsForSession,
-  addOrUpdateStoredScrapingConfig,
+  modifyScrapingConfig,
   getStoredScrapingConfigs,
 };

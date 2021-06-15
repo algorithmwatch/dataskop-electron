@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { ScrapingProgressBar, useConfig, useScraping } from '../../contexts';
 import { addNewSession, addScrapingResult } from '../../db';
+import { providerToMeta } from '../../providers';
 import { createSingleGenerator } from '../../providers/youtube/procedures';
 import { postDummyBackend } from '../../utils/networking';
 import { delay } from '../../utils/time';
@@ -61,14 +62,15 @@ export default function ScrapingManager({
     const cookies = await getCookies();
     // complexity is currently not needed, maybe later?
     const isLoggedIn = cookies.some(
-      (x: any) => x.name === scrapingConfig.loginCookie,
+      (x: any) =>
+        x.name === providerToMeta[scrapingConfig.provider].loginCookie,
     );
     dispatch({ type: 'set-user-logged-in', isUserLoggedIn: isLoggedIn });
     return isLoggedIn;
   };
 
   const goToStart = () => {
-    return goToUrl(scrapingConfig.loginUrl);
+    return goToUrl(providerToMeta[scrapingConfig.provider].loginUrl);
   };
 
   const getHtmlLazy = async (

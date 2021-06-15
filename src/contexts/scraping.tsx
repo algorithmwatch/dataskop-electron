@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
-import { defaultConfig, ScrapingConfig } from '../providers/youtube';
+import { ScrapingConfig } from '../providers/types';
+import { defaultConfig } from '../providers/youtube';
 
 export type ScrapingProgressBar = {
   isActive: boolean;

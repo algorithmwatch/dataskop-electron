@@ -2,6 +2,7 @@
 /* eslint-disable no-await-in-loop */
 import React from 'react';
 import { useScraping } from '../../contexts/scraping';
+import { providerToMeta } from '../../providers';
 import Button from '../Button';
 import { goToUrl } from './ipc';
 
@@ -30,11 +31,11 @@ export default function ScrapingControls({
   } = useScraping();
 
   const goToStart = () => {
-    return goToUrl(scrapingConfig.loginUrl);
+    return goToUrl(providerToMeta[scrapingConfig.provider].loginUrl);
   };
 
   const resetBrowser = () => {
-    goToUrl(scrapingConfig.loginUrl, { clear: true });
+    goToUrl(providerToMeta[scrapingConfig.provider].loginUrl, { clear: true });
     dispatch({ type: 'set-user-logged-in', isUserLoggedIn: false });
   };
 

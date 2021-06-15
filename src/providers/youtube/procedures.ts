@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 import { clearStorage } from '../../components/scraping/ipc';
 import { getSessionData } from '../../db';
 import { delay } from '../../utils/time';
@@ -12,13 +14,13 @@ import {
 import {
   GetHtmlFunction,
   GetHtmlLazyFunction,
-  ProcedureConfig,
   ProfileProcedureConfig,
   SearchProcedureConfig,
   SeedScraper,
   SeedVideo,
   SeedVideoRepeat,
   VideoProcedureConfig,
+  YtProcedureConfig,
 } from './types';
 
 const getSeedVideosRepeat = async (
@@ -191,10 +193,13 @@ async function* scrapingSearchProcedure(
     // frac must be above 0 to trigger the next call
     yield [(i + 1) / queries.length, result];
   }
+
+  // should never happen
+  return [1, null];
 }
 
 const createProcedureGenMakers = (
-  steps: ProcedureConfig[],
+  steps: YtProcedureConfig[],
 ): ((
   x: GetHtmlFunction,
   y: GetHtmlLazyFunction,
@@ -240,7 +245,7 @@ const createProcedureGenMakers = (
 };
 
 const createSingleGenerator = (
-  steps: ProcedureConfig[],
+  steps: YtProcedureConfig[],
   getHtml: GetHtmlFunction,
   getHtmlLazy: GetHtmlLazyFunction,
   sessionId: string,

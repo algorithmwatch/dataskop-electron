@@ -1,10 +1,11 @@
+import { ProviderMetaInformation } from '../types';
 import { profileScraperSlugToFun } from './scrapers';
 import {
   ProfileProcedureConfig,
   ProfileScraper,
-  ScrapingConfig,
   SearchProcedureConfig,
   VideoProcedureConfig,
+  YtScrapingConfig,
 } from './types';
 
 const emptyVideoProcedureConfig: VideoProcedureConfig = {
@@ -62,12 +63,11 @@ const defaultProfileScraper: ProfileProcedureConfig = {
   profileScrapers: Object.keys(profileScraperSlugToFun) as ProfileScraper[],
 };
 
-const defaultConfig: ScrapingConfig = {
+const defaultConfig: YtScrapingConfig = {
+  provider: 'youtube',
+  version: 1,
   title: 'youtube default: profile, videos, logout',
   slug: 'yt-default',
-  startUrl: 'https://www.youtube.com',
-  loginUrl: 'https://www.youtube.com/account',
-  loginCookie: 'LOGIN_INFO',
   steps: [
     defaultProfileScraper,
     defaultVideoExperimentScraper,
@@ -77,14 +77,14 @@ const defaultConfig: ScrapingConfig = {
   ],
 };
 
-const simpleConfig: ScrapingConfig = {
+const simpleConfig: YtScrapingConfig = {
   ...defaultConfig,
   title: 'youtube simple: videos',
   slug: 'yt-simple',
   steps: [simpleVideoExperimentScaper],
 };
 
-const searchConfig: ScrapingConfig = {
+const searchConfig: YtScrapingConfig = {
   ...defaultConfig,
   title: 'youtube search: some queries',
   slug: 'yt-search',
@@ -93,7 +93,7 @@ const searchConfig: ScrapingConfig = {
 
 // fast test, all functions only need to run once
 
-const testConfig: ScrapingConfig = {
+const testConfig: YtScrapingConfig = {
   ...defaultConfig,
   title: 'youtube test: test all involved functions once',
   slug: 'yt-test',
@@ -108,6 +108,19 @@ const testConfig: ScrapingConfig = {
   ],
 };
 
+const youtubeMeta: ProviderMetaInformation = {
+  startUrl: 'https://www.youtube.com',
+  loginUrl: 'https://www.youtube.com/account',
+  loginCookie: 'LOGIN_INFO',
+};
+
 const allConfigs = [defaultConfig, simpleConfig, searchConfig, testConfig];
 
-export { defaultConfig, simpleConfig, testConfig, searchConfig, allConfigs };
+export {
+  defaultConfig,
+  simpleConfig,
+  testConfig,
+  searchConfig,
+  allConfigs,
+  youtubeMeta,
+};
