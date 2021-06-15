@@ -32,6 +32,16 @@ export default function ResultsDetailsPage() {
         >
           News Top-5
         </Button>
+        <Button
+          onClick={() =>
+            history.push({
+              pathname: routes.VISUALIZATION_EXPERIMENT,
+              state: { sessionId, type: 'search-results-compare' },
+            })
+          }
+        >
+          Search Results Compare
+        </Button>
       </div>
       <ResultsDetails sessionId={sessionId} />
     </>

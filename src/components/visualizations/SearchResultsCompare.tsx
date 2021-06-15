@@ -118,7 +118,11 @@ function Visual({ session }: { session: NewsTop5DataItem }) {
   );
 }
 
-export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
+export default function SearchResultsCompare({
+  data,
+}: {
+  data: ScrapingResultSaved[];
+}) {
   const filtered = (() => {
     const signedInData = data.filter(
       (x) =>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, useLocation } from 'react-router-dom';
 import FooterNav from '../components/FooterNav';
 import NewsTop5 from '../components/visualizations/NewsTop5';
+import SearchResultsCompare from '../components/visualizations/SearchResultsCompare';
 import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
 import { getSessionData } from '../db';
@@ -46,6 +47,7 @@ export default function VisualizationExperimentsPage() {
   return (
     <>
       {type === 'newstop5' && <NewsTop5 data={data} />}
+      {type === 'search-results-compare' && <SearchResultsCompare data={data} />}
       <FooterNav items={footerNavItems} />
     </>
   );
