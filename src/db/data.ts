@@ -1,8 +1,8 @@
 import { ipcRenderer } from 'electron';
 import _ from 'lodash';
 // lowdb is a ESM module and this causes some problems right now
-// import { JSONFile, Low } from 'lowdb';
-import { JSONFile, Low } from 'lowdb/lib/index';
+import { JSONFile, Low } from 'lowdb';
+// import { JSONFile, Low } from 'lowdb/lib/index';
 import { join } from 'path';
 import { ScrapingConfig } from '../providers/youtube';
 import { statsForArray } from '../utils/math';
