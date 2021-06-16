@@ -28,7 +28,7 @@ const LIST_ID_LIKED_VIDEOS = 'LL';
 
 const waitUntilDone = async (
   getCurrentHtml: GetCurrentHtml,
-  parseHtml: (url: string) => ParserResult,
+  parseHtml: (html: string) => ParserResult,
   isDoneCheck: null | ((arg0: ScrapingResult, arg1: number) => boolean) = null,
   timeout = { max: 5000, start: 700, factor: 1.3 },
   slugPrefix = 'yt',
@@ -162,7 +162,10 @@ const scrapeSubscriptions = async (
 const scrapeVideoSearch = async (getHtml: GetHtmlFunction, query: string) => {
   const url = buildSearchUrl(query);
   const getCurrentHtml = await getHtml(url);
-  return waitUntilDone(getCurrentHtml, parseSearchResultsVideos);
+  // hard to parse query from rendered html so pass it to the parser
+  return waitUntilDone(getCurrentHtml, (html) =>
+    parseSearchResultsVideos(html, query),
+  );
 };
 
 async function* scrapeSeedVideosAndFollow(
