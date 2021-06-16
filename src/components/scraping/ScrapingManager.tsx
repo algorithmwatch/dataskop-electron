@@ -2,7 +2,7 @@
 import { ipcRenderer } from 'electron';
 import React, { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { ScrapingProgressBar, useConfig, useScraping } from '../../contexts';
+import { useConfig, useScraping } from '../../contexts';
 import { addNewSession, addScrapingResult } from '../../db';
 import { providerToMeta } from '../../providers';
 import { createSingleGenerator } from '../../providers/youtube/procedures/setup';
@@ -53,9 +53,6 @@ export default function ScrapingManager({
     },
     dispatch,
   } = useScraping();
-
-  const setScrapingProgressBar = (options: ScrapingProgressBar) =>
-    dispatch({ type: 'set-scraping-progress-bar', scrapingProgress: options });
 
   const checkForLogIn = async () => {
     const cookies = await getCookies();
@@ -110,19 +107,20 @@ export default function ScrapingManager({
     return html;
   };
 
-  const cbSlug = 'scraping-navigation-happened';
+  const cbSlugNav = 'scraping-navigation-happened';
 
   const checkLoginCb = async () => {
     const loggedIn = await checkForLogIn();
     if (loggedIn) {
       // successfully logged in
-      setNavigationCallback(cbSlug, true);
+      setNavigationCallback(cbSlugNav, true);
       if (onLogin !== null) onLogin();
     }
   };
 
   // controls for the scraping
 
+  // start scraping when `isScrapingStarted` was set to true
   useEffect(() => {
     const startScraping = async () => {
       if (isDebug) {
@@ -164,7 +162,10 @@ export default function ScrapingManager({
 
         const [newFrac, step, result] = value;
 
-        setScrapingProgressBar({ isActive: true, label: '', value: newFrac });
+        dispatch({
+          type: 'set-scraping-progress-bar',
+          scrapingProgress: { isActive: true, label: '', value: newFrac },
+        });
 
         // async, don't wait until data is stored on disk
         addScrapingResult(sessionId, step, result);
@@ -182,8 +183,7 @@ export default function ScrapingManager({
         if (!postedSuccess) console.error('error posting data to backend');
 
         if (done) {
-          dispatch({ type: 'set-scraping-finished', isScrapingFinished: true });
-          setScrapingProgressBar({ isActive: false, label: '', value: 0 });
+          dispatch({ type: 'scraping-has-finished' });
           if (onDone !== null) onDone(sessionId);
         }
       } catch (err) {
@@ -208,8 +208,8 @@ export default function ScrapingManager({
       const loggedIn = await checkForLogIn();
 
       if (!loggedIn) {
-        await setNavigationCallback(cbSlug);
-        ipcRenderer.on(cbSlug, checkLoginCb);
+        await setNavigationCallback(cbSlugNav);
+        ipcRenderer.on(cbSlugNav, checkLoginCb);
       } else {
         if (onLogin !== null) onLogin();
 
@@ -220,7 +220,7 @@ export default function ScrapingManager({
     };
 
     const cleanUpScraper = () => {
-      ipcRenderer.removeListener(cbSlug, checkLoginCb);
+      ipcRenderer.removeListener(cbSlugNav, checkLoginCb);
       ipcRenderer.invoke('scraping-remove-view');
     };
 

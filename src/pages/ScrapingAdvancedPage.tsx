@@ -9,28 +9,45 @@ import {
   MenuItem,
   Select,
 } from '@material-ui/core';
+import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Button from '../components/Button';
 import { makeGetHtml } from '../components/scraping/ipc';
 import ScrapingControls from '../components/scraping/ScrapingControls';
 import routes from '../constants/routes.json';
 import { useScraping } from '../contexts/scraping';
+import { getStoredScrapingConfigs } from '../db';
+import { ScrapingConfig } from '../providers/types';
 import { allConfigs } from '../providers/youtube';
 import {
   activateWatchHistory,
   deactivateWatchHistory,
 } from '../providers/youtube/actions/manage-watch-history';
 
-const ScrapingConfigSelect = ({ scrapingConfig, setScrapingConfig }) => {
+const ScrapingConfigSelect = ({
+  scrapingConfig,
+  setScrapingConfig,
+}: {
+  scrapingConfig: ScrapingConfig;
+  setScrapingConfig: any;
+}) => {
   const [expanded, setExpanded] = useState(false);
+  const [configOptions, setOptions] = useState(allConfigs as ScrapingConfig[]);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  const configOptions = allConfigs;
+  useEffect(() => {
+    const loadData = async () => {
+      const stored = await getStoredScrapingConfigs();
+      setOptions((allConfigs as ScrapingConfig[]).concat(stored));
+    };
+    loadData();
+  }, []);
 
+  // hotfix for some strange behaviour for w/ config options and uniqueness
   return (
     <Card className="mt-10">
       <CardContent>
@@ -39,11 +56,13 @@ const ScrapingConfigSelect = ({ scrapingConfig, setScrapingConfig }) => {
           <InputLabel id="scraping-config-select">Scraping Config</InputLabel>
           <Select
             labelId="scraping-config-select"
-            value={scrapingConfig}
+            value={
+              configOptions.filter((x) => x.slug === scrapingConfig.slug)[0]
+            }
             onChange={(event) => setScrapingConfig(event.target.value)}
           >
-            {configOptions.map((x) => (
-              <MenuItem key={x.title} value={x}>
+            {_.uniqBy(configOptions, 'slug').map((x) => (
+              <MenuItem key={x.slug} value={x}>
                 {x.title}
               </MenuItem>
             ))}
@@ -70,13 +89,16 @@ const ScrapingConfigSelect = ({ scrapingConfig, setScrapingConfig }) => {
 
 export default function AdvancedScrapingPage(): JSX.Element {
   const {
-    state: { scrapingConfig, sessionId },
+    state: { scrapingConfig: curScrapingConfig, sessionId },
     dispatch,
   } = useScraping();
 
-  const setScrapingConfig = (scrapingConfig) =>
+  const history = useHistory();
+
+  const setScrapingConfig = (scrapingConfig: ScrapingConfig) =>
     dispatch({ type: 'set-scraping-config', scrapingConfig });
 
+  // enable and disable scraping window
   useEffect(() => {
     dispatch({ type: 'set-is-attached', isAttached: true });
     return () => dispatch({ type: 'set-is-attached', isAttached: false });
@@ -87,19 +109,25 @@ export default function AdvancedScrapingPage(): JSX.Element {
     <>
       <div className="overflow-y-auto">
         <ScrapingConfigSelect
-          scrapingConfig={scrapingConfig}
+          scrapingConfig={curScrapingConfig}
           setScrapingConfig={setScrapingConfig}
         />
         <ScrapingControls />
         {sessionId !== null && (
-          <Link to={routes.RESULTS_DETAILS.replace(':sessionId', sessionId)}>
+          <Button
+            onClick={() =>
+              history.push(
+                routes.RESULTS_DETAILS.replace(':sessionId', sessionId),
+              )
+            }
+          >
             go to result
-          </Link>
+          </Button>
         )}
-        <Button onClick={(x) => activateWatchHistory(makeGetHtml(false))}>
+        <Button onClick={() => activateWatchHistory(makeGetHtml(false))}>
           activate watch history
         </Button>
-        <Button onClick={(x) => deactivateWatchHistory(makeGetHtml(false))}>
+        <Button onClick={() => deactivateWatchHistory(makeGetHtml(false))}>
           deactivate watch history
         </Button>
       </div>

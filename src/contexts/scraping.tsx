@@ -20,7 +20,7 @@ type Action =
   | { type: 'set-user-logged-in'; isUserLoggedIn: boolean }
   | { type: 'set-scraping-started'; isScrapingStarted: boolean }
   | { type: 'set-scraping-paused'; isScrapingPaused: boolean }
-  | { type: 'set-scraping-finished'; isScrapingFinished: boolean }
+  | { type: 'scraping-has-finished' }
   | { type: 'set-muted'; isMuted: boolean }
   | { type: 'set-scraping-error'; scrapingError: Error | null }
   | { type: 'reset-scraping' }
@@ -103,10 +103,6 @@ function scrapingReducer(state: State, action: Action) {
       return { ...state, isScrapingPaused: action.isScrapingPaused };
     }
 
-    case 'set-scraping-finished': {
-      return { ...state, isScrapingFinished: action.isScrapingFinished };
-    }
-
     case 'set-muted': {
       return { ...state, isMuted: action.isMuted };
     }
@@ -124,6 +120,19 @@ function scrapingReducer(state: State, action: Action) {
         ...state,
         sessionId: action.sessionId,
         stepGenerator: action.stepGenerator,
+        isScrapingFinished: false,
+        isScrapingPaused: false,
+        scrapingProgress: { isActive: true, label: '', value: 0 },
+      };
+    }
+
+    case 'scraping-has-finished': {
+      return {
+        ...state,
+        isScrapingFinished: true,
+        isScrapingPaused: true,
+        isScrapingStarted: false,
+        scrapingProgress: { isActive: false, label: '', value: 1 },
       };
     }
 
