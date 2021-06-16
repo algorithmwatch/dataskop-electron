@@ -37,8 +37,13 @@ export type SeedVideo = {
   creator: SeedScraper | 'fixed' | string;
 };
 
+export type ActionProcedureConfig = {
+  type: 'action';
+  slug: 'yt-activate-watch-history' | 'yt-deactivate-watch-history';
+};
+
 export type VideoProcedureConfig = {
-  type: 'videos';
+  type: 'video';
   // id of videos that are further processed
   seedVideosFixed: Array<string>;
   // function that provides seed videos, including the approx. amount of videos (for the progress bar)
@@ -64,6 +69,7 @@ export type SearchProcedureConfig = {
 };
 
 export type YtProcedureConfig =
+  | ActionProcedureConfig
   | ProfileProcedureConfig
   | VideoProcedureConfig
   | SearchProcedureConfig;

@@ -2,6 +2,21 @@
   "$ref": "#/definitions/YtScrapingConfig",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
+    "ActionProcedureConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "slug": {
+          "enum": ["yt-activate-watch-history", "yt-deactivate-watch-history"],
+          "type": "string"
+        },
+        "type": {
+          "const": "action",
+          "type": "string"
+        }
+      },
+      "required": ["type", "slug"],
+      "type": "object"
+    },
     "ProfileProcedureConfig": {
       "additionalProperties": false,
       "properties": {
@@ -105,7 +120,7 @@
           "type": "array"
         },
         "type": {
-          "const": "videos",
+          "const": "video",
           "type": "string"
         }
       },
@@ -122,6 +137,9 @@
     },
     "YtProcedureConfig": {
       "anyOf": [
+        {
+          "$ref": "#/definitions/ActionProcedureConfig"
+        },
         {
           "$ref": "#/definitions/ProfileProcedureConfig"
         },

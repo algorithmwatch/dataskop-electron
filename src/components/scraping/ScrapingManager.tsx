@@ -1,12 +1,11 @@
 /* eslint-disable no-restricted-syntax */
-/* eslint-disable no-await-in-loop */
 import { ipcRenderer } from 'electron';
 import React, { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { ScrapingProgressBar, useConfig, useScraping } from '../../contexts';
 import { addNewSession, addScrapingResult } from '../../db';
 import { providerToMeta } from '../../providers';
-import { createSingleGenerator } from '../../providers/youtube/procedures';
+import { createSingleGenerator } from '../../providers/youtube/procedures/setup';
 import { postDummyBackend } from '../../utils/networking';
 import { delay } from '../../utils/time';
 import {

@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 import {
   buildSearchUrl,
@@ -130,7 +129,6 @@ const scrapeWatchedVideos = async (
   getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
   const getCurrentHtml = await getHtml('https://www.youtube.com/feed/history');
-  await delay(1000);
   return waitUntilDone(getCurrentHtml, parseWatchHistory);
 };
 

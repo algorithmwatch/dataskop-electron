@@ -1,5 +1,4 @@
 /* eslint-disable no-restricted-syntax */
-/* eslint-disable no-await-in-loop */
 import {
   Card,
   CardActions,
@@ -21,7 +20,7 @@ import { allConfigs } from '../providers/youtube';
 import {
   activateWatchHistory,
   deactivateWatchHistory,
-} from '../providers/youtube/actions/manageWatchHistory';
+} from '../providers/youtube/actions/manage-watch-history';
 
 const ScrapingConfigSelect = ({ scrapingConfig, setScrapingConfig }) => {
   const [expanded, setExpanded] = useState(false);

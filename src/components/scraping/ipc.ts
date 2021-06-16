@@ -49,6 +49,10 @@ const clickElement = async (selector: string) => {
   return ipcRenderer.invoke('scraping-click-element', selector);
 };
 
+const elementExists = async (selector: string) => {
+  return ipcRenderer.invoke('scraping-element-exists', selector);
+};
+
 const submitForm = async (selector: string) => {
   return ipcRenderer.invoke('scraping-submit-form', selector);
 };
@@ -63,4 +67,5 @@ export {
   extractHtml,
   goToUrl,
   clickElement,
+  elementExists,
 };

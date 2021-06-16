@@ -147,4 +147,10 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       `document.querySelector("${selector}").submit()`,
     );
   });
+
+  ipcMain.handle('scraping-element-exists', async (_event, selector) => {
+    return scrapingView?.webContents.executeJavaScript(
+      `document.querySelector("${selector}") !== null`,
+    );
+  });
 }

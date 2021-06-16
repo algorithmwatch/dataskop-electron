@@ -9,6 +9,8 @@ module.exports = {
     'no-console': 'off',
     // not useful for iterative software development
     'import/prefer-default-export': 'off',
+    // useful for async scraping / generators
+    'no-await-in-loop': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

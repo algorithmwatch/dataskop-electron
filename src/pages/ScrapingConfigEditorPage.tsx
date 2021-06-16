@@ -1,5 +1,4 @@
 /* eslint-disable no-restricted-syntax */
-/* eslint-disable no-await-in-loop */
 import {
   Card,
   CardContent,

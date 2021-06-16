@@ -9,7 +9,7 @@ import {
 } from './types';
 
 const emptyVideoProcedureConfig: VideoProcedureConfig = {
-  type: 'videos',
+  type: 'video',
   scrollingBottomForComments: 0,
   followVideos: 0,
   seedVideosFixed: [],
@@ -24,11 +24,11 @@ const defaultVideoExperimentScraper = {
   seedVideosFixed: ['4Y1lZQsyuSQ', 'yr1YyrolRZY'],
   seedVideosDynamic: [
     {
-      maxVideos: 0,
+      maxVideos: 2,
       slug: 'yt-playlist-page-popular-videos',
     },
     {
-      maxVideos: 5,
+      maxVideos: 2,
       slug: 'yt-playlist-page-national-news-top-stories',
     },
   ],
@@ -98,13 +98,22 @@ const testConfig: YtScrapingConfig = {
   title: 'youtube test: test all involved functions once',
   slug: 'yt-test',
   steps: [
+    { type: 'action', slug: 'yt-deactivate-watch-history' },
     {
       ...defaultProfileScraper,
     },
     {
       ...defaultVideoExperimentScraper,
+      followVideos: 1,
       seedVideosFixed: ['4Y1lZQsyuSQ'],
+      seedVideosDynamic: [
+        {
+          maxVideos: 1,
+          slug: 'yt-playlist-page-popular-videos',
+        },
+      ],
     },
+    { type: 'action', slug: 'yt-activate-watch-history' },
   ],
 };
 

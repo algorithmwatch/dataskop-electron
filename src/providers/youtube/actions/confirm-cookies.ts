@@ -1,9 +1,8 @@
-/* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 import cheerio from 'cheerio';
+import { currentDelay } from '../..';
 import { submitForm } from '../../../components/scraping/ipc';
 import { getUniquePath } from '../../../utils/cheerio-unique-selector';
-import { delay } from '../../../utils/time';
 import { GetHtmlFunction } from '../types';
 
 const rootUrl = 'https://www.youtube.com/';
@@ -24,10 +23,8 @@ const submitConfirmForm = async (getHtml: GetHtmlFunction) => {
       (x) => x[1] === 'https://consent.youtube.com/s',
     );
 
-    console.log(theForm, forms);
-
     if (theForm.length === 0) {
-      await delay(1000);
+      await currentDelay();
     } else {
       const selectorPath = getUniquePath($hmtl(theForm[0][0]), $hmtl);
 
