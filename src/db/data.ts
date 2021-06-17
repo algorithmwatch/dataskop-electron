@@ -1,6 +1,7 @@
 import { ipcRenderer } from 'electron';
 import _ from 'lodash';
 import { JSONFile, Low } from 'lowdb';
+import PQueue from 'p-queue';
 import { join } from 'path';
 import { ScrapingConfig } from '../providers/types';
 import { statsForArray } from '../utils/math';
@@ -13,6 +14,8 @@ type Data = {
 };
 
 let db: Low<Data> | null = null;
+
+const queue = new PQueue({ concurrency: 1 });
 
 const initDb = async () => {
   const userFolder = await ipcRenderer.invoke('get-path-user-data');
@@ -52,11 +55,19 @@ const addNewSession = async (sessionId: string, configSlug: string) => {
   return db.write();
 };
 
-const addScrapingResult = async (
-  sessionId: string,
-  step: number,
-  data: any,
-) => {
+const internAddScrapingResult = async (obj: ScrapingResultSaved) => {
+  await setUpDb();
+
+  if (db === null || db.data === null) throw Error('db is not initialized');
+
+  db.data.scrapingResults.push(obj);
+
+  return db.write();
+};
+
+// important: use queue because otherwise some results were skipped due to race
+// condition
+const addScrapingResult = (sessionId: string, step: number, data: any) => {
   const obj = {
     sessionId,
     step,
@@ -64,12 +75,7 @@ const addScrapingResult = async (
     scrapedAt: Date.now(),
   };
 
-  await setUpDb();
-
-  if (db === null || db.data === null) throw Error('db is not initialized');
-  db.data.scrapingResults.push(obj);
-
-  return db.write();
+  return queue.add(() => internAddScrapingResult(obj));
 };
 
 const getScrapingResults = async () => {

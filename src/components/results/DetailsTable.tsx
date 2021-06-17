@@ -78,7 +78,7 @@ export default function DetailsTable({ rows }) {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <Row key={row.scrapedAt} row={row} />
+            <Row key={row.scrapedAt + row.step + row.slug} row={row} />
           ))}
         </TableBody>
       </Table>

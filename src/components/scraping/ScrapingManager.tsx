@@ -171,9 +171,6 @@ export default function ScrapingManager({
           scrapingProgress: { isActive: true, label: '', value: newFrac },
         });
 
-        // async, don't wait until data is stored on disk
-        addScrapingResult(sessionId, step, result);
-
         if (!result.success) {
           console.error('parsing error:');
           console.error(result);
@@ -187,9 +184,16 @@ export default function ScrapingManager({
         if (!postedSuccess) console.error('error posting data to backend');
 
         if (done) {
+          // this is the last step of the session. It's important to wait until
+          // data is stored on disk. With async, the last data woud not be stored.
+          await addScrapingResult(sessionId, step, result);
+
           setSessionFinishedAt(sessionId);
           dispatch({ type: 'scraping-has-finished' });
           if (onDone !== null) onDone(sessionId);
+        } else {
+          // Store data w/ async
+          addScrapingResult(sessionId, step, result);
         }
       } catch (err) {
         dispatch({ type: 'set-scraping-error', scrapingError: err });
