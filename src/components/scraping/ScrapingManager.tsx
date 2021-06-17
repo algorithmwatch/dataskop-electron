@@ -3,7 +3,11 @@ import { ipcRenderer } from 'electron';
 import React, { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useConfig, useScraping } from '../../contexts';
-import { addNewSession, addScrapingResult } from '../../db';
+import {
+  addNewSession,
+  addScrapingResult,
+  setSessionFinishedAt,
+} from '../../db';
 import { providerToMeta } from '../../providers';
 import { createSingleGenerator } from '../../providers/youtube/procedures/setup';
 import { postDummyBackend } from '../../utils/networking';
@@ -183,6 +187,7 @@ export default function ScrapingManager({
         if (!postedSuccess) console.error('error posting data to backend');
 
         if (done) {
+          setSessionFinishedAt(sessionId);
           dispatch({ type: 'scraping-has-finished' });
           if (onDone !== null) onDone(sessionId);
         }

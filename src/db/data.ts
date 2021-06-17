@@ -4,10 +4,10 @@ import { JSONFile, Low } from 'lowdb';
 import { join } from 'path';
 import { ScrapingConfig } from '../providers/types';
 import { statsForArray } from '../utils/math';
-import { ScrapingResultSaved, ScrapingSessions } from './types';
+import { ScrapingResultSaved, ScrapingSession } from './types';
 
 type Data = {
-  scrapingSessions: ScrapingSessions[];
+  scrapingSessions: ScrapingSession[];
   scrapingResults: ScrapingResultSaved[];
   scrapingConfigs: ScrapingConfig[];
 };
@@ -40,6 +40,7 @@ const addNewSession = async (sessionId: string, configSlug: string) => {
   const obj = {
     sessionId,
     startedAt: Date.now(),
+    finishedAt: null,
     configSlug,
   };
 
@@ -112,7 +113,7 @@ const importResultRows = async (
   return sum.length - old.length;
 };
 
-const importSessionRows = async (rows: ScrapingSessions[]): Promise<number> => {
+const importSessionRows = async (rows: ScrapingSession[]): Promise<number> => {
   const old = (await setUpDb()).scrapingSessions;
 
   const sum = _.uniqWith(old.concat(rows), _.isEqual);
@@ -137,6 +138,22 @@ const getSessionData = async (
       (slug == null || x.slug === slug) &&
       (step == null || x.step === step),
   );
+};
+
+const setSessionFinishedAt = async (sessionId: string) => {
+  await setUpDb();
+
+  if (db === null || db?.data === null) throw Error();
+
+  const theSession = db.data.scrapingSessions.filter(
+    (x) => x.sessionId === sessionId,
+  )[0];
+
+  db.data.scrapingSessions = [
+    { ...theSession, finishedAt: Date.now() } as ScrapingSession,
+  ].concat(db.data.scrapingSessions.filter((x) => x.sessionId !== sessionId));
+
+  db.write();
 };
 
 const clearData = async () => {
@@ -218,4 +235,5 @@ export {
   getStatisticsForSession,
   modifyScrapingConfig,
   getStoredScrapingConfigs,
+  setSessionFinishedAt,
 };

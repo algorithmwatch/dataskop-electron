@@ -12,10 +12,11 @@ interface ScrapingResultSaved extends ScrapingResult {
   step: number;
 }
 
-interface ScrapingSessions {
+interface ScrapingSession {
   sessionId: string;
   startedAt: number; // number of millisecconds in UTC
+  finishedAt: number | null; // number of millisecconds in UTC
   configSlug: string;
 }
 
-export { ScrapingResult, ScrapingResultSaved, ScrapingSessions };
+export { ScrapingResult, ScrapingResultSaved, ScrapingSession };

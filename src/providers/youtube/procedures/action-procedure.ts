@@ -31,12 +31,12 @@ async function* actionProcedure(
       await activateWatchHistory(getHtml);
     }
 
-    return [1, { success: true, slug, fields: {} }];
+    return [1, { success: true, slug, fields: {}, errors: [] }];
   }
 
   if (slug === 'yt-deactivate-watch-history') {
     const turnOnAgain = await deactivateWatchHistory(getHtml);
-    return [1, { success: true, slug, fields: { turnOnAgain } }];
+    return [1, { success: true, slug, fields: { turnOnAgain }, errors: [] }];
   }
 
   return [1, null];

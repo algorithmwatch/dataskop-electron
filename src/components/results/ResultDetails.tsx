@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { getSessionData, getStatisticsForSession } from '../../db';
+import {
+  getSessionData,
+  getSessions,
+  getStatisticsForSession,
+  ScrapingSession,
+} from '../../db';
 import DetailsTable from './DetailsTable';
 import Stats from './Stats';
 
@@ -10,11 +15,15 @@ export default function ResultsDetails({
 }): JSX.Element {
   const [rows, setRows] = useState<any>([]);
   const [stats, setStats] = useState<any>([]);
+  const [session, setSession] = useState<ScrapingSession>(null);
 
   useEffect(() => {
     const newRows = async () => {
       setRows(await getSessionData(sessionId));
       setStats(await getStatisticsForSession(sessionId));
+      setSession(
+        (await getSessions()).filter((x) => x.sessionId === sessionId)[0],
+      );
     };
     newRows();
   }, []);
@@ -23,6 +32,13 @@ export default function ResultsDetails({
     <>
       <div className="overflow-y-auto" style={{ height: '90vh' }}>
         <h2>Session: {sessionId}</h2>
+        <div>
+          duration:{' '}
+          {session &&
+            session.finishedAt &&
+            (session.finishedAt - session.startedAt) / 1000}
+          s
+        </div>
         <Stats data={stats} />
         <DetailsTable rows={rows} />
       </div>

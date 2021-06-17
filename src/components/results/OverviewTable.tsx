@@ -28,7 +28,8 @@ export default function OverviewTable({ rows }) {
           <TableRow>
             <TableCell>Session ID</TableCell>
             <TableCell>Config Slug</TableCell>
-            <TableCell>Date</TableCell>
+            <TableCell>Started At</TableCell>
+            <TableCell>Duation</TableCell>
             <TableCell>Number of Items</TableCell>
           </TableRow>
         </TableHead>
@@ -48,6 +49,10 @@ export default function OverviewTable({ rows }) {
               </TableCell>
               <TableCell>{row.configSlug}</TableCell>
               <TableCell>{dayjs(row.startedAt).format()}</TableCell>
+              <TableCell>
+                {row.finishedAt &&
+                  `${(row.finishedAt - row.startedAt) / 1000}s`}
+              </TableCell>
               <TableCell>{row.count}</TableCell>
             </TableRow>
           ))}
