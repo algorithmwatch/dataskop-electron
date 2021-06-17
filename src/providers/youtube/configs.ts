@@ -29,7 +29,7 @@ const videoScraperStep = {
       slug: 'yt-playlist-page-popular-videos',
     },
     {
-      maxVideos: 2,
+      maxVideos: 5,
       slug: 'yt-playlist-page-national-news-top-stories',
     },
   ],
@@ -83,9 +83,9 @@ const defaultConfig: YtScrapingConfig = {
     profileScraperStep,
     videoScraperStep,
     searchStep,
+    activateWatchHistoryStep,
     logOutVideoScraperStep,
     searchStep,
-    activateWatchHistoryStep,
   ],
 };
 
