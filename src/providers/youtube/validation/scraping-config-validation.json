@@ -83,7 +83,7 @@
           "type": "string"
         },
         "step": {
-          "type": "number"
+          "type": ["number", "null"]
         }
       },
       "required": ["step", "previousResult", "maxVideos"],

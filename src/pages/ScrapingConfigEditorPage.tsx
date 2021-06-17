@@ -77,6 +77,7 @@ export default function ScrapingConfigEditorPage(): JSX.Element {
                 src={editJson}
                 onAdd={updateConfig}
                 onEdit={updateConfig}
+                onDelete={updateConfig}
               />
             )}
           </CardContent>
