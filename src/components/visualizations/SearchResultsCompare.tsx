@@ -1,4 +1,4 @@
-import { Channel, RecommendedVideo } from '@algorithmwatch/harke';
+import { RecommendedVideo } from '@algorithmwatch/harke';
 import { faNewspaper } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippyjs/react';
@@ -6,16 +6,11 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import { Placement } from 'tippy.js';
 import { ScrapingResultSaved } from '../../db/types';
-import { Carousel, Slide } from '../Carousel/Carousel';
 import { Options } from '../Carousel/types';
 import Explainer from '../Explainer';
 
-interface NewsTop5DataItem {
-  video: {
-    id: string;
-    title: string;
-    channel: Channel;
-  };
+interface SearchResultsCompareDataItem {
+  query: string;
   signedInVideos: RecommendedVideo[];
   signedOutVideos: RecommendedVideo[];
 }
@@ -56,7 +51,7 @@ function VideoList({
   );
 }
 
-function Visual({ session }: { session: NewsTop5DataItem }) {
+function Visual({ session }: { session: SearchResultsCompareDataItem }) {
   const [displayCount, setDisplayCount] = useState(10);
 
   return (
@@ -123,32 +118,17 @@ export default function SearchResultsCompare({
 }: {
   data: ScrapingResultSaved[];
 }) {
-  const filtered = (() => {
-    const signedInData = data.filter(
-      (x) =>
-        x.fields.seedCreator === 'yt-playlist-page-national-news-top-stories',
-    );
-    const signedOutData = data.filter(
-      (x) =>
-        x.fields.seedCreator ===
-        'repeat: yt-playlist-page-national-news-top-stories',
-    );
+  const queryGroups = _(data)
+    .filter({ slug: 'yt-search-results-videos' })
+    .groupBy('fields.query')
+    .map((items, query) => ({
+      query,
+      signedInVideos: items[0].fields.videos,
+      signedOutVideos: items[1].fields.videos,
+    }))
+    .value();
 
-    return _.zip(signedOutData, signedInData);
-  })();
-  const transformed: NewsTop5DataItem[] = (() =>
-    filtered.map((x) => ({
-      video: {
-        id: x[0]?.fields.id,
-        title: x[0]?.fields.title,
-        channel: x[0]?.fields.channel,
-      },
-      signedInVideos: x[0]?.fields.recommendedVideos,
-      signedOutVideos: x[1]?.fields.recommendedVideos,
-    })))();
-
-  // console.warn('filtered', filtered);
-  // console.warn('transformed', transformed);
+  // console.warn('queryGroups', queryGroups);
 
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
   const carouselOptions: Options = {
@@ -270,9 +250,9 @@ export default function SearchResultsCompare({
         </div>
       </Explainer>
       <Carousel options={carouselOptions}>
-        {transformed.length &&
-          transformed.map((session) => (
-            <Slide key={session.video.title}>
+        {queryGroups.length &&
+          queryGroups.map((session) => (
+            <Slide key={session.query}>
               <Visual session={session} />
             </Slide>
           ))}

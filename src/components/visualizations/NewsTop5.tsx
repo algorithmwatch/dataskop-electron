@@ -41,7 +41,7 @@ function VideoList({
                 <div>{channelName}</div>
               </>
             }
-            delay={[250, 0]}
+            // delay={[250, 0]}
             theme="process-info"
             placement={tippyPlacement}
           >
