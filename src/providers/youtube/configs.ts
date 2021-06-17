@@ -1,6 +1,7 @@
 import { ProviderMetaInformation } from '../types';
 import { profileScraperSlugToFun } from './scrapers';
 import {
+  ActionProcedureConfig,
   ProfileProcedureConfig,
   ProfileScraper,
   SearchProcedureConfig,
@@ -18,7 +19,7 @@ const emptyVideoProcedureConfig: VideoProcedureConfig = {
   doLogout: false,
 };
 
-const defaultVideoExperimentScraper = {
+const videoScraperStep = {
   ...emptyVideoProcedureConfig,
   followVideos: 2,
   seedVideosFixed: ['4Y1lZQsyuSQ', 'yr1YyrolRZY'],
@@ -35,11 +36,11 @@ const defaultVideoExperimentScraper = {
 };
 
 const simpleVideoExperimentScaper = {
-  ...defaultVideoExperimentScraper,
+  ...videoScraperStep,
   followVideos: 0,
 };
 
-const logOutExperimentConfig = {
+const logOutVideoScraperStep = {
   ...simpleVideoExperimentScaper,
   doLogout: true,
   seedVideosFixed: [],
@@ -47,7 +48,6 @@ const logOutExperimentConfig = {
   seedVideosRepeat: [
     {
       previousResult: 'yt-playlist-page-national-news-top-stories',
-      step: 1,
       maxVideos: 5,
     },
   ],
@@ -58,9 +58,19 @@ const searchStep: SearchProcedureConfig = {
   queries: ['antifa', 'berlin'],
 };
 
-const defaultProfileScraper: ProfileProcedureConfig = {
+const profileScraperStep: ProfileProcedureConfig = {
   type: 'profile',
   profileScrapers: Object.keys(profileScraperSlugToFun) as ProfileScraper[],
+};
+
+const deactivateWatchHistoryStep: ActionProcedureConfig = {
+  type: 'action',
+  slug: 'yt-deactivate-watch-history',
+};
+
+const activateWatchHistoryStep: ActionProcedureConfig = {
+  type: 'action',
+  slug: 'yt-activate-watch-history',
 };
 
 const defaultConfig: YtScrapingConfig = {
@@ -69,11 +79,13 @@ const defaultConfig: YtScrapingConfig = {
   title: 'youtube default: profile, videos, logout',
   slug: 'yt-default',
   steps: [
-    defaultProfileScraper,
-    defaultVideoExperimentScraper,
+    deactivateWatchHistoryStep,
+    profileScraperStep,
+    videoScraperStep,
     searchStep,
-    logOutExperimentConfig,
+    logOutVideoScraperStep,
     searchStep,
+    activateWatchHistoryStep,
   ],
 };
 
@@ -98,12 +110,10 @@ const testConfig: YtScrapingConfig = {
   title: 'youtube test: test all involved functions once',
   slug: 'yt-test',
   steps: [
-    { type: 'action', slug: 'yt-deactivate-watch-history' },
+    deactivateWatchHistoryStep,
+    profileScraperStep,
     {
-      ...defaultProfileScraper,
-    },
-    {
-      ...defaultVideoExperimentScraper,
+      ...videoScraperStep,
       followVideos: 1,
       seedVideosFixed: ['4Y1lZQsyuSQ'],
       seedVideosDynamic: [
@@ -113,7 +123,7 @@ const testConfig: YtScrapingConfig = {
         },
       ],
     },
-    { type: 'action', slug: 'yt-activate-watch-history' },
+    activateWatchHistoryStep,
   ],
 };
 

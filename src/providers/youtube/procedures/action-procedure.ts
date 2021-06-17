@@ -31,7 +31,7 @@ async function* actionProcedure(
       await activateWatchHistory(getHtml);
     }
 
-    return [1, { success: true, slug }];
+    return [1, { success: true, slug, fields: {} }];
   }
 
   if (slug === 'yt-deactivate-watch-history') {

@@ -29,9 +29,8 @@ export default function ScrapingConfigEditorPage(): JSX.Element {
   };
 
   const newConfig = async () => {
-    const config = defaultConfig;
-    config.slug = `youtube-${dayjs().format('YYYY-MM-DD-HH-mm-s')}`;
-    config.title = `youtube-${dayjs().format('YYYY-MM-DD-HH-mm-s')}`;
+    const slug = `youtube-${dayjs().format('YYYY-MM-DD-HH-mm-s')}`;
+    const config = { ...defaultConfig, slug, title: slug };
     await modifyScrapingConfig(config);
     loadData();
   };

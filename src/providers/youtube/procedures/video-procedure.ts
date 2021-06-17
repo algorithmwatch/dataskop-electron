@@ -22,10 +22,18 @@ const getSeedVideosRepeat = async (
   scrapeAgain: SeedVideoRepeat,
 ): Promise<SeedVideo[]> => {
   const { previousResult, step, maxVideos } = scrapeAgain;
-  const oldData = await getSessionData(sessionId, {
-    slug: previousResult,
-    step,
-  });
+
+  let filterBy = null;
+  if (step !== null) {
+    filterBy = { slug: previousResult, step };
+  } else {
+    filterBy = { slug: previousResult };
+  }
+
+  const oldData = await getSessionData(sessionId, filterBy);
+  if (oldData.length > 1) {
+    console.warn('Uh! Got more than 1 previous result. You sure?');
+  }
   return oldData[0].fields.videos
     .slice(0, maxVideos)
     .map(({ id }: { id: string }) => ({

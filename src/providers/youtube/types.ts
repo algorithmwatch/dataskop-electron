@@ -17,7 +17,7 @@ export type SeedCreator = {
 };
 
 export type SeedVideoRepeat = {
-  step: number;
+  step: number | null;
   previousResult: string;
   maxVideos: number;
 };
