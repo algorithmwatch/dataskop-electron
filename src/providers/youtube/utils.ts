@@ -29,9 +29,9 @@ const groupByFollowId = (x: any[]) =>
   Object.values(_.groupBy(x, (y) => y.fields.followId));
 
 const getVideos = (data: any[]) =>
-  data.filter((x) => x.slug.includes('video-page') && x.success);
+  data.filter((x) => x.slug && x.slug.includes('video-page') && x.success);
 
 const getFollowGroups = (data: any[]) =>
-  groupByFollowId(data.filter((x) => x.slug.includes('video-page')));
+  groupByFollowId(data.filter((x) => x.slug && x.slug.includes('video-page')));
 
 export { getThumbnails, getFollowGroups, getVideos };
