@@ -58,6 +58,7 @@ function VideoList({
 
 function Visual({ session }: { session: NewsTop5DataItem }) {
   const [displayCount, setDisplayCount] = useState(10);
+  console.warn('test1', session);
 
   return (
     <div className="flex bg-yellow-200 border-2 border-yellow-400 w-full max-w-2xl mx-auto px-5 py-4 cursor-auto">
@@ -143,8 +144,8 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
       signedOutVideos: x[1]?.fields.recommendedVideos,
     })))();
 
-  // console.warn('filtered', filtered);
-  // console.warn('transformed', transformed);
+  console.warn('filtered', filtered);
+  console.warn('transformed', transformed);
 
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
   const carouselOptions: Options = {
