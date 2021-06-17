@@ -1,40 +1,44 @@
 import { ipcRenderer } from 'electron';
 import { pick, round } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Rnd } from 'react-rnd';
+import { useScraping } from '../../contexts';
 
 export default function ScrapingWindow({
-  isMuted = true,
-  fixedWindow = false,
   initPosition = 'center',
   initSizeFactor = 0.6,
 }: {
-  isMuted: boolean;
-  fixedWindow: boolean;
   initPosition?: string;
   initSizeFactor?: number;
 }) {
   const margin = 30;
-  const [bounds, setBounds] = useState({
-    width: margin * 2,
-    height: margin * 2,
-    x: margin * 2,
-    y: margin * 2,
-  });
+
+  const {
+    state: { isMuted, fixedWindow, bounds, visibleWindow },
+    dispatch,
+  } = useScraping();
+
+  const setBounds = (bounds) => {
+    dispatch({ type: 'set-bounds', bounds });
+  };
 
   useEffect(() => {
     ipcRenderer.invoke('scraping-set-muted', isMuted);
   }, [isMuted]);
 
   useEffect(() => {
-    const b = { ...bounds };
-    b.height -= margin * 2;
-    b.width -= margin * 2;
-    b.x += margin;
-    b.y += margin;
-
-    ipcRenderer.invoke('scraping-set-bounds', b);
-  }, [bounds]);
+    if (visibleWindow) {
+      const b = { ...bounds };
+      b.height -= margin * 2;
+      b.width -= margin * 2;
+      b.x += margin;
+      b.y += margin;
+      ipcRenderer.invoke('scraping-set-bounds', b);
+    } else {
+      const b = { ...bounds, width: 0, height: 0 };
+      ipcRenderer.invoke('scraping-set-bounds', b);
+    }
+  }, [bounds, visibleWindow]);
 
   useEffect(() => {
     const width = window.innerWidth;
@@ -60,6 +64,8 @@ export default function ScrapingWindow({
 
     setBounds(windowDimensions());
   }, [initPosition, initSizeFactor]);
+
+  if (!visibleWindow) return null;
 
   return (
     <div

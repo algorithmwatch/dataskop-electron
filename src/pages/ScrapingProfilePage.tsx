@@ -1,25 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import FooterNav from '../components/FooterNav';
-import Scraping from '../components/scraping/ScrapingManager';
 import routes from '../constants/routes.json';
-import { useConfig } from '../contexts/config';
+import { useScraping } from '../contexts';
 
 export default function ScrapingProfilePage(): JSX.Element {
-  const [sessionId, setSessionId] = useState(null);
-
   const {
-    state: { scrapingConfig },
-  } = useConfig();
-
-  const onlyProfileScraper = {
-    ...scrapingConfig,
-    procedureConfig: {
-      ...scrapingConfig.procedureConfig,
-      seedVideosDynamic: [],
-      seedVideosFixed: [],
-    },
-  };
+    state: { sessionId },
+    dispatch,
+  } = useScraping();
 
   const footerNavItems =
     sessionId !== null
@@ -35,15 +24,16 @@ export default function ScrapingProfilePage(): JSX.Element {
         ]
       : [];
 
+  // enable and disable scraping window
+  useEffect(() => {
+    dispatch({ type: 'set-is-attached', isAttached: true });
+    // return () => dispatch({ type: 'set-is-attached', isAttached: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
-      <Scraping
-        scrapingConfig={onlyProfileScraper}
-        disableInput
-        hideControls
-        autostart
-        onDone={(x) => setSessionId(x)}
-      />
+      <div>Bro, sup!</div>
       <FooterNav items={footerNavItems} />
     </>
   );

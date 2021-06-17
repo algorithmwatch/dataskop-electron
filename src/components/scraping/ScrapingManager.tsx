@@ -31,13 +31,11 @@ export default function ScrapingManager({
   onLogin = null,
   onDone = null,
   disableInput = false,
-  fixedWindow = false,
   autostart = false,
 }: {
   onLogin?: null | (() => void);
   onDone?: null | ((arg0: string) => void);
   disableInput?: boolean;
-  fixedWindow?: boolean;
   autostart?: boolean;
 }): JSX.Element {
   const {
@@ -238,5 +236,5 @@ export default function ScrapingManager({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <ScrapingBrowser isMuted={isMuted} fixedWindow={fixedWindow} />;
+  return <ScrapingBrowser />;
 }

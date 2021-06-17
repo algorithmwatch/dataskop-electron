@@ -22,6 +22,9 @@ type Action =
   | { type: 'set-scraping-paused'; isScrapingPaused: boolean }
   | { type: 'scraping-has-finished' }
   | { type: 'set-muted'; isMuted: boolean }
+  | { type: 'set-fixed-window'; fixedWindow: boolean }
+  | { type: 'set-visible-window'; visibleWindow: boolean }
+  | { type: 'set-bounds'; bounds: boolean }
   | { type: 'set-scraping-error'; scrapingError: Error | null }
   | { type: 'reset-scraping' }
   | {
@@ -41,10 +44,13 @@ type State = {
   isScrapingStarted: boolean;
   isScrapingPaused: boolean;
   isScrapingFinished: boolean;
-  isMuted: boolean;
   scrapingError: Error | null;
   // create a generation to be able to hold/resumee a scraping proccess
   stepGenerator: AsyncGenerator | null;
+  isMuted: boolean;
+  fixedWindow: boolean;
+  visibleWindow: boolean;
+  bounds: { width: number; height: number; x: number; y: number };
 };
 
 type ScrapingProviderProps = { children: React.ReactNode };
@@ -68,9 +74,12 @@ const initialState = {
   isScrapingStarted: false,
   isScrapingPaused: false,
   isScrapingFinished: false,
-  isMuted: true,
   scrapingError: null,
   stepGenerator: null,
+  isMuted: true,
+  fixedWindow: false,
+  visibleWindow: true,
+  bounds: { width: 100, height: 100, x: 100, y: 100 },
 };
 
 function scrapingReducer(state: State, action: Action) {
@@ -105,6 +114,18 @@ function scrapingReducer(state: State, action: Action) {
 
     case 'set-muted': {
       return { ...state, isMuted: action.isMuted };
+    }
+
+    case 'set-fixed-window': {
+      return { ...state, fixedWindow: action.fixedWindow };
+    }
+
+    case 'set-visible-window': {
+      return { ...state, visibleWindow: action.visibleWindow };
+    }
+
+    case 'set-bounds': {
+      return { ...state, bounds: action.bounds };
     }
 
     case 'set-scraping-error': {

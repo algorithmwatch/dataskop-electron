@@ -25,6 +25,7 @@ export default function ScrapingControls({
       scrapingError,
       isMuted,
       scrapingProgress,
+      visibleWindow,
     },
     dispatch,
   } = useScraping();
@@ -56,6 +57,10 @@ export default function ScrapingControls({
 
   const toggleIsMuted = () => {
     dispatch({ type: 'set-muted', isMuted: !isMuted });
+  };
+
+  const toggleVis = () => {
+    dispatch({ type: 'set-visible-window', visibleWindow: !visibleWindow });
   };
 
   const startScraping = () => {
@@ -90,6 +95,7 @@ export default function ScrapingControls({
           )}
 
           <Button onClick={toggleIsMuted}>is {!isMuted && 'not'} muted</Button>
+          <Button onClick={toggleVis}>{!isMuted && 'not'} vis</Button>
         </div>
         {isScrapingStarted && (
           <progress className="progress" value={scrapingProgress.value} max="1">
