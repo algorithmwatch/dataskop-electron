@@ -19,7 +19,6 @@ export type SeedCreator = {
 export type SeedVideoRepeat = {
   step: number | null;
   previousResult: string;
-  maxVideos: number;
 };
 
 export type ProfileScraper =

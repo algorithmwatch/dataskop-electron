@@ -16,12 +16,14 @@ import {
   scrapeSeedVideos,
   scrapeSeedVideosAndFollow,
 } from '../scrapers';
+import { YtScrapingConfig } from '../types';
 
 const getSeedVideosRepeat = async (
   sessionId: string,
   scrapeAgain: SeedVideoRepeat,
+  scrapingConfigSlug: YtScrapingConfig,
 ): Promise<SeedVideo[]> => {
-  const { previousResult, step, maxVideos } = scrapeAgain;
+  const { previousResult, step } = scrapeAgain;
 
   let filterBy = null;
   if (step !== null) {
@@ -34,7 +36,14 @@ const getSeedVideosRepeat = async (
   if (oldData.length > 1) {
     console.warn('Uh! Got more than 1 previous result. You sure?');
   }
-  return oldData[0].fields.videos
+
+  const [oldResult] = oldData;
+
+  const { maxVideos } = (
+    scrapingConfigSlug.steps[oldResult.step] as VideoProcedureConfig
+  ).seedVideosDynamic.filter((x) => x.slug === previousResult)[0];
+
+  return oldResult.fields.videos
     .slice(0, maxVideos)
     .map(({ id }: { id: string }) => ({
       id,
@@ -51,6 +60,7 @@ async function* videosProcedure(
   getHtmlLazy: GetHtmlLazyFunction,
   sessionId: string,
   config: VideoProcedureConfig,
+  scrapingConfig: YtScrapingConfig,
 ) {
   const {
     followVideos,
@@ -90,7 +100,7 @@ async function* videosProcedure(
 
   // get videos from previous results
   for (const rep of seedVideosRepeat) {
-    const newSeed = await getSeedVideosRepeat(sessionId, rep);
+    const newSeed = await getSeedVideosRepeat(sessionId, rep, scrapingConfig);
     maxSteps += newSeed.length;
     seedVideos.push(...newSeed);
   }

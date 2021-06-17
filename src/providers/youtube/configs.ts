@@ -48,7 +48,6 @@ const logOutVideoScraperStep = {
   seedVideosRepeat: [
     {
       previousResult: 'yt-playlist-page-national-news-top-stories',
-      maxVideos: 5,
       step: null,
     },
   ],

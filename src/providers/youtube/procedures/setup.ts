@@ -2,7 +2,7 @@
 import {
   GetHtmlFunction,
   GetHtmlLazyFunction,
-  YtProcedureConfig,
+  YtScrapingConfig,
 } from '../types';
 import { actionProcedure } from './action-procedure';
 import { profileProcedure } from './profile-procedure';
@@ -11,7 +11,7 @@ import { videosProcedure } from './video-procedure';
 
 // deserialize JSON configs
 const createProcedureGenMakers = (
-  steps: YtProcedureConfig[],
+  config: YtScrapingConfig,
 ): ((
   x: GetHtmlFunction,
   y: GetHtmlLazyFunction,
@@ -23,13 +23,13 @@ const createProcedureGenMakers = (
     sessiondId: string,
   ) => any)[] = [];
 
-  for (const step of steps) {
+  for (const step of config.steps) {
     if (step.type === 'video') {
       const f = (
         x: GetHtmlFunction,
         y: GetHtmlLazyFunction,
         sessiondId: string,
-      ) => videosProcedure(x, y, sessiondId, step);
+      ) => videosProcedure(x, y, sessiondId, step, config);
 
       result.push(f);
     }
@@ -67,12 +67,12 @@ const createProcedureGenMakers = (
 };
 
 const createSingleGenerator = (
-  steps: YtProcedureConfig[],
+  scrapingConfig: YtScrapingConfig,
   getHtml: GetHtmlFunction,
   getHtmlLazy: GetHtmlLazyFunction,
   sessionId: string,
 ) => {
-  const genMakers = createProcedureGenMakers(steps);
+  const genMakers = createProcedureGenMakers(scrapingConfig);
 
   async function* gen() {
     let i = 0;
@@ -103,4 +103,4 @@ const createSingleGenerator = (
   return gen();
 };
 
-export { createSingleGenerator, createProcedureGenMakers };
+export { createSingleGenerator };

@@ -76,9 +76,6 @@
     "SeedVideoRepeat": {
       "additionalProperties": false,
       "properties": {
-        "maxVideos": {
-          "type": "number"
-        },
         "previousResult": {
           "type": "string"
         },
@@ -86,7 +83,7 @@
           "type": ["number", "null"]
         }
       },
-      "required": ["step", "previousResult", "maxVideos"],
+      "required": ["step", "previousResult"],
       "type": "object"
     },
     "VideoProcedureConfig": {

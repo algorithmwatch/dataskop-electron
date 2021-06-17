@@ -135,7 +135,7 @@ export default function ScrapingManager({
       const sId = uuidv4();
 
       const gen = createSingleGenerator(
-        scrapingConfig.steps,
+        scrapingConfig,
         makeGetHtml(logHtml),
         getHtmlLazy,
         sId,
