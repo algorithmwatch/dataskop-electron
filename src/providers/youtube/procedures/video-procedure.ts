@@ -67,14 +67,14 @@ async function* videosProcedure(
     seedVideosFixed,
     seedVideosDynamic,
     seedVideosRepeat,
-    scrollingBottomForComments,
     doLogout,
   } = config;
 
   const isFollowingVideos = !(followVideos == null || followVideos === 0);
-  const scrapeComments = !(
-    scrollingBottomForComments == null || scrollingBottomForComments === 0
-  );
+  const scrapeComments = false;
+  // const scrapeComments = !(
+  //   scrollingBottomForComments == null || scrollingBottomForComments === 0
+  // );
 
   if (doLogout) {
     await clearStorage();

@@ -95,9 +95,6 @@
         "followVideos": {
           "type": "number"
         },
-        "scrollingBottomForComments": {
-          "type": "number"
-        },
         "seedVideosDynamic": {
           "items": {
             "$ref": "#/definitions/SeedCreator"
@@ -127,7 +124,6 @@
         "seedVideosDynamic",
         "seedVideosRepeat",
         "followVideos",
-        "scrollingBottomForComments",
         "doLogout"
       ],
       "type": "object"

@@ -52,7 +52,8 @@ export type VideoProcedureConfig = {
   // how many videos to follow for each seed video
   followVideos: number;
   // how often to scroll down for lazy loading
-  scrollingBottomForComments: number;
+  // not using right now
+  // scrollingBottomForComments: number;
   // if true, logout user before first scraping
   doLogout: boolean;
 };
