@@ -47,7 +47,9 @@ export default function VisualizationExperimentsPage() {
   return (
     <>
       {type === 'newstop5' && <NewsTop5 data={data} />}
-      {type === 'search-results-compare' && <SearchResultsCompare data={data} />}
+      {type === 'search-results-compare' && (
+        <SearchResultsCompare data={data} />
+      )}
       <FooterNav items={footerNavItems} />
     </>
   );
