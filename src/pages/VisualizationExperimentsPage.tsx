@@ -32,7 +32,7 @@ export default function VisualizationExperimentsPage() {
   }, [sessionId]);
 
   if (isDebug) {
-    console.log(data);
+    console.debug(data);
   }
 
   const footerNavItems = [
