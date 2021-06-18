@@ -181,6 +181,7 @@ async function* scrapeSeedVideosAndFollow(
     const dataFromSeed = await scrapeVideo(id, getHtml, comments);
     step += 1;
 
+    dataFromSeed.slug += '-seed-follow';
     // assign an unique ID to extract follow chains
     dataFromSeed.fields.followId = followChainId;
     dataFromSeed.fields.seedCreator = creator;
@@ -235,6 +236,7 @@ async function* scrapeSeedVideos(
   for (const { id, creator } of seedVideoIds) {
     const data = await scrapeVideo(id, getHtml, comments);
 
+    data.slug += '-seed-no-follow';
     data.fields.seedCreator = creator;
 
     step += 1;
