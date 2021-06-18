@@ -42,6 +42,16 @@ export default function ResultsDetailsPage() {
         >
           Search Results Compare
         </Button>
+        <Button
+          onClick={() =>
+            history.push({
+              pathname: routes.VISUALIZATION_EXPERIMENT,
+              state: { sessionId, type: 'autoplay-chain' },
+            })
+          }
+        >
+          Autplay Chain
+        </Button>
       </div>
       <ResultsDetails sessionId={sessionId} />
     </>

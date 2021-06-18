@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, useLocation } from 'react-router-dom';
 import FooterNav from '../components/FooterNav';
+import AutoplayChain from '../components/visualizations/AutoplayChain';
 import NewsTop5 from '../components/visualizations/NewsTop5';
 import SearchResultsCompare from '../components/visualizations/SearchResultsCompare';
 import routes from '../constants/routes.json';
@@ -50,6 +51,7 @@ export default function VisualizationExperimentsPage() {
       {type === 'search-results-compare' && (
         <SearchResultsCompare data={data} />
       )}
+      {type === 'autoplay-chain' && <AutoplayChain data={data} />}
       <FooterNav items={footerNavItems} />
     </>
   );
