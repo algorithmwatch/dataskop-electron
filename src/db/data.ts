@@ -97,7 +97,7 @@ const modifyScrapingConfig = async (config: ScrapingConfig, remove = false) => {
 
 const getStoredScrapingConfigs = async () => {
   const data = await setUpDb();
-  return data.scrapingConfigs;
+  return data.scrapingConfigs || [];
 };
 
 const getAllData = async () => {
