@@ -1,12 +1,11 @@
 import { RecommendedVideo } from '@algorithmwatch/harke';
 import { faSearch } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import _ from 'lodash';
 import React, { useState } from 'react';
-import { Placement } from 'tippy.js';
 import { ScrapingResultSaved } from '../../db/types';
 import Explainer from '../Explainer';
+import Thumbnail from '../Thumbnail';
 
 interface SearchResultsCompareDataItem {
   query: string;
@@ -14,63 +13,29 @@ interface SearchResultsCompareDataItem {
   signedOutVideos: RecommendedVideo[];
 }
 
-function VideoList({
-  items,
-  tippyPlacement,
-}: {
-  items: RecommendedVideo[];
-  tippyPlacement: Placement;
-}) {
-  return (
-    <div className="space-y-2">
-      {items.map(({ channelName, duration, id, percWatched, title }) => (
-        <div
-          key={id}
-          className="w-24 h-12 xl:w-28 xl:h-16 bg-gray-300 overflow-hidden flex place-items-center"
-        >
-          <Tippy
-            content={
-              <>
-                <div className="font-bold">{title}</div>
-                <div>{channelName}</div>
-              </>
-            }
-            delay={[250, 0]}
-            theme="process-info"
-            placement={tippyPlacement}
-          >
-            <img
-              src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
-              alt=""
-            />
-          </Tippy>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 export default function AutoplayChain({
   data,
 }: {
   data: ScrapingResultSaved[];
 }) {
-  const groupByFollowId = (x: ScrapingResultSaved[]) =>
-    _(x)
-      .filter(
-        (y) =>
-          y.success === true &&
-          ['yt-video-page-seed-follow', 'yt-video-page-followed'].includes(
-            y.slug,
-          ),
-      )
-      .groupBy('fields.followId')
-      .values()
-      .value();
-
-  console.warn('groups', groupByFollowId(data));
-
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
+  const groups = _(data)
+    .filter(
+      (y) =>
+        y.success === true &&
+        ['yt-video-page-seed-follow', 'yt-video-page-followed'].includes(
+          y.slug,
+        ),
+    )
+    .groupBy('fields.followId')
+    .values()
+    .value();
+  const seedVideos = groups.map((group) => group[0].fields);
+  const [currentSeedVideoIndex, setCurrentSeedVideoIndex] = useState(0);
+  const currentGroup = groups[currentSeedVideoIndex] || [];
+
+  console.warn('groups', groups);
+  console.warn('currentGroup', currentGroup);
 
   return (
     <>
@@ -158,6 +123,44 @@ export default function AutoplayChain({
           </p>
         </div>
       </Explainer>
+      <div className="mx-auto space-y-6">
+        {/* Seed videos menu */}
+        <div className="flex space-x-2">
+          {seedVideos.map((video) => (
+            <Thumbnail key={video.id} videoId={video.id} />
+          ))}
+        </div>
+
+        {/* Viz */}
+        <div className="flex max-w-6xl">
+          {/* Column 1: Autoplay videos */}
+          <div className="space-y-2">
+            <div className="text-sm whitespace-nowrap">Autoplay Videos</div>
+            {currentGroup.length &&
+              currentGroup.map((scrapeResult) => (
+                <Thumbnail
+                  key={scrapeResult.fields.id}
+                  videoId={scrapeResult.fields.id}
+                />
+              ))}
+          </div>
+
+          {/* Column 2: Recommended videos of autoplayed videos */}
+          <div className="space-y-2 overflow-hidden">
+            <div className="text-sm whitespace-nowrap">Empfohlene Videos</div>
+            {currentGroup.length &&
+              currentGroup.map((scrapeResult) => (
+                <div key={scrapeResult.fields.id} className="flex">
+                  {scrapeResult.fields.recommendedVideos.map(
+                    (video: RecommendedVideo) => (
+                      <Thumbnail key={video.id} videoId={video.id} />
+                    ),
+                  )}
+                </div>
+              ))}
+          </div>
+        </div>
+      </div>
     </>
   );
 }

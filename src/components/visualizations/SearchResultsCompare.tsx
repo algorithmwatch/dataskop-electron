@@ -1,7 +1,6 @@
 import { RecommendedVideo } from '@algorithmwatch/harke';
 import { faSearch } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import { Placement } from 'tippy.js';
@@ -9,6 +8,7 @@ import { ScrapingResultSaved } from '../../db/types';
 import { Carousel, Slide } from '../Carousel/Carousel';
 import { Options } from '../Carousel/types';
 import Explainer from '../Explainer';
+import Thumbnail from '../Thumbnail';
 
 interface SearchResultsCompareDataItem {
   query: string;
@@ -26,27 +26,20 @@ function VideoList({
   return (
     <div className="space-y-2">
       {items.map(({ channelName, duration, id, percWatched, title }) => (
-        <div
+        <Thumbnail
           key={id}
-          className="w-24 h-12 xl:w-28 xl:h-16 bg-gray-300 overflow-hidden flex place-items-center"
-        >
-          <Tippy
-            content={
+          videoId={id}
+          tippyOptions={{
+            content: (
               <>
                 <div className="font-bold">{title}</div>
                 <div>{channelName}</div>
               </>
-            }
-            delay={[250, 0]}
-            theme="process-info"
-            placement={tippyPlacement}
-          >
-            <img
-              src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
-              alt=""
-            />
-          </Tippy>
-        </div>
+            ),
+            placement: tippyPlacement,
+            theme: 'process-info',
+          }}
+        />
       ))}
     </div>
   );
@@ -128,25 +121,37 @@ export default function SearchResultsCompare({
 
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
   const carouselOptions: Options = {
-    focusAt: 'center',
-    gap: 0,
-    peek: 250,
+    // focusAt: 'center',
+    // gap: 40,
+    // peek: 350,
     breakpoints: {
-      // 1500: {
-      // peek: 400,
-      // gap: 40,
-      // },
-      1400: {
-        peek: 250,
+      2000: {
+        peek: 500,
+        gap: 0,
+      },
+      1800: {
+        peek: 400,
+        gap: 0,
+      },
+      1600: {
+        peek: 350,
         gap: 40,
+      },
+      1500: {
+        peek: 300,
+        gap: 40,
+      },
+      1400: {
+        peek: 300,
+        gap: 60,
       },
       1300: {
-        peek: 200,
-        gap: 40,
+        peek: 250,
+        gap: 60,
       },
       1200: {
-        peek: 175,
-        gap: 40,
+        peek: 200,
+        gap: 60,
       },
       1100: {
         peek: 0,

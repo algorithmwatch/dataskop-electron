@@ -1,7 +1,6 @@
 import { Channel, RecommendedVideo } from '@algorithmwatch/harke';
 import { faNewspaper } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import { Placement } from 'tippy.js';
@@ -9,6 +8,7 @@ import { ScrapingResultSaved } from '../../db/types';
 import { Carousel, Slide } from '../Carousel/Carousel';
 import { Options } from '../Carousel/types';
 import Explainer from '../Explainer';
+import Thumbnail from '../Thumbnail';
 
 interface NewsTop5DataItem {
   video: {
@@ -30,27 +30,20 @@ function VideoList({
   return (
     <div className="space-y-2">
       {items.map(({ channelName, duration, id, percWatched, title }) => (
-        <div
+        <Thumbnail
           key={id}
-          className="w-24 h-12 xl:w-28 xl:h-16 bg-gray-300 overflow-hidden flex place-items-center"
-        >
-          <Tippy
-            content={
+          videoId={id}
+          tippyOptions={{
+            content: (
               <>
                 <div className="font-bold">{title}</div>
                 <div>{channelName}</div>
               </>
-            }
-            // delay={[250, 0]}
-            theme="process-info"
-            placement={tippyPlacement}
-          >
-            <img
-              src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
-              alt=""
-            />
-          </Tippy>
-        </div>
+            ),
+            placement: tippyPlacement,
+            theme: 'process-info',
+          }}
+        />
       ))}
     </div>
   );

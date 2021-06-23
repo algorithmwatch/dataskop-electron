@@ -6,12 +6,11 @@ import {
   ProfileScraper,
   SearchProcedureConfig,
   VideoProcedureConfig,
-  YtScrapingConfig,
+  YtScrapingConfig
 } from './types';
 
 const emptyVideoProcedureConfig: VideoProcedureConfig = {
   type: 'video',
-  scrollingBottomForComments: 0,
   followVideos: 0,
   seedVideosFixed: [],
   seedVideosDynamic: [],
@@ -21,7 +20,7 @@ const emptyVideoProcedureConfig: VideoProcedureConfig = {
 
 const videoScraperStep = {
   ...emptyVideoProcedureConfig,
-  followVideos: 2,
+  followVideos: 7,
   seedVideosFixed: ['4Y1lZQsyuSQ', 'yr1YyrolRZY'],
   seedVideosDynamic: [
     {
