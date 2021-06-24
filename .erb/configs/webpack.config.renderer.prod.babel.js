@@ -2,16 +2,16 @@
  * Build config for electron renderer process
  */
 
-import path from 'path';
-import webpack from 'webpack';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
-import { merge } from 'webpack-merge';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import path from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
-import baseConfig from './webpack.config.base';
+import webpack from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import { merge } from 'webpack-merge';
 import CheckNodeEnv from '../scripts/CheckNodeEnv';
 import DeleteSourceMaps from '../scripts/DeleteSourceMaps';
+import baseConfig from './webpack.config.base';
 
 CheckNodeEnv('production');
 DeleteSourceMaps();

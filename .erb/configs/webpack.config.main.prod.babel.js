@@ -3,13 +3,13 @@
  */
 
 import path from 'path';
-import webpack from 'webpack';
-import { merge } from 'webpack-merge';
 import TerserPlugin from 'terser-webpack-plugin';
+import webpack from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import baseConfig from './webpack.config.base';
+import { merge } from 'webpack-merge';
 import CheckNodeEnv from '../scripts/CheckNodeEnv';
 import DeleteSourceMaps from '../scripts/DeleteSourceMaps';
+import baseConfig from './webpack.config.base';
 
 CheckNodeEnv('production');
 DeleteSourceMaps();
