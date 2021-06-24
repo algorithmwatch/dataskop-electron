@@ -1,11 +1,12 @@
 import { RecommendedVideo } from '@algorithmwatch/harke';
-import { faSearch } from '@fortawesome/pro-regular-svg-icons';
+import { faChevronRight, faSearch } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import { ScrapingResultSaved } from '../../db/types';
 import Explainer from '../Explainer';
-import Thumbnail from '../Thumbnail';
+import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
+// import ThumbnailTooltipContent from '../VideoThumbnail/ThumbnailTooltipContent'
 
 interface SearchResultsCompareDataItem {
   query: string;
@@ -34,6 +35,7 @@ export default function AutoplayChain({
   const [currentSeedVideoIndex, setCurrentSeedVideoIndex] = useState(0);
   const currentGroup = groups[currentSeedVideoIndex] || [];
 
+  console.warn('seedVideos', seedVideos);
   console.warn('groups', groups);
   console.warn('currentGroup', currentGroup);
 
@@ -125,41 +127,90 @@ export default function AutoplayChain({
       </Explainer>
       <div className="mx-auto space-y-6">
         {/* Seed videos menu */}
-        <div className="flex space-x-2">
-          {seedVideos.map((video) => (
-            <Thumbnail key={video.id} videoId={video.id} />
-          ))}
-        </div>
-
-        {/* Viz */}
-        <div className="flex max-w-6xl">
-          {/* Column 1: Autoplay videos */}
-          <div className="space-y-2">
-            <div className="text-sm whitespace-nowrap">Autoplay Videos</div>
-            {currentGroup.length &&
-              currentGroup.map((scrapeResult) => (
-                <Thumbnail
-                  key={scrapeResult.fields.id}
-                  videoId={scrapeResult.fields.id}
-                />
-              ))}
+        {seedVideos.length && (
+          <div className="flex space-x-2">
+            {seedVideos.map(({ id, title, channel, uploadDate, viewCount }) => (
+              <VideoThumbnail
+                key={id}
+                videoId={id}
+                tippyOptions={{
+                  content: (
+                    <TooltipContent
+                      video={{
+                        title,
+                        channelName: channel.name,
+                        uploadDate,
+                        viewCount,
+                      }}
+                    />
+                  ),
+                  theme: 'process-info',
+                }}
+              />
+            ))}
           </div>
+        )}
 
-          {/* Column 2: Recommended videos of autoplayed videos */}
-          <div className="space-y-2 overflow-hidden">
-            <div className="text-sm whitespace-nowrap">Empfohlene Videos</div>
-            {currentGroup.length &&
-              currentGroup.map((scrapeResult) => (
-                <div key={scrapeResult.fields.id} className="flex">
-                  {scrapeResult.fields.recommendedVideos.map(
-                    (video: RecommendedVideo) => (
-                      <Thumbnail key={video.id} videoId={video.id} />
-                    ),
-                  )}
+        {currentGroup.length && (
+          <>
+            {/* Viz */}
+            <div className="flex max-w-6xl">
+              {/* Column 1: Autoplay videos */}
+              <div className="space-y-2 mr-6">
+                <div className="text-sm whitespace-nowrap">Autoplay Videos</div>
+                {currentGroup.map((scrapeResult) => (
+                  <div key={scrapeResult.fields.id} className="relative">
+                    <VideoThumbnail
+                      videoId={scrapeResult.fields.id}
+                      tippyOptions={{
+                        content: (
+                          <TooltipContent
+                            video={{
+                              title: scrapeResult.fields.title,
+                              channelName: scrapeResult.fields.channel.name,
+                              uploadDate: scrapeResult.fields.uploadDate,
+                              viewCount: scrapeResult.fields.viewCount,
+                            }}
+                          />
+                        ),
+                        theme: 'process-info',
+                      }}
+                    />
+                    <FontAwesomeIcon
+                      icon={faChevronRight}
+                      className="absolute -right-3 top-5 text-yellow-1500"
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {/* Column 2: Recommended videos of autoplayed videos */}
+              <div className="space-y-2 overflow-hidden">
+                <div className="text-sm whitespace-nowrap">
+                  Empfohlene Videos
                 </div>
-              ))}
-          </div>
-        </div>
+                {currentGroup.slice(0, 10).map((scrapeResult) => (
+                  <div key={scrapeResult.fields.id} className="flex space-x-2">
+                    {scrapeResult.fields.recommendedVideos.map(
+                      ({ title, channelName, id }: RecommendedVideo) => (
+                        <VideoThumbnail
+                          key={id}
+                          videoId={id}
+                          tippyOptions={{
+                            content: (
+                              <TooltipContent video={{ title, channelName }} />
+                            ),
+                            theme: 'process-info',
+                          }}
+                        />
+                      ),
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </>
   );

@@ -8,7 +8,7 @@ import { ScrapingResultSaved } from '../../db/types';
 import { Carousel, Slide } from '../Carousel/Carousel';
 import { Options } from '../Carousel/types';
 import Explainer from '../Explainer';
-import Thumbnail from '../Thumbnail';
+import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
 
 interface NewsTop5DataItem {
   video: {
@@ -30,16 +30,11 @@ function VideoList({
   return (
     <div className="space-y-2">
       {items.map(({ channelName, duration, id, percWatched, title }) => (
-        <Thumbnail
+        <VideoThumbnail
           key={id}
           videoId={id}
           tippyOptions={{
-            content: (
-              <>
-                <div className="font-bold">{title}</div>
-                <div>{channelName}</div>
-              </>
-            ),
+            content: <TooltipContent video={{ title, channelName }} />,
             placement: tippyPlacement,
             theme: 'process-info',
           }}
