@@ -2,6 +2,7 @@
 import { RecommendedVideo } from '@algorithmwatch/harke';
 import { faChevronRight, faSearch } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import classNames from 'classnames';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { ScrapingResultSaved } from '../../db/types';
@@ -141,28 +142,34 @@ export default function AutoplayChain({
       <div className="mx-auto space-y-6">
         {/* Seed videos menu */}
         {seedVideos.length && (
-          <div className="flex space-x-2">
+          <div className="flex max-w-min space-x-4 p-2 border-2 border-yellow-700 bg-yellow-200">
             {seedVideos.map(
               ({ id, title, channel, uploadDate, viewCount }, index) => (
-                <VideoThumbnail
+                <div
                   key={`seed-${id}`}
-                  videoId={id}
-                  tippyOptions={{
-                    content: (
-                      <TooltipContent
-                        video={{
-                          title,
-                          channelName: channel.name,
-                          uploadDate,
-                          viewCount,
-                        }}
-                      />
-                    ),
-                    theme: 'process-info',
-                  }}
-                  className="cursor-pointer"
-                  onClickCallback={() => setCurrentSeedVideoIndex(index)}
-                />
+                  className={classNames({
+                    'ring-8 ring-yellow-700': index === currentSeedVideoIndex,
+                  })}
+                >
+                  <VideoThumbnail
+                    videoId={id}
+                    tippyOptions={{
+                      content: (
+                        <TooltipContent
+                          video={{
+                            title,
+                            channelName: channel.name,
+                            uploadDate,
+                            viewCount,
+                          }}
+                        />
+                      ),
+                      theme: 'process-info',
+                    }}
+                    className="cursor-pointer"
+                    onClickCallback={() => setCurrentSeedVideoIndex(index)}
+                  />
+                </div>
               ),
             )}
           </div>
