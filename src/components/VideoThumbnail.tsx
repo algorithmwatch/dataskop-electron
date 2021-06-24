@@ -6,10 +6,18 @@ export default function VideoThumbnail({
   videoId,
   url,
   tippyOptions,
+  className,
+  onClickCallback,
+  onMouseOverCallback,
+  onMouseOutCallback,
 }: {
-  videoId?: string | undefined;
-  url?: string | undefined;
-  tippyOptions?: TippyProps | undefined;
+  videoId?: string;
+  url?: string;
+  tippyOptions?: TippyProps;
+  className?: string;
+  onClickCallback?: () => void;
+  onMouseOverCallback?: () => void;
+  onMouseOutCallback?: () => void;
 }) {
   if (!videoId && !url) {
     return null;
@@ -19,15 +27,25 @@ export default function VideoThumbnail({
     ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
     : url;
 
+  const imgElement = (
+    // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events
+    <img
+      src={thumbUrl}
+      alt=""
+      className={className}
+      onClick={() => onClickCallback && onClickCallback()}
+      onMouseOver={() => onMouseOverCallback && onMouseOverCallback()}
+      onMouseOut={() => onMouseOutCallback && onMouseOutCallback()}
+    />
+  );
+
   return (
     <div className="w-24 h-14 bg-gray-300 overflow-hidden flex place-items-center flex-shrink-0">
       {tippyOptions ? (
         // eslint-disable-next-line react/jsx-props-no-spreading
-        <Tippy {...tippyOptions}>
-          <img src={thumbUrl} alt="" />
-        </Tippy>
+        <Tippy {...tippyOptions}>{imgElement}</Tippy>
       ) : (
-        <img src={thumbUrl} alt="" />
+        { imgElement }
       )}
     </div>
   );

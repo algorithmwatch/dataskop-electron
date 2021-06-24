@@ -1,12 +1,12 @@
+/* eslint-disable react/no-array-index-key */
 import { RecommendedVideo } from '@algorithmwatch/harke';
 import { faChevronRight, faSearch } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ScrapingResultSaved } from '../../db/types';
 import Explainer from '../Explainer';
 import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
-// import ThumbnailTooltipContent from '../VideoThumbnail/ThumbnailTooltipContent'
 
 interface SearchResultsCompareDataItem {
   query: string;
@@ -20,24 +20,30 @@ export default function AutoplayChain({
   data: ScrapingResultSaved[];
 }) {
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
-  const groups = _(data)
-    .filter(
-      (y) =>
-        y.success === true &&
-        ['yt-video-page-seed-follow', 'yt-video-page-followed'].includes(
-          y.slug,
-        ),
-    )
-    .groupBy('fields.followId')
-    .values()
-    .value();
+  const groups = useMemo(
+    () =>
+      _(data)
+        .filter(
+          (y) =>
+            y.success === true &&
+            ['yt-video-page-seed-follow', 'yt-video-page-followed'].includes(
+              y.slug,
+            ),
+        )
+        .groupBy('fields.followId')
+        .values()
+        .value(),
+    [data],
+  );
   const seedVideos = groups.map((group) => group[0].fields);
   const [currentSeedVideoIndex, setCurrentSeedVideoIndex] = useState(0);
+  const [hoveringVideoId, setHoveringVideoId] = useState<null | string>(null);
   const currentGroup = groups[currentSeedVideoIndex] || [];
+  const recommendedVideosLimit = 10;
 
-  console.warn('seedVideos', seedVideos);
-  console.warn('groups', groups);
-  console.warn('currentGroup', currentGroup);
+  // console.warn('seedVideos', seedVideos);
+  // console.warn('groups', groups);
+  // console.warn('currentGroup', currentGroup);
 
   return (
     <>
@@ -129,25 +135,30 @@ export default function AutoplayChain({
         {/* Seed videos menu */}
         {seedVideos.length && (
           <div className="flex space-x-2">
-            {seedVideos.map(({ id, title, channel, uploadDate, viewCount }) => (
-              <VideoThumbnail
-                key={id}
-                videoId={id}
-                tippyOptions={{
-                  content: (
-                    <TooltipContent
-                      video={{
-                        title,
-                        channelName: channel.name,
-                        uploadDate,
-                        viewCount,
-                      }}
-                    />
-                  ),
-                  theme: 'process-info',
-                }}
-              />
-            ))}
+            {seedVideos.map(
+              ({ id, title, channel, uploadDate, viewCount }, index) => (
+                <VideoThumbnail
+                  key={`seed-${id}`}
+                  videoId={id}
+                  tippyOptions={{
+                    content: (
+                      <TooltipContent
+                        video={{
+                          title,
+                          channelName: channel.name,
+                          uploadDate,
+                          viewCount,
+                        }}
+                      />
+                    ),
+                    theme: 'process-info',
+                  }}
+                  className="cursor-pointer"
+                  onClickCallback={() => setCurrentSeedVideoIndex(index)}
+                />
+              ),
+            )}
+            {hoveringVideoId}
           </div>
         )}
 
@@ -157,9 +168,14 @@ export default function AutoplayChain({
             <div className="flex max-w-6xl">
               {/* Column 1: Autoplay videos */}
               <div className="space-y-2 mr-6">
-                <div className="text-sm whitespace-nowrap">Autoplay Videos</div>
-                {currentGroup.map((scrapeResult) => (
-                  <div key={scrapeResult.fields.id} className="relative">
+                <div className="text-sm whitespace-nowrap mb-3">
+                  Autoplay Videos
+                </div>
+                {currentGroup.map((scrapeResult, index) => (
+                  <div
+                    key={`autoplay-${scrapeResult.fields.id}-${index}`}
+                    className="relative"
+                  >
                     <VideoThumbnail
                       videoId={scrapeResult.fields.id}
                       tippyOptions={{
@@ -175,6 +191,16 @@ export default function AutoplayChain({
                         ),
                         theme: 'process-info',
                       }}
+                      onMouseOverCallback={() =>
+                        setHoveringVideoId(scrapeResult.fields.id)
+                      }
+                      onMouseOutCallback={() => setHoveringVideoId(null)}
+                      className={
+                        hoveringVideoId &&
+                        hoveringVideoId !== scrapeResult.fields.id
+                          ? 'opacity-40'
+                          : undefined
+                      }
                     />
                     <FontAwesomeIcon
                       icon={faChevronRight}
@@ -186,27 +212,46 @@ export default function AutoplayChain({
 
               {/* Column 2: Recommended videos of autoplayed videos */}
               <div className="space-y-2 overflow-hidden">
-                <div className="text-sm whitespace-nowrap">
+                <div className="text-sm whitespace-nowrap mb-3">
                   Empfohlene Videos
                 </div>
-                {currentGroup.slice(0, 10).map((scrapeResult) => (
-                  <div key={scrapeResult.fields.id} className="flex space-x-2">
-                    {scrapeResult.fields.recommendedVideos.map(
-                      ({ title, channelName, id }: RecommendedVideo) => (
-                        <VideoThumbnail
-                          key={id}
-                          videoId={id}
-                          tippyOptions={{
-                            content: (
-                              <TooltipContent video={{ title, channelName }} />
-                            ),
-                            theme: 'process-info',
-                          }}
-                        />
-                      ),
-                    )}
-                  </div>
-                ))}
+                {currentGroup
+                  .slice(0, recommendedVideosLimit)
+                  .map((scrapeResult, index) => (
+                    <div
+                      key={`${scrapeResult.fields.id}-${index}`}
+                      className="flex space-x-2"
+                    >
+                      {scrapeResult.fields.recommendedVideos.map(
+                        (video: RecommendedVideo, index2: number) => (
+                          <VideoThumbnail
+                            key={`${video.id}-${index}-${index2}`}
+                            videoId={video.id}
+                            tippyOptions={{
+                              content: (
+                                <TooltipContent
+                                  video={{
+                                    title: video.title,
+                                    channelName: video.channelName,
+                                  }}
+                                />
+                              ),
+                              theme: 'process-info',
+                            }}
+                            onMouseOverCallback={() =>
+                              setHoveringVideoId(video.id)
+                            }
+                            onMouseOutCallback={() => setHoveringVideoId(null)}
+                            className={
+                              hoveringVideoId && hoveringVideoId !== video.id
+                                ? 'opacity-40'
+                                : undefined
+                            }
+                          />
+                        ),
+                      )}
+                    </div>
+                  ))}
               </div>
             </div>
           </>
