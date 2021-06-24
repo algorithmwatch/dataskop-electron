@@ -8,7 +8,7 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[yaml]": {
-    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.defaultFormatter": "redhat.vscode-yaml"
   },
   // disable builtin formaters
   "javascript.validate.enable": false,
@@ -41,7 +41,5 @@
       "source.organizeImports": true
     }
   },
-  "editor.rulers": [
-    80
-  ]
+  "editor.rulers": [80]
 }

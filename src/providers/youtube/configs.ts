@@ -6,7 +6,7 @@ import {
   ProfileScraper,
   SearchProcedureConfig,
   VideoProcedureConfig,
-  YtScrapingConfig
+  YtScrapingConfig,
 } from './types';
 
 const emptyVideoProcedureConfig: VideoProcedureConfig = {

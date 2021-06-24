@@ -7,7 +7,7 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
-  Select
+  Select,
 } from '@material-ui/core';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
@@ -22,7 +22,7 @@ import { ScrapingConfig } from '../providers/types';
 import { allConfigs } from '../providers/youtube';
 import {
   activateWatchHistory,
-  deactivateWatchHistory
+  deactivateWatchHistory,
 } from '../providers/youtube/actions/manage-watch-history';
 
 const ScrapingConfigSelect = ({
