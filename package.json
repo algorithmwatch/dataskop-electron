@@ -20,6 +20,7 @@
     "start:main": "cross-env NODE_ENV=development electron -r ./.erb/scripts/BabelRegister ./src/main.dev.ts",
     "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/configs/webpack.config.renderer.dev.babel.js",
     "test": "jest",
+    "format": "prettier --write .",
     "ytschema": "./node_modules/.bin/ts-json-schema-generator --path './src/providers/youtube/types.ts' --type 'YtScrapingConfig' --out './src/providers/youtube/validation/scraping-config-validation.json' && prettier --write './src/providers/youtube/validation/scraping-config-validation.json'"
   },
   "lint-staged": {
