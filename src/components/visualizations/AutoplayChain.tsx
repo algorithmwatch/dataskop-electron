@@ -35,9 +35,16 @@ export default function AutoplayChain({
         .value(),
     [data],
   );
-  const seedVideos = groups.map((group) => group[0].fields);
+  const seedVideos = useMemo(
+    () => groups.map((group) => group[0].fields),
+    [groups],
+  );
   const [currentSeedVideoIndex, setCurrentSeedVideoIndex] = useState(0);
   const [hoveringVideoId, setHoveringVideoId] = useState<null | string>(null);
+  const setHoveringVideoIdDebounced = _.debounce(
+    (val) => setHoveringVideoId.call(null, val),
+    50,
+  );
   const currentGroup = groups[currentSeedVideoIndex] || [];
   const recommendedVideosLimit = 10;
 
@@ -158,7 +165,6 @@ export default function AutoplayChain({
                 />
               ),
             )}
-            {hoveringVideoId}
           </div>
         )}
 
@@ -192,9 +198,11 @@ export default function AutoplayChain({
                         theme: 'process-info',
                       }}
                       onMouseOverCallback={() =>
-                        setHoveringVideoId(scrapeResult.fields.id)
+                        setHoveringVideoIdDebounced(scrapeResult.fields.id)
                       }
-                      onMouseOutCallback={() => setHoveringVideoId(null)}
+                      onMouseOutCallback={() =>
+                        setHoveringVideoIdDebounced(null)
+                      }
                       className={
                         hoveringVideoId &&
                         hoveringVideoId !== scrapeResult.fields.id
@@ -239,9 +247,11 @@ export default function AutoplayChain({
                               theme: 'process-info',
                             }}
                             onMouseOverCallback={() =>
-                              setHoveringVideoId(video.id)
+                              setHoveringVideoIdDebounced(video.id)
                             }
-                            onMouseOutCallback={() => setHoveringVideoId(null)}
+                            onMouseOutCallback={() =>
+                              setHoveringVideoIdDebounced(null)
+                            }
                             className={
                               hoveringVideoId && hoveringVideoId !== video.id
                                 ? 'opacity-40'

@@ -32,7 +32,7 @@ export default function VideoThumbnail({
     <img
       src={thumbUrl}
       alt=""
-      className={className}
+      className={`transition-opacity duration-75 ease-in-out ${className}`}
       onClick={() => onClickCallback && onClickCallback()}
       onMouseOver={() => onMouseOverCallback && onMouseOverCallback()}
       onMouseOut={() => onMouseOutCallback && onMouseOutCallback()}
