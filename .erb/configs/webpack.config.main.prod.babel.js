@@ -2,6 +2,7 @@
  * Webpack config for production electron main process
  */
 
+import Dotenv from 'dotenv-webpack';
 import path from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
@@ -67,6 +68,9 @@ export default merge(baseConfig, {
       SENTRY_DSN: null,
       UPDATE_FEED_URL: null,
     }),
+
+    // read .env files
+    new Dotenv(),
   ],
 
   /**

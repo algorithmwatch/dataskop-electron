@@ -1,6 +1,7 @@
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import chalk from 'chalk';
 import { execSync, spawn } from 'child_process';
+import Dotenv from 'dotenv-webpack';
 import fs from 'fs';
 import path from 'path';
 import webpack from 'webpack';
@@ -240,6 +241,8 @@ export default merge(baseConfig, {
       SENTRY_DSN: null,
       UPDATE_FEED_URL: null,
     }),
+
+    new Dotenv(),
 
     new webpack.LoaderOptionsPlugin({
       debug: true,

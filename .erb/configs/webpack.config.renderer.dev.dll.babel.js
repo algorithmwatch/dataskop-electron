@@ -2,6 +2,7 @@
  * Builds the DLL for development electron renderer process
  */
 
+import Dotenv from 'dotenv-webpack';
 import path from 'path';
 import webpack from 'webpack';
 import { merge } from 'webpack-merge';
@@ -58,6 +59,9 @@ export default merge(baseConfig, {
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development',
     }),
+
+    // read .env files
+    new Dotenv(),
 
     new webpack.LoaderOptionsPlugin({
       debug: true,

@@ -3,6 +3,7 @@
  */
 
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import Dotenv from 'dotenv-webpack';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import path from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
@@ -152,6 +153,9 @@ export default merge(baseConfig, {
       DEBUG_PROD: false,
       SENTRY_DSN: null,
     }),
+
+    // read .env files
+    new Dotenv(),
 
     new MiniCssExtractPlugin({
       filename: 'style.css',
