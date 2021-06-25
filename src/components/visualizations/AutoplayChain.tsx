@@ -1,6 +1,16 @@
 /* eslint-disable react/no-array-index-key */
 import { RecommendedVideo } from '@algorithmwatch/harke';
-import { faChevronRight, faSearch } from '@fortawesome/pro-solid-svg-icons';
+import {
+  faImages,
+  faTags,
+  faUserHeadset,
+  IconDefinition
+} from '@fortawesome/pro-regular-svg-icons';
+import {
+  faAngleDown,
+  faChevronRight,
+  faSearch
+} from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import _ from 'lodash';
@@ -13,6 +23,50 @@ interface SearchResultsCompareDataItem {
   query: string;
   signedInVideos: RecommendedVideo[];
   signedOutVideos: RecommendedVideo[];
+}
+
+function ViewSwitcherItem({
+  label,
+  icon,
+}: {
+  label: string;
+  icon: IconDefinition;
+}) {
+  return (
+    <div className="py-0.5 flex flex-col items-center">
+      <FontAwesomeIcon icon={icon} size="2x" />
+      <div className="text-sm">{label}</div>
+    </div>
+  );
+}
+
+function ViewSwitcher() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const items = [
+    { label: 'Thumbnails', icon: faImages },
+    { label: 'Kategorien', icon: faTags },
+    { label: 'Creator', icon: faUserHeadset },
+  ];
+
+  return (
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+    <div
+      className="relative flex items-center py-2 px-3 border-2 border-yellow-700 bg-yellow-200 text-blue-600"
+      onClick={() => setIsOpen(!isOpen)}
+    >
+      <div className="">
+        {items
+          .filter((x, index) => (isOpen ? true : index === selectedIndex))
+          .map(({ label, icon }, index) => (
+            <ViewSwitcherItem key={label} label={label} icon={icon} />
+          ))}
+      </div>
+      <div className="ml-3">
+        <FontAwesomeIcon icon={faAngleDown} />
+      </div>
+    </div>
+  );
 }
 
 export default function AutoplayChain({
@@ -142,36 +196,41 @@ export default function AutoplayChain({
       <div className="mx-auto space-y-6">
         {/* Seed videos menu */}
         {seedVideos.length && (
-          <div className="flex max-w-min space-x-4 p-2 border-2 border-yellow-700 bg-yellow-200">
-            {seedVideos.map(
-              ({ id, title, channel, uploadDate, viewCount }, index) => (
-                <div
-                  key={`seed-${id}`}
-                  className={classNames({
-                    'ring-8 ring-yellow-700': index === currentSeedVideoIndex,
-                  })}
-                >
-                  <VideoThumbnail
-                    videoId={id}
-                    tippyOptions={{
-                      content: (
-                        <TooltipContent
-                          video={{
-                            title,
-                            channelName: channel.name,
-                            uploadDate,
-                            viewCount,
-                          }}
-                        />
-                      ),
-                      theme: 'process-info',
-                    }}
-                    className="cursor-pointer"
-                    onClickCallback={() => setCurrentSeedVideoIndex(index)}
-                  />
-                </div>
-              ),
-            )}
+          <div className="flex">
+            <div className="flex max-w-min space-x-4 p-2 border-2 border-yellow-700 bg-yellow-200">
+              {seedVideos.map(
+                ({ id, title, channel, uploadDate, viewCount }, index) => (
+                  <div
+                    key={`seed-${id}`}
+                    className={classNames({
+                      'ring-8 ring-yellow-700': index === currentSeedVideoIndex,
+                    })}
+                  >
+                    <VideoThumbnail
+                      videoId={id}
+                      tippyOptions={{
+                        content: (
+                          <TooltipContent
+                            video={{
+                              title,
+                              channelName: channel.name,
+                              uploadDate,
+                              viewCount,
+                            }}
+                          />
+                        ),
+                        theme: 'process-info',
+                      }}
+                      className="cursor-pointer"
+                      onClickCallback={() => setCurrentSeedVideoIndex(index)}
+                    />
+                  </div>
+                ),
+              )}
+            </div>
+            <div className="ml-4">
+              <ViewSwitcher />
+            </div>
           </div>
         )}
 
