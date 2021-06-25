@@ -5,7 +5,7 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import { Placement } from 'tippy.js';
 import { ScrapingResultSaved } from '../../db/types';
-import { Carousel, Slide } from '../Carousel/Carousel';
+import { Carousel, Slide } from '../Carousel';
 import { Options } from '../Carousel/types';
 import Explainer from '../Explainer';
 import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
