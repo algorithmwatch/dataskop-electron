@@ -9,8 +9,9 @@ import {
   setSessionFinishedAt,
 } from '../../db';
 import { providerToMeta } from '../../providers';
+import { YtScrapingConfig } from '../../providers/youtube';
 import { createSingleGenerator } from '../../providers/youtube/procedures/setup';
-import { postDummyBackend } from '../../utils/networking';
+import { postSimpleBackend } from '../../utils/networking';
 import { delay } from '../../utils/time';
 import {
   extractHtml,
@@ -39,7 +40,7 @@ export default function ScrapingManager({
   autostart?: boolean;
 }): JSX.Element {
   const {
-    state: { version, isDebug },
+    state: { version, isDebug, simpleBackendUrl },
   } = useConfig();
 
   const {
@@ -133,7 +134,7 @@ export default function ScrapingManager({
       const sId = uuidv4();
 
       const gen = createSingleGenerator(
-        scrapingConfig,
+        scrapingConfig as YtScrapingConfig,
         makeGetHtml(logHtml),
         getHtmlLazy,
         sId,
@@ -174,12 +175,8 @@ export default function ScrapingManager({
           console.error(result);
         }
 
-        const postedSuccess = await postDummyBackend(
-          result,
-          version,
-          sessionId,
-        );
-        if (!postedSuccess) console.error('error posting data to backend');
+        if (simpleBackendUrl)
+          postSimpleBackend(simpleBackendUrl, result, version, sessionId);
 
         if (done) {
           // this is the last step of the session. It's important to wait until

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import { ScrapingConfig } from '../providers/types';
+import { Campaign, ScrapingConfig } from '../providers/types';
 import { defaultConfig } from '../providers/youtube';
 
 export type ScrapingProgressBar = {
@@ -12,7 +12,11 @@ export type ScrapingProgressBar = {
 type Action =
   | { type: 'set-is-attached'; isAttached: boolean }
   | { type: 'set-log-html'; logHtml: boolean }
-  | { type: 'set-scraping-config'; scrapingConfig: ScrapingConfig }
+  | {
+      type: 'set-scraping-config';
+      scrapingConfig: ScrapingConfig;
+      campaign: Campaign | null;
+    }
   | {
       type: 'set-scraping-progress-bar';
       scrapingProgress: ScrapingProgressBar;
@@ -35,11 +39,14 @@ type Action =
 
 type Dispatch = (action: Action) => void;
 type State = {
+  // if the browser manager is attached
   isAttached: boolean;
-  logHtml: boolean;
+  // the current selected scraping config
   scrapingConfig: ScrapingConfig;
-  scrapingProgress: ScrapingProgressBar;
+  // set to the campaign (in the backend)
+  campaign: Campaign | null;
   sessionId: string | null;
+  scrapingProgress: ScrapingProgressBar;
   isUserLoggedIn: boolean;
   isScrapingStarted: boolean;
   isScrapingPaused: boolean;
@@ -51,6 +58,8 @@ type State = {
   fixedWindow: boolean;
   visibleWindow: boolean;
   bounds: { width: number; height: number; x: number; y: number };
+  // store scraped HTML in log file (for debugging)
+  logHtml: boolean;
 };
 
 type ScrapingProviderProps = { children: React.ReactNode };
@@ -62,14 +71,14 @@ const ScrapingStateContext = React.createContext<
 
 const initialState = {
   isAttached: false,
-  logHtml: false,
   scrapingConfig: defaultConfig,
+  campaign: null,
+  sessionId: null,
   scrapingProgress: {
     isActive: false,
     value: 0,
     label: '',
   },
-  sessionId: null,
   isUserLoggedIn: false,
   isScrapingStarted: false,
   isScrapingPaused: false,
@@ -80,6 +89,7 @@ const initialState = {
   fixedWindow: false,
   visibleWindow: true,
   bounds: { width: 100, height: 100, x: 100, y: 100 },
+  logHtml: false,
 };
 
 function scrapingReducer(state: State, action: Action) {
@@ -93,7 +103,11 @@ function scrapingReducer(state: State, action: Action) {
     }
 
     case 'set-scraping-config': {
-      return { ...state, scrapingConfig: action.scrapingConfig };
+      return {
+        ...state,
+        scrapingConfig: action.scrapingConfig,
+        campaign: action.campaign,
+      };
     }
 
     case 'set-scraping-progress-bar': {

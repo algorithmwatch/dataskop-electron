@@ -2,6 +2,7 @@ import { faAngleRight } from '@fortawesome/pro-regular-svg-icons';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
+import RemoteScrapingConfig from '../components/scraping/RemoteScrapingConfigSelect';
 import routes from '../constants/routes.json';
 
 export default function StartPage(): JSX.Element {
@@ -59,6 +60,7 @@ export default function StartPage(): JSX.Element {
           </li>
         </ul>
       </div>
+      <RemoteScrapingConfig />
 
       <FooterNav items={footerNavItems} />
     </>

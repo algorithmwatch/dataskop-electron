@@ -9,6 +9,9 @@ type State = {
   version: string;
   isDebug: boolean;
   showAdvancedMenu: boolean;
+  simpleBackendUrl: string | null;
+  platformUrl: string | null;
+  trackRouteChanges: boolean;
 };
 type ConfigProviderProps = { children: React.ReactNode };
 // started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
@@ -37,11 +40,18 @@ function ConfigProvider({ children }: ConfigProviderProps) {
   const isDebug =
     process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
+  const simpleBackendUrl = process.env.SIMPLE_BACKEND ?? null;
+  const platformUrl = process.env.PLATFORM_URL ?? null;
+  const trackRouteChanges = !!process.env.TRACK_ROUTE_CHANGES;
+
   // initial value gets overriden with `useEffect`
   const [state, dispatch] = React.useReducer(configReducer, {
     version: 'loading...',
     isDebug,
     showAdvancedMenu: true,
+    simpleBackendUrl,
+    platformUrl,
+    trackRouteChanges,
   });
 
   // NOTE: you *might* need to memoize this value

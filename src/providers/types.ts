@@ -16,3 +16,9 @@ export interface ScrapingConfig {
   // configuration for the scraper
   steps: any[];
 }
+
+export type Campaign = {
+  id: number;
+  title: string;
+  description: string;
+};

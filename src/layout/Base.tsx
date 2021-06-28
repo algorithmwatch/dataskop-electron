@@ -11,8 +11,10 @@ import Button from '../components/Button';
 import ProcessIndicator from '../components/ProcessIndicator';
 import Sidebar from '../components/Sidebar';
 import routes from '../constants/routes.json';
+import { useConfig } from '../contexts';
 import { useScraping } from '../contexts/scraping';
 import logo from '../static/logos/dslogo.svg';
+import { postEvent } from '../utils/networking';
 
 const sidebarMenu = [
   {
@@ -78,8 +80,12 @@ export default function Base({
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const { pathname } = useLocation();
   const {
-    state: { scrapingProgress },
+    state: { scrapingProgress, campaign },
   } = useScraping();
+
+  const {
+    state: { trackRouteChanges, platformUrl },
+  } = useConfig();
 
   // read config for current route
   useEffect(() => {
@@ -99,6 +105,9 @@ export default function Base({
           setCurrentStepIndex(setting.stepIndex);
         }
       }
+    }
+    if (trackRouteChanges && campaign !== null && platformUrl !== null) {
+      postEvent(platformUrl, campaign.id, pathname, {});
     }
   }, [pathname]);
 
