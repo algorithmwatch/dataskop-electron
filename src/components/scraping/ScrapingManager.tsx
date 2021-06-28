@@ -145,7 +145,7 @@ export default function ScrapingManager({
         sessionId: sId,
       });
 
-      await addNewSession(sId, scrapingConfig.slug);
+      await addNewSession(sId, scrapingConfig);
     };
 
     if (isScrapingStarted) startScraping();

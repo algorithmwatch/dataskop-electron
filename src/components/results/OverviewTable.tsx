@@ -47,7 +47,7 @@ export default function OverviewTable({ rows }) {
               <TableCell component="th" scope="row">
                 {row.sessionId}
               </TableCell>
-              <TableCell>{row.configSlug}</TableCell>
+              <TableCell>{row.scrapingConfig.slug}</TableCell>
               <TableCell>{dayjs(row.startedAt).format()}</TableCell>
               <TableCell>
                 {row.finishedAt &&

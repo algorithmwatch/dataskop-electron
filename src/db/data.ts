@@ -39,12 +39,15 @@ const setUpDb = async () => {
   return db.data;
 };
 
-const addNewSession = async (sessionId: string, configSlug: string) => {
+const addNewSession = async (
+  sessionId: string,
+  scrapingConfig: ScrapingConfig,
+) => {
   const obj = {
     sessionId,
     startedAt: Date.now(),
     finishedAt: null,
-    configSlug,
+    scrapingConfig,
   };
 
   await setUpDb();
