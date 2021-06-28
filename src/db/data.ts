@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { JSONFile, Low } from 'lowdb';
 import PQueue from 'p-queue';
 import { join } from 'path';
-import { ScrapingConfig } from '../providers/types';
+import { Campaign, ScrapingConfig } from '../providers/types';
 import { statsForArray } from '../utils/math';
 import { ScrapingResultSaved, ScrapingSession } from './types';
 
@@ -42,12 +42,14 @@ const setUpDb = async () => {
 const addNewSession = async (
   sessionId: string,
   scrapingConfig: ScrapingConfig,
+  campaign: Campaign | null,
 ) => {
   const obj = {
     sessionId,
     startedAt: Date.now(),
     finishedAt: null,
     scrapingConfig,
+    campaign,
   };
 
   await setUpDb();

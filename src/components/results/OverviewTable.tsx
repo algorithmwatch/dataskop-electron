@@ -31,6 +31,7 @@ export default function OverviewTable({ rows }) {
             <TableCell>Started At</TableCell>
             <TableCell>Duation</TableCell>
             <TableCell>Number of Items</TableCell>
+            <TableCell>Campaign</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -54,6 +55,7 @@ export default function OverviewTable({ rows }) {
                   `${(row.finishedAt - row.startedAt) / 1000}s`}
               </TableCell>
               <TableCell>{row.count}</TableCell>
+              <TableCell>{JSON.stringify(row.campaign)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

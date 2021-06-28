@@ -53,6 +53,7 @@ export default function ScrapingManager({
       isScrapingStarted,
       scrapingConfig,
       stepGenerator,
+      campaign,
     },
     dispatch,
   } = useScraping();
@@ -146,7 +147,7 @@ export default function ScrapingManager({
         sessionId: sId,
       });
 
-      await addNewSession(sId, scrapingConfig);
+      await addNewSession(sId, scrapingConfig, campaign);
     };
 
     if (isScrapingStarted) startScraping();

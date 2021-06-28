@@ -1,5 +1,5 @@
 import { ParserResult } from '@algorithmwatch/harke';
-import { ScrapingConfig } from '../providers/types';
+import { Campaign, ScrapingConfig } from '../providers/types';
 
 // re-defining the slug of `ParserResult` from `harke-parser` because the slug is not changable
 interface ScrapingResult extends Omit<ParserResult, 'slug'> {
@@ -18,6 +18,7 @@ interface ScrapingSession {
   startedAt: number; // number of millisecconds in UTC
   finishedAt: number | null; // number of millisecconds in UTC
   scrapingConfig: ScrapingConfig;
+  campaign: Campaign | null;
 }
 
 export { ScrapingResult, ScrapingResultSaved, ScrapingSession };
