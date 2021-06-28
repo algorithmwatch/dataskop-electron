@@ -14,7 +14,8 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import _ from 'lodash';
-import React, { useMemo, useState } from 'react';
+import debounce from 'lodash/debounce';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ScrapingResultSaved } from '../../db/types';
 import Explainer from '../Explainer';
 import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
@@ -96,12 +97,19 @@ export default function AutoplayChain({
   );
   const [currentSeedVideoIndex, setCurrentSeedVideoIndex] = useState(0);
   const [hoveringVideoId, setHoveringVideoId] = useState<null | string>(null);
-  const setHoveringVideoIdDebounced = _.debounce(
-    (val) => setHoveringVideoId.call(null, val),
-    50,
+  const setHoveringVideoIdDebounced = useMemo(
+    () => debounce(setHoveringVideoId, 50),
+    [],
   );
   const currentGroup = groups[currentSeedVideoIndex] || [];
   const recommendedVideosLimit = 10;
+
+  // Stop the invocation of the debounced function after unmounting
+  useEffect(() => {
+    return () => {
+      setHoveringVideoIdDebounced.cancel();
+    };
+  }, []);
 
   // console.warn('seedVideos', seedVideos);
   // console.warn('groups', groups);
