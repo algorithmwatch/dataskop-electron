@@ -94,6 +94,9 @@ module.exports = {
       width: {
         192: '48rem',
       },
+      height: {
+        max: 'max-content',
+      },
     },
   },
   variants: {

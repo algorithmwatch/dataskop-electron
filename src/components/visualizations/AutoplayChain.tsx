@@ -1,9 +1,7 @@
 /* eslint-disable react/no-array-index-key */
-import { RecommendedVideo } from '@algorithmwatch/harke';
+import { RecommendedVideo, VideoPage } from '@algorithmwatch/harke';
 import {
-  faImages,
-  faTags,
-  faUserHeadset,
+  faImages, faUserHeadset,
   IconDefinition
 } from '@fortawesome/pro-regular-svg-icons';
 import {
@@ -20,55 +18,134 @@ import { ScrapingResultSaved } from '../../db/types';
 import Explainer from '../Explainer';
 import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
 
-interface SearchResultsCompareDataItem {
-  query: string;
-  signedInVideos: RecommendedVideo[];
-  signedOutVideos: RecommendedVideo[];
+function SeedVideoMenu({
+  seedVideos,
+  currentVideoIndex,
+  onSelect,
+}: {
+  seedVideos: VideoPage[];
+  currentVideoIndex: number;
+  onSelect: (index: number) => void;
+}) {
+  return (
+    <div className="flex items-center max-w-min border-2 border-yellow-700 bg-yellow-200">
+      {seedVideos.map((video: VideoPage, index: number) => (
+        <div
+          key={`seed-${video.id}`}
+          className={classNames('p-2 h-full flex items-center', {
+            'bg-yellow-700': index === currentVideoIndex,
+          })}
+        >
+          <VideoThumbnail
+            videoId={video.id}
+            tippyOptions={{
+              content: <TooltipContent video={video} />,
+              theme: 'process-info',
+            }}
+            className="cursor-pointer"
+            onClickCallback={() => onSelect(index)}
+          />
+        </div>
+      ))}
+    </div>
+  );
 }
 
 function ViewSwitcherItem({
   label,
   icon,
+  menuIsOpen = false,
+  isSelected,
+  onSelect,
 }: {
   label: string;
   icon: IconDefinition;
+  menuIsOpen?: boolean;
+  isSelected: boolean;
+  onSelect: () => void;
 }) {
-  return (
-    <div className="py-0.5 flex flex-col items-center">
-      <FontAwesomeIcon icon={icon} size="2x" />
-      <div className="text-sm">{label}</div>
-    </div>
-  );
-}
-
-function ViewSwitcher() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const items = [
-    { label: 'Thumbnails', icon: faImages },
-    { label: 'Kategorien', icon: faTags },
-    { label: 'Creator', icon: faUserHeadset },
-  ];
-
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
-      className="relative flex items-center py-2 px-3 border-2 border-yellow-700 bg-yellow-200 text-blue-600"
-      onClick={() => setIsOpen(!isOpen)}
+      key={label}
+      className={classNames(
+        'w-full h-20 flex flex-col items-center justify-center hover:bg-yellow-400 transition-all',
+        {
+          'bg-yellow-200': !menuIsOpen,
+          'bg-yellow-300': menuIsOpen,
+        },
+      )}
+      onClick={onSelect}
     >
-      <div className="">
-        {items
-          .filter((x, index) => (isOpen ? true : index === selectedIndex))
-          .map(({ label, icon }, index) => (
-            <ViewSwitcherItem key={label} label={label} icon={icon} />
-          ))}
-      </div>
-      <div className="ml-3">
-        <FontAwesomeIcon icon={faAngleDown} />
+      <FontAwesomeIcon icon={icon} size="2x" />
+      <div
+        className={classNames('text-sm select-none', {
+          underline: isSelected,
+        })}
+      >
+        {label}
       </div>
     </div>
   );
 }
+
+const ViewSwitcher = React.memo(function ViewSwitcher({
+  modeIndex,
+  onModeIndexChange,
+}: {
+  modeIndex: number;
+  onModeIndexChange: (index: number) => void;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const items = [
+    { label: 'Thumbnails', icon: faImages },
+    // { label: 'Kategorien', icon: faTags },
+    { label: 'Creator', icon: faUserHeadset },
+  ];
+  const selectedItem = items[modeIndex];
+
+  return (
+    <div className="relative w-28 h-full flex items-center border-2 border-yellow-700 bg-yellow-200 text-blue-600 cursor-pointer z-10">
+      <div className="ml-auto mr-3 z-20 pointer-events-none">
+        <FontAwesomeIcon icon={faAngleDown} />
+      </div>
+      <div
+        className={classNames('absolute inset-0', {
+          'overflow-hidden': !isOpen,
+          'h-max ring ring-yellow-700': isOpen,
+        })}
+      >
+        <ViewSwitcherItem
+          key={selectedItem.label}
+          label={selectedItem.label}
+          icon={selectedItem.icon}
+          menuIsOpen={isOpen}
+          isSelected
+          onSelect={() => setIsOpen(!isOpen)}
+        />
+        {isOpen &&
+          items.map(({ label, icon }, index) => {
+            const isSelected = index === modeIndex;
+            return (
+              !isSelected && (
+                <ViewSwitcherItem
+                  key={label}
+                  label={label}
+                  icon={icon}
+                  isSelected={isSelected}
+                  onSelect={() => {
+                    onModeIndexChange(index);
+                    setIsOpen(false);
+                  }}
+                />
+              )
+            );
+          })}
+      </div>
+    </div>
+  );
+});
 
 export default function AutoplayChain({
   data,
@@ -94,9 +171,10 @@ export default function AutoplayChain({
   const seedVideos = useMemo(
     () => groups.map((group) => group[0].fields),
     [groups],
-  );
+  ) as VideoPage[];
   const [currentSeedVideoIndex, setCurrentSeedVideoIndex] = useState(0);
   const [hoveringVideoId, setHoveringVideoId] = useState<null | string>(null);
+  const [modeIndex, setModeIndex] = useState<0 | 1>(0);
   const setHoveringVideoIdDebounced = useMemo(
     () => debounce(setHoveringVideoId, 50),
     [],
@@ -113,7 +191,7 @@ export default function AutoplayChain({
 
   // console.warn('seedVideos', seedVideos);
   // console.warn('groups', groups);
-  // console.warn('currentGroup', currentGroup);
+  console.warn('currentGroup', currentGroup);
 
   return (
     <>
@@ -204,40 +282,17 @@ export default function AutoplayChain({
       <div className="mx-auto space-y-6">
         {/* Seed videos menu */}
         {seedVideos.length && (
-          <div className="flex">
-            <div className="flex max-w-min space-x-4 p-2 border-2 border-yellow-700 bg-yellow-200">
-              {seedVideos.map(
-                ({ id, title, channel, uploadDate, viewCount }, index) => (
-                  <div
-                    key={`seed-${id}`}
-                    className={classNames({
-                      'ring-8 ring-yellow-700': index === currentSeedVideoIndex,
-                    })}
-                  >
-                    <VideoThumbnail
-                      videoId={id}
-                      tippyOptions={{
-                        content: (
-                          <TooltipContent
-                            video={{
-                              title,
-                              channelName: channel.name,
-                              uploadDate,
-                              viewCount,
-                            }}
-                          />
-                        ),
-                        theme: 'process-info',
-                      }}
-                      className="cursor-pointer"
-                      onClickCallback={() => setCurrentSeedVideoIndex(index)}
-                    />
-                  </div>
-                ),
-              )}
-            </div>
+          <div className="flex h-20">
+            <SeedVideoMenu
+              seedVideos={seedVideos}
+              currentVideoIndex={currentSeedVideoIndex}
+              onSelect={(index) => setCurrentSeedVideoIndex(index)}
+            />
             <div className="ml-4">
-              <ViewSwitcher />
+              <ViewSwitcher
+                modeIndex={modeIndex}
+                onModeIndexChange={(index: number) => setModeIndex(index)}
+              />
             </div>
           </div>
         )}
@@ -259,16 +314,7 @@ export default function AutoplayChain({
                     <VideoThumbnail
                       videoId={scrapeResult.fields.id}
                       tippyOptions={{
-                        content: (
-                          <TooltipContent
-                            video={{
-                              title: scrapeResult.fields.title,
-                              channelName: scrapeResult.fields.channel.name,
-                              uploadDate: scrapeResult.fields.uploadDate,
-                              viewCount: scrapeResult.fields.viewCount,
-                            }}
-                          />
-                        ),
+                        content: <TooltipContent video={scrapeResult.fields} />,
                         theme: 'process-info',
                       }}
                       onMouseOverCallback={() =>
@@ -309,15 +355,9 @@ export default function AutoplayChain({
                           <VideoThumbnail
                             key={`${video.id}-${index}-${index2}`}
                             videoId={video.id}
+                            type={modeIndex}
                             tippyOptions={{
-                              content: (
-                                <TooltipContent
-                                  video={{
-                                    title: video.title,
-                                    channelName: video.channelName,
-                                  }}
-                                />
-                              ),
+                              content: <TooltipContent video={video} />,
                               theme: 'process-info',
                             }}
                             onMouseOverCallback={() =>
