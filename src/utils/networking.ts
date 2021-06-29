@@ -46,14 +46,13 @@ const postEvent = async (
 const postDonation = async (
   platformUrl: string,
   email: string,
-  campaign: number,
   result: any,
   session: ScrapingSession,
 ) => {
   const url = `${platformUrl}/api/donations/`;
   const res = await postJson(url, {
     unauthorized_email: email,
-    campaign,
+    campaign: session.campaign?.id,
     result: { scrapingResult: result, session },
   });
   if (!res.ok) console.warn(res);

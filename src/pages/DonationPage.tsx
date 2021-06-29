@@ -2,8 +2,11 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useConfig, useScraping } from '../contexts';
-import { getSessionData, getSessions } from '../db';
-import { Campaign } from '../providers/types';
+import {
+  getScrapingResultsBySession,
+  getSessionById,
+  getSessions,
+} from '../db';
 import { postDonation } from '../utils/networking';
 
 export default function DonationPage(): JSX.Element {
@@ -21,43 +24,34 @@ export default function DonationPage(): JSX.Element {
 
   const onSubmit = async ({ email }: { email: string }) => {
     if (platformUrl == null) {
-      setStatus('ask the dev to set the platform url');
+      setStatus('ask the dev to set the platform url :/');
       return;
     }
-
-    let theCam = campaign;
     let theSId = sessionId;
 
     if (isDebug) {
-      if (theCam == null) theCam = { id: 1 } as Campaign;
-
+      // choose a random session id for debug
       // eslint-disable-next-line prefer-destructuring
       if (theSId == null) theSId = (await getSessions())[0].sessionId;
-    } else {
-      if (theCam == null) {
-        setStatus('cannot donate when chosing a local scraping config');
-        return;
-      }
-
-      if (theSId == null) {
-        setStatus('something is wrong the the session id');
-        return;
-      }
+    } else if (theSId == null) {
+      setStatus('something is wrong the the session id :/ ');
+      return;
     }
 
-    const result = getSessionData(theSId);
+    const result = await getScrapingResultsBySession(theSId);
+    const scrapingSession = await getSessionById(theSId);
 
-    const sessionInfo = (await getSessions()).filter(
-      ({ sessionId }) => sessionId === theSId,
-    )[0];
+    if (scrapingSession === null) {
+      setStatus('session is null, something is broken :/');
+      return;
+    }
 
     // await postDonation(platformUrl, email, campaign.id, result, scrapingConfig);
     const resp = await postDonation(
       platformUrl,
       email,
-      theCam.id,
       result,
-      sessionInfo,
+      scrapingSession,
     );
     if (resp.ok) setStatus('Success!');
     else {

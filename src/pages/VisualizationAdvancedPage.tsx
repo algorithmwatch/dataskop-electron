@@ -6,7 +6,7 @@ import RecommenderMap from '../components/visualizations/RecommenderMap';
 import SmallMultipleChart from '../components/visualizations/SmallMultipleChart';
 import StatisticsChart from '../components/visualizations/StatisticsChart';
 import { useConfig } from '../contexts/config';
-import { getSessionData } from '../db';
+import { getScrapingResultsBySession } from '../db';
 
 export default function VisualizationAdvancedPage() {
   const [data, setData] = useState<any>([]);
@@ -27,7 +27,7 @@ export default function VisualizationAdvancedPage() {
 
   useEffect(() => {
     const loadData = async () => {
-      setData(await getSessionData(sessionId));
+      setData(await getScrapingResultsBySession(sessionId));
     };
     loadData();
   }, [sessionId]);

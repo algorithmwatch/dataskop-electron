@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  getSessionData,
+  getScrapingResultsBySession,
   getSessions,
   getStatisticsForSession,
   ScrapingSession,
@@ -19,7 +19,7 @@ export default function ResultsDetails({
 
   useEffect(() => {
     const newRows = async () => {
-      setRows(await getSessionData(sessionId));
+      setRows(await getScrapingResultsBySession(sessionId));
       setStats(await getStatisticsForSession(sessionId));
       setSession(
         (await getSessions()).filter((x) => x.sessionId === sessionId)[0],

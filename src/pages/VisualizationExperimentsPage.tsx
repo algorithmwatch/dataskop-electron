@@ -6,7 +6,7 @@ import NewsTop5 from '../components/visualizations/NewsTop5';
 import SearchResultsCompare from '../components/visualizations/SearchResultsCompare';
 import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
-import { getSessionData } from '../db';
+import { getScrapingResultsBySession } from '../db';
 
 interface LocationState {
   sessionId: string;
@@ -26,7 +26,7 @@ export default function VisualizationExperimentsPage() {
 
   useEffect(() => {
     const loadData = async () => {
-      setData(await getSessionData(sessionId));
+      setData(await getScrapingResultsBySession(sessionId));
     };
     loadData();
   }, [sessionId]);

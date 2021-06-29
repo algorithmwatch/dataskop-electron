@@ -4,7 +4,7 @@ import FooterNav from '../components/FooterNav';
 import SmallMultipleChart from '../components/visualizations/SmallMultipleChart';
 import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
-import { getSessionData } from '../db';
+import { getScrapingResultsBySession } from '../db';
 
 export default function VisualizationExperimentsPage(): JSX.Element {
   const { sessionId }: { sessionId: string } = useParams();
@@ -16,7 +16,7 @@ export default function VisualizationExperimentsPage(): JSX.Element {
 
   useEffect(() => {
     const loadData = async () => {
-      setData(await getSessionData(sessionId));
+      setData(await getScrapingResultsBySession(sessionId));
     };
     loadData();
   }, [sessionId]);

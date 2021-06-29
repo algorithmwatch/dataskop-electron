@@ -39,6 +39,8 @@ const setUpDb = async () => {
   return db.data;
 };
 
+// sessions
+
 const addNewSession = async (
   sessionId: string,
   scrapingConfig: ScrapingConfig,
@@ -60,7 +62,49 @@ const addNewSession = async (
   return db.write();
 };
 
-const internAddScrapingResult = async (obj: ScrapingResultSaved) => {
+const setSessionFinishedAt = async (sessionId: string) => {
+  await setUpDb();
+
+  if (db === null || db?.data === null) throw Error();
+
+  const theSession = db.data.scrapingSessions.filter(
+    (x) => x.sessionId === sessionId,
+  )[0];
+
+  db.data.scrapingSessions = [
+    { ...theSession, finishedAt: Date.now() } as ScrapingSession,
+  ].concat(db.data.scrapingSessions.filter((x) => x.sessionId !== sessionId));
+
+  db.write();
+};
+
+const getSessions = async () => {
+  const data = await setUpDb();
+
+  const sessionsCount = _.countBy(data.scrapingResults, 'sessionId');
+  const sessions = data.scrapingSessions.map((x) => ({
+    ...x,
+    count: sessionsCount[x.sessionId] ?? 0,
+  }));
+
+  sessions.sort((a, b) => (b?.startedAt ?? 0) - (a?.startedAt ?? 0));
+  return sessions;
+};
+
+const getSessionById = async (
+  sessionId: string,
+): Promise<ScrapingSession | null> => {
+  const data = await setUpDb();
+
+  const res = data.scrapingSessions.filter((x) => x.sessionId === sessionId);
+  if (res.length === 1) return res[0];
+
+  return null;
+};
+
+// scraping results
+
+const queuedAddScrapingResult = async (obj: ScrapingResultSaved) => {
   await setUpDb();
 
   if (db === null || db.data === null) throw Error('db is not initialized');
@@ -80,13 +124,29 @@ const addScrapingResult = (sessionId: string, step: number, data: any) => {
     scrapedAt: Date.now(),
   };
 
-  return queue.add(() => internAddScrapingResult(obj));
+  return queue.add(() => queuedAddScrapingResult(obj));
 };
 
 const getScrapingResults = async () => {
   const data = await setUpDb();
   return _.orderBy(data.scrapingResults, 'scrapedAt');
 };
+
+const getScrapingResultsBySession = async (
+  sessiondId: string,
+  filter: { slug?: null | string; step?: null | number } = {},
+) => {
+  const { slug, step } = filter;
+  const data = await setUpDb();
+  return data.scrapingResults.filter(
+    (x) =>
+      x.sessionId === sessiondId &&
+      (slug == null || x.slug === slug) &&
+      (step == null || x.step === step),
+  );
+};
+
+// scraping config
 
 const modifyScrapingConfig = async (config: ScrapingConfig, remove = false) => {
   await setUpDb();
@@ -105,9 +165,25 @@ const getStoredScrapingConfigs = async () => {
   return data.scrapingConfigs || [];
 };
 
+// some utils
+
 const getAllData = async () => {
   return setUpDb();
 };
+
+const clearData = async () => {
+  if (db === null) throw Error('db is not initialized');
+
+  if (db.data === null) return;
+  db.data = {
+    scrapingSessions: [],
+    scrapingResults: [],
+    scrapingConfigs: db.data.scrapingConfigs,
+  };
+  await db.write();
+};
+
+// imort data
 
 const importResultRows = async (
   rows: ScrapingResultSaved[],
@@ -137,60 +213,7 @@ const importSessionRows = async (rows: ScrapingSession[]): Promise<number> => {
   return sum.length - old.length;
 };
 
-const getSessionData = async (
-  sessiondId: string,
-  filter: { slug?: null | string; step?: null | number } = {},
-) => {
-  const { slug, step } = filter;
-  const data = await setUpDb();
-  return data.scrapingResults.filter(
-    (x) =>
-      x.sessionId === sessiondId &&
-      (slug == null || x.slug === slug) &&
-      (step == null || x.step === step),
-  );
-};
-
-const setSessionFinishedAt = async (sessionId: string) => {
-  await setUpDb();
-
-  if (db === null || db?.data === null) throw Error();
-
-  const theSession = db.data.scrapingSessions.filter(
-    (x) => x.sessionId === sessionId,
-  )[0];
-
-  db.data.scrapingSessions = [
-    { ...theSession, finishedAt: Date.now() } as ScrapingSession,
-  ].concat(db.data.scrapingSessions.filter((x) => x.sessionId !== sessionId));
-
-  db.write();
-};
-
-const clearData = async () => {
-  if (db === null) throw Error('db is not initialized');
-
-  if (db.data === null) return;
-  db.data = {
-    scrapingSessions: [],
-    scrapingResults: [],
-    scrapingConfigs: db.data.scrapingConfigs,
-  };
-  await db.write();
-};
-
-const getSessions = async () => {
-  const data = await setUpDb();
-
-  const sessionsCount = _.countBy(data.scrapingResults, 'sessionId');
-  const sessions = data.scrapingSessions.map((x) => ({
-    ...x,
-    count: sessionsCount[x.sessionId] ?? 0,
-  }));
-
-  sessions.sort((a, b) => (b?.startedAt ?? 0) - (a?.startedAt ?? 0));
-  return sessions;
-};
+// some math utils
 
 const getStatisticsForSession = async (sessiondId: string) => {
   const data = await setUpDb();
@@ -240,8 +263,9 @@ export {
   importSessionRows,
   getScrapingResults,
   clearData,
+  getSessionById,
   getSessions,
-  getSessionData,
+  getScrapingResultsBySession,
   addNewSession,
   getStatisticsForSession,
   modifyScrapingConfig,

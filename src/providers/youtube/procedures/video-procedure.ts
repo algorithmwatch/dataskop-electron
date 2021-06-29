@@ -8,7 +8,7 @@ import {
   VideoProcedureConfig,
 } from '..';
 import { clearStorage } from '../../../components/scraping/ipc';
-import { getSessionData } from '../../../db';
+import { getScrapingResultsBySession } from '../../../db';
 import { delay } from '../../../utils/time';
 import { submitConfirmForm } from '../actions/confirm-cookies';
 import {
@@ -32,7 +32,7 @@ const getSeedVideosRepeat = async (
     filterBy = { slug: previousResult };
   }
 
-  const oldData = await getSessionData(sessionId, filterBy);
+  const oldData = await getScrapingResultsBySession(sessionId, filterBy);
   if (oldData.length > 1) {
     console.warn('Uh! Got more than 1 previous result. You sure?');
   }

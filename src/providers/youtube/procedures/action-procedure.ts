@@ -4,7 +4,7 @@ import {
   GetHtmlFunction,
   GetHtmlLazyFunction,
 } from '..';
-import { getSessionData } from '../../../db';
+import { getScrapingResultsBySession } from '../../../db';
 import {
   activateWatchHistory,
   deactivateWatchHistory,
@@ -20,7 +20,7 @@ async function* actionProcedure(
   const { slug } = config;
 
   if (slug === 'yt-activate-watch-history') {
-    const data = await getSessionData(sessionId, {
+    const data = await getScrapingResultsBySession(sessionId, {
       slug: 'yt-deactivate-watch-history',
     });
     const {
