@@ -3,9 +3,13 @@ import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import RemoteScrapingConfig from '../components/scraping/RemoteScrapingConfigSelect';
-import routes from '../constants/routes.json';
+import { useNavigation } from '../contexts/navigation';
 
 export default function StartPage(): JSX.Element {
+  const { nextPage } = useNavigation();
+
+  console.log(nextPage());
+
   const footerNavItems: FooterNavItem[] = [
     // {
     //   label: 'Zurück',
@@ -22,7 +26,7 @@ export default function StartPage(): JSX.Element {
       endIcon: faAngleRight,
       classNames: 'mx-auto',
       clickHandler(history: RouteComponentProps['history']) {
-        history.push(routes.EXPLANATION);
+        history.push(nextPage());
       },
     },
     // {

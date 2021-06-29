@@ -10,6 +10,7 @@ import ScrapingAttached from './components/scraping/ScrapingAttached';
 import UpdateNotification from './components/UpdateNotification';
 import routes from './constants/routes.json';
 import { ConfigProvider } from './contexts/config';
+import { NavigationProvider } from './contexts/navigation';
 import { ScrapingProvider } from './contexts/scraping';
 import BaseLayout from './layout/Base';
 import DonationPage from './pages/DonationPage';
@@ -31,66 +32,68 @@ import VisualizationProfilePage from './pages/VisualizationProfilePage';
 export default function App() {
   return (
     <ConfigProvider>
-      <ScrapingProvider>
-        <UpdateNotification />
-        <Router>
-          <BaseLayout>
-            <Switch>
-              <Route
-                path={routes.SCRAPING_ADVANCED}
-                component={AdvancedScrapingPage}
-              />
-              <Route
-                path={routes.SCRAPING_CONFIG_EDITOR}
-                component={ScrapingConfigEditorPage}
-              />
-              <Route
-                path={routes.SCRAPING_PROFILE}
-                component={ScrapingProfilePage}
-              />
-              <Route
-                path={routes.SCRAPING_EXPERIMENT}
-                component={ScrapingExperimentPage}
-              />
-              <Route
-                path={routes.SCRAPING_EXPLANATION}
-                component={ScrapingExplanationPage}
-              />
-              <Route
-                path={routes.PROVIDER_LOGIN}
-                component={ProviderLoginPage}
-              />
-              <Route path={routes.DONATION} component={DonationPage} />
-              <Route
-                path={routes.RESULTS_DETAILS}
-                component={ResultsDetailsPage}
-              />
-              <Route path={routes.RESULTS} component={ResultsPage} />
-              <Route path={routes.SETTINGS} component={SettingsPage} />
-              <Route
-                path={routes.VISUALIZATION_ADVANCED}
-                component={VisualizationAdvancedPage}
-              />
-              <Route
-                path={routes.VISUALIZATION_EXPERIMENT}
-                component={VisualizationExperimentsPage}
-              />
-              <Route
-                path={routes.VISUALIZATION_PROFILE}
-                component={VisualizationProfilePage}
-              />
-              <Route path={routes.EXPLANATION} component={ExplanationPage} />
-              <Route path={routes.START} component={StartPage} />
+      <NavigationProvider>
+        <ScrapingProvider>
+          <UpdateNotification />
+          <Router>
+            <BaseLayout>
+              <Switch>
+                <Route
+                  path={routes.SCRAPING_ADVANCED}
+                  component={AdvancedScrapingPage}
+                />
+                <Route
+                  path={routes.SCRAPING_CONFIG_EDITOR}
+                  component={ScrapingConfigEditorPage}
+                />
+                <Route
+                  path={routes.SCRAPING_PROFILE}
+                  component={ScrapingProfilePage}
+                />
+                <Route
+                  path={routes.SCRAPING_EXPERIMENT}
+                  component={ScrapingExperimentPage}
+                />
+                <Route
+                  path={routes.SCRAPING_EXPLANATION}
+                  component={ScrapingExplanationPage}
+                />
+                <Route
+                  path={routes.PROVIDER_LOGIN}
+                  component={ProviderLoginPage}
+                />
+                <Route path={routes.DONATION} component={DonationPage} />
+                <Route
+                  path={routes.RESULTS_DETAILS}
+                  component={ResultsDetailsPage}
+                />
+                <Route path={routes.RESULTS} component={ResultsPage} />
+                <Route path={routes.SETTINGS} component={SettingsPage} />
+                <Route
+                  path={routes.VISUALIZATION_ADVANCED}
+                  component={VisualizationAdvancedPage}
+                />
+                <Route
+                  path={routes.VISUALIZATION_EXPERIMENT}
+                  component={VisualizationExperimentsPage}
+                />
+                <Route
+                  path={routes.VISUALIZATION_PROFILE}
+                  component={VisualizationProfilePage}
+                />
+                <Route path={routes.EXPLANATION} component={ExplanationPage} />
+                <Route path={routes.START} component={StartPage} />
 
-              <Route path="/">
-                <Redirect to={routes.START} />
-              </Route>
-            </Switch>
-          </BaseLayout>
-        </Router>
-        {/* has to come here _after_ the pages in the router */}
-        <ScrapingAttached />
-      </ScrapingProvider>
+                <Route path="/">
+                  <Redirect to={routes.START} />
+                </Route>
+              </Switch>
+            </BaseLayout>
+          </Router>
+          {/* has to come here _after_ the pages in the router */}
+          <ScrapingAttached />
+        </ScrapingProvider>
+      </NavigationProvider>
     </ConfigProvider>
   );
 }
