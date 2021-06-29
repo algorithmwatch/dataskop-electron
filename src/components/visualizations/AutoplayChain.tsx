@@ -1,7 +1,8 @@
 /* eslint-disable react/no-array-index-key */
 import { RecommendedVideo, VideoPage } from '@algorithmwatch/harke';
 import {
-  faImages, faUserHeadset,
+  faImages,
+  faUserHeadset,
   IconDefinition
 } from '@fortawesome/pro-regular-svg-icons';
 import {
@@ -191,7 +192,7 @@ export default function AutoplayChain({
 
   // console.warn('seedVideos', seedVideos);
   // console.warn('groups', groups);
-  console.warn('currentGroup', currentGroup);
+  // console.warn('currentGroup', currentGroup);
 
   return (
     <>
