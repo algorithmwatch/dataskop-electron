@@ -36,9 +36,9 @@ export default function AdvancedScrapingPage(): JSX.Element {
   return (
     <>
       <div className="overflow-y-auto">
-        <div>{curScrapingConfig && curScrapingConfig.title}</div>
-        <div>{curScrapingConfig && curScrapingConfig.slug}</div>
-        <div>campaign: {campaign && campaign}</div>
+        <div>title: {curScrapingConfig && curScrapingConfig.title}</div>
+        <div>slug: {curScrapingConfig && curScrapingConfig.slug}</div>
+        <div>campaign: {campaign && JSON.stringify(campaign)}</div>
 
         <LocalScrapinogConfigSelect
           scrapingConfig={curScrapingConfig}

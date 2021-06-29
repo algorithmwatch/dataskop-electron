@@ -1,3 +1,5 @@
+import { ScrapingSession } from '../db';
+
 // eslint-disable-next-line @typescript-eslint/ban-types
 const postJson = (url: string, body: Object) => {
   return fetch(url, {
@@ -32,7 +34,7 @@ const getActiveCampaigns = async (platformUrl: string) => {
 
 const postEvent = async (
   platformUrl: string,
-  campaign: any,
+  campaign: number,
   message: string,
   data: any,
 ) => {
@@ -41,6 +43,21 @@ const postEvent = async (
   if (!res.ok) console.warn(res);
 };
 
-const postDonation = async (result) => {};
+const postDonation = async (
+  platformUrl: string,
+  email: string,
+  campaign: number,
+  result: any,
+  session: ScrapingSession,
+) => {
+  const url = `${platformUrl}/api/donations/`;
+  const res = await postJson(url, {
+    unauthorized_email: email,
+    campaign,
+    result: { scrapingResult: result, session },
+  });
+  if (!res.ok) console.warn(res);
+  return res;
+};
 
-export { getActiveCampaigns, postSimpleBackend, postEvent };
+export { getActiveCampaigns, postSimpleBackend, postEvent, postDonation };

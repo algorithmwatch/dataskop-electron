@@ -24,6 +24,7 @@ export default function RemoteScrapingConfig() {
   };
 
   const fetchCams = async () => {
+    if (platformUrl == null) return;
     const options = await getActiveCampaigns(platformUrl);
     setCamOptions(options);
   };
