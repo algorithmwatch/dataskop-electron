@@ -33,6 +33,7 @@ jobs:
         with:
           node-version: 14
 
+      # NB: it used to work w/o "always-auth=true" but it's now required
       - name: Setup NPM auth token for font awesome pro & github packages
         run: >
           echo "always-auth=true" >> .npmrc &&
@@ -55,7 +56,7 @@ jobs:
       # - not running dev `postinstall` (used for dev)
       # - we need `yarn install` to t
       - name: Install dependencies
-        run: rm yarn.lock && yarn install
+        run: yarn install --prefer-offline --frozen-lockfile
         env:
           NOYARNPOSTINSTALL: 1
 
