@@ -1,24 +1,32 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useConfig, useScraping } from '../contexts';
-import {
-  getScrapingResultsBySession,
-  getSessionById,
-  getSessions
-} from '../db';
+import { getScrapingResultsBySession, getSessionById } from '../db';
 import { postDonation } from '../utils/networking';
 
 export default function DonationPage1(): JSX.Element {
   const [status, setStatus] = useState('');
+  const [results, setResults] = useState<any>(null);
 
   const {
-    state: { isDebug, platformUrl },
+    state: { platformUrl },
   } = useConfig();
 
   const {
     state: { sessionId },
   } = useScraping();
+
+  useEffect(() => {
+    const theFun = async () => {
+      console.log(sessionId);
+      if (sessionId === null) return;
+      const newResult = await getScrapingResultsBySession(sessionId);
+      setResults(newResult);
+    };
+
+    theFun();
+  }, [sessionId]);
 
   const { register, handleSubmit } = useForm();
 
@@ -27,30 +35,23 @@ export default function DonationPage1(): JSX.Element {
       setStatus('ask the dev to set the platform url :/');
       return;
     }
-    let theSId = sessionId;
 
-    if (isDebug) {
-      // choose a random session id for debug
-      // eslint-disable-next-line prefer-destructuring
-      if (theSId == null) theSId = (await getSessions())[0].sessionId;
-    } else if (theSId == null) {
+    if (sessionId == null) {
       setStatus('something is wrong the the session id :/ ');
       return;
     }
 
-    const result = await getScrapingResultsBySession(theSId);
-    const scrapingSession = await getSessionById(theSId);
+    const scrapingSession = await getSessionById(sessionId);
 
     if (scrapingSession === null) {
       setStatus('session is null, something is broken :/');
       return;
     }
 
-    // await postDonation(platformUrl, email, campaign.id, result, scrapingConfig);
     const resp = await postDonation(
       platformUrl,
       email,
-      result,
+      results,
       scrapingSession,
     );
     if (resp.ok) setStatus('Success!');
