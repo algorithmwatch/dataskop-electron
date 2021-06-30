@@ -6,7 +6,7 @@ import { useConfig, useScraping } from '../../contexts';
 import {
   addNewSession,
   addScrapingResult,
-  setSessionFinishedAt,
+  setSessionFinishedAt
 } from '../../db';
 import { providerToMeta } from '../../providers';
 import { YtScrapingConfig } from '../../providers/youtube';
@@ -19,7 +19,7 @@ import {
   goToUrl,
   makeGetHtml,
   scrollDown,
-  setNavigationCallback,
+  setNavigationCallback
 } from './ipc';
 import ScrapingBrowser from './ScrapingWindow';
 
@@ -168,7 +168,7 @@ export default function ScrapingManager({
 
         dispatch({
           type: 'set-scraping-progress-bar',
-          scrapingProgress: { isActive: true, label: '', value: newFrac },
+          scrapingProgress: { isActive: true, value: newFrac, step },
         });
 
         if (!result.success) {

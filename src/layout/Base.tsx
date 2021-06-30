@@ -9,6 +9,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Button from '../components/Button';
 import ProcessIndicator from '../components/ProcessIndicator';
+import ScrapingProgressBar from '../components/ScrapingProgressBar';
 import Sidebar from '../components/Sidebar';
 import { useConfig, useNavigation } from '../contexts';
 import { useScraping } from '../contexts/scraping';
@@ -39,7 +40,7 @@ export default function Base({
   const [sectionIndex, setSectionIndex] = useState(0);
   const { pathname } = useLocation();
   const {
-    state: { scrapingProgress, campaign },
+    state: { campaign },
   } = useScraping();
   const {
     state: { trackRouteChanges, platformUrl },
@@ -90,14 +91,7 @@ export default function Base({
           <img src={logo} style={{ width: '8rem' }} alt="Dataskop Logo" />
         </div>
         <div className="flex items-center ml-auto mr-6">
-          {/* Scraping progress bar */}
-          {scrapingProgress.isActive && (
-            <div className="mr-4">
-              <progress value={scrapingProgress.value} max="1" className="">
-                {scrapingProgress.value}
-              </progress>
-            </div>
-          )}
+          <ScrapingProgressBar />
 
           {/* MyData vault */}
           <div>

@@ -3,10 +3,10 @@ import React from 'react';
 import { Campaign, ScrapingConfig } from '../providers/types';
 import { defaultConfig } from '../providers/youtube';
 
-export type ScrapingProgressBar = {
+export type ScrapingProgress = {
   isActive: boolean;
   value: number; // progres from 0 to 1
-  label: string;
+  step: number;
 };
 
 type Action =
@@ -19,7 +19,7 @@ type Action =
     }
   | {
       type: 'set-scraping-progress-bar';
-      scrapingProgress: ScrapingProgressBar;
+      scrapingProgress: ScrapingProgress;
     }
   | { type: 'set-user-logged-in'; isUserLoggedIn: boolean }
   | { type: 'set-scraping-started'; isScrapingStarted: boolean }
@@ -46,7 +46,7 @@ type State = {
   // set to the campaign (in the backend)
   campaign: Campaign | null;
   sessionId: string | null;
-  scrapingProgress: ScrapingProgressBar;
+  scrapingProgress: ScrapingProgress;
   isUserLoggedIn: boolean;
   isScrapingStarted: boolean;
   isScrapingPaused: boolean;
@@ -77,7 +77,7 @@ const initialState = {
   scrapingProgress: {
     isActive: false,
     value: 0,
-    label: '',
+    step: 0,
   },
   isUserLoggedIn: false,
   isScrapingStarted: false,
@@ -157,7 +157,7 @@ function scrapingReducer(state: State, action: Action) {
         stepGenerator: action.stepGenerator,
         isScrapingFinished: false,
         isScrapingPaused: false,
-        scrapingProgress: { isActive: true, label: '', value: 0 },
+        scrapingProgress: { isActive: true, value: 0, step: 0 },
       };
     }
 
@@ -167,7 +167,11 @@ function scrapingReducer(state: State, action: Action) {
         isScrapingFinished: true,
         isScrapingPaused: true,
         isScrapingStarted: false,
-        scrapingProgress: { isActive: false, label: '', value: 1 },
+        scrapingProgress: {
+          isActive: false,
+          value: 1,
+          step: state.scrapingConfig.steps.length - 1,
+        },
       };
     }
 
@@ -183,6 +187,8 @@ function scrapingReducer(state: State, action: Action) {
           'isScrapingFinished',
           'scrapingError',
           'stepGenerator',
+          'isUserLoggedIn',
+          'campaign',
         ]),
       };
     }

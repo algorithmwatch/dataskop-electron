@@ -1,41 +1,44 @@
 import { faAngleRight } from '@fortawesome/pro-regular-svg-icons';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
+import { useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
 
 export default function VisualizationProfilePage(): JSX.Element {
+  const [nextButtonIsDisabled, setNextButtonIsDisabled] = useState(true);
   const { getNextPage } = useNavigation();
-
+  const {
+    state: {
+      scrapingProgress: { step },
+      scrapingConfig,
+    },
+  } = useScraping();
   const footerNavItems: FooterNavItem[] = [
-    // {
-    //   label: 'Zurück',
-    //   startIcon: faAngleLeft,
-    //   classNames: '',
-    //   disabled: true,
-    //   clickHandler(history: History) {
-    //     history.push(routes.EXPLANATION);
-    //   },
-    // },
     {
       label: 'Weiter',
       // size: 'large',
       endIcon: faAngleRight,
       classNames: 'mx-auto',
+      disabled: nextButtonIsDisabled,
       clickHandler(history: RouteComponentProps['history']) {
-        history.push(getNextPage('path'));
+        if (!nextButtonIsDisabled) {
+          history.push(getNextPage('path'));
+        }
       },
     },
-    // {
-    //   label: 'Weiter',
-    //   endIcon: faAngleRight,
-    //   // classNames: '',
-    //   // theme: 'link',
-    //   clickHandler(history: History) {
-    //     history.push(routes.EXPLANATION);
-    //   },
-    // },
   ];
+
+  useEffect(() => {
+    const currentStep = scrapingConfig.steps.filter(
+      (s) => s.type === 'profile',
+    )[0];
+    const stepIndex = scrapingConfig.steps.indexOf(currentStep);
+
+    if (step > stepIndex && nextButtonIsDisabled) {
+      setNextButtonIsDisabled(false);
+    }
+  }, [step]);
 
   return (
     <>

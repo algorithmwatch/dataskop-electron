@@ -1,12 +1,16 @@
 import { faAngleRight } from '@fortawesome/pro-regular-svg-icons';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
+import { useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
 
 export default function InterfaceTutorialPage(): JSX.Element {
   const { getNextPage } = useNavigation();
-
+  const {
+    state: { isScrapingStarted },
+    dispatch,
+  } = useScraping();
   const footerNavItems: FooterNavItem[] = [
     // {
     //   label: 'Zurück',
@@ -36,6 +40,13 @@ export default function InterfaceTutorialPage(): JSX.Element {
     //   },
     // },
   ];
+
+  useEffect(() => {
+    // start scraping
+    if (!isScrapingStarted) {
+      dispatch({ type: 'set-scraping-started', isScrapingStarted: true });
+    }
+  }, []);
 
   return (
     <>

@@ -16,6 +16,7 @@ const NavigationStateContext = React.createContext<
       state: State;
       dispatch: Dispatch;
       getNextPage: any;
+      getPreviousPage: any;
       getCurrentPage: any;
       getPageIndexByPath: any;
     }
@@ -134,6 +135,27 @@ function NavigationProvider({ children }: NavigationProviderProps) {
     return nextPageObj;
   };
 
+  const getPreviousPage = (propName?: string) => {
+    const prevIndex = state.pageIndex - 1;
+
+    if (!state.pages[prevIndex]) {
+      throw new Error(`Previous page index "${prevIndex}" does not exist`);
+    }
+
+    const prevPageObj = state.pages[prevIndex];
+
+    if (propName) {
+      if (!prevPageObj[propName]) {
+        throw new Error(
+          `Property "${propName}" does not exist on previous page object`,
+        );
+      }
+      return prevPageObj[propName];
+    }
+
+    return prevPageObj;
+  };
+
   const getCurrentPage = (propName?: string) => {
     const currentIndex = state.pageIndex;
 
@@ -162,6 +184,7 @@ function NavigationProvider({ children }: NavigationProviderProps) {
     state,
     dispatch,
     getNextPage,
+    getPreviousPage,
     getCurrentPage,
     getPageIndexByPath,
   };

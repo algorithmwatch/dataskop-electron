@@ -1,52 +1,88 @@
-import { faAngleRight } from '@fortawesome/pro-regular-svg-icons';
-import React from 'react';
+import { faAngleLeft } from '@fortawesome/pro-regular-svg-icons';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import Button from '../components/Button';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
+import { goToUrl } from '../components/scraping/ipc';
+import { useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
+import { providerToMeta } from '../providers';
 
 export default function OnboardingPage2(): JSX.Element {
-  const { getNextPage } = useNavigation();
+  const { getNextPage, getPreviousPage } = useNavigation();
+  const [showLoginWindow, setShowLoginWindow] = useState(false);
+  const {
+    state: { isUserLoggedIn, scrapingConfig },
+    dispatch,
+  } = useScraping();
 
   const footerNavItems: FooterNavItem[] = [
-    // {
-    //   label: 'Zurück',
-    //   startIcon: faAngleLeft,
-    //   classNames: '',
-    //   disabled: true,
-    //   clickHandler(history: History) {
-    //     history.push(routes.EXPLANATION);
-    //   },
-    // },
     {
+      label: 'Zurück',
+      startIcon: faAngleLeft,
+      theme: 'link',
+      clickHandler(history: RouteComponentProps['history']) {
+        history.push(getPreviousPage('path'));
+
+        // logout user if logged in already
+        if (isUserLoggedIn) {
+          console.warn('logging out');
+          dispatch({ type: 'reset-scraping' });
+          goToUrl(providerToMeta[scrapingConfig.provider].loginUrl, {
+            clear: true,
+          });
+          dispatch({ type: 'set-visible-window', visibleWindow: false });
+        }
+      },
+    },
+  ];
+  if (isUserLoggedIn) {
+    footerNavItems.push({
       label: 'Weiter',
-      // size: 'large',
-      endIcon: faAngleRight,
+      size: 'large',
       classNames: 'mx-auto',
       clickHandler(history: RouteComponentProps['history']) {
         history.push(getNextPage('path'));
       },
-    },
-    // {
-    //   label: 'Weiter',
-    //   endIcon: faAngleRight,
-    //   // classNames: '',
-    //   // theme: 'link',
-    //   clickHandler(history: History) {
-    //     history.push(routes.EXPLANATION);
-    //   },
-    // },
-  ];
+    });
+  }
+
+  useEffect(() => {
+    if (isUserLoggedIn) {
+      dispatch({ type: 'set-visible-window', visibleWindow: false });
+    }
+  }, [isUserLoggedIn]);
 
   return (
     <>
-      <div className="p-6 max-w-lg mx-auto mb-10 text-center">
-        <div>
-          <div className="text-xl font-medium">Onboarding 2</div>
-          {/* <p className="text-yellow-1200">
-            Hello and welcome to this early development version of DataSkop.
-          </p> */}
-        </div>
-      </div>
+      {!isUserLoggedIn && !showLoginWindow && (
+        <>
+          <h1 className="hl-4xl text-center mb-6">Bitte melden Sie sich an</h1>
+          <p className="text-lg mx-auto mb-6">
+            Bitte melden Sie sich mit Ihrem Google-Konto an.
+          </p>
+          <div className="mx-auto">
+            <Button
+              size="large"
+              onClick={() => {
+                setShowLoginWindow(true);
+                dispatch({ type: 'set-is-attached', isAttached: true });
+                dispatch({ type: 'set-visible-window', visibleWindow: true });
+              }}
+            >
+              Anmelden
+            </Button>
+          </div>
+        </>
+      )}
+      {isUserLoggedIn && (
+        <>
+          <h1 className="hl-4xl text-center mb-6">Anmeldung erfolgreich</h1>
+          <p className="text-lg mx-auto mb-6">
+            Klicke auf "Weiter", um fortzufahren.
+          </p>
+        </>
+      )}
       <FooterNav items={footerNavItems} />
     </>
   );
