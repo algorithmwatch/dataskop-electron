@@ -18,15 +18,22 @@ const emptyVideoProcedureConfig: VideoProcedureConfig = {
   doLogout: false,
 };
 
+const lorenzIds = [
+  '4Y1lZQsyuSQ',
+  'WWwy4cYRFls',
+  '3z0gnXgK8Do',
+  'PNjG22Gbo6U',
+  'tNc5QEtV3po',
+  'F0JWsW6N_uw',
+  '1mVyK48rLjg',
+  '16u_2GvAJcE',
+];
+
 const videoScraperStep = {
   ...emptyVideoProcedureConfig,
   followVideos: 7,
-  seedVideosFixed: ['4Y1lZQsyuSQ', 'yr1YyrolRZY'],
+  seedVideosFixed: lorenzIds,
   seedVideosDynamic: [
-    {
-      maxVideos: 2,
-      slug: 'yt-playlist-page-popular-videos',
-    },
     {
       maxVideos: 5,
       slug: 'yt-playlist-page-national-news-top-stories',
@@ -54,7 +61,13 @@ const logOutVideoScraperStep = {
 
 const searchStep: SearchProcedureConfig = {
   type: 'search',
-  queries: ['antifa', 'berlin'],
+  queries: [
+    'Baerbock',
+    'Laschet',
+    'Bundeswehr Afghanistan',
+    'Hitzewelle Kanada',
+    'Corona Delta',
+  ],
 };
 
 const profileScraperStep: ProfileProcedureConfig = {
