@@ -5,12 +5,13 @@ import PQueue from 'p-queue';
 import { join } from 'path';
 import { Campaign, ScrapingConfig } from '../providers/types';
 import { statsForArray } from '../utils/math';
-import { ScrapingResultSaved, ScrapingSession } from './types';
+import { Lookup, ScrapingResultSaved, ScrapingSession } from './types';
 
 type Data = {
   scrapingSessions: ScrapingSession[];
   scrapingResults: ScrapingResultSaved[];
   scrapingConfigs: ScrapingConfig[];
+  lookups: Lookup[];
 };
 
 let db: Low<Data> | null = null;
@@ -35,6 +36,7 @@ const setUpDb = async () => {
     scrapingSessions: [],
     scrapingResults: [],
     scrapingConfigs: [],
+    lookups: [],
   };
   return db.data;
 };
@@ -165,6 +167,31 @@ const getStoredScrapingConfigs = async () => {
   return data.scrapingConfigs || [];
 };
 
+// lookup table for e.g. additional background scraping
+
+const getLookups = async () => {
+  const data = await setUpDb();
+  return data.lookups || [];
+};
+
+const addLookups = async (newLookups: Lookup[]) => {
+  const lookups = await getLookups();
+
+  if (db === null || db.data === null) throw Error('db is not initialized');
+
+  db.data.lookups = lookups.concat(newLookups);
+  return db.write();
+};
+
+const clearLookups = async () => {
+  const data = await setUpDb();
+
+  if (db === null || db.data === null) throw Error('db is not initialized');
+
+  db.data.lookups = [];
+  return db.write();
+};
+
 // some utils
 
 const getAllData = async () => {
@@ -179,6 +206,7 @@ const clearData = async () => {
     scrapingSessions: [],
     scrapingResults: [],
     scrapingConfigs: db.data.scrapingConfigs,
+    lookups: [],
   };
   await db.write();
 };
@@ -257,6 +285,9 @@ const getStatisticsForSession = async (sessiondId: string) => {
 };
 
 export {
+  getLookups,
+  addLookups,
+  clearLookups,
   getAllData,
   addScrapingResult,
   importResultRows,

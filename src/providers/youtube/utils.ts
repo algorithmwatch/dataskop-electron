@@ -23,6 +23,8 @@ const getThumbnails = (id: string) => {
   return { small, default: defaultImage };
 };
 
+const getVideoUrl = (id: string) => `https://www.youtube.com/watch?v=${id}`;
+
 // data wrangling
 
 const groupByFollowId = (x: any[]) =>
@@ -34,4 +36,4 @@ const getVideos = (data: any[]) =>
 const getFollowGroups = (data: any[]) =>
   groupByFollowId(data.filter((x) => x.slug && x.slug.includes('video-page')));
 
-export { getThumbnails, getFollowGroups, getVideos };
+export { getThumbnails, getVideoUrl, getFollowGroups, getVideos };

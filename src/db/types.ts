@@ -21,4 +21,9 @@ interface ScrapingSession {
   campaign: Campaign | null;
 }
 
-export { ScrapingResult, ScrapingResultSaved, ScrapingSession };
+interface Lookup {
+  info: any;
+  scrapedAt: number;
+}
+
+export { ScrapingResult, ScrapingResultSaved, ScrapingSession, Lookup };

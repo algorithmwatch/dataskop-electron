@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-5.1.1.tgz#9274ec7460652f9c632c59addf24efb1684ef876"
   integrity sha512-sAP4LldeWNz0lNzmTird3uWfFDWWTeg6V/MsmyyLR9X1idwKBWIgt/ZvinqQldJm3LecKEs1emkbquO6PCiLVQ==
 
-"@algorithmwatch/harke@^0.1.0-22":
-  version "0.1.0-22"
-  resolved "https://npm.pkg.github.com/download/@algorithmwatch/harke/0.1.0-22/d75e976b93afb2566d1269e1b1f8e487bdbf41b8a199fa4a37b3150bdd4ad303#9255f935f6852ceb32bc8443ad4c1b778e11b734"
-  integrity sha512-YGQPhKW33rFOZtJCq1ICYCy7tC6FXNTLZKa5uKRv31eu5Sxcstyhfn3eqAiDJi63qgZ/talfQm48RQL5K7CcFw==
+"@algorithmwatch/harke@^0.1.0-23":
+  version "0.1.0-23"
+  resolved "https://npm.pkg.github.com/download/@algorithmwatch/harke/0.1.0-23/4eb82e93ce51f130ad7400669cbe2242914d3bc53d34b5e67e92836bff9fc877#4f181bff384b43990051022928ddc0374b7a3a21"
+  integrity sha512-1XRdr1h6qMVTueos8XfnriqAR1Esvck7TxtItWA6rWJXrku94JS2R9qoJkeDhgpVgMDJ4xjUdHz0eGvjimE1Jg==
   dependencies:
     cheerio "^1.0.0-rc.5"
 

@@ -12,6 +12,7 @@ import {
 import _ from 'lodash';
 import { ScrapingResult } from '../../db/types';
 import { delay } from '../../utils/time';
+import { lookupOrScrapeVideos } from './html-scrapers';
 import {
   GetCurrentHtml,
   GetHtmlFunction,
@@ -129,7 +130,14 @@ const scrapeWatchedVideos = async (
   getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
   const getCurrentHtml = await getHtml('https://www.youtube.com/feed/history');
-  return waitUntilDone(getCurrentHtml, parseWatchHistory);
+  const results = await waitUntilDone(getCurrentHtml, parseWatchHistory);
+
+  // - we need to figure out if a video is private / unlisted
+  // - we need to scrape all those videos here because otherwise we need to set
+  //   the consent cookie again
+  await lookupOrScrapeVideos(_.uniq(results.fields.videos.map(({ id }) => id)));
+
+  return results;
 };
 
 const scrapeSearchHistory = async (

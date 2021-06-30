@@ -7,6 +7,7 @@ import ConfirmDialog from '../../components/ConfirmDialog';
 import OverviewTable from '../../components/results/OverviewTable';
 import {
   clearData,
+  clearLookups,
   getAllData,
   getScrapingResults,
   getSessions,
@@ -70,6 +71,7 @@ export default function ResultsPage(): JSX.Element {
             text="you sure?"
             handleConfirm={() => clearData() && setRows([])}
           />
+          <Button onClick={() => clearLookups()}>clear lookup table</Button>
           <Button onClick={async () => invokeExport()}>export data</Button>
           <Button onClick={async () => invokeImport(importRowCb)}>
             import data
