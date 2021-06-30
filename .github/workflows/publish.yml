@@ -35,6 +35,7 @@ jobs:
 
       - name: Setup NPM auth token for font awesome pro & github packages
         run: >
+          echo "always-auth=true" >> .npmrc &&
           echo "//npm.fontawesome.com/:_authToken=${{ secrets.FONT_AWESOME_TOKEN }}" >> .npmrc &&
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_PACKAGES_TOKEN }}" >> .npmrc
 
