@@ -8,7 +8,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
 } from '@material-ui/core';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';

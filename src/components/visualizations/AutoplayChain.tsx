@@ -3,12 +3,12 @@ import { RecommendedVideo, VideoPage } from '@algorithmwatch/harke';
 import {
   faImages,
   faUserHeadset,
-  IconDefinition
+  IconDefinition,
 } from '@fortawesome/pro-regular-svg-icons';
 import {
   faAngleDown,
   faChevronRight,
-  faSearch
+  faSearch,
 } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';

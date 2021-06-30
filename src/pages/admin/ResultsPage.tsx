@@ -11,7 +11,7 @@ import {
   getScrapingResults,
   getSessions,
   importResultRows,
-  importSessionRows
+  importSessionRows,
 } from '../../db';
 import { ScrapingResultSaved } from '../../db/types';
 import { getVideos } from '../../providers/youtube/utils';

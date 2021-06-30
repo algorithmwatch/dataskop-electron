@@ -12,7 +12,7 @@ import { useScraping } from '../../contexts/scraping';
 import { ScrapingConfig } from '../../providers/types';
 import {
   activateWatchHistory,
-  deactivateWatchHistory
+  deactivateWatchHistory,
 } from '../../providers/youtube/actions/manage-watch-history';
 
 export default function AdvancedScrapingPage(): JSX.Element {

@@ -71,7 +71,7 @@ export default function Sidebar({
                     to: routes.SCRAPING_EXPERIMENT,
                   },
                   { label: 'settings', to: routes.SETTINGS },
-                  { label: 'donation', to: routes.DONATION },
+                  { label: 'donation', to: routes.DONATION1 },
                 ]}
               />
             </div>

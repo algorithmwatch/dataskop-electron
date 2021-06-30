@@ -17,8 +17,6 @@ export default function VisualizationExperimentsPage() {
   const { state } = useLocation<LocationState>();
   const { sessionId, type } = state;
 
-  if (!sessionId || !type) return null;
-
   const [data, setData] = useState<any>([]);
   const {
     state: { isDebug },
@@ -34,6 +32,8 @@ export default function VisualizationExperimentsPage() {
   if (isDebug) {
     console.debug(data);
   }
+
+  if (!sessionId || !type) return null;
 
   const footerNavItems = [
     {
