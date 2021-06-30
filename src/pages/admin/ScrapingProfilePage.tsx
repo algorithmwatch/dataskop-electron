@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import FooterNav from '../components/FooterNav';
-import routes from '../constants/routes.json';
-import { useScraping } from '../contexts';
+import FooterNav from '../../components/FooterNav';
+import routes from '../../constants/routes.json';
+import { useScraping } from '../../contexts';
 
 export default function ScrapingProfilePage(): JSX.Element {
   const {

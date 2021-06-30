@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import { useNavigation } from '../contexts/navigation';
 
-export default function VisualizationProfilePage(): JSX.Element {
+export default function QuestionnairePage(): JSX.Element {
   const { getNextPage } = useNavigation();
 
   const footerNavItems: FooterNavItem[] = [
@@ -41,7 +41,7 @@ export default function VisualizationProfilePage(): JSX.Element {
     <>
       <div className="p-6 max-w-lg mx-auto mb-10 text-center">
         <div>
-          <div className="text-xl font-medium">Visualization Profile</div>
+          <div className="text-xl font-medium">Questionnaire</div>
           {/* <p className="text-yellow-1200">
             Hello and welcome to this early development version of DataSkop.
           </p> */}

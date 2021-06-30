@@ -8,16 +8,16 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
+  TableRow
 } from '@material-ui/core';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import ReactJson from 'react-json-view';
-import Button from '../components/Button';
-import { getStoredScrapingConfigs, modifyScrapingConfig } from '../db';
-import { ScrapingConfig } from '../providers/types';
-import { defaultConfig } from '../providers/youtube';
-import { getValidErrors } from '../providers/youtube/validation/validate';
+import Button from '../../components/Button';
+import { getStoredScrapingConfigs, modifyScrapingConfig } from '../../db';
+import { ScrapingConfig } from '../../providers/types';
+import { defaultConfig } from '../../providers/youtube';
+import { getValidErrors } from '../../providers/youtube/validation/validate';
 
 export default function ScrapingConfigEditorPage(): JSX.Element {
   const [rows, setRows] = useState<ScrapingConfig[]>([]);

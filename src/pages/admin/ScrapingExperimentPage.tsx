@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import FooterNav from '../components/FooterNav';
-import Scraping from '../components/scraping/ScrapingManager';
-import routes from '../constants/routes.json';
-import { useConfig } from '../contexts/config';
+import FooterNav from '../../components/FooterNav';
+import Scraping from '../../components/scraping/ScrapingManager';
+import routes from '../../constants/routes.json';
+import { useConfig } from '../../contexts/config';
 
 export default function ScrapingExperimentPage(): JSX.Element {
   const [sessionId, setSessionId] = useState<null | string>(null);

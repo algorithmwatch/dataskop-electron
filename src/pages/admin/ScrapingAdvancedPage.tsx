@@ -2,18 +2,18 @@
 import { Card } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import Button from '../components/Button';
-import { makeGetHtml } from '../components/scraping/ipc';
-import LocalScrapinogConfigSelect from '../components/scraping/LocalScrapingConfigSelect';
-import RemoteScrapingConfig from '../components/scraping/RemoteScrapingConfigSelect';
-import ScrapingControls from '../components/scraping/ScrapingControls';
-import routes from '../constants/routes.json';
-import { useScraping } from '../contexts/scraping';
-import { ScrapingConfig } from '../providers/types';
+import Button from '../../components/Button';
+import { makeGetHtml } from '../../components/scraping/ipc';
+import LocalScrapinogConfigSelect from '../../components/scraping/LocalScrapingConfigSelect';
+import RemoteScrapingConfig from '../../components/scraping/RemoteScrapingConfigSelect';
+import ScrapingControls from '../../components/scraping/ScrapingControls';
+import routes from '../../constants/routes.json';
+import { useScraping } from '../../contexts/scraping';
+import { ScrapingConfig } from '../../providers/types';
 import {
   activateWatchHistory,
-  deactivateWatchHistory,
-} from '../providers/youtube/actions/manage-watch-history';
+  deactivateWatchHistory
+} from '../../providers/youtube/actions/manage-watch-history';
 
 export default function AdvancedScrapingPage(): JSX.Element {
   const {

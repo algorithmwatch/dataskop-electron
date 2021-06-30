@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, useLocation } from 'react-router-dom';
-import FooterNav from '../components/FooterNav';
-import AutoplayChain from '../components/visualizations/AutoplayChain';
-import NewsTop5 from '../components/visualizations/NewsTop5';
-import SearchResultsCompare from '../components/visualizations/SearchResultsCompare';
-import routes from '../constants/routes.json';
-import { useConfig } from '../contexts/config';
-import { getScrapingResultsBySession } from '../db';
+import FooterNav from '../../components/FooterNav';
+import AutoplayChain from '../../components/visualizations/AutoplayChain';
+import NewsTop5 from '../../components/visualizations/NewsTop5';
+import SearchResultsCompare from '../../components/visualizations/SearchResultsCompare';
+import routes from '../../constants/routes.json';
+import { useConfig } from '../../contexts/config';
+import { getScrapingResultsBySession } from '../../db';
 
 interface LocationState {
   sessionId: string;
@@ -40,7 +40,7 @@ export default function VisualizationExperimentsPage() {
       label: 'weiter zu Donation',
       classNames: 'ml-auto',
       clickHandler(history: RouteComponentProps['history']) {
-        history.push(routes.DONATION);
+        history.push(routes.DONATION1);
       },
     },
   ];

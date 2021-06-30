@@ -5,11 +5,11 @@ import { useConfig, useScraping } from '../contexts';
 import {
   getScrapingResultsBySession,
   getSessionById,
-  getSessions,
+  getSessions
 } from '../db';
 import { postDonation } from '../utils/networking';
 
-export default function DonationPage(): JSX.Element {
+export default function DonationPage1(): JSX.Element {
   const [status, setStatus] = useState('');
 
   const {
@@ -63,6 +63,7 @@ export default function DonationPage(): JSX.Element {
 
   return (
     <>
+      <div className="text-xl font-medium">Donation 1</div>
       <div>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio
         molestiae laboriosam adipisci odio molestias eligendi, illo fugit ad

@@ -2,7 +2,7 @@ import {
   faBars,
   faChartPieAlt,
   faInfoCircle,
-  faPaperPlane,
+  faPaperPlane
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { ReactNode, useEffect, useState } from 'react';
@@ -10,8 +10,7 @@ import { useLocation } from 'react-router-dom';
 import Button from '../components/Button';
 import ProcessIndicator from '../components/ProcessIndicator';
 import Sidebar from '../components/Sidebar';
-import routes from '../constants/routes.json';
-import { useConfig } from '../contexts';
+import { useConfig, useNavigation } from '../contexts';
 import { useScraping } from '../contexts/scraping';
 import logo from '../static/logos/dslogo.svg';
 import { postEvent } from '../utils/networking';
@@ -30,46 +29,6 @@ const sidebarMenu = [
     icon: faInfoCircle,
   },
 ];
-const processIndicatorSteps = [
-  {
-    label: 'Section 1',
-  },
-  {
-    label: 'Section 2',
-  },
-  {
-    label: 'Section 3',
-  },
-  {
-    label: 'Section 4',
-  },
-  {
-    label: 'Section 5',
-  },
-  {
-    label: 'Section 6',
-  },
-];
-
-const routeSetting: {
-  [key: string]: {
-    stepIndex: number;
-    isDarkMode: boolean;
-  };
-} = {
-  [routes.START]: {
-    stepIndex: 0,
-    isDarkMode: false,
-  },
-  [routes.EXPLANATION]: {
-    stepIndex: 1,
-    isDarkMode: false,
-  },
-  [routes.PROVIDER_LOGIN]: {
-    stepIndex: 2,
-    isDarkMode: false,
-  },
-};
 
 export default function Base({
   children,
@@ -77,39 +36,52 @@ export default function Base({
   children: ReactNode;
 }): JSX.Element {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [sectionIndex, setSectionIndex] = useState(0);
   const { pathname } = useLocation();
   const {
     state: { scrapingProgress, campaign },
   } = useScraping();
-
   const {
     state: { trackRouteChanges, platformUrl },
   } = useConfig();
+  const {
+    state: { pageIndex, sections },
+    dispatch,
+    getCurrentPage,
+    getPageIndexByPath,
+  } = useNavigation();
 
   // read config for current route
   useEffect(() => {
-    const setting = routeSetting[pathname];
+    const nextPageIndex = getPageIndexByPath(pathname);
 
-    if (setting) {
-      if (typeof setting.isDarkMode !== 'undefined') {
-        if (setting.isDarkMode === true) {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
-      }
-
-      if (typeof setting.stepIndex !== 'undefined') {
-        if (setting.stepIndex >= 0) {
-          setCurrentStepIndex(setting.stepIndex);
-        }
-      }
+    // set page index
+    if (nextPageIndex !== -1) {
+      dispatch({ type: 'set-page-index', pageIndex: nextPageIndex });
     }
+
     if (trackRouteChanges && campaign !== null && platformUrl !== null) {
       postEvent(platformUrl, campaign.id, pathname, {});
     }
   }, [pathname]);
+
+  useEffect(() => {
+    const page = getCurrentPage();
+
+    // set dark mode
+    if (page.isDarkMode) {
+      if (page.isDarkMode === true) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+
+    // set processIndicator
+    if (page.sectionIndex >= 0) {
+      setSectionIndex(page.sectionIndex);
+    }
+  }, [pageIndex]);
 
   return (
     <div className="relative flex flex-col h-screen justify-between">
@@ -162,10 +134,7 @@ export default function Base({
       </main>
 
       <footer>
-        <ProcessIndicator
-          steps={processIndicatorSteps}
-          currentStep={currentStepIndex}
-        />
+        <ProcessIndicator steps={sections} currentStep={sectionIndex} />
       </footer>
     </div>
   );

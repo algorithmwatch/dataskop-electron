@@ -2,19 +2,19 @@ import dayjs from 'dayjs';
 import { ipcRenderer } from 'electron';
 import { uniq } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import Button from '../components/Button';
-import ConfirmDialog from '../components/ConfirmDialog';
-import OverviewTable from '../components/results/OverviewTable';
+import Button from '../../components/Button';
+import ConfirmDialog from '../../components/ConfirmDialog';
+import OverviewTable from '../../components/results/OverviewTable';
 import {
   clearData,
   getAllData,
   getScrapingResults,
   getSessions,
   importResultRows,
-  importSessionRows,
-} from '../db';
-import { ScrapingResultSaved } from '../db/types';
-import { getVideos } from '../providers/youtube/utils';
+  importSessionRows
+} from '../../db';
+import { ScrapingResultSaved } from '../../db/types';
+import { getVideos } from '../../providers/youtube/utils';
 
 const invokeExport = async () => {
   const filename = `dataskop-${dayjs().format('YYYY-MM-DD-HH-mm-s')}.json`;

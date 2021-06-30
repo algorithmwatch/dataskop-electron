@@ -6,9 +6,7 @@ import RemoteScrapingConfig from '../components/scraping/RemoteScrapingConfigSel
 import { useNavigation } from '../contexts/navigation';
 
 export default function StartPage(): JSX.Element {
-  const { nextPage } = useNavigation();
-
-  console.log(nextPage());
+  const { getNextPage } = useNavigation();
 
   const footerNavItems: FooterNavItem[] = [
     // {
@@ -26,7 +24,7 @@ export default function StartPage(): JSX.Element {
       endIcon: faAngleRight,
       classNames: 'mx-auto',
       clickHandler(history: RouteComponentProps['history']) {
-        history.push(nextPage());
+        history.push(getNextPage('path'));
       },
     },
     // {
@@ -44,7 +42,7 @@ export default function StartPage(): JSX.Element {
     <>
       <div className="p-6 max-w-lg mx-auto mb-10 text-center">
         <div>
-          <div className="text-xl font-medium">Onboarding</div>
+          <div className="text-xl font-medium">Welcome</div>
           <p className="text-yellow-1200">
             Hello and welcome to this early development version of DataSkop.
           </p>

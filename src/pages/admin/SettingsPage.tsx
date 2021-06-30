@@ -1,6 +1,6 @@
 import { Checkbox, FormControlLabel } from '@material-ui/core';
 import React from 'react';
-import { useConfig } from '../contexts/config';
+import { useConfig } from '../../contexts/config';
 
 export default function SettingsPage(): JSX.Element {
   const {

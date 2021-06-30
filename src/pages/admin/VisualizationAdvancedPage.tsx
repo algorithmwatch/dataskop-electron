@@ -1,12 +1,12 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import Button from '../components/Button';
-import RecommenderMap from '../components/visualizations/RecommenderMap';
-import SmallMultipleChart from '../components/visualizations/SmallMultipleChart';
-import StatisticsChart from '../components/visualizations/StatisticsChart';
-import { useConfig } from '../contexts/config';
-import { getScrapingResultsBySession } from '../db';
+import Button from '../../components/Button';
+import RecommenderMap from '../../components/visualizations/RecommenderMap';
+import SmallMultipleChart from '../../components/visualizations/SmallMultipleChart';
+import StatisticsChart from '../../components/visualizations/StatisticsChart';
+import { useConfig } from '../../contexts/config';
+import { getScrapingResultsBySession } from '../../db';
 
 export default function VisualizationAdvancedPage() {
   const [data, setData] = useState<any>([]);

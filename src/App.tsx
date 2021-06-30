@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Redirect,
   Route,
-  Switch,
+  Switch
 } from 'react-router-dom';
 import './App.global.css';
 import ScrapingAttached from './components/scraping/ScrapingAttached';
@@ -13,21 +13,32 @@ import { ConfigProvider } from './contexts/config';
 import { NavigationProvider } from './contexts/navigation';
 import { ScrapingProvider } from './contexts/scraping';
 import BaseLayout from './layout/Base';
-import DonationPage from './pages/DonationPage';
-import ExplanationPage from './pages/ExplanationPage';
-import ResultsDetailsPage from './pages/ResultsDetailsPage';
-import ResultsPage from './pages/ResultsPage';
-import AdvancedScrapingPage from './pages/ScrapingAdvancedPage';
-import ScrapingConfigEditorPage from './pages/ScrapingConfigEditorPage';
-import ScrapingExperimentPage from './pages/ScrapingExperimentPage';
+import ExplanationPage from './pages/admin/ExplanationPage';
+import ResultsDetailsPage from './pages/admin/ResultsDetailsPage';
+import ResultsPage from './pages/admin/ResultsPage';
+import AdvancedScrapingPage from './pages/admin/ScrapingAdvancedPage';
+import ScrapingConfigEditorPage from './pages/admin/ScrapingConfigEditorPage';
+import ScrapingExperimentPage from './pages/admin/ScrapingExperimentPage';
+import ScrapingProfilePage from './pages/admin/ScrapingProfilePage';
+import ProviderLoginPage from './pages/admin/ScrapingProviderLoginPage';
+import SettingsPage from './pages/admin/SettingsPage';
+import VisualizationAdvancedPage from './pages/admin/VisualizationAdvancedPage';
+import VisualizationExperimentsPage from './pages/admin/VisualizationExperimentsPage';
+import DonationPage1 from './pages/DonationPage1';
+import DonationPage2 from './pages/DonationPage2';
+import DonationSuccessPage from './pages/DonationSuccessPage';
+import InterfaceTutorialPage from './pages/InterfaceTutorialPage';
+import IntroductionPage from './pages/IntroductionPage';
+import MyDataHintPage from './pages/MyDataHintPage';
+import OnboardingPage1 from './pages/OnboardingPage1';
+import OnboardingPage2 from './pages/OnboardingPage2';
+import QuestionnairePage from './pages/QuestionnairePage';
 import ScrapingExplanationPage from './pages/ScrapingExplanationPage';
-import ScrapingProfilePage from './pages/ScrapingProfilePage';
-import ProviderLoginPage from './pages/ScrapingProviderLoginPage';
-import SettingsPage from './pages/SettingsPage';
 import StartPage from './pages/StartPage';
-import VisualizationAdvancedPage from './pages/VisualizationAdvancedPage';
-import VisualizationExperimentsPage from './pages/VisualizationExperimentsPage';
+import VisualizationAutoplayChainPage from './pages/VisualizationAutoplayChainPage';
+import VisualizationNewsPage from './pages/VisualizationNewsPage';
 import VisualizationProfilePage from './pages/VisualizationProfilePage';
+import VisualizationSearchPage from './pages/VisualizationSearchPage';
 
 export default function App() {
   return (
@@ -55,14 +66,9 @@ export default function App() {
                   component={ScrapingExperimentPage}
                 />
                 <Route
-                  path={routes.SCRAPING_EXPLANATION}
-                  component={ScrapingExplanationPage}
-                />
-                <Route
                   path={routes.PROVIDER_LOGIN}
                   component={ProviderLoginPage}
                 />
-                <Route path={routes.DONATION} component={DonationPage} />
                 <Route
                   path={routes.RESULTS_DETAILS}
                   component={ResultsDetailsPage}
@@ -77,11 +83,52 @@ export default function App() {
                   path={routes.VISUALIZATION_EXPERIMENT}
                   component={VisualizationExperimentsPage}
                 />
+                <Route path={routes.EXPLANATION} component={ExplanationPage} />
+
+                {/*
+                  Sections:
+                */}
+                <Route
+                  path={routes.DONATION_SUCCESS}
+                  component={DonationSuccessPage}
+                />
+                <Route path={routes.DONATION2} component={DonationPage2} />
+                <Route path={routes.DONATION1} component={DonationPage1} />
+                <Route
+                  path={routes.QUESTIONNAIRE}
+                  component={QuestionnairePage}
+                />
+                <Route path={routes.MY_DATA_HINT} component={MyDataHintPage} />
+                <Route
+                  path={routes.VISUALIZATION_SEARCH}
+                  component={VisualizationSearchPage}
+                />
+                <Route
+                  path={routes.VISUALIZATION_NEWS}
+                  component={VisualizationNewsPage}
+                />
+                <Route
+                  path={routes.VISUALIZATION_AUTOPLAYCHAIN}
+                  component={VisualizationAutoplayChainPage}
+                />
                 <Route
                   path={routes.VISUALIZATION_PROFILE}
                   component={VisualizationProfilePage}
                 />
-                <Route path={routes.EXPLANATION} component={ExplanationPage} />
+                <Route
+                  path={routes.SCRAPING_EXPLANATION}
+                  component={ScrapingExplanationPage}
+                />
+                <Route
+                  path={routes.INTERFACE_TUTORIAL}
+                  component={InterfaceTutorialPage}
+                />
+                <Route path={routes.ONBOARDING_2} component={OnboardingPage2} />
+                <Route path={routes.ONBOARDING_1} component={OnboardingPage1} />
+                <Route
+                  path={routes.INTRODUCTION}
+                  component={IntroductionPage}
+                />
                 <Route path={routes.START} component={StartPage} />
 
                 <Route path="/">

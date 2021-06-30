@@ -1,8 +1,8 @@
 import React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import Button from '../components/Button';
-import ResultsDetails from '../components/results/ResultDetails';
-import routes from '../constants/routes.json';
+import Button from '../../components/Button';
+import ResultsDetails from '../../components/results/ResultDetails';
+import routes from '../../constants/routes.json';
 
 export default function ResultsDetailsPage() {
   const { sessionId }: { sessionId: string } = useParams();
