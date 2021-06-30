@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import Button from '../../components/Button';
 import ResultsDetails from '../../components/results/ResultDetails';
 import routes from '../../constants/routes.json';
+import { useScraping } from '../../contexts';
 
 export default function ResultsDetailsPage() {
   const { sessionId }: { sessionId: string } = useParams();
   const history = useHistory();
+
+  const { dispatch } = useScraping();
+
+  useEffect(() => {
+    dispatch({ type: 'set-session-id', sessionId });
+  }, [sessionId]);
 
   return (
     <>

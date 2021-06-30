@@ -30,6 +30,7 @@ type Action =
   | { type: 'set-visible-window'; visibleWindow: boolean }
   | { type: 'set-bounds'; bounds: boolean }
   | { type: 'set-scraping-error'; scrapingError: Error | null }
+  | { type: 'set-session-id'; sessionId: string }
   | { type: 'reset-scraping' }
   | {
       type: 'scraping-has-started';
@@ -172,6 +173,13 @@ function scrapingReducer(state: State, action: Action) {
           value: 1,
           step: state.scrapingConfig.steps.length - 1,
         },
+      };
+    }
+
+    case 'set-session-id': {
+      return {
+        ...state,
+        sessionId: action.sessionId,
       };
     }
 
