@@ -9,7 +9,7 @@ import {
   parseVideoPage,
   parseWatchHistory,
 } from '@algorithmwatch/harke';
-import _ from 'lodash';
+import _, { range } from 'lodash';
 import { ScrapingResult } from '../../db/types';
 import { delay } from '../../utils/time';
 import { lookupOrScrapeVideos } from './html-scrapers';
@@ -73,14 +73,44 @@ const waitUntilDone = async (
   return prevResult;
 };
 
+const trySeveralTimes = async (
+  getHtml: GetHtmlFunction,
+  url: string,
+  parseHtml: (html: string) => ParserResult,
+  isDoneCheck: null | ((arg0: ScrapingResult, arg1: number) => boolean) = null,
+  timeout = { max: 5000, start: 700, factor: 1.3 },
+  slugPrefix = 'yt',
+) => {
+  let lastRes = null;
+  // eslint-disable-next-line no-empty-pattern
+  for (const {} of range(3)) {
+    try {
+      const getCurrentHtml = await getHtml(url);
+      const result = await waitUntilDone(
+        getCurrentHtml,
+        parseHtml,
+        isDoneCheck,
+        timeout,
+        slugPrefix,
+      );
+      if (result.success) return result;
+      lastRes = result;
+      await getHtml('https://youtube.com');
+      await delay(2000);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  if (lastRes === null) throw new Error('too many failed tries');
+  return lastRes;
+};
+
 const scrapePlaylist = async (
   playlistId: string,
   getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
-  const getCurrentHtml = await getHtml(
-    `https://www.youtube.com/playlist?list=${playlistId}`,
-  );
-  return waitUntilDone(getCurrentHtml, parsePlaylistPage);
+  const url = `https://www.youtube.com/playlist?list=${playlistId}`;
+  return trySeveralTimes(getHtml, url, parsePlaylistPage);
 };
 
 const scrapePopularVideos = async (
@@ -117,9 +147,9 @@ const scrapeVideo = async (
 ): Promise<ScrapingResult> => {
   // comments are currently not implemented
   const url = `https://www.youtube.com/watch?v=${videoId}`;
-  const getCurrentHtml = await getHtml(url);
-  return waitUntilDone(
-    getCurrentHtml,
+  return trySeveralTimes(
+    getHtml,
+    url,
     parseVideoPage,
     // at least 10 videos, still pass if timeout is reached
     (x, timeFrac) => timeFrac >= 1 || x.fields.recommendedVideos.length > 10,
@@ -129,13 +159,15 @@ const scrapeVideo = async (
 const scrapeWatchedVideos = async (
   getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
-  const getCurrentHtml = await getHtml('https://www.youtube.com/feed/history');
-  const results = await waitUntilDone(getCurrentHtml, parseWatchHistory);
+  const url = 'https://www.youtube.com/feed/history';
+  const results = await trySeveralTimes(getHtml, url, parseWatchHistory);
 
   // - we need to figure out if a video is private / unlisted
   // - we need to scrape all those videos here because otherwise we need to set
   //   the consent cookie again
   await lookupOrScrapeVideos(_.uniq(results.fields.videos.map(({ id }) => id)));
+
+  await delay(5000);
 
   return results;
 };
@@ -143,10 +175,8 @@ const scrapeWatchedVideos = async (
 const scrapeSearchHistory = async (
   getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
-  const getCurrentHtml = await getHtml(
-    'https://myactivity.google.com/activitycontrols/youtube',
-  );
-  return waitUntilDone(getCurrentHtml, parseSearchHistory);
+  const url = 'https://myactivity.google.com/activitycontrols/youtube';
+  return trySeveralTimes(getHtml, url, parseSearchHistory);
 };
 
 // const scrapeCommentHistory = async (
@@ -161,15 +191,15 @@ const scrapeSearchHistory = async (
 const scrapeSubscriptions = async (
   getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
-  const getCurrentHtml = await getHtml('https://www.youtube.com/feed/channels');
-  return waitUntilDone(getCurrentHtml, parseSubscribedChannels);
+  const url = 'https://www.youtube.com/feed/channels';
+  return trySeveralTimes(getHtml, url, parseSubscribedChannels);
 };
 
 const scrapeVideoSearch = async (getHtml: GetHtmlFunction, query: string) => {
   const url = buildSearchUrl(query);
-  const getCurrentHtml = await getHtml(url);
+
   // hard to parse query from rendered html so pass it to the parser
-  return waitUntilDone(getCurrentHtml, (html) =>
+  return trySeveralTimes(getHtml, url, (html) =>
     parseSearchResultsVideos(html, query),
   );
 };

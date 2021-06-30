@@ -21,7 +21,8 @@ async function scrapeMetaInformation(url: string) {
 }
 
 async function scrapeVideoMeta(videoIds: string[]) {
-  const limit = pLimit(10);
+  // 10 was too much
+  const limit = pLimit(3);
   const output = videoIds.map((x) =>
     limit(() => scrapeMetaInformation(getVideoUrl(x))),
   );
