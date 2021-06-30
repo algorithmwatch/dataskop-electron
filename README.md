@@ -92,6 +92,12 @@ yarn cross-env DEBUG_PROD=true yarn package
 
 ### Production
 
+To deploy a new version:
+
+1. _IMPORTANT_: ensure that you have a clean git status
+2. run `yarn run version:pre`
+3. watch the GitHub action status (and maybe retry) at: <https://github.com/algorithmwatch/dataskop-electron/actions/workflows/publish.yml>
+
 [Read more on how to publish releases for production](./docs/publishing.md)
 
 ## Logging
