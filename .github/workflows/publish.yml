@@ -54,7 +54,7 @@ jobs:
       # - not running dev `postinstall` (used for dev)
       # - we need `yarn install` to t
       - name: Install dependencies
-        run: rm yarn.lock && yarn install --prefer-offline
+        run: rm yarn.lock && yarn install
         env:
           NOYARNPOSTINSTALL: 1
 
