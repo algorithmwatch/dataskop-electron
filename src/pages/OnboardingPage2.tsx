@@ -12,7 +12,7 @@ export default function OnboardingPage2(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const [showLoginWindow, setShowLoginWindow] = useState(false);
   const {
-    state: { isUserLoggedIn, scrapingConfig },
+    state: { isUserLoggedIn, scrapingConfig, isScrapingStarted },
     dispatch,
   } = useScraping();
 
@@ -26,13 +26,13 @@ export default function OnboardingPage2(): JSX.Element {
 
         // logout user if logged in already
         if (isUserLoggedIn) {
-          console.warn('logging out');
           dispatch({ type: 'reset-scraping' });
           goToUrl(providerToMeta[scrapingConfig.provider].loginUrl, {
             clear: true,
           });
-          dispatch({ type: 'set-visible-window', visibleWindow: false });
         }
+
+        dispatch({ type: 'set-visible-window', visibleWindow: false });
       },
     },
   ];
@@ -40,7 +40,6 @@ export default function OnboardingPage2(): JSX.Element {
     footerNavItems.push({
       label: 'Weiter',
       size: 'large',
-      classNames: 'mx-auto',
       clickHandler(history: RouteComponentProps['history']) {
         history.push(getNextPage('path'));
       },

@@ -1,4 +1,4 @@
-import { faAngleRight } from '@fortawesome/pro-regular-svg-icons';
+import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
 import React, { useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
@@ -6,39 +6,29 @@ import { useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
 
 export default function InterfaceTutorialPage(): JSX.Element {
-  const { getNextPage } = useNavigation();
+  const { getNextPage, getPreviousPage } = useNavigation();
   const {
     state: { isScrapingStarted },
     dispatch,
   } = useScraping();
+
   const footerNavItems: FooterNavItem[] = [
-    // {
-    //   label: 'Zurück',
-    //   startIcon: faAngleLeft,
-    //   classNames: '',
-    //   disabled: true,
-    //   clickHandler(history: History) {
-    //     history.push(routes.EXPLANATION);
-    //   },
-    // },
+    {
+      label: 'Zurück',
+      startIcon: faAngleLeft,
+      theme: 'link',
+      clickHandler(history: RouteComponentProps['history']) {
+        history.push(getPreviousPage('path'));
+      },
+    },
     {
       label: 'Weiter',
       // size: 'large',
       endIcon: faAngleRight,
-      classNames: 'mx-auto',
       clickHandler(history: RouteComponentProps['history']) {
         history.push(getNextPage('path'));
       },
     },
-    // {
-    //   label: 'Weiter',
-    //   endIcon: faAngleRight,
-    //   // classNames: '',
-    //   // theme: 'link',
-    //   clickHandler(history: History) {
-    //     history.push(routes.EXPLANATION);
-    //   },
-    // },
   ];
 
   useEffect(() => {

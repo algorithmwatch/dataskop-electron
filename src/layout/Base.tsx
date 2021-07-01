@@ -2,7 +2,7 @@ import {
   faBars,
   faChartPieAlt,
   faInfoCircle,
-  faPaperPlane,
+  faPaperPlane
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { ReactNode, useEffect, useState } from 'react';
@@ -123,7 +123,7 @@ export default function Base({
       />
 
       {/*  h-full hides the debug button for long pages */}
-      <main className="flex flex-grow flex-col overflow-y-auto overflow-x-hidden pt-4">
+      <main className="flex flex-grow flex-col justify-between overflow-y-auto overflow-x-hidden pt-4">
         {children}
       </main>
 

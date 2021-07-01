@@ -2,22 +2,12 @@ import { faAngleRight } from '@fortawesome/pro-regular-svg-icons';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
-import RemoteScrapingConfig from '../components/scraping/RemoteScrapingConfigSelect';
 import { useNavigation } from '../contexts/navigation';
 
 export default function StartPage(): JSX.Element {
   const { getNextPage } = useNavigation();
 
   const footerNavItems: FooterNavItem[] = [
-    // {
-    //   label: 'Zurück',
-    //   startIcon: faAngleLeft,
-    //   classNames: '',
-    //   disabled: true,
-    //   clickHandler(history: History) {
-    //     history.push(routes.EXPLANATION);
-    //   },
-    // },
     {
       label: 'Weiter',
       // size: 'large',
@@ -27,15 +17,6 @@ export default function StartPage(): JSX.Element {
         history.push(getNextPage('path'));
       },
     },
-    // {
-    //   label: 'Weiter',
-    //   endIcon: faAngleRight,
-    //   // classNames: '',
-    //   // theme: 'link',
-    //   clickHandler(history: History) {
-    //     history.push(routes.EXPLANATION);
-    //   },
-    // },
   ];
 
   return (
@@ -62,7 +43,7 @@ export default function StartPage(): JSX.Element {
           </li>
         </ul>
       </div>
-      <RemoteScrapingConfig />
+      {/* <RemoteScrapingConfig /> */}
 
       <FooterNav items={footerNavItems} />
     </>

@@ -1,5 +1,6 @@
 import { IconDefinition } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Tippy, { TippyProps } from '@tippyjs/react';
 import cn from 'classnames';
 import React, { MouseEvent, ReactNode } from 'react';
 
@@ -10,6 +11,7 @@ export interface ButtonProps {
   endIcon?: IconDefinition;
   classNames?: string;
   disabled?: boolean;
+  tippyOptions?: TippyProps;
   onClick?: (event: MouseEvent) => void;
   children?: ReactNode;
 }
@@ -21,9 +23,10 @@ export default function Button({
   endIcon,
   classNames = '',
   disabled = false,
+  tippyOptions,
   onClick,
   children,
-}: ButtonProps): JSX.Element {
+}: ButtonProps) {
   // set button content
   const buttonContent = [];
 
@@ -76,14 +79,27 @@ export default function Button({
     }),
   };
 
-  return (
+  const button = (
     <button
       type="button"
       className={`inline-flex flex-nowrap items-center leading-none font-semibold transition duration-150 ease-in-out ${buttonSize[size]} ${buttonTheme[theme]} ${classNames}`}
-      disabled={disabled === true}
+      disabled={disabled}
       onClick={onClick}
     >
       {buttonContent}
     </button>
   );
+
+  if (tippyOptions) {
+    // disabled elements need to be wrapped in order for Tippy to work
+    // accesibility issues. see: https://atomiks.github.io/tippyjs/v6/constructor/#disabled-elements
+    return (
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      <Tippy {...tippyOptions}>
+        {disabled ? <span tabIndex="0">{button}</span> : button}
+      </Tippy>
+    );
+  }
+
+  return button;
 }

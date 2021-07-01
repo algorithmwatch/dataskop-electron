@@ -7,7 +7,7 @@ export interface FooterNavItem extends ButtonProps {
   clickHandler: (history: RouteComponentProps['history']) => void;
 }
 
-function FooterNav({ items = [] }: { items: FooterNavItem[] }): JSX.Element {
+function FooterNav({ items = [] }: { items: FooterNavItem[] }) {
   const history = useHistory();
 
   return (
@@ -19,6 +19,7 @@ function FooterNav({ items = [] }: { items: FooterNavItem[] }): JSX.Element {
           theme,
           startIcon,
           endIcon,
+          tippyOptions,
           clickHandler,
           disabled,
           classNames,
@@ -31,6 +32,7 @@ function FooterNav({ items = [] }: { items: FooterNavItem[] }): JSX.Element {
             size={size}
             theme={theme}
             classNames={classNames}
+            tippyOptions={tippyOptions}
             onClick={() => clickHandler(history)}
           >
             {label}
