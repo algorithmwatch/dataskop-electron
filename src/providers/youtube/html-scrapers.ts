@@ -6,13 +6,13 @@ import { addLookups, getLookups } from '../../db';
 import { getVideoUrl } from './utils';
 
 async function scrapeMetaInformation(url: string) {
-  console.log(url);
+  // console.log(url);
   const res = await fetch(url);
   const html = await res.text();
 
-  console.log(res.url);
-  console.log('done');
-  console.log(res.status);
+  // console.log(res.url);
+  // console.log('done');
+  // console.log(res.status);
 
   return {
     info: parseVideoNoJs(html),
@@ -31,7 +31,7 @@ async function scrapeVideoMeta(videoIds: string[]) {
 
 async function lookupOrScrapeVideos(videoIds: string[]) {
   const data = await getLookups();
-  console.log(data);
+  // console.log(data);
   const readyIds = new Set(
     data.filter(({ info }) => info != null).map(({ info: { id } }) => id),
   );
