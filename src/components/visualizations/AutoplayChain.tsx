@@ -3,12 +3,12 @@ import { RecommendedVideo, VideoPage } from '@algorithmwatch/harke';
 import {
   faImages,
   faUserHeadset,
-  IconDefinition,
+  IconDefinition
 } from '@fortawesome/pro-regular-svg-icons';
 import {
   faAngleDown,
   faChevronRight,
-  faSearch,
+  faSearch
 } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
@@ -170,7 +170,7 @@ export default function AutoplayChain({
     [data],
   );
   const seedVideos = useMemo(
-    () => groups.map((group) => group[0].fields),
+    () => groups.map((group) => group[0].fields).slice(0, 10),
     [groups],
   ) as VideoPage[];
   const [currentSeedVideoIndex, setCurrentSeedVideoIndex] = useState(0);
@@ -202,7 +202,7 @@ export default function AutoplayChain({
       >
         <FontAwesomeIcon icon={faSearch} size="6x" className="text-blue-200" />
         <div className="max-w-prose">
-          <h1 className="hl-4xl my-6">News Top 5</h1>
+          <h1 className="hl-4xl my-6">Autoplay Chain</h1>
           <p className="mb-4">
             Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas
             Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!«

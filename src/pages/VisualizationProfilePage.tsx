@@ -30,11 +30,13 @@ export default function VisualizationProfilePage(): JSX.Element {
       // size: 'large',
       endIcon: faAngleRight,
       disabled: nextButtonIsDisabled,
-      tippyOptions: {
-        content: 'Bitte warten Sie, bis das Scraping beendet ist.',
-        theme: 'process-info',
-        placement: 'left',
-      },
+      tippyOptions: nextButtonIsDisabled
+        ? {
+            content: 'Bitte warten Sie, bis alle Daten geladen sind.',
+            theme: 'process-info',
+            placement: 'left',
+          }
+        : undefined,
       clickHandler(history: RouteComponentProps['history']) {
         if (!nextButtonIsDisabled) {
           history.push(getNextPage('path'));

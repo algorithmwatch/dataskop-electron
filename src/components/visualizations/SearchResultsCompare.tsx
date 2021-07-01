@@ -163,7 +163,7 @@ export default function SearchResultsCompare({
       >
         <FontAwesomeIcon icon={faSearch} size="6x" className="text-blue-200" />
         <div className="max-w-prose">
-          <h1 className="hl-4xl my-6">News Top 5</h1>
+          <h1 className="hl-4xl my-6">Search Results Compare</h1>
           <p className="mb-4">
             Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas
             Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!«

@@ -26,6 +26,13 @@ export default function VisualizationAutoplayChainPage() {
       label: 'Weiter',
       endIcon: faAngleRight,
       disabled: !isScrapingFinished,
+      tippyOptions: !isScrapingFinished
+        ? {
+            content: 'Bitte warten Sie, bis das Scraping beendet ist.',
+            theme: 'process-info',
+            placement: 'left',
+          }
+        : undefined,
       clickHandler(history: RouteComponentProps['history']) {
         if (isScrapingFinished) {
           history.push(getNextPage('path'));
