@@ -27,11 +27,11 @@ export default function OnboardingPage2(): JSX.Element {
         // logout user if logged in already
         if (isUserLoggedIn) {
           dispatch({ type: 'reset-scraping' });
-          goToUrl(providerToMeta[scrapingConfig.provider].loginUrl, {
-            clear: true,
-          });
         }
 
+        goToUrl(providerToMeta[scrapingConfig.provider].loginUrl, {
+          clear: true,
+        });
         dispatch({ type: 'set-visible-window', visibleWindow: false });
       },
     },

@@ -91,7 +91,9 @@ export default function Base({
           <img src={logo} style={{ width: '8rem' }} alt="Dataskop Logo" />
         </div>
         <div className="flex items-center ml-auto mr-6">
-          <ScrapingProgressBar />
+          <div className="mr-4">
+            <ScrapingProgressBar />
+          </div>
 
           {/* MyData vault */}
           <div>
