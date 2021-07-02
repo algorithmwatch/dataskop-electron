@@ -8,6 +8,7 @@ import { ScrapingResultSaved } from '../../db/types';
 import { Carousel, Slide } from '../Carousel';
 import { Options } from '../Carousel/types';
 import Explainer from '../Explainer';
+import Infobox from '../Infobox';
 import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
 
 interface SearchResultsCompareDataItem {
@@ -163,82 +164,38 @@ export default function SearchResultsCompare({
       >
         <FontAwesomeIcon icon={faSearch} size="6x" className="text-blue-200" />
         <div className="max-w-prose">
-          <h1 className="hl-4xl my-6">Search Results Compare</h1>
-          <p className="mb-4">
-            Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas
-            Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!«
-            sagte er, es war, als sollte die Scham ihn überleben.
-          </p>
-          <p className="mb-4">
-            Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand
-            er sich in seinem Bett zu einem ungeheueren Ungeziefer verwandelt.
-            Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten
-            Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob
-            und ihren jungen Körper dehnte.
-          </p>
-          <p className="mb-4">
-            »Es ist ein eigentümlicher Apparat«, sagte der Offizier zu dem
-            Forschungsreisenden und überblickte mit einem gewissermaßen
-            bewundernden Blick den ihm doch wohlbekannten Apparat. Sie hätten
-            noch ins Boot springen können, aber der Reisende hob ein schweres,
-            geknotetes Tau vom Boden, drohte ihnen damit und hielt sie dadurch
-            von dem Sprunge ab.
-          </p>
-          <p className="mb-4">
-            In den letzten Jahrzehnten ist das Interesse an Hungerkünstlern sehr
-            zurückgegangen. Aber sie überwanden sich, umdrängten den Käfig und
-            wollten sich gar nicht fortrühren.
-          </p>
-          <p className="mb-4">
-            Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas
-            Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!«
-            sagte er, es war, als sollte die Scham ihn überleben.
-          </p>
-          <p className="mb-4">
-            Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand
-            er sich in seinem Bett zu einem ungeheueren Ungeziefer verwandelt.
-            Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten
-            Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob
-            und ihren jungen Körper dehnte.
-          </p>
-          <p className="mb-4">
-            »Es ist ein eigentümlicher Apparat«, sagte der Offizier zu dem
-            Forschungsreisenden und überblickte mit einem gewissermaßen
-            bewundernden Blick den ihm doch wohlbekannten Apparat. Sie hätten
-            noch ins Boot springen können, aber der Reisende hob ein schweres,
-            geknotetes Tau vom Boden, drohte ihnen damit und hielt sie dadurch
-            von dem Sprunge ab.
-          </p>
-          <p className="mb-4">
-            In den letzten Jahrzehnten ist das Interesse an Hungerkünstlern sehr
-            zurückgegangen. Aber sie überwanden sich, umdrängten den Käfig und
-            wollten sich gar nicht fortrühren.
-          </p>
-          <p className="mb-4">
-            Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas
-            Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!«
-            sagte er, es war, als sollte die Scham ihn überleben.
-          </p>
-          <p className="mb-4">
-            Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand
-            er sich in seinem Bett zu einem ungeheueren Ungeziefer verwandelt.
-            Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten
-            Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob
-            und ihren jungen Körper dehnte.
-          </p>
-          <p className="mb-4">
-            »Es ist ein eigentümlicher Apparat«, sagte der Offizier zu dem
-            Forschungsreisenden und überblickte mit einem gewissermaßen
-            bewundernden Blick den ihm doch wohlbekannten Apparat. Sie hätten
-            noch ins Boot springen können, aber der Reisende hob ein schweres,
-            geknotetes Tau vom Boden, drohte ihnen damit und hielt sie dadurch
-            von dem Sprunge ab.
-          </p>
-          <p className="mb-4">
-            In den letzten Jahrzehnten ist das Interesse an Hungerkünstlern sehr
-            zurückgegangen. Aber sie überwanden sich, umdrängten den Käfig und
-            wollten sich gar nicht fortrühren.
-          </p>
+          <h1 className="hl-4xl my-6">Search Viz</h1>
+          <div className="space-y-4">
+            <p>
+              Visuell sieht dieses Experiment dem zu den Nachrichten sehr
+              ähnlich. Doch wir schauen diesmal auf die Suche. Statt einem Video
+              kannst Du eine Reihe von Suchbegriffen betrachten. Die drehen sich
+              alle um das Thema Bundestagswahl und sind zum Teil an aktuellen
+              Ereignissen orientiert.
+            </p>
+            <ul>
+              <li>Suchbegriff 1</li>
+              <li>Suchbegriff 2</li>
+              <li>Suchbegriff 3</li>
+              <li>Suchbegriff 4</li>
+            </ul>
+            <p>
+              Statt Empfehlungen zeigen wir Dir hier die Liste der ersten zehn
+              Suchergebnisse an. Links, wenn Du eingeloggst bist und recht die
+              Ergbenisse, wenn Du nicht eingeloggt bist. [Erklärung ergänzen,
+              falls es die gleichen Filter gibt wie bei Autoplay Chain Viz]
+            </p>
+            <div>
+              <Infobox classname="mt-6">
+                <p>
+                  Bei diesem Experiment interessiert uns die Personalisierung
+                  bei den Suchbegriffen: Wie beinflussen die historischen Daten
+                  deines Profils und deine Kanalabos, was Du als Ergebnisse
+                  erhälst?
+                </p>
+              </Infobox>
+            </div>
+          </div>
         </div>
       </Explainer>
       <Carousel options={carouselOptions}>

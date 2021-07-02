@@ -1,6 +1,6 @@
 import {
   faChevronLeft,
-  faChevronRight,
+  faChevronRight
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
@@ -25,21 +25,19 @@ export default function Explainer({
       })}
     >
       <div
-        className={classNames({
-          'w-192 inset-y-0 bg-white z-30': true,
-          '-left-192 absolute': !isOpen,
-          'left-0 relative': isOpen,
-          'transition-all duration-300 ease-in-out': true,
-          'flex flex-col justify-between': true,
-          'box-content border-r-8': true,
-          'border-yellow-600': !isToggleHover,
-          'border-yellow-800': isToggleHover,
-        })}
+        className={classNames(
+          'w-192 min-h-full inset-y-0 bg-white z-30 transition-all duration-300 ease-in-out flex flex-col justify-between box-content border-r-8',
+          {
+            '-left-192 absolute': !isOpen,
+            'left-0 relative': isOpen,
+            'border-yellow-600': !isToggleHover,
+            'border-yellow-800': isToggleHover,
+          },
+        )}
       >
         {/* Open/close toggle */}
         <div
-          className={classNames({
-            'absolute top-20': true,
+          className={classNames('absolute top-20', {
             'right-4': isOpen,
             '-right-2': !isOpen,
           })}
@@ -50,12 +48,13 @@ export default function Explainer({
             onClick={() => onIsOpenChange(!isOpen)}
             onMouseOver={() => setIsToggleHover(true)}
             onMouseOut={() => setIsToggleHover(false)}
-            className={classNames({
-              'w-10 h-10 fixed focus:outline-none': true,
-              'transition-colors duration-300 ease-in-out': true,
-              'bg-yellow-600': !isToggleHover,
-              'bg-yellow-800': isToggleHover,
-            })}
+            className={classNames(
+              'w-10 h-10 fixed focus:outline-none transition-colors duration-300 ease-in-out',
+              {
+                'bg-yellow-600': !isToggleHover,
+                'bg-yellow-800': isToggleHover,
+              },
+            )}
           >
             <FontAwesomeIcon
               icon={isOpen ? faChevronLeft : faChevronRight}

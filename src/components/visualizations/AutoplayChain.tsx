@@ -16,7 +16,9 @@ import _ from 'lodash';
 import debounce from 'lodash/debounce';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ScrapingResultSaved } from '../../db/types';
+import explainerImage from '../../static/images/autoplay-explainer.png';
 import Explainer from '../Explainer';
+import Infobox from '../Infobox';
 import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
 
 function SeedVideoMenu({
@@ -170,7 +172,7 @@ export default function AutoplayChain({
     [data],
   );
   const seedVideos = useMemo(
-    () => groups.map((group) => group[0].fields).slice(0, 10),
+    () => groups.map((group) => group[0].fields).slice(0, 9),
     [groups],
   ) as VideoPage[];
   const [currentSeedVideoIndex, setCurrentSeedVideoIndex] = useState(0);
@@ -202,82 +204,44 @@ export default function AutoplayChain({
       >
         <FontAwesomeIcon icon={faSearch} size="6x" className="text-blue-200" />
         <div className="max-w-prose">
-          <h1 className="hl-4xl my-6">Autoplay Chain</h1>
-          <p className="mb-4">
-            Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas
-            Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!«
-            sagte er, es war, als sollte die Scham ihn überleben.
-          </p>
-          <p className="mb-4">
-            Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand
-            er sich in seinem Bett zu einem ungeheueren Ungeziefer verwandelt.
-            Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten
-            Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob
-            und ihren jungen Körper dehnte.
-          </p>
-          <p className="mb-4">
-            »Es ist ein eigentümlicher Apparat«, sagte der Offizier zu dem
-            Forschungsreisenden und überblickte mit einem gewissermaßen
-            bewundernden Blick den ihm doch wohlbekannten Apparat. Sie hätten
-            noch ins Boot springen können, aber der Reisende hob ein schweres,
-            geknotetes Tau vom Boden, drohte ihnen damit und hielt sie dadurch
-            von dem Sprunge ab.
-          </p>
-          <p className="mb-4">
-            In den letzten Jahrzehnten ist das Interesse an Hungerkünstlern sehr
-            zurückgegangen. Aber sie überwanden sich, umdrängten den Käfig und
-            wollten sich gar nicht fortrühren.
-          </p>
-          <p className="mb-4">
-            Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas
-            Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!«
-            sagte er, es war, als sollte die Scham ihn überleben.
-          </p>
-          <p className="mb-4">
-            Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand
-            er sich in seinem Bett zu einem ungeheueren Ungeziefer verwandelt.
-            Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten
-            Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob
-            und ihren jungen Körper dehnte.
-          </p>
-          <p className="mb-4">
-            »Es ist ein eigentümlicher Apparat«, sagte der Offizier zu dem
-            Forschungsreisenden und überblickte mit einem gewissermaßen
-            bewundernden Blick den ihm doch wohlbekannten Apparat. Sie hätten
-            noch ins Boot springen können, aber der Reisende hob ein schweres,
-            geknotetes Tau vom Boden, drohte ihnen damit und hielt sie dadurch
-            von dem Sprunge ab.
-          </p>
-          <p className="mb-4">
-            In den letzten Jahrzehnten ist das Interesse an Hungerkünstlern sehr
-            zurückgegangen. Aber sie überwanden sich, umdrängten den Käfig und
-            wollten sich gar nicht fortrühren.
-          </p>
-          <p className="mb-4">
-            Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas
-            Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!«
-            sagte er, es war, als sollte die Scham ihn überleben.
-          </p>
-          <p className="mb-4">
-            Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand
-            er sich in seinem Bett zu einem ungeheueren Ungeziefer verwandelt.
-            Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten
-            Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob
-            und ihren jungen Körper dehnte.
-          </p>
-          <p className="mb-4">
-            »Es ist ein eigentümlicher Apparat«, sagte der Offizier zu dem
-            Forschungsreisenden und überblickte mit einem gewissermaßen
-            bewundernden Blick den ihm doch wohlbekannten Apparat. Sie hätten
-            noch ins Boot springen können, aber der Reisende hob ein schweres,
-            geknotetes Tau vom Boden, drohte ihnen damit und hielt sie dadurch
-            von dem Sprunge ab.
-          </p>
-          <p className="mb-4">
-            In den letzten Jahrzehnten ist das Interesse an Hungerkünstlern sehr
-            zurückgegangen. Aber sie überwanden sich, umdrängten den Käfig und
-            wollten sich gar nicht fortrühren.
-          </p>
+          <h1 className="hl-4xl my-6">AutoPlay Chain Viz</h1>
+          <div className="space-y-4">
+            <p>
+              In der folgenden Visualisierungen kannst Du du oben aus acht
+              Videos auswählen. Das sind zum einen bekannte und bedeutende
+              Videos aus den letzten Jahren. Zum anderen Videos, die dieser Tage
+              aktuell viel Aufmerksamkeit erfahren.  Für jedes dieser Videos
+              zeigen wir in der ersten Spalte das ursprüngliche Video plus die
+              sieben Videos. Es sind die, die YouTube Dir automatisch gezeigt
+              hätte (autoplay), wenn Du YouTube einfach laufen lassen würdest.
+              Für jedes dieser automatisch  abgespielten Videos zeigen wir in
+              der dazugehörigen Spalte die ersten zehn von YouTube empfohlenen
+              Videos (recommendations).
+            </p>
+            <p>
+              Wenn Du Deinen Mauszeiger über eines der Videos bewegst, siehst
+              Du, sowohl den Titel usw. des Videos, aber auch, ob es unter den
+              80 empfohlenen Videos noch ein- oder mehre Male auftaucht. Mit den
+              Filtern oben rechts kannst Du die Ansicht umstellten: Statt der
+              Titelbilder der Videos kannst Du etwa die Kategorien der
+              empfohlenen Videos sehen oder wie alt sie sind.
+            </p>
+            <p className="py-4">
+              <img src={explainerImage} alt="" />
+            </p>
+            <div>
+              <Infobox>
+                <p>
+                  Wir erhoffen uns, durch dieses Experiment Muster erkennen zu
+                  können, die Rückschlüsse erlauben, inwiefern YouTube Dir
+                  Videos abhängig von Deiner Watch-History und welchen Kanälen
+                  Du folgst, empfiehlt. Dafür hilft es, wenn viele Leute ihre
+                  Daten spenden, weil wir dann viele Ergebnisse miteinander
+                  vergleichen können.
+                </p>
+              </Infobox>
+            </div>
+          </div>
         </div>
       </Explainer>
       <div className="mx-auto space-y-6">

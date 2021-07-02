@@ -8,7 +8,7 @@ import { useNavigation } from '../contexts/navigation';
 export default function InterfaceTutorialPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const {
-    state: { isScrapingStarted },
+    state: { isScrapingStarted, isUserLoggedIn },
     dispatch,
   } = useScraping();
 
@@ -33,7 +33,7 @@ export default function InterfaceTutorialPage(): JSX.Element {
 
   useEffect(() => {
     // start scraping
-    if (!isScrapingStarted) {
+    if (isUserLoggedIn && !isScrapingStarted) {
       dispatch({ type: 'set-scraping-started', isScrapingStarted: true });
     }
   }, []);

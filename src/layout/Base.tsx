@@ -125,7 +125,7 @@ export default function Base({
       />
 
       {/*  h-full hides the debug button for long pages */}
-      <main className="flex flex-grow flex-col justify-between overflow-y-auto overflow-x-hidden pt-4">
+      <main className="flex flex-grow flex-col justify-between overflow-auto pt-4">
         {children}
       </main>
 

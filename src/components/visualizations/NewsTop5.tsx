@@ -8,6 +8,7 @@ import { ScrapingResultSaved } from '../../db/types';
 import { Carousel, Slide } from '../Carousel';
 import { Options } from '../Carousel/types';
 import Explainer from '../Explainer';
+import Infobox from '../Infobox';
 import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
 
 interface NewsTop5DataItem {
@@ -192,82 +193,31 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
           className="text-blue-200"
         />
         <div className="max-w-prose">
-          <h1 className="hl-4xl my-6">News Top 5</h1>
-          <p className="mb-4">
-            Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas
-            Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!«
-            sagte er, es war, als sollte die Scham ihn überleben.
-          </p>
-          <p className="mb-4">
-            Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand
-            er sich in seinem Bett zu einem ungeheueren Ungeziefer verwandelt.
-            Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten
-            Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob
-            und ihren jungen Körper dehnte.
-          </p>
-          <p className="mb-4">
-            »Es ist ein eigentümlicher Apparat«, sagte der Offizier zu dem
-            Forschungsreisenden und überblickte mit einem gewissermaßen
-            bewundernden Blick den ihm doch wohlbekannten Apparat. Sie hätten
-            noch ins Boot springen können, aber der Reisende hob ein schweres,
-            geknotetes Tau vom Boden, drohte ihnen damit und hielt sie dadurch
-            von dem Sprunge ab.
-          </p>
-          <p className="mb-4">
-            In den letzten Jahrzehnten ist das Interesse an Hungerkünstlern sehr
-            zurückgegangen. Aber sie überwanden sich, umdrängten den Käfig und
-            wollten sich gar nicht fortrühren.
-          </p>
-          <p className="mb-4">
-            Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas
-            Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!«
-            sagte er, es war, als sollte die Scham ihn überleben.
-          </p>
-          <p className="mb-4">
-            Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand
-            er sich in seinem Bett zu einem ungeheueren Ungeziefer verwandelt.
-            Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten
-            Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob
-            und ihren jungen Körper dehnte.
-          </p>
-          <p className="mb-4">
-            »Es ist ein eigentümlicher Apparat«, sagte der Offizier zu dem
-            Forschungsreisenden und überblickte mit einem gewissermaßen
-            bewundernden Blick den ihm doch wohlbekannten Apparat. Sie hätten
-            noch ins Boot springen können, aber der Reisende hob ein schweres,
-            geknotetes Tau vom Boden, drohte ihnen damit und hielt sie dadurch
-            von dem Sprunge ab.
-          </p>
-          <p className="mb-4">
-            In den letzten Jahrzehnten ist das Interesse an Hungerkünstlern sehr
-            zurückgegangen. Aber sie überwanden sich, umdrängten den Käfig und
-            wollten sich gar nicht fortrühren.
-          </p>
-          <p className="mb-4">
-            Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas
-            Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!«
-            sagte er, es war, als sollte die Scham ihn überleben.
-          </p>
-          <p className="mb-4">
-            Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand
-            er sich in seinem Bett zu einem ungeheueren Ungeziefer verwandelt.
-            Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten
-            Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob
-            und ihren jungen Körper dehnte.
-          </p>
-          <p className="mb-4">
-            »Es ist ein eigentümlicher Apparat«, sagte der Offizier zu dem
-            Forschungsreisenden und überblickte mit einem gewissermaßen
-            bewundernden Blick den ihm doch wohlbekannten Apparat. Sie hätten
-            noch ins Boot springen können, aber der Reisende hob ein schweres,
-            geknotetes Tau vom Boden, drohte ihnen damit und hielt sie dadurch
-            von dem Sprunge ab.
-          </p>
-          <p className="mb-4">
-            In den letzten Jahrzehnten ist das Interesse an Hungerkünstlern sehr
-            zurückgegangen. Aber sie überwanden sich, umdrängten den Käfig und
-            wollten sich gar nicht fortrühren.
-          </p>
+          <h1 className="hl-4xl my-6">News Viz</h1>
+          <div className="space-y-4">
+            <p>
+              YouTube bietet auf seiner Website in einem Bereich aktuelle
+              Nachrichten-Videos an. Wir haben eben dort die aktuellsten fünf
+              ersten Videos ausgelesen. Wir zeigen Dir für jedes dieser
+              News-Videos in der linken Spalte die ersten zehn Videos an, die Du
+              empfohlen bekommst, wenn Du mit Deinem YT-Konto eingeloggt bist.
+              Zum Vergleich stehen in der rechten Spalte, die Videos, die
+              empfohlen werden, wenn Du nicht bei YouTube angemeldet bist.
+              [Erklärung ergänzen, falls es die gleichen Filter gibt wie bei
+              Autoplay Chain Viz]
+            </p>
+            <div>
+              <Infobox classname="mt-6">
+                <p>
+                  Hier wollen wir untersuchen, ob die Empfehlungen bei der sich
+                  schnell verändernden Nachrichtenauswahl, deutlich
+                  personalisiert werden, Dabei interessiert und vor allem auch
+                  die Vergleichsmöglichkeit zwischen den Empfehlungen, wenn Du
+                  eingeloggt bist und wenn Du es nicht bist.
+                </p>
+              </Infobox>
+            </div>
+          </div>
         </div>
       </Explainer>
       <Carousel options={carouselOptions}>
