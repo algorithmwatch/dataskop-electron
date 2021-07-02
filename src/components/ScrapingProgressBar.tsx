@@ -12,9 +12,9 @@ export default function ScrapingProgressBar() {
     },
     dispatch,
   } = useScraping();
-  // if (!isActive) {
-  //   return null;
-  // }
+  if (!isActive) {
+    return null;
+  }
 
   const typeDescriptionMap = {
     action: 'Überprüfe Traktorstrahl…',
@@ -40,7 +40,10 @@ export default function ScrapingProgressBar() {
         </div>
       </div>
       <div className="z-0 absolute bottom-0 inset-x-0 h-1 bg-yellow-300">
-        <div className="bg-yellow-700 h-full" style={{ width: '30%' }} />
+        <div
+          className="bg-yellow-700 h-full"
+          style={{ width: `${value * 100}%` }}
+        />
       </div>
     </div>
   );
