@@ -35,7 +35,11 @@ function VideoList({
           key={id}
           videoId={id}
           tippyOptions={{
-            content: <TooltipContent video={{ title, channelName }} />,
+            content: (
+              <TooltipContent
+                video={{ title, channel: { name: channelName } }}
+              />
+            ),
             placement: tippyPlacement,
             theme: 'process-info',
           }}
