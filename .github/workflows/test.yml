@@ -3,31 +3,57 @@ name: Test
 on: [push, pull_request]
 
 jobs:
-  release:
+  test:
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        # os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [ubuntu-latest]
 
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v1
+      - name: Checkout git repo
+        uses: actions/checkout@v2
 
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v1
+      - name: Install Node, NPM and Yarn
+        uses: actions/setup-node@v2
         with:
-          node-version: 15
+          node-version: 14
 
-      - name: yarn install
-        run: |
-          yarn install --frozen-lockfile --network-timeout 300000
+      # NB: it used to work w/o "always-auth=true" but it's now required
+      - name: Setup NPM auth token for font awesome pro & github packages
+        run: >
+          echo "always-auth=true" >> .npmrc &&
+          echo "//npm.fontawesome.com/:_authToken=${{ secrets.FONT_AWESOME_TOKEN }}" >> .npmrc &&
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_PACKAGES_TOKEN }}" >> .npmrc
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      # - Using cached `node_modules`
+      # - not running dev `postinstall` (used for dev)
+      # - we need `yarn install` to t
+      - name: Install dependencies
+        run: yarn install --prefer-offline --frozen-lockfile --network-timeout 300000
+        env:
+          NOYARNPOSTINSTALL: 1
+
+      - name: Postinstall for prod
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn run postinstall:prod
 
       - name: yarn test
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          yarn package
-          yarn lint
-          yarn tsc
+          yarn build
           yarn test
