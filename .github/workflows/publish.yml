@@ -56,13 +56,20 @@ jobs:
       # - not running dev `postinstall` (used for dev)
       # - we need `yarn install` to t
       - name: Install dependencies
-        run: yarn install --prefer-offline --frozen-lockfile
+        run: yarn install --prefer-offline --frozen-lockfile --network-timeout 300000
         env:
           NOYARNPOSTINSTALL: 1
 
       - name: Postinstall for prod
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn run postinstall:prod
+
+      - name: Setup dotenv files
+        run: >
+          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env &&
+          echo "UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }}" >> .env &&
+          echo "PLATFORM_URL=${{ secrets.PLATFORM_URL }}" >> .env &&
+          echo "TRACK_ROUTE_CHANGES=${{ secrets.TRACK_ROUTE_CHANGES }}" >> .env
 
       - name: Publish releases
         env:
@@ -83,8 +90,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: >
           if [ "$RUNNER_OS" == "Linux" ]; then TARGET="--linux --win"; else TARGET="--mac"; fi &&
-          yarn cross-env SENTRY_DSN=${{ secrets.SENTRY_DSN }} UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }} yarn build &&
-          yarn electron-builder --publish always $TARGET
+          yarn build && yarn electron-builder --publish always $TARGET
 
       # Add the notification step as the last one
       - uses: "marvinpinto/action-keybase-notifications@latest"
