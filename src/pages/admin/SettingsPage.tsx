@@ -1,12 +1,12 @@
 import { Checkbox, FormControlLabel } from '@material-ui/core';
 import React from 'react';
-import { useConfig } from '../../contexts/config';
+import { useScraping } from '../../contexts';
 
 export default function SettingsPage(): JSX.Element {
   const {
     state: { logHtml },
     dispatch,
-  } = useConfig();
+  } = useScraping();
 
   const handleLogHtmlChange = (event) => {
     dispatch({ type: 'set-log-html', logHtml: event.target.checked });
