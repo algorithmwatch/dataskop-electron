@@ -5,33 +5,28 @@ import pLimit from 'p-limit';
 import { addLookups, getLookups } from '../../db';
 import { getVideoUrl } from './utils';
 
-async function scrapeMetaInformation(url: string) {
-  // console.log(url);
+async function scrapeMetaInformation(videoId: string) {
+  const url = getVideoUrl(videoId);
   const res = await fetch(url);
   const html = await res.text();
-
-  // console.log(res.url);
-  // console.log('done');
-  // console.log(res.status);
+  const result = parseVideoNoJs(html);
 
   return {
-    info: parseVideoNoJs(html),
+    info: { ...result, videoId },
     scrapedAt: Date.now(),
   };
 }
 
 async function scrapeVideoMeta(videoIds: string[]) {
-  // 10 was too much
+  // scraping 10 in parallel was too much
   const limit = pLimit(3);
-  const output = videoIds.map((x) =>
-    limit(() => scrapeMetaInformation(getVideoUrl(x))),
-  );
+  const output = videoIds.map((x) => limit(() => scrapeMetaInformation(x)));
   return Promise.all(output);
 }
 
 async function lookupOrScrapeVideos(videoIds: string[]) {
   const data = await getLookups();
-  // console.log(data);
+
   const readyIds = new Set(
     data.filter(({ info }) => info != null).map(({ info: { id } }) => id),
   );
