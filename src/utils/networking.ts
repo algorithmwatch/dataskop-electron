@@ -53,7 +53,7 @@ const postDonation = async (
   const res = await postJson(url, {
     unauthorized_email: email,
     campaign: session.campaign?.id,
-    result: { scrapingResult: result, session },
+    results: { scrapingResult: result, session },
   });
   if (!res.ok) console.warn(res);
   return res;
