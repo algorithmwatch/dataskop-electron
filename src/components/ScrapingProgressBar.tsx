@@ -17,10 +17,10 @@ export default function ScrapingProgressBar() {
   }
 
   const typeDescriptionMap = {
-    action: 'Überprüfe Hyperraumantrieb…',
+    action: 'Starte Hyperraumantrieb…',
     profile: 'Starte den Laser…',
-    video: 'Überprüfe Schleudersitz…',
-    search: 'Teste Traktorstrahl…',
+    video: 'Überprüfe Rettungskapsel…',
+    search: 'Teste Druckkabine…',
   };
   const currentType = scrapingConfig.steps[step].type;
   const description = typeDescriptionMap[currentType];
