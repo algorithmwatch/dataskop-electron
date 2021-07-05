@@ -2,16 +2,22 @@ import Tippy from '@tippyjs/react';
 import React from 'react';
 
 function ProcessIndicator({
-  currentStep = 0,
-  steps = [],
+  currentStep,
+  steps,
 }: {
-  currentStep: number;
+  currentStep: string;
   steps: {
-    label: string;
-    description?: string;
-  }[];
+    [key: string]: {
+      label: string;
+      description?: string;
+    };
+  };
 }): JSX.Element {
-  const barWidth = (100 * currentStep) / (steps.length - 1);
+  const stepsKeys = Object.keys(steps);
+  const stepsValues = Object.values(steps);
+  const stepsCount = stepsKeys.length;
+  const currentStepIndex = stepsKeys.indexOf(currentStep);
+  const barWidth = (100 * currentStepIndex) / (stepsCount - 1);
   const barWidthPlusPadding = `calc(${barWidth}% + 1.5rem)`;
 
   return (
@@ -19,7 +25,7 @@ function ProcessIndicator({
       <div className="relative h-2 w-full">
         {/* vertical lines */}
         <div className="z-10 absolute inset-0 h-2 w-full flex justify-between">
-          {steps.map(({ label, description }) => (
+          {stepsValues.map(({ label, description }) => (
             <div key={label} className="h-full w-0.5 bg-yellow-1500">
               <Tippy
                 content={<span>{label}</span>}

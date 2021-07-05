@@ -7,7 +7,7 @@ type Dispatch = (action: Action) => void;
 type State = {
   pageIndex: number;
   pages: any[];
-  sections: any[];
+  sections: { [key: string]: { label: string } };
 };
 type NavigationProviderProps = { children: React.ReactNode };
 
@@ -41,77 +41,77 @@ function NavigationProvider({ children }: NavigationProviderProps) {
     pages: [
       {
         path: routes.START,
-        sectionIndex: 0,
       },
       {
         path: routes.INTRODUCTION,
-        sectionIndex: 1,
       },
       {
         path: routes.ONBOARDING_1,
-        sectionIndex: 2,
       },
       {
         path: routes.ONBOARDING_2,
       },
       {
         path: routes.INTERFACE_TUTORIAL,
-        sectionIndex: 3,
+        sectionKey: routes.INTERFACE_TUTORIAL,
       },
       {
         path: routes.SCRAPING_EXPLANATION,
-        sectionIndex: 4,
+        sectionKey: routes.SCRAPING_EXPLANATION,
       },
       {
         path: routes.VISUALIZATION_PROFILE,
-        sectionIndex: 5,
+        sectionKey: routes.VISUALIZATION_PROFILE,
+      },
+      {
+        path: routes.RESEARCH_INFO,
+        sectionKey: routes.RESEARCH_INFO,
       },
       {
         path: routes.VISUALIZATION_AUTOPLAYCHAIN,
-        sectionIndex: 6,
+        sectionKey: routes.VISUALIZATION_AUTOPLAYCHAIN,
       },
       {
         path: routes.VISUALIZATION_NEWS,
-        sectionIndex: 7,
+        sectionKey: routes.VISUALIZATION_NEWS,
       },
       {
         path: routes.VISUALIZATION_SEARCH,
-        sectionIndex: 8,
+        sectionKey: routes.VISUALIZATION_SEARCH,
       },
       {
         path: routes.MY_DATA_HINT,
-        sectionIndex: 9,
+        sectionKey: routes.MY_DATA_HINT,
       },
       {
         path: routes.QUESTIONNAIRE,
-        sectionIndex: 10,
+        sectionKey: routes.QUESTIONNAIRE,
       },
       {
         path: routes.DONATION1,
-        sectionIndex: 11,
+        sectionKey: routes.DONATION1,
       },
       {
         path: routes.DONATION2,
       },
       {
         path: routes.DONATION_SUCCESS,
-        sectionIndex: 12,
+        sectionKey: routes.DONATION_SUCCESS,
       },
     ],
-    sections: [
-      { label: 'Section 1' },
-      { label: 'Section 2' },
-      { label: 'Section 3' },
-      { label: 'Section 4' },
-      { label: 'Section 5' },
-      { label: 'Section 6' },
-      { label: 'Section 7' },
-      { label: 'Section 8' },
-      { label: 'Section 9' },
-      { label: 'Section 10' },
-      { label: 'Section 11' },
-      { label: 'Section 12' },
-    ],
+    sections: {
+      [routes.INTERFACE_TUTORIAL]: { label: 'Interface Tutorial' },
+      [routes.SCRAPING_EXPLANATION]: { label: 'Was ist Scraping?' },
+      [routes.VISUALIZATION_PROFILE]: { label: 'Mein YouTube-Profil' },
+      [routes.RESEARCH_INFO]: { label: 'Was wir untersuchen' },
+      [routes.VISUALIZATION_AUTOPLAYCHAIN]: { label: 'AutoPlay Chain Viz' },
+      [routes.VISUALIZATION_NEWS]: { label: 'News Viz' },
+      [routes.VISUALIZATION_SEARCH]: { label: 'Search Viz' },
+      [routes.MY_DATA_HINT]: { label: 'Meine Daten' },
+      [routes.QUESTIONNAIRE]: { label: 'Umfrage' },
+      [routes.DONATION1]: { label: 'Die Datenspende' },
+      [routes.DONATION_SUCCESS]: { label: 'Ende' },
+    },
   });
 
   const getNextPage = (propName?: string) => {

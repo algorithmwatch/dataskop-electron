@@ -37,7 +37,7 @@ export default function Base({
   children: ReactNode;
 }): JSX.Element {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
-  const [sectionIndex, setSectionIndex] = useState(0);
+  const [sectionKey, setSectionKey] = useState('');
   const { pathname } = useLocation();
   const {
     state: { campaign },
@@ -79,8 +79,8 @@ export default function Base({
     }
 
     // set processIndicator
-    if (page.sectionIndex >= 0) {
-      setSectionIndex(page.sectionIndex);
+    if (page.sectionKey) {
+      setSectionKey(page.sectionKey);
     }
   }, [pageIndex]);
 
@@ -130,7 +130,7 @@ export default function Base({
       </main>
 
       <footer>
-        <ProcessIndicator steps={sections} currentStep={sectionIndex} />
+        <ProcessIndicator steps={sections} currentStep={sectionKey} />
       </footer>
     </div>
   );

@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Redirect,
   Route,
-  Switch,
+  Switch
 } from 'react-router-dom';
 import './App.global.css';
 import ScrapingAttached from './components/scraping/ScrapingAttached';
@@ -33,6 +33,7 @@ import MyDataHintPage from './pages/MyDataHintPage';
 import OnboardingPage1 from './pages/OnboardingPage1';
 import OnboardingPage2 from './pages/OnboardingPage2';
 import QuestionnairePage from './pages/QuestionnairePage';
+import ResearchInfoPage from './pages/ResearchInfoPage';
 import ScrapingExplanationPage from './pages/ScrapingExplanationPage';
 import StartPage from './pages/StartPage';
 import VisualizationAutoplayChainPage from './pages/VisualizationAutoplayChainPage';
@@ -110,6 +111,10 @@ export default function App() {
                 <Route
                   path={routes.VISUALIZATION_AUTOPLAYCHAIN}
                   component={VisualizationAutoplayChainPage}
+                />
+                <Route
+                  path={routes.RESEARCH_INFO}
+                  component={ResearchInfoPage}
                 />
                 <Route
                   path={routes.VISUALIZATION_PROFILE}
