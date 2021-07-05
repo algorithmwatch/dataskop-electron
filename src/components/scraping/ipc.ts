@@ -1,6 +1,5 @@
 import { ipcRenderer } from 'electron';
-import log from 'electron-log';
-import zlib from 'zlib';
+import fs from 'fs';
 import { GetCurrentHtml, GetHtmlFunction } from '../../providers/youtube';
 
 // commands to communicate with the browser window in the main screen
@@ -19,12 +18,17 @@ const makeGetHtml = (logHtml: boolean): GetHtmlFunction => {
   const getHtml = async (url: string): Promise<GetCurrentHtml> => {
     await goToUrl(url);
     if (logHtml) {
+      const userFolder = await ipcRenderer.invoke('get-path-user-data');
+      // on macOS: ~/Library/Application Support/Electron/html
       return async () => {
         const html = await extractHtml();
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        !fs.existsSync(`${userFolder}/html`) &&
+          fs.mkdirSync(`${userFolder}/html`);
 
-        const compressed = zlib.deflateSync(html).toString('base64');
+        const fn = `${url.replace(/[^a-z0-9]/gi, '')}.html`;
+        fs.writeFileSync(`${userFolder}/html/${fn}`, html);
 
-        log.info(url, compressed);
         return html;
       };
     }
