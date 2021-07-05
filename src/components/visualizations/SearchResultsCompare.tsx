@@ -46,7 +46,7 @@ function VideoList({
 }
 
 function Visual({ session }: { session: SearchResultsCompareDataItem }) {
-  const [displayCount, setDisplayCount] = useState(10);
+  const [displayCount, setDisplayCount] = useState(8);
 
   return (
     <div className="flex bg-yellow-200 border-2 border-yellow-400 w-full max-w-2xl mx-auto px-5 py-4 cursor-auto">
