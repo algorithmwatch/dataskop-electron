@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/mouse-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events */
-import { VideoPage } from '@algorithmwatch/harke';
+import { Channel } from '@algorithmwatch/harke';
 import { faImages } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy, { TippyProps } from '@tippyjs/react';
@@ -90,10 +90,19 @@ export default function VideoThumbnail({
   );
 }
 
+export interface TooltipContentType {
+  title: string;
+  channel: Partial<Channel>;
+  uploadDate?: Date;
+  viewCount?: number;
+  upvotes?: number | null;
+  downvotes?: number | null;
+}
+
 export function TooltipContent({
   video,
 }: {
-  video: Partial<VideoPage>;
+  video: TooltipContentType;
 }): JSX.Element {
   const tooltipContent = [];
 

@@ -14,14 +14,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import _ from 'lodash';
 import debounce from 'lodash/debounce';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ScrapingResultSaved } from '../../db/types';
 import explainerImage from '../../static/images/autoplay-explainer.png';
 import Explainer from '../Explainer';
 import Infobox from '../Infobox';
 import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
 
-function SeedVideoMenu({
+const SeedVideoMenu = React.memo(function SeedVideoMenu({
   seedVideos,
   currentVideoIndex,
   onSelect,
@@ -52,7 +52,7 @@ function SeedVideoMenu({
       ))}
     </div>
   );
-}
+});
 
 function ViewSwitcherItem({
   label,
@@ -185,13 +185,6 @@ export default function AutoplayChain({
   const currentGroup = groups[currentSeedVideoIndex] || [];
   const recommendedVideosLimit = 10;
 
-  // Stop the invocation of the debounced function after unmounting
-  useEffect(() => {
-    return () => {
-      setHoveringVideoIdDebounced.cancel();
-    };
-  }, []);
-
   // console.warn('seedVideos', seedVideos);
   // console.warn('groups', groups);
   // console.warn('currentGroup', currentGroup);
@@ -246,7 +239,7 @@ export default function AutoplayChain({
       </Explainer>
       <div className="mx-auto space-y-6">
         {/* Seed videos menu */}
-        {seedVideos.length && (
+        {seedVideos.length > 0 && (
           <div className="flex h-20">
             <SeedVideoMenu
               seedVideos={seedVideos}
@@ -262,7 +255,7 @@ export default function AutoplayChain({
           </div>
         )}
 
-        {currentGroup.length && (
+        {currentGroup.length > 0 && (
           <>
             {/* Viz */}
             <div className="flex max-w-6xl">
@@ -279,7 +272,18 @@ export default function AutoplayChain({
                     <VideoThumbnail
                       videoId={scrapeResult.fields.id}
                       tippyOptions={{
-                        content: <TooltipContent video={scrapeResult.fields} />,
+                        content: (
+                          <TooltipContent
+                            video={{
+                              title: scrapeResult.fields.title,
+                              channel: scrapeResult.fields.channel,
+                              uploadDate: scrapeResult.fields.uploadDate,
+                              viewCount: scrapeResult.fields.viewCount,
+                              upvotes: scrapeResult.fields.upvotes,
+                              downvotes: scrapeResult.fields.downvotes,
+                            }}
+                          />
+                        ),
                         theme: 'process-info',
                       }}
                       onMouseOverCallback={() =>
@@ -322,7 +326,16 @@ export default function AutoplayChain({
                             videoId={video.id}
                             type={modeIndex}
                             tippyOptions={{
-                              content: <TooltipContent video={video} />,
+                              content: (
+                                <TooltipContent
+                                  video={{
+                                    title: video.title,
+                                    channel: {
+                                      name: video.channelName,
+                                    },
+                                  }}
+                                />
+                              ),
                               theme: 'process-info',
                             }}
                             onMouseOverCallback={() =>

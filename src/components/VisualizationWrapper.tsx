@@ -9,7 +9,7 @@ export default function VisualizationWrapper({ name }: { name: string }) {
   const [data, setData] = useState<any>([]);
 
   const {
-    state: { sessionId },
+    state: { sessionId, scrapingProgress },
   } = useScraping();
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function VisualizationWrapper({ name }: { name: string }) {
       }
     };
     loadData();
-  }, [sessionId]);
+  }, [sessionId, scrapingProgress.value, scrapingProgress.step]);
 
   if (!sessionId) return null;
 

@@ -31,7 +31,11 @@ function VideoList({
           key={id}
           videoId={id}
           tippyOptions={{
-            content: <TooltipContent video={{ title, channelName }} />,
+            content: (
+              <TooltipContent
+                video={{ title, channel: { name: channelName } }}
+              />
+            ),
             placement: tippyPlacement,
             theme: 'process-info',
           }}
@@ -112,8 +116,6 @@ export default function SearchResultsCompare({
       signedOutVideos: items[1].fields.videos,
     }))
     .value();
-
-  // console.warn('queryGroups', queryGroups);
 
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
   const carouselOptions: Options = {

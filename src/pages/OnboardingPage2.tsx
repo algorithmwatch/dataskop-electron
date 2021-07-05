@@ -39,7 +39,6 @@ export default function OnboardingPage2(): JSX.Element {
   if (isUserLoggedIn) {
     footerNavItems.push({
       label: 'Weiter',
-      size: 'large',
       clickHandler(history: RouteComponentProps['history']) {
         history.push(getNextPage('path'));
       },
