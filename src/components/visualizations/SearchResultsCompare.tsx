@@ -175,7 +175,7 @@ export default function SearchResultsCompare({
               alle um das Thema Bundestagswahl und sind zum Teil an aktuellen
               Ereignissen orientiert.
             </p>
-            <ul>
+            <ul className="list-disc">
               <li>Suchbegriff 1</li>
               <li>Suchbegriff 2</li>
               <li>Suchbegriff 3</li>

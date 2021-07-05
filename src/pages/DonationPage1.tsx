@@ -17,7 +17,7 @@ export default function DonationPage1(): JSX.Element {
       },
     },
     {
-      label: 'Weiter',
+      label: 'Zustimmen & Weiter',
       endIcon: faAngleRight,
       clickHandler(history: RouteComponentProps['history']) {
         history.push(getNextPage('path'));
@@ -29,7 +29,7 @@ export default function DonationPage1(): JSX.Element {
     <>
       <div className="p-6 max-w-prose mx-auto">
         <div className="text-2xl font-bold mb-6">Die Datenspende</div>
-        <div className="space-y-4">
+        <div className="space-y-6">
           <p>
             Jede Datenspende hilft! Je mehr User ihre Daten in unserem Projekt
             spenden, desto besser lassen sich unsere Analysen erhärten oder
@@ -51,28 +51,32 @@ export default function DonationPage1(): JSX.Element {
             vielleicht wegen Nachfragen kontaktierten und Dich zur Teilnahme an
             anderen Datenspendenprojekten auffordern können.
           </p>
-          <p>Bevor Du spendest, musst Du zwei Dingen zustimmen:</p>
+          <div className="space-y-6 bg-white border-2 border-yellow-200 p-6">
+            <p className="font-bold text-lg">
+              Bevor Du spendest, musst Du zwei Dingen zustimmen:
+            </p>
 
-          <p className="font-bold">
-            A. Dem Datenspendevertrag. In dem steht im wesentlichen folgendes:
-          </p>
-          <ul className="list-disc">
-            <li>Platzhalter 1</li>
-            <li>Platzhalter 2</li>
-            <li>Platzhalter 3</li>
-            <li>Platzhalter 4</li>
-          </ul>
+            <p>
+              A. Dem Datenspendevertrag. In dem steht im wesentlichen folgendes:
+            </p>
+            <ul className="list-disc list-inside">
+              <li>Platzhalter 1</li>
+              <li>Platzhalter 2</li>
+              <li>Platzhalter 3</li>
+              <li>Platzhalter 4</li>
+            </ul>
 
-          <p className="font-bold list-disc">
-            B. Der Datenschutzerklärung. Die beinhaltet diese entscheidenen
-            Punkte:
-          </p>
-          <ul>
-            <li>Platzhalter 1</li>
-            <li>Platzhalter 2</li>
-            <li>Platzhalter 3</li>
-            <li>Platzhalter 4</li>
-          </ul>
+            <p>
+              B. Der Datenschutzerklärung. Die beinhaltet diese entscheidenen
+              Punkte:
+            </p>
+            <ul className="list-disc list-inside">
+              <li>Platzhalter 1</li>
+              <li>Platzhalter 2</li>
+              <li>Platzhalter 3</li>
+              <li>Platzhalter 4</li>
+            </ul>
+          </div>
         </div>
       </div>
       <FooterNav items={footerNavItems} />

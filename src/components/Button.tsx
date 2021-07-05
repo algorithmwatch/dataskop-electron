@@ -5,6 +5,7 @@ import cn from 'classnames';
 import React, { MouseEvent, ReactNode } from 'react';
 
 export interface ButtonProps {
+  type?: 'button' | 'submit';
   size?: 'small' | 'medium' | 'large';
   theme?: 'outline' | 'link' | 'blue';
   startIcon?: IconDefinition;
@@ -17,6 +18,7 @@ export interface ButtonProps {
 }
 
 export default function Button({
+  type = 'button',
   size = 'medium',
   theme = 'outline',
   startIcon,
@@ -81,7 +83,8 @@ export default function Button({
 
   const button = (
     <button
-      type="button"
+      // eslint-disable-next-line react/button-has-type
+      type={type}
       className={`inline-flex flex-nowrap items-center leading-none font-semibold transition duration-150 ease-in-out ${buttonSize[size]} ${buttonTheme[theme]} ${classNames}`}
       disabled={disabled}
       onClick={onClick}

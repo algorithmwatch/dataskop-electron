@@ -1,8 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
+import { faAngleLeft } from '@fortawesome/pro-regular-svg-icons';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
+import Button from '../components/Button';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import { useConfig, useNavigation, useScraping } from '../contexts';
 import { getScrapingResultsBySession, getSessionById } from '../db';
@@ -12,20 +13,14 @@ export default function DonationPage2(): JSX.Element {
   const [status, setStatus] = useState('');
   const [results, setResults] = useState<any>(null);
   const { getNextPage, getPreviousPage } = useNavigation();
+  const history = useHistory();
   const footerNavItems: FooterNavItem[] = [
     {
       label: 'Zurück',
       theme: 'link',
       startIcon: faAngleLeft,
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getPreviousPage('path'));
-      },
-    },
-    {
-      label: 'Weiter',
-      endIcon: faAngleRight,
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getNextPage('path'));
+      clickHandler(hist: RouteComponentProps['history']) {
+        hist.push(getPreviousPage('path'));
       },
     },
   ];
@@ -75,8 +70,9 @@ export default function DonationPage2(): JSX.Element {
       results,
       scrapingSession,
     );
-    if (resp.ok) setStatus('Success!');
-    else {
+    if (resp.ok) {
+      history.push(getNextPage('path'));
+    } else {
       setStatus(`fail: ${JSON.stringify(resp)}`);
     }
   };
@@ -85,24 +81,28 @@ export default function DonationPage2(): JSX.Element {
 
   return (
     <>
-      <div>
-        <div className="text-xl font-medium">Donation 1</div>
-        <div>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio
-          molestiae laboriosam adipisci odio molestias eligendi, illo fugit ad
-          impedit repellendus nulla beatae unde quasi eaque ea consequatur
-          recusandae velit necessitatibus!
-        </div>
-        <div>{status}</div>
-        <div>
-          <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="p-6 max-w-prose mx-auto text-center">
+        <div className="text-2xl font-bold mb-6">Die Datenspende</div>
+        <div className="space-y-4">
+          <p>
+            Du hast es fast geschafft! Gebe Deine E-Mail-Adresse für Deinen
+            DataSkop-Account ein. Im Anschluss erhältst Du eine E-Mail mit einem
+            Link, den Du bestätigen musst. Die Datenspende ist nach diesem
+            Schritt abgeschlossen.
+          </p>
+          {status.length > 0 && <div className="text-red-700">{status}</div>}
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col space-y-4 items-center"
+          >
             <input
               pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
               title="Invalid email address"
               type="email"
+              className="p-2.5 w-80 text-base bg-white border border-yellow-600 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 transition-all"
               {...register('email')}
             />
-            <input type="submit" />
+            <Button type="submit">Absenden</Button>
           </form>
         </div>
       </div>
