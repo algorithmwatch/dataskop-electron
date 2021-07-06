@@ -81,8 +81,10 @@ const createWindow = async () => {
   // The 'unsafe-eval' is required to execute custom JavaScript in the scraper view. When not allowed it,
   // the browser view ist not using a custom user agent (that is required to scrape YouTube).
   // `https://ssl.gstatic.com` to allow Google Login to work.
+
+  // HOTFIX: allow all HTTPS traffic because there were issues with google login
   const cspString =
-    "script-src 'self' 'unsafe-eval' 'unsafe-inline' http://localhost:1212 https://dataskop.net https://*.dataskop.net https://ssl.gstatic.com";
+    "script-src 'self' 'unsafe-eval' 'unsafe-inline' http://localhost:1212 https://dataskop.net https://*.dataskop.net https://ssl.gstatic.com https:";
 
   if (process.env)
     session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
