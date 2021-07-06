@@ -18,17 +18,23 @@ export default function StartPage(): JSX.Element {
   const setActiveCampaign = async () => {
     if (platformUrl == null) return;
 
-    const cams = await getActiveCampaigns(platformUrl);
-    const remoteCampaign = cams[0];
+    try {
+      const cams = await getActiveCampaigns(platformUrl);
+      const remoteCampaign = cams[0];
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { scraping_config, id, title, description } = remoteCampaign;
-    console.log(scraping_config);
-    dispatch({
-      type: 'set-scraping-config',
-      scrapingConfig: scraping_config,
-      campaign: { id, title, description },
-    });
+      if (remoteCampaign == null) return;
+
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const { scraping_config, id, title, description } = remoteCampaign;
+      dispatch({
+        type: 'set-scraping-config',
+        scrapingConfig: scraping_config,
+        campaign: { id, title, description },
+      });
+    } catch (error) {
+      console.error('not able to set sraping config from remote');
+      console.log(error);
+    }
   };
 
   useEffect(() => {
