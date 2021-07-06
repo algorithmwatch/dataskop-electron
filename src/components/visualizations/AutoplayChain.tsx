@@ -2,6 +2,7 @@
 import { RecommendedVideo, VideoPage } from '@algorithmwatch/harke';
 import {
   faImages,
+  faSpinnerThird,
   faUserHeadset,
   IconDefinition
 } from '@fortawesome/pro-regular-svg-icons';
@@ -15,6 +16,7 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import debounce from 'lodash/debounce';
 import React, { useMemo, useState } from 'react';
+import { useScraping } from '../../contexts';
 import { ScrapingResultSaved } from '../../db/types';
 import explainerImage from '../../static/images/autoplay-explainer.png';
 import Explainer from '../Explainer';
@@ -25,10 +27,12 @@ const SeedVideoMenu = React.memo(function SeedVideoMenu({
   seedVideos,
   currentVideoIndex,
   onSelect,
+  displaySpinner,
 }: {
   seedVideos: VideoPage[];
   currentVideoIndex: number;
   onSelect: (index: number) => void;
+  displaySpinner?: boolean;
 }) {
   return (
     <div className="flex items-center max-w-min border-2 border-yellow-700 bg-yellow-200">
@@ -50,6 +54,12 @@ const SeedVideoMenu = React.memo(function SeedVideoMenu({
           />
         </div>
       ))}
+
+      {displaySpinner && (
+        <div className="pl-2 pr-3 h-full flex items-center text-yellow-800">
+          <FontAwesomeIcon icon={faSpinnerThird} spin size="3x" />
+        </div>
+      )}
     </div>
   );
 });
@@ -155,6 +165,9 @@ export default function AutoplayChain({
 }: {
   data: ScrapingResultSaved[];
 }) {
+  const {
+    state: { isScrapingStarted, isScrapingPaused },
+  } = useScraping();
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
   const groups = useMemo(
     () =>
@@ -245,6 +258,7 @@ export default function AutoplayChain({
               seedVideos={seedVideos}
               currentVideoIndex={currentSeedVideoIndex}
               onSelect={(index) => setCurrentSeedVideoIndex(index)}
+              displaySpinner={isScrapingStarted && !isScrapingPaused}
             />
             <div className="ml-4">
               <ViewSwitcher
