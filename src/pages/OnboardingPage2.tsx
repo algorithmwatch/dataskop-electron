@@ -3,10 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import Button from '../components/Button';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
-import { goToUrl } from '../components/scraping/ipc';
 import { useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
-import { providerToMeta } from '../providers';
 
 export default function OnboardingPage2(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -25,13 +23,13 @@ export default function OnboardingPage2(): JSX.Element {
         history.push(getPreviousPage('path'));
 
         // logout user if logged in already
-        if (isUserLoggedIn) {
-          dispatch({ type: 'reset-scraping' });
-        }
+        // if (isUserLoggedIn) {
+        //   dispatch({ type: 'reset-scraping' });
+        // }
 
-        goToUrl(providerToMeta[scrapingConfig.provider].loginUrl, {
-          clear: true,
-        });
+        // goToUrl(providerToMeta[scrapingConfig.provider].loginUrl, {
+        //   clear: true,
+        // });
         dispatch({ type: 'set-visible-window', visibleWindow: false });
       },
     },
