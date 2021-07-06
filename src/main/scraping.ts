@@ -67,7 +67,9 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       }
 
       await view?.webContents.loadURL(url, {
-        userAgent: 'Chrome',
+        // userAgent: 'Chrome',
+        userAgent:
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.69 Safari/537.36',
       });
 
       // wait until the browser is idle, wait at most 10 seconds
