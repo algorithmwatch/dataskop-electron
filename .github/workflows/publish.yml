@@ -64,13 +64,6 @@ jobs:
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn run postinstall:prod
 
-      - name: Setup dotenv files
-        run: >
-          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env &&
-          echo "UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }}" >> .env &&
-          echo "PLATFORM_URL=${{ secrets.PLATFORM_URL }}" >> .env &&
-          echo "TRACK_ROUTE_CHANGES=${{ secrets.TRACK_ROUTE_CHANGES }}" >> .env
-
       - name: Publish releases
         env:
           # macOS code signing
@@ -90,7 +83,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: >
           if [ "$RUNNER_OS" == "Linux" ]; then TARGET="--linux --win"; else TARGET="--mac"; fi &&
-          yarn build && yarn electron-builder --publish always $TARGET
+          yarn cross-env SENTRY_DSN=${{ secrets.SENTRY_DSN }} UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }} PLATFORM_URL=${{ secrets.PLATFORM_URL }} TRACK_ROUTE_CHANGES=${{ secrets.TRACK_ROUTE_CHANGES }} yarn build &&
+          yarn electron-builder --publish always $TARGET
 
       # Add the notification step as the last one
       - uses: "marvinpinto/action-keybase-notifications@latest"
