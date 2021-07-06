@@ -28,6 +28,9 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
       mainWindow?.setBrowserView(newView);
 
+      // open the debug console in dev
+      // newView.webContents.openDevTools();
+
       if (muted) newView.webContents?.setAudioMuted(true);
 
       if (!allowInput) {
@@ -66,10 +69,36 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         view?.webContents.session.clearStorageData();
       }
 
+      // Choosing a correct user agent is important to make the login with Google.
+      // 1) Using the Electron default one will fail.
+      // 2) Choosing the user agent of the bundled chrome version will also fail.
+      // It seems that Google knows that this is a modified version of the chrome (fingerprinting?)
+      // 3) So we set to some recent Firefox user agents.
+
+      // Background:
+      // https://stackoverflow.com/a/68231284/4028896
+      // https://www.reddit.com/r/kde/comments/e7136e/google_bans_falkon_and_konqueror_browsers/faicv9g/
+      // https://www.electronjs.org/releases/stable?version=12&page=3#12.0.0
+
+      let userAgent = '';
+
+      if (process.platform === 'darwin') {
+        userAgent =
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 11.4; rv:89.0) Gecko/20100101 Firefox/89.0';
+      }
+
+      if (process.platform === 'win32') {
+        userAgent =
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0';
+      }
+
+      if (process.platform === 'linux') {
+        userAgent =
+          'Mozilla/5.0 (X11; Linux i686; rv:89.0) Gecko/20100101 Firefox/89.0';
+      }
+
       await view?.webContents.loadURL(url, {
-        // userAgent: 'Chrome',
-        userAgent:
-          'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.69 Safari/537.36',
+        userAgent,
       });
 
       // wait until the browser is idle, wait at most 10 seconds
