@@ -64,6 +64,13 @@ jobs:
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn run postinstall:prod
 
+      # further below, we set ENV values for renderer + main
+      # (maybe this can be fixed to always use this .env files)
+      - name: Setup dotenv files (for renderer)
+        run: >
+          echo "PLATFORM_URL=${{ secrets.PLATFORM_URL }}" >> .env &&
+          echo "TRACK_ROUTE_CHANGES=${{ secrets.TRACK_ROUTE_CHANGES }}" >> .env
+
       - name: Publish releases
         env:
           # macOS code signing
@@ -83,7 +90,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: >
           if [ "$RUNNER_OS" == "Linux" ]; then TARGET="--linux --win"; else TARGET="--mac"; fi &&
-          yarn cross-env SENTRY_DSN=${{ secrets.SENTRY_DSN }} UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }} PLATFORM_URL=${{ secrets.PLATFORM_URL }} TRACK_ROUTE_CHANGES=${{ secrets.TRACK_ROUTE_CHANGES }} yarn build &&
+          yarn cross-env SENTRY_DSN=${{ secrets.SENTRY_DSN }} UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }} yarn build &&
           yarn electron-builder --publish always $TARGET
 
       # Add the notification step as the last one
