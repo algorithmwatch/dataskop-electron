@@ -3,6 +3,8 @@
  */
 
 import { BrowserView, BrowserWindow, ipcMain } from 'electron';
+import { range } from 'lodash';
+import { delay } from '../utils/time';
 
 let scrapingView: BrowserView | null = null;
 
@@ -97,25 +99,49 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
           'Mozilla/5.0 (X11; Linux i686; rv:89.0) Gecko/20100101 Firefox/89.0';
       }
 
-      await view?.webContents.loadURL(url, {
-        userAgent,
-      });
+      // try 5 times and then give up
 
-      // wait until the browser is idle, wait at most 10 seconds
-      // see: https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback
-      await view?.webContents.executeJavaScript(
-        `new Promise(function(resolve, reject) { requestIdleCallback(() => resolve(true), { timeout: 10000 }) });`,
-        true,
-      );
+      // eslint-disable-next-line no-restricted-syntax
+      for (const i of range(5)) {
+        // await loadUrl(..) causes somethimes strange errors.
+        try {
+          await view?.webContents.loadURL(url, {
+            userAgent,
+          });
+        } catch (error) {
+          console.log(
+            'strange error with await + loadUrl, trying to overcome it',
+          );
+          console.log(error);
+          await delay(2000);
+        }
 
-      if (withHtml) {
-        const html = await view?.webContents.executeJavaScript(
-          'document.documentElement.innerHTML',
-        );
-        return html;
+        try {
+          // wait until the browser is idle, wait at most 10 seconds
+          // see: https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback
+          await view?.webContents.executeJavaScript(
+            `new Promise(function(resolve, reject) { requestIdleCallback(() => resolve(true), { timeout: 10000 }) });`,
+            true,
+          );
+
+          if (withHtml) {
+            const html = await view?.webContents.executeJavaScript(
+              'document.documentElement.innerHTML',
+            );
+            return html;
+          }
+
+          return null;
+        } catch (error) {
+          console.log('strange error, retry...');
+          console.log(error);
+          delay(1000 * i);
+        }
       }
 
-      return null;
+      throw new Error(
+        `failed at main/scraping.ts to extract html from given url: ${url}`,
+      );
     },
   );
 
