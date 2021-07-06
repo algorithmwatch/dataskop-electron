@@ -1,11 +1,39 @@
 import { faAngleRight } from '@fortawesome/pro-regular-svg-icons';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
+import { useConfig, useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
+import { getActiveCampaigns } from '../utils/networking';
 
 export default function StartPage(): JSX.Element {
+  const {
+    state: { platformUrl },
+  } = useConfig();
+
   const { getNextPage } = useNavigation();
+
+  const { dispatch } = useScraping();
+
+  const setActiveCampaign = async () => {
+    if (platformUrl == null) return;
+
+    const cams = await getActiveCampaigns(platformUrl);
+    const remoteCampaign = cams[0];
+
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const { scraping_config, id, title, description } = remoteCampaign;
+    console.log(scraping_config);
+    dispatch({
+      type: 'set-scraping-config',
+      scrapingConfig: scraping_config,
+      campaign: { id, title, description },
+    });
+  };
+
+  useEffect(() => {
+    setActiveCampaign();
+  }, []);
 
   const footerNavItems: FooterNavItem[] = [
     {
