@@ -1,4 +1,5 @@
 import Tippy from '@tippyjs/react';
+import classNames from 'classnames';
 import React from 'react';
 
 function ProcessIndicator({
@@ -22,7 +23,12 @@ function ProcessIndicator({
 
   return (
     <div className="px-6">
-      <div className="relative h-2 w-full">
+      <div
+        className={classNames(
+          'relative h-2 w-full transition-opacity',
+          !currentStep.length ? 'opacity-0' : 'opacity-100',
+        )}
+      >
         {/* vertical lines */}
         <div className="z-10 absolute inset-0 h-2 w-full flex justify-between">
           {stepsValues.map(({ label, description }) => (

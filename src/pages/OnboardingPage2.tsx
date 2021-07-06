@@ -10,7 +10,7 @@ export default function OnboardingPage2(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const [showLoginWindow, setShowLoginWindow] = useState(false);
   const {
-    state: { isUserLoggedIn, scrapingConfig, isScrapingStarted },
+    state: { isUserLoggedIn },
     dispatch,
   } = useScraping();
 
