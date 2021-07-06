@@ -79,8 +79,12 @@ export default function Base({
     }
 
     // set processIndicator
-    if (page.sectionKey) {
-      setSectionKey(page.sectionKey);
+    if (typeof page.sectionKey !== 'undefined') {
+      if (page.sectionKey === null) {
+        setSectionKey('');
+      } else {
+        setSectionKey(page.sectionKey);
+      }
     }
   }, [pageIndex]);
 

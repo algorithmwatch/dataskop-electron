@@ -1,17 +1,17 @@
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import { useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
 
 export default function VisualizationProfilePage(): JSX.Element {
-  const [nextButtonIsDisabled, setNextButtonIsDisabled] = useState(true);
   const { getNextPage, getPreviousPage } = useNavigation();
 
   const {
     state: {
       scrapingProgress: { step },
+      isScrapingFinished,
       scrapingConfig,
     },
   } = useScraping();
@@ -29,8 +29,8 @@ export default function VisualizationProfilePage(): JSX.Element {
       label: 'Weiter',
       // size: 'large',
       endIcon: faAngleRight,
-      disabled: nextButtonIsDisabled,
-      tippyOptions: nextButtonIsDisabled
+      disabled: !isScrapingFinished,
+      tippyOptions: !isScrapingFinished
         ? {
             content: 'Bitte warten Sie, bis alle Daten geladen sind.',
             theme: 'process-info',
@@ -38,22 +38,12 @@ export default function VisualizationProfilePage(): JSX.Element {
           }
         : undefined,
       clickHandler(history: RouteComponentProps['history']) {
-        if (!nextButtonIsDisabled) {
+        if (isScrapingFinished) {
           history.push(getNextPage('path'));
         }
       },
     },
   ];
-
-  // check if scraping progress is ahead of current step
-  useEffect(() => {
-    const stepIndex = scrapingConfig.steps.findIndex(
-      (s) => s.type === 'profile',
-    );
-    if (nextButtonIsDisabled && step > stepIndex) {
-      setNextButtonIsDisabled(false);
-    }
-  }, [step]);
 
   return (
     <>

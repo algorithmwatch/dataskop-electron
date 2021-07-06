@@ -41,15 +41,19 @@ function NavigationProvider({ children }: NavigationProviderProps) {
     pages: [
       {
         path: routes.START,
+        sectionKey: null,
       },
       {
         path: routes.INTRODUCTION,
+        sectionKey: null,
       },
       {
         path: routes.ONBOARDING_1,
+        sectionKey: null,
       },
       {
         path: routes.ONBOARDING_2,
+        sectionKey: null,
       },
       {
         path: routes.INTERFACE_TUTORIAL,

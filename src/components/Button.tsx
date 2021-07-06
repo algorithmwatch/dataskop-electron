@@ -99,7 +99,13 @@ export default function Button({
     return (
       // eslint-disable-next-line react/jsx-props-no-spreading
       <Tippy {...tippyOptions}>
-        {disabled ? <span tabIndex="0">{button}</span> : button}
+        {disabled ? (
+          <span tabIndex="0" className="focus:outline-none">
+            {button}
+          </span>
+        ) : (
+          button
+        )}
       </Tippy>
     );
   }

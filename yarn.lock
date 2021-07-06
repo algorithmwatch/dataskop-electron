@@ -10077,6 +10077,11 @@ pend@~1.2.0:
   resolved "https://registry.yarnpkg.com/pend/-/pend-1.2.0.tgz"
   integrity sha1-elfrVQpng/kRUzH89GY9XI4AelA=
 
+perfect-arrows@^0.3.5:
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/perfect-arrows/-/perfect-arrows-0.3.5.tgz#c115066014486fb1649d3a01f80db630fb4f5491"
+  integrity sha512-F7mPydcmQ40TG8HLi/WcVVo0Qf4r6/r1vhvVsF7y3OhoRv5CSX/6YahY2gm4+Nn54MaiIjCVBt/g26uzYvMdBQ==
+
 performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz"
