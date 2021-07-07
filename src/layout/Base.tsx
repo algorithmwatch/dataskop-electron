@@ -2,7 +2,7 @@ import {
   faBars,
   faChartPieAlt,
   faInfoCircle,
-  faPaperPlane
+  faPaperPlane,
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
@@ -45,7 +45,7 @@ export default function Base({
     state: { campaign },
   } = useScraping();
   const {
-    state: { trackRouteChanges, platformUrl },
+    state: { trackEvents, platformUrl },
   } = useConfig();
   const {
     state: { pageIndex, sections },
@@ -63,7 +63,7 @@ export default function Base({
       dispatch({ type: 'set-page-index', pageIndex: nextPageIndex });
     }
 
-    if (trackRouteChanges && campaign !== null && platformUrl !== null) {
+    if (trackEvents && campaign !== null && platformUrl !== null) {
       postEvent(platformUrl, campaign.id, pathname, {});
     }
   }, [pathname]);

@@ -11,7 +11,7 @@ type State = {
   showAdvancedMenu: boolean;
   simpleBackendUrl: string | null;
   platformUrl: string | null;
-  trackRouteChanges: boolean;
+  trackEvents: boolean;
 };
 type ConfigProviderProps = { children: React.ReactNode };
 // started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
@@ -42,7 +42,7 @@ function ConfigProvider({ children }: ConfigProviderProps) {
 
   const simpleBackendUrl = process.env.SIMPLE_BACKEND ?? null;
   const platformUrl = process.env.PLATFORM_URL ?? null;
-  const trackRouteChanges = !!process.env.TRACK_ROUTE_CHANGES;
+  const trackEvents = !!process.env.TRACK_EVENTS;
 
   // initial value gets overriden with `useEffect`
   const [state, dispatch] = React.useReducer(configReducer, {
@@ -51,7 +51,7 @@ function ConfigProvider({ children }: ConfigProviderProps) {
     showAdvancedMenu: true,
     simpleBackendUrl,
     platformUrl,
-    trackRouteChanges,
+    trackEvents,
   });
 
   // NOTE: you *might* need to memoize this value

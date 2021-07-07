@@ -34,13 +34,7 @@ export default function ScrapingManager({
   disableInput?: boolean;
 }): JSX.Element {
   const {
-    state: {
-      version,
-      isDebug,
-      simpleBackendUrl,
-      platformUrl,
-      trackRouteChanges,
-    },
+    state: { version, isDebug, simpleBackendUrl, platformUrl, trackEvents },
   } = useConfig();
 
   const {
@@ -137,11 +131,7 @@ export default function ScrapingManager({
           console.log(scrapingProgress.step, logoutStepIndex);
           // the step will increment later on, so it's one off
           if (scrapingProgress.step + 1 < logoutStepIndex) {
-            if (
-              trackRouteChanges &&
-              platformUrl !== null &&
-              campaign !== null
-            ) {
+            if (trackEvents && platformUrl !== null && campaign !== null) {
               postEvent(
                 platformUrl,
                 campaign.id,
