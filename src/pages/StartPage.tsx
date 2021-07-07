@@ -16,6 +16,7 @@ import { getActiveCampaigns } from '../utils/networking';
 export default function StartPage(): JSX.Element {
   const {
     state: { platformUrl },
+    sendEvent,
   } = useConfig();
 
   const { getNextPage } = useNavigation();
@@ -33,14 +34,18 @@ export default function StartPage(): JSX.Element {
 
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { scraping_config, id, title, description } = remoteCampaign;
+      const campaign = { id, title, description };
       dispatch({
         type: 'set-scraping-config',
         scrapingConfig: scraping_config,
-        campaign: { id, title, description },
+        campaign,
       });
+
+      sendEvent(campaign, 'successfully fetched remote config', {});
     } catch (error) {
       console.error('not able to set sraping config from remote');
       console.log(error);
+      sendEvent(null, 'failed to fetch remote config', {});
     }
   };
 

@@ -11,7 +11,7 @@ import {
 import { providerToMeta } from '../../providers';
 import { YtScrapingConfig } from '../../providers/youtube';
 import { createSingleGenerator } from '../../providers/youtube/procedures/setup';
-import { postEvent, postSimpleBackend } from '../../utils/networking';
+import { postSimpleBackend } from '../../utils/networking';
 import { delay } from '../../utils/time';
 import {
   extractHtml,
@@ -34,7 +34,8 @@ export default function ScrapingManager({
   disableInput?: boolean;
 }): JSX.Element {
   const {
-    state: { version, isDebug, simpleBackendUrl, platformUrl, trackEvents },
+    state: { version, isDebug, simpleBackendUrl },
+    sendEvent,
   } = useConfig();
 
   const {
@@ -131,14 +132,11 @@ export default function ScrapingManager({
           console.log(scrapingProgress.step, logoutStepIndex);
           // the step will increment later on, so it's one off
           if (scrapingProgress.step + 1 < logoutStepIndex) {
-            if (trackEvents && platformUrl !== null && campaign !== null) {
-              postEvent(
-                platformUrl,
-                campaign.id,
-                `user was logged out in step ${scrapingProgress.step}, the logout step was ${logoutStepIndex}`,
-                {},
-              );
-            }
+            sendEvent(
+              campaign,
+              `user was logged out in step ${scrapingProgress.step}, the logout step was ${logoutStepIndex}`,
+              {},
+            );
 
             await resetScraping();
 

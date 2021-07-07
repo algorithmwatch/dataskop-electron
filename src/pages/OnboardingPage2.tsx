@@ -4,16 +4,18 @@ import { RouteComponentProps } from 'react-router-dom';
 import Button from '../components/Button';
 import ContentWrapper from '../components/ContentWrapper';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
-import { useScraping } from '../contexts';
+import { useConfig, useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
 
 export default function OnboardingPage2(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const [showLoginWindow, setShowLoginWindow] = useState(false);
   const {
-    state: { isUserLoggedIn },
+    state: { isUserLoggedIn, campaign },
     dispatch,
   } = useScraping();
+
+  const { sendEvent } = useConfig();
 
   const footerNavItems: FooterNavItem[] = [
     {
@@ -55,11 +57,19 @@ export default function OnboardingPage2(): JSX.Element {
                 setShowLoginWindow(true);
                 dispatch({ type: 'set-is-attached', isAttached: true });
                 dispatch({ type: 'set-visible-window', visibleWindow: true });
+                sendEvent(campaign, 'clicked start scraping', {});
               }}
             >
               Anmelden
             </Button>
-            <Button size="large">Mit Demodaten fortfahren</Button>
+            <Button
+              size="large"
+              onClick={() => {
+                sendEvent(campaign, 'clicked use demo data', {});
+              }}
+            >
+              Mit Demodaten fortfahren
+            </Button>
           </div>
         </ContentWrapper>
       )}

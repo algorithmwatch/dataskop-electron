@@ -13,10 +13,8 @@ import ProcessIndicator from '../components/ProcessIndicator';
 import ScrapingProgressBar from '../components/ScrapingProgressBar';
 import Sidebar from '../components/Sidebar';
 import routes from '../constants/routes.json';
-import { useConfig, useNavigation } from '../contexts';
-import { useScraping } from '../contexts/scraping';
+import { useNavigation } from '../contexts';
 import logo from '../static/images/logos/dslogo.svg';
-import { postEvent } from '../utils/networking';
 
 const sidebarMenu = [
   {
@@ -41,12 +39,7 @@ export default function Base({
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const [sectionKey, setSectionKey] = useState('');
   const { pathname } = useLocation();
-  const {
-    state: { campaign },
-  } = useScraping();
-  const {
-    state: { trackEvents, platformUrl },
-  } = useConfig();
+
   const {
     state: { pageIndex, sections },
     dispatch,
@@ -61,10 +54,6 @@ export default function Base({
     // set page index
     if (nextPageIndex !== -1) {
       dispatch({ type: 'set-page-index', pageIndex: nextPageIndex });
-    }
-
-    if (trackEvents && campaign !== null && platformUrl !== null) {
-      postEvent(platformUrl, campaign.id, pathname, {});
     }
   }, [pathname]);
 

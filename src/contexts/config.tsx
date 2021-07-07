@@ -1,5 +1,7 @@
 import { ipcRenderer } from 'electron';
 import React, { useEffect } from 'react';
+import { Campaign } from '../providers/types';
+import { postEvent } from '../utils/networking';
 
 type Action =
   | { type: 'set-version'; version: string }
@@ -17,7 +19,7 @@ type ConfigProviderProps = { children: React.ReactNode };
 // started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
 
 const ConfigStateContext = React.createContext<
-  { state: State; dispatch: Dispatch } | undefined
+  { state: State; dispatch: Dispatch; sendEvent: any } | undefined
 >(undefined);
 
 function configReducer(state: State, action: Action) {
@@ -66,7 +68,18 @@ function ConfigProvider({ children }: ConfigProviderProps) {
     getVersionNumber();
   }, []);
 
-  const value = { state, dispatch };
+  function sendEvent(campaign: Campaign | null, message: string, data: any) {
+    if (trackEvents && platformUrl !== null) {
+      postEvent(
+        platformUrl,
+        campaign === null ? -1 : campaign.id,
+        message,
+        data,
+      );
+    }
+  }
+
+  const value = { state, dispatch, sendEvent };
 
   return (
     <ConfigStateContext.Provider value={value}>
