@@ -77,15 +77,22 @@ const parseDate = (() => {
 const useData = (raw: Array<ScrapingResult>) => {
   const [data, setData] = useState({});
 
-  const slug = raw.find(
+  console.log(raw);
+
+  const slugHistory = raw.find(
     (x) => x.success && x.slug.includes('user-watch-history'),
   )?.fields.videos;
+
+  const channels = raw.find(
+    (x) => x.success && x.slug.includes('subscribed-channels'),
+  )?.fields.channels;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const lookups = await getLookups();
-        const history = slug.map((d) => {
+
+        const history = slugHistory.map((d) => {
           const date = parseDate(d.watchedAt);
           const watchTime = parseInt((d.duration * d.percWatched) / 100 / 1000);
           const detail = lookups.find((l) => l.info.videoId === d.id).info;
@@ -108,6 +115,9 @@ const useData = (raw: Array<ScrapingResult>) => {
         const watchTime = sum(history, (d) => d.watchTime) / 60;
         const watchPercentAverage = mean(history, (d) => d.percWatched);
         const watchTimeAverage = mean(history, (d) => d.watchTime) / 60;
+        const channelsNotification = channels.filter(
+          (d) => d.notificationsEnabled,
+        );
 
         setData({
           history,
@@ -117,18 +127,20 @@ const useData = (raw: Array<ScrapingResult>) => {
           watchTime,
           watchPercentAverage,
           watchTimeAverage,
+          channels,
+          channelsNotification,
         });
       } catch (error) {
         console.error(error);
       }
     };
 
-    if (slug) {
+    if (slugHistory) {
       fetchData();
     } else {
       setData({ empty: true });
     }
-  }, [slug]);
+  }, [slugHistory, channels]);
 
   return data;
 };
@@ -184,6 +196,12 @@ export default function StatisticsChart({
         value={db.mostWatchedCategoriesTime[0][0]}
         small={true}
         unit=""
+      />
+      <Badge title="subscribed to" value={db.channels.length} unit="channels" />
+      <Badge
+        title="width notifications"
+        value={db.channelsNotification.length}
+        unit="channels"
       />
     </div>
   );
