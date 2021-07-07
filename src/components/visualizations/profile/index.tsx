@@ -118,6 +118,12 @@ const useData = (raw: Array<ScrapingResult>) => {
         const channelsNotification = channels.filter(
           (d) => d.notificationsEnabled,
         );
+        const channelUrls = channels.map((c) => c.channelUrl);
+        const topChannels = rollups(
+          history.filter((h) => channelUrls.includes(h.channelUrl)),
+          (v) => v.length,
+          (d) => d.channelName,
+        );
 
         setData({
           history,
@@ -129,6 +135,7 @@ const useData = (raw: Array<ScrapingResult>) => {
           watchTimeAverage,
           channels,
           channelsNotification,
+          topChannels,
         });
       } catch (error) {
         console.error(error);
@@ -202,6 +209,12 @@ export default function StatisticsChart({
         title="width notifications"
         value={db.channelsNotification.length}
         unit="channels"
+      />
+      <Badge
+        title="favorite channel"
+        value={db.topChannels[0][0]}
+        small={true}
+        unit=""
       />
     </div>
   );
