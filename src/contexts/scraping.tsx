@@ -11,7 +11,6 @@ export type ScrapingProgress = {
 
 type Action =
   | { type: 'set-is-attached'; isAttached: boolean }
-  | { type: 'set-log-html'; logHtml: boolean }
   | {
       type: 'set-scraping-config';
       scrapingConfig: ScrapingConfig;
@@ -36,7 +35,9 @@ type Action =
       type: 'scraping-has-started';
       sessionId: string | null;
       stepGenerator: AsyncGenerator | null;
-    };
+    }
+  | { type: 'set-log-html'; logHtml: boolean }
+  | { type: 'set-disable-input'; disableInput: boolean };
 
 type Dispatch = (action: Action) => void;
 type State = {
@@ -61,6 +62,7 @@ type State = {
   bounds: { width: number; height: number; x: number; y: number };
   // store scraped HTML in log file (for debugging)
   logHtml: boolean;
+  disableInput: boolean;
 };
 
 type ScrapingProviderProps = { children: React.ReactNode };
@@ -91,16 +93,13 @@ const initialState = {
   visibleWindow: true,
   bounds: { width: 100, height: 100, x: 100, y: 100 },
   logHtml: false,
+  disableInput: false,
 };
 
 function scrapingReducer(state: State, action: Action) {
   switch (action.type) {
     case 'set-is-attached': {
       return { ...state, isAttached: action.isAttached };
-    }
-
-    case 'set-log-html': {
-      return { ...state, logHtml: action.logHtml };
     }
 
     case 'set-scraping-config': {
@@ -120,7 +119,11 @@ function scrapingReducer(state: State, action: Action) {
     }
 
     case 'set-scraping-started': {
-      return { ...state, isScrapingStarted: action.isScrapingStarted };
+      return {
+        ...state,
+        isScrapingStarted: action.isScrapingStarted,
+        disableInput: true,
+      };
     }
 
     case 'set-scraping-paused': {
@@ -199,6 +202,14 @@ function scrapingReducer(state: State, action: Action) {
           'campaign',
         ]),
       };
+    }
+
+    case 'set-log-html': {
+      return { ...state, logHtml: action.logHtml };
+    }
+
+    case 'set-disable-input': {
+      return { ...state, disableInput: action.disableInput };
     }
 
     default: {

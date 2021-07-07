@@ -32,12 +32,10 @@ export default function ScrapingManager({
   onLogin = null,
   onDone = null,
   disableInput = false,
-  autostart = false,
 }: {
   onLogin?: null | (() => void);
   onDone?: null | ((arg0: string) => void);
   disableInput?: boolean;
-  autostart?: boolean;
 }): JSX.Element {
   const {
     state: { version, isDebug, simpleBackendUrl },
@@ -172,8 +170,10 @@ export default function ScrapingManager({
         });
 
         if (!result.success) {
-          console.error('parsing error:');
-          console.error(result);
+          console.info(
+            'The scraping result was marked as unsuccessful. However, we continue.',
+          );
+          console.info(result);
         }
 
         if (simpleBackendUrl)
@@ -217,10 +217,6 @@ export default function ScrapingManager({
         ipcRenderer.on(cbSlugNav, checkLoginCb);
       } else {
         if (onLogin !== null) onLogin();
-
-        if (autostart) {
-          dispatch({ type: 'set-scraping-started', isScrapingStarted: true });
-        }
       }
     };
 
@@ -232,7 +228,7 @@ export default function ScrapingManager({
     initScraper();
     return cleanUpScraper;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [disableInput]);
 
   return <ScrapingBrowser />;
 }

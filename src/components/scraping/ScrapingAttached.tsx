@@ -4,9 +4,9 @@ import ScrapingManager from './ScrapingManager';
 
 export default function ScapingAttached() {
   const {
-    state: { isAttached },
+    state: { isAttached, disableInput },
   } = useScraping();
 
-  if (isAttached) return <ScrapingManager />;
+  if (isAttached) return <ScrapingManager disableInput={disableInput} />;
   return null;
 }
