@@ -67,7 +67,7 @@ export default function OnboardingPage2(): JSX.Element {
                 dispatch({ type: 'set-visible-window', visibleWindow: true });
               }}
             >
-              Bei Google anmelden
+              Anmelden
             </Button>
             <Button size="large">Mit Demodaten fortfahren</Button>
           </div>
