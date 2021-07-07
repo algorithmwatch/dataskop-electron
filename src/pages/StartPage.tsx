@@ -8,7 +8,7 @@ import awlogo from '../static/images/logos/aw-logo.png';
 import bmbflogo from '../static/images/logos/bmbf-logo.png';
 import dslogo from '../static/images/logos/dslogo.svg';
 import enslogo from '../static/images/logos/ens-logo.png';
-import hplogo from '../static/images/logos/fhp-logo.png';
+import fhplogo from '../static/images/logos/fhp-logo.png';
 import mplogo from '../static/images/logos/mp-logo.png';
 import uplogo from '../static/images/logos/up-logo.png';
 import { getActiveCampaigns } from '../utils/networking';
@@ -68,18 +68,38 @@ export default function StartPage(): JSX.Element {
         </div>
         <div className="bg-yellow-100">
           <div className="text-center">
-            <div className="font-bold">Partner:</div>
-            <div className="flex flex-wrap items-center justify-center mb-8">
-              <img src={enslogo} alt="" className="mx-2.5 block w-24 h-auto" />
-              <img src={hplogo} alt="" className="mx-2.5 block w-52 h-auto" />
-              <img src={awlogo} alt="" className="mx-2.5 block w-48 h-auto" />
-              <img src={mplogo} alt="" className="mx-2.5 block w-44 h-auto" />
-              <img src={uplogo} alt="" className="mx-2.5 block w-48 h-auto" />
+            <div className="font-bold mb-3">Partner:</div>
+            <div className="flex flex-wrap items-center justify-center mb-5 max-w-xl">
+              <img
+                src={awlogo}
+                alt=""
+                className="mx-3 py-1 block w-36 h-auto"
+              />
+              <img
+                src={enslogo}
+                alt=""
+                className="mx-3 py-1 block w-20 h-auto"
+              />
+              <img
+                src={uplogo}
+                alt=""
+                className="mx-3 py-1 block w-44 h-auto"
+              />
+              <img
+                src={fhplogo}
+                alt=""
+                className="mx-3 py-1 block w-48 h-auto"
+              />
+              <img
+                src={mplogo}
+                alt=""
+                className="mx-3 py-1 block w-36 h-auto"
+              />
             </div>
           </div>
           <div className="text-center">
             <div className="font-bold">Gefördert durch:</div>
-            <img src={bmbflogo} alt="" className="block w-52 mx-auto" />
+            <img src={bmbflogo} alt="" className="block w-52 mx-auto -mt-1" />
           </div>
         </div>
       </div>
