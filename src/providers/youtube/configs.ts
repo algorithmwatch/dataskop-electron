@@ -1,9 +1,7 @@
 import { ProviderMetaInformation } from '../types';
-import { profileScraperSlugToFun } from './scrapers';
 import {
   ActionProcedureConfig,
   ProfileProcedureConfig,
-  ProfileScraper,
   SearchProcedureConfig,
   VideoProcedureConfig,
   YtScrapingConfig,
@@ -72,7 +70,11 @@ const searchStep: SearchProcedureConfig = {
 
 const profileScraperStep: ProfileProcedureConfig = {
   type: 'profile',
-  profileScrapers: Object.keys(profileScraperSlugToFun) as ProfileScraper[],
+  profileScrapers: [
+    'yt-user-watch-history',
+    'yt-playlist-page-liked-videos',
+    'yt-user-subscribed-channels',
+  ],
 };
 
 const deactivateWatchHistoryStep: ActionProcedureConfig = {
@@ -110,9 +112,9 @@ const simpleConfig: YtScrapingConfig = {
 
 const searchConfig: YtScrapingConfig = {
   ...defaultConfig,
-  title: 'youtube search: some queries',
+  title: 'youtube search: simple video, some queries, log out and again',
   slug: 'yt-search',
-  steps: [searchStep],
+  steps: [simpleVideoExperimentScaper, searchStep, logOutVideoScraperStep],
 };
 
 // fast test, all functions only need to run once
