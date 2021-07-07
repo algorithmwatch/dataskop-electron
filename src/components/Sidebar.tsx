@@ -62,14 +62,6 @@ export default function Sidebar({
                     to: routes.SCRAPING_CONFIG_EDITOR,
                   },
                   { label: 'results', to: routes.RESULTS },
-                  {
-                    label: 'provider login',
-                    to: routes.PROVIDER_LOGIN,
-                  },
-                  {
-                    label: 'experiment scraping',
-                    to: routes.SCRAPING_EXPERIMENT,
-                  },
                   { label: 'settings', to: routes.SETTINGS },
                   { label: 'donation', to: routes.DONATION1 },
                 ]}

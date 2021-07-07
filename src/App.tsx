@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Redirect,
   Route,
-  Switch
+  Switch,
 } from 'react-router-dom';
 import './App.global.css';
 import ScrapingAttached from './components/scraping/ScrapingAttached';
@@ -13,14 +13,10 @@ import { ConfigProvider } from './contexts/config';
 import { NavigationProvider } from './contexts/navigation';
 import { ScrapingProvider } from './contexts/scraping';
 import BaseLayout from './layout/Base';
-import ExplanationPage from './pages/admin/ExplanationPage';
 import ResultsDetailsPage from './pages/admin/ResultsDetailsPage';
 import ResultsPage from './pages/admin/ResultsPage';
 import AdvancedScrapingPage from './pages/admin/ScrapingAdvancedPage';
 import ScrapingConfigEditorPage from './pages/admin/ScrapingConfigEditorPage';
-import ScrapingExperimentPage from './pages/admin/ScrapingExperimentPage';
-import ScrapingProfilePage from './pages/admin/ScrapingProfilePage';
-import ProviderLoginPage from './pages/admin/ScrapingProviderLoginPage';
 import SettingsPage from './pages/admin/SettingsPage';
 import VisualizationAdvancedPage from './pages/admin/VisualizationAdvancedPage';
 import VisualizationExperimentsPage from './pages/admin/VisualizationExperimentsPage';
@@ -59,18 +55,6 @@ export default function App() {
                   component={ScrapingConfigEditorPage}
                 />
                 <Route
-                  path={routes.SCRAPING_PROFILE}
-                  component={ScrapingProfilePage}
-                />
-                <Route
-                  path={routes.SCRAPING_EXPERIMENT}
-                  component={ScrapingExperimentPage}
-                />
-                <Route
-                  path={routes.PROVIDER_LOGIN}
-                  component={ProviderLoginPage}
-                />
-                <Route
                   path={routes.RESULTS_DETAILS}
                   component={ResultsDetailsPage}
                 />
@@ -84,7 +68,6 @@ export default function App() {
                   path={routes.VISUALIZATION_EXPERIMENT}
                   component={VisualizationExperimentsPage}
                 />
-                <Route path={routes.EXPLANATION} component={ExplanationPage} />
 
                 {/*
                   Sections:
