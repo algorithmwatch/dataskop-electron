@@ -30,12 +30,15 @@ export function PerfectArrow({
     <svg
       viewBox={`0 0 ${width} ${height}`}
       style={{ width, height }}
-      stroke="#000"
-      fill="#000"
-      strokeWidth={3}
+      className="text-yellow-1500 fill-current stroke-current"
+      strokeWidth={2}
     >
       {/* <circle cx={sx} cy={sy} r={4} /> */}
-      <path d={`M${sx},${sy} Q${cx},${cy} ${ex},${ey}`} fill="none" />
+      <path
+        d={`M${sx},${sy} Q${cx},${cy} ${ex},${ey}`}
+        fill="none"
+        strokeDasharray={4}
+      />
       <polygon
         points="0,-6 12,0, 0,6"
         transform={`translate(${ex},${ey}) rotate(${endAngleAsDegrees})`}

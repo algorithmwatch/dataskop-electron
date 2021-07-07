@@ -93,7 +93,7 @@ export default function Base({
   return (
     <div className="relative flex flex-col h-screen justify-between">
       <header
-        className={classNames('flex items-center py-4 px-6', {
+        className={classNames('flex items-center py-4 px-6 z-20', {
           'opacity-0': pathname === routes.START,
         })}
       >

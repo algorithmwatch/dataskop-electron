@@ -185,7 +185,10 @@ export default function AutoplayChain({
     [data],
   );
   const seedVideos = useMemo(
-    () => groups.map((group) => group[0].fields).slice(0, 9),
+    () =>
+      groups
+        .map((group) => group[0].fields)
+        .filter((x) => x.seedCreator === 'fixed'),
     [groups],
   ) as VideoPage[];
   const [currentSeedVideoIndex, setCurrentSeedVideoIndex] = useState(0);
