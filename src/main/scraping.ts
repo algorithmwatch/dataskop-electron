@@ -125,6 +125,15 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
             true,
           );
 
+          // pause videos right after rendering, import to not alter the HTML for the hash check
+          try {
+            await view?.webContents.executeJavaScript(
+              "const awThePlayer = document.querySelector('.html5-video-player'); if(awThePlayer != null) awThePlayer.click();",
+            );
+          } catch (e) {
+            console.log(e);
+          }
+
           if (withHtml) {
             const html = await view?.webContents.executeJavaScript(
               'document.documentElement.innerHTML',
