@@ -139,10 +139,10 @@ function Badge({ title, value, unit, small = false }) {
       <div className="p-2 backdrop-filter backdrop-contrast-125 backdrop-brightness-110 backdrop-saturate-200 flex justify-center items-center flex-grow flex-row">
         <div>
           <span className={small ? 'hl-2xl' : 'hl-4xl'}>{value}</span>{' '}
-          <span className="text-xs ">{unit}</span>
+          <span className="text-sm ">{unit}</span>
         </div>
       </div>
-      <div className="p-2 text-s text-opacity-50 backdrop-filter backdrop-saturate-200 backdrop-contrast-75">
+      <div className="p-2 text-sm text-yellow-1300  backdrop-filter backdrop-saturate-50">
         {title}
       </div>
     </div>
@@ -161,7 +161,7 @@ export default function StatisticsChart({
   console.log('dsb', db);
 
   return (
-    <div className="p-5 grid grid-cols-6 gap-4">
+    <div className="p-7 grid grid-cols-6 gap-4">
       <Badge title="watch history" value={db.days} unit="days" />
       <Badge title="videos" value={db.history?.length} unit="" />
       <Badge
