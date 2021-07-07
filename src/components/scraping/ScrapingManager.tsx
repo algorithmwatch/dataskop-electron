@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { ipcRenderer } from 'electron';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useConfig, useScraping } from '../../contexts';
 import {
@@ -55,6 +55,7 @@ export default function ScrapingManager({
       stepGenerator,
       campaign,
       isUserLoggedIn,
+      bounds,
     },
     dispatch,
   } = useScraping();
@@ -268,14 +269,18 @@ export default function ScrapingManager({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // hotfix to force the scraping browser to reload
+  const [forceReload, setForceReload] = useState(0);
+
   useEffect(() => {
     const reloadScrapingView = async () => {
       await ipcRenderer.invoke('scraping-remove-view');
       await initScraper();
+      setForceReload(forceReload + 1);
     };
     reloadScrapingView();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [disableInput]);
 
-  return <ScrapingBrowser />;
+  return <ScrapingBrowser forceReload={forceReload} />;
 }

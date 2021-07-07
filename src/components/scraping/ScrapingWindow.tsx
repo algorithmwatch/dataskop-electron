@@ -5,9 +5,11 @@ import { Rnd } from 'react-rnd';
 import { useScraping } from '../../contexts';
 
 export default function ScrapingWindow({
+  forceReload = 0,
   initPosition = 'center',
   initSizeFactor = 0.6,
 }: {
+  forceReload: number;
   initPosition?: string;
   initSizeFactor?: number;
 }) {
@@ -63,7 +65,7 @@ export default function ScrapingWindow({
     };
 
     setBounds(windowDimensions());
-  }, [initPosition, initSizeFactor]);
+  }, [initPosition, initSizeFactor, forceReload]);
 
   if (!visibleWindow) return null;
 
