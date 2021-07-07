@@ -29,12 +29,8 @@ import ScrapingBrowser from './ScrapingWindow';
 // You have to set from the component's initialization whether a scraping view is interactive.
 
 export default function ScrapingManager({
-  onLogin = null,
-  onDone = null,
   disableInput = false,
 }: {
-  onLogin?: null | (() => void);
-  onDone?: null | ((arg0: string) => void);
   disableInput?: boolean;
 }): JSX.Element {
   const {
@@ -116,7 +112,6 @@ export default function ScrapingManager({
     if (loggedIn) {
       // successfully logged in
       setNavigationCallback(cbSlugNav, true);
-      if (onLogin !== null) onLogin();
     }
   };
 
@@ -186,7 +181,6 @@ export default function ScrapingManager({
 
           setSessionFinishedAt(sessionId);
           dispatch({ type: 'scraping-has-finished' });
-          if (onDone !== null) onDone(sessionId);
         } else {
           // Store data w/ async
           addScrapingResult(sessionId, step, result);
@@ -215,8 +209,6 @@ export default function ScrapingManager({
       if (!loggedIn) {
         await setNavigationCallback(cbSlugNav);
         ipcRenderer.on(cbSlugNav, checkLoginCb);
-      } else {
-        if (onLogin !== null) onLogin();
       }
     };
 
