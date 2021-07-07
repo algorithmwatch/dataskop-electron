@@ -83,19 +83,23 @@ function Visual({ session }: { session: SearchResultsCompareDataItem }) {
           <div className="font-bold text-sm text-yellow-1500 mb-3">
             Angemeldet
           </div>
-          <VideoList
-            items={session.signedInVideos.slice(0, displayCount)}
-            tippyPlacement="left"
-          />
+          {session.signedInVideos && (
+            <VideoList
+              items={session.signedInVideos.slice(0, displayCount)}
+              tippyPlacement="left"
+            />
+          )}
         </div>
         <div className="">
           <div className="font-bold text-sm text-yellow-1500 mb-3">
             Nicht angemeldet
           </div>
-          <VideoList
-            items={session.signedOutVideos.slice(0, displayCount)}
-            tippyPlacement="right"
-          />
+          {session.signedOutVideos && (
+            <VideoList
+              items={session.signedOutVideos.slice(0, displayCount)}
+              tippyPlacement="right"
+            />
+          )}
         </div>
       </div>
     </div>
@@ -112,8 +116,8 @@ export default function SearchResultsCompare({
     .groupBy('fields.query')
     .map((items, query) => ({
       query,
-      signedInVideos: items[0].fields.videos,
-      signedOutVideos: items[1].fields.videos,
+      signedInVideos: items[0]?.fields.videos,
+      signedOutVideos: items[1]?.fields.videos,
     }))
     .value();
 
@@ -201,7 +205,7 @@ export default function SearchResultsCompare({
         </div>
       </Explainer>
       <Carousel options={carouselOptions}>
-        {queryGroups.length &&
+        {queryGroups.length > 0 &&
           queryGroups.map((session) => (
             <Slide key={session.query}>
               <Visual session={session} />

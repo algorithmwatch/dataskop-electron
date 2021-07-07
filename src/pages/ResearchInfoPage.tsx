@@ -9,10 +9,7 @@ import { useNavigation } from '../contexts/navigation';
 export default function ResearchInfoPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const {
-    state: {
-      scrapingProgress: { step },
-      isScrapingFinished,
-    },
+    state: { isScrapingFinished },
   } = useScraping();
   const footerNavItems: FooterNavItem[] = [
     {

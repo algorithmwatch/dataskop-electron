@@ -37,6 +37,7 @@ function ProcessIndicator({
               content: <span>{label}</span>,
               theme: 'process-info',
               placement: 'top-start',
+              zIndex: 35,
             };
             const isCurrentStep = stepsKeys[index] === currentStep;
 

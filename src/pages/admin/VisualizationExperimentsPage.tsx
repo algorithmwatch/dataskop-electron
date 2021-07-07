@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { RouteComponentProps, useLocation } from 'react-router-dom';
-import FooterNav from '../../components/FooterNav';
+import { useLocation } from 'react-router-dom';
 import AutoplayChain from '../../components/visualizations/AutoplayChain';
 import NewsTop5 from '../../components/visualizations/NewsTop5';
 import SearchResultsCompare from '../../components/visualizations/SearchResultsCompare';
-import routes from '../../constants/routes.json';
 import { useConfig } from '../../contexts/config';
 import { getScrapingResultsBySession } from '../../db';
 
@@ -35,16 +33,6 @@ export default function VisualizationExperimentsPage() {
 
   if (!sessionId || !type) return null;
 
-  const footerNavItems = [
-    {
-      label: 'weiter zu Donation',
-      classNames: 'ml-auto',
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(routes.DONATION1);
-      },
-    },
-  ];
-
   return (
     <>
       {type === 'newstop5' && <NewsTop5 data={data} />}
@@ -52,7 +40,6 @@ export default function VisualizationExperimentsPage() {
         <SearchResultsCompare data={data} />
       )}
       {type === 'autoplay-chain' && <AutoplayChain data={data} />}
-      <FooterNav items={footerNavItems} />
     </>
   );
 }

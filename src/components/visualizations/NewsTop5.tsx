@@ -115,11 +115,11 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
   const filtered = (() => {
     const signedInData = data.filter(
       (x) =>
-        x.fields.seedCreator === 'yt-playlist-page-national-news-top-stories',
+        x?.fields.seedCreator === 'yt-playlist-page-national-news-top-stories',
     );
     const signedOutData = data.filter(
       (x) =>
-        x.fields.seedCreator ===
+        x?.fields.seedCreator ===
         'repeat: yt-playlist-page-national-news-top-stories',
     );
 
