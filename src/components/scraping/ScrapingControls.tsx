@@ -30,13 +30,11 @@ export default function ScrapingControls({
     dispatch,
   } = useScraping();
 
-  const goToStart = () => {
-    return goToUrl(providerToMeta[scrapingConfig.provider].loginUrl);
-  };
-
-  const resetBrowser = () => {
-    goToUrl(providerToMeta[scrapingConfig.provider].loginUrl, { clear: true });
-    dispatch({ type: 'set-user-logged-in', isUserLoggedIn: false });
+  const resetScraping = async () => {
+    await goToUrl(providerToMeta[scrapingConfig.provider].loginUrl, {
+      clear: true,
+    });
+    dispatch({ type: 'reset-scraping' });
   };
 
   // controls for the scraping
@@ -47,12 +45,6 @@ export default function ScrapingControls({
 
   const resumeScraping = () => {
     dispatch({ type: 'set-scraping-paused', isScrapingPaused: false });
-  };
-
-  const resetScraping = () => {
-    dispatch({ type: 'reset-scraping' });
-
-    goToStart();
   };
 
   const toggleIsMuted = () => {
@@ -76,13 +68,7 @@ export default function ScrapingControls({
         </p>
         <br />
         <div className={hideControls ? 'invisible' : ''}>
-          {isUserLoggedIn && (
-            <>
-              <Button onClick={resetBrowser}>reset browser</Button>
-              <Button onClick={resetScraping}>reset scraping</Button>
-              <br />
-            </>
-          )}
+          <Button onClick={resetScraping}>reset scraping</Button>
           {!isUserLoggedIn && <p>Please login before continuing.</p>}
           {isUserLoggedIn && !isScrapingStarted && (
             <Button onClick={startScraping}>start scraping</Button>

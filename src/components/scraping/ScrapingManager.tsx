@@ -11,7 +11,7 @@ import {
 import { providerToMeta } from '../../providers';
 import { YtScrapingConfig } from '../../providers/youtube';
 import { createSingleGenerator } from '../../providers/youtube/procedures/setup';
-import { postSimpleBackend } from '../../utils/networking';
+import { postEvent, postSimpleBackend } from '../../utils/networking';
 import { delay } from '../../utils/time';
 import {
   extractHtml,
@@ -34,7 +34,13 @@ export default function ScrapingManager({
   disableInput?: boolean;
 }): JSX.Element {
   const {
-    state: { version, isDebug, simpleBackendUrl },
+    state: {
+      version,
+      isDebug,
+      simpleBackendUrl,
+      platformUrl,
+      trackRouteChanges,
+    },
   } = useConfig();
 
   const {
@@ -48,6 +54,7 @@ export default function ScrapingManager({
       scrapingConfig,
       stepGenerator,
       campaign,
+      isUserLoggedIn,
     },
     dispatch,
   } = useScraping();
@@ -105,17 +112,58 @@ export default function ScrapingManager({
     return html;
   };
 
+  const resetScraping = async () => {
+    dispatch({ type: 'reset-scraping' });
+    await goToUrl(providerToMeta[scrapingConfig.provider].loginUrl, {
+      clear: true,
+    });
+    return ipcRenderer.invoke('scraping-remove-view');
+  };
+
   const cbSlugNav = 'scraping-navigation-happened';
+
+  useEffect(() => {
+    const checkIfLoggedOut = async () => {
+      console.log(isUserLoggedIn, isScrapingStarted);
+
+      if (!isUserLoggedIn && isScrapingStarted) {
+        const logoutSteps = scrapingConfig.steps.filter(
+          (x) => 'doLogout' in x && x.doLogout,
+        );
+        console.log(logoutSteps);
+        if (logoutSteps.length === 1) {
+          const logoutStepIndex = scrapingConfig.steps.indexOf(logoutSteps[0]);
+          console.log(scrapingProgress.step, logoutStepIndex);
+          // the step will increment later on, so it's one off
+          if (scrapingProgress.step + 1 < logoutStepIndex) {
+            if (
+              trackRouteChanges &&
+              platformUrl !== null &&
+              campaign !== null
+            ) {
+              postEvent(
+                platformUrl,
+                campaign.id,
+                `user was logged out in step ${scrapingProgress.step}, the logout step was ${logoutStepIndex}`,
+                {},
+              );
+            }
+
+            await resetScraping();
+
+            // TODO: go to 'oops!' site
+          }
+        }
+      }
+    };
+    checkIfLoggedOut();
+  }, [isUserLoggedIn]);
 
   const checkLoginCb = async () => {
     const loggedIn = await checkForLogIn();
-    if (loggedIn) {
-      // successfully logged in
-      setNavigationCallback(cbSlugNav, true);
-    }
-  };
 
-  // controls for the scraping
+    if (loggedIn) dispatch({ type: 'set-disable-input', disableInput: true });
+  };
 
   // start scraping when `isScrapingStarted` was set to true
   useEffect(() => {
@@ -142,6 +190,8 @@ export default function ScrapingManager({
 
       await addNewSession(sId, scrapingConfig, campaign);
     };
+
+    console.log('x', isScrapingStarted);
 
     if (isScrapingStarted) startScraping();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -196,29 +246,34 @@ export default function ScrapingManager({
 
   // initialize & cleanup
 
+  const initScraper = async () => {
+    await ipcRenderer.invoke('scraping-init-view', {
+      muted: isMuted,
+      allowInput: !disableInput,
+    });
+    await goToStart();
+
+    await setNavigationCallback(cbSlugNav);
+    ipcRenderer.on(cbSlugNav, checkLoginCb);
+  };
+
+  const cleanUpScraper = () => {
+    ipcRenderer.removeListener(cbSlugNav, checkLoginCb);
+    ipcRenderer.invoke('scraping-remove-view');
+  };
+
   useEffect(() => {
-    const initScraper = async () => {
-      await ipcRenderer.invoke('scraping-init-view', {
-        muted: isMuted,
-        allowInput: !disableInput,
-      });
-      await goToStart();
-
-      const loggedIn = await checkForLogIn();
-
-      if (!loggedIn) {
-        await setNavigationCallback(cbSlugNav);
-        ipcRenderer.on(cbSlugNav, checkLoginCb);
-      }
-    };
-
-    const cleanUpScraper = () => {
-      ipcRenderer.removeListener(cbSlugNav, checkLoginCb);
-      ipcRenderer.invoke('scraping-remove-view');
-    };
-
-    initScraper();
+    // initScraper();
     return cleanUpScraper;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const reloadScrapingView = async () => {
+      await ipcRenderer.invoke('scraping-remove-view');
+      await initScraper();
+    };
+    reloadScrapingView();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [disableInput]);
 

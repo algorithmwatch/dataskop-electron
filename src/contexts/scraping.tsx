@@ -122,7 +122,6 @@ function scrapingReducer(state: State, action: Action) {
       return {
         ...state,
         isScrapingStarted: action.isScrapingStarted,
-        disableInput: true,
       };
     }
 
@@ -159,6 +158,7 @@ function scrapingReducer(state: State, action: Action) {
         ...state,
         sessionId: action.sessionId,
         stepGenerator: action.stepGenerator,
+        isScrapingStarted: true,
         isScrapingFinished: false,
         isScrapingPaused: false,
         scrapingProgress: { isActive: true, value: 0, step: 0 },
@@ -186,21 +186,11 @@ function scrapingReducer(state: State, action: Action) {
       };
     }
 
-    // only select state that does not re-render the browser window
+    // reset everything besides campaign + scraping config
     case 'reset-scraping': {
       return {
-        ...state,
-        ..._.pick(initialState, [
-          'sessionid',
-          'scrapingProgress',
-          'isScrapingStarted',
-          'isScrapingPaused',
-          'isScrapingFinished',
-          'scrapingError',
-          'stepGenerator',
-          'isUserLoggedIn',
-          'campaign',
-        ]),
+        ...initialState,
+        ..._.pick(state, ['sessionid', 'campaign', 'isAttached', 'bounds']),
       };
     }
 
