@@ -47,11 +47,7 @@ const LocalScrapingConfigSelect = ({
   let chosenOption = uniqueOptions[0];
   if (chosenOptionArray.length > 0) {
     [chosenOption] = chosenOptionArray;
-  } else {
-    // happens if the selected scraping config is deleted, choose a default one
-    setScrapingConfig(chosenOption);
   }
-
   return (
     <Card className="mt-10">
       <CardContent>

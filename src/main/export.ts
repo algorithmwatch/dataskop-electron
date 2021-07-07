@@ -1,4 +1,4 @@
-import { dialog, ipcMain } from 'electron';
+import { BrowserWindow, dialog, ipcMain } from 'electron';
 import fetch from 'electron-fetch';
 import fs from 'fs';
 import pLimit from 'p-limit';
@@ -50,7 +50,7 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
       });
       if (canceled || !filePath) return;
 
-      !fs.existsSync(filePath) && fs.mkdirSync(filePath);
+      if (!fs.existsSync(filePath)) fs.mkdirSync(filePath);
 
       const limit = pLimit(10);
       console.log(ytIds);
