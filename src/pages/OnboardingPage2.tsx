@@ -55,10 +55,10 @@ export default function OnboardingPage2(): JSX.Element {
       {!isUserLoggedIn && !showLoginWindow && (
         <ContentWrapper centerY>
           <h1 className="hl-4xl text-center mb-6">Bitte melden Sie sich an</h1>
-          <p className="text-lg mx-auto mb-6">
+          {/* <p className="text-lg mx-auto mb-6">
             Bitte melden Sie sich mit Ihrem Google-Konto an.
-          </p>
-          <div className="flex justify-center">
+          </p> */}
+          <div className="flex flex-col items-center space-y-4">
             <Button
               size="large"
               onClick={() => {
@@ -67,8 +67,9 @@ export default function OnboardingPage2(): JSX.Element {
                 dispatch({ type: 'set-visible-window', visibleWindow: true });
               }}
             >
-              Anmelden
+              Bei Google anmelden
             </Button>
+            <Button size="large">Mit Demodaten fortfahren</Button>
           </div>
         </ContentWrapper>
       )}
