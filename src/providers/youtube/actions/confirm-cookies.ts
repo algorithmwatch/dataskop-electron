@@ -13,7 +13,8 @@ const submitConfirmForm = async (getHtml: GetHtmlFunction) => {
   const maxSteps = 10;
 
   for (let step = 0; step < maxSteps; step += 1) {
-    const $hmtl = cheerio.load(await getCurrentHtml());
+    const { html } = await getCurrentHtml();
+    const $hmtl = cheerio.load(html);
 
     const forms = $hmtl('form')
       .toArray()

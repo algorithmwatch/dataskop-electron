@@ -30,10 +30,11 @@ const waitUntilDone = async (
   getCurrentHtml: GetCurrentHtml,
   parseHtml: (html: string) => ParserResult,
   isDoneCheck: null | ((arg0: ScrapingResult, arg1: number) => boolean) = null,
-  timeout = { max: 5000, start: 700, factor: 1.3 },
+  timeout: number,
+  times: number,
   slugPrefix = 'yt',
 ) => {
-  let curTimeout = timeout.start;
+  const curTimeout = timeout;
 
   // set to some dummy value to please TypeScript
   let prevResult = {
@@ -43,29 +44,44 @@ const waitUntilDone = async (
     slug: '',
   } as ScrapingResult;
 
-  while (curTimeout < timeout.max) {
+  let prevHash = null;
+
+  // in last round, return parsing result anyhow
+
+  for (const i of range(times)) {
+    const lastRound = i === times - 1;
     await delay(curTimeout);
-    const currentHtml = await getCurrentHtml();
+    const { html, hash } = await getCurrentHtml();
+
+    // parse + check if the hash of the HTML is identical
+    // OR 2/3 of times passed and in last round
+    const checkAnyhow = Math.floor((times * 2) / 3) === i || lastRound;
+
+    if (prevHash === null || (prevHash !== hash && !checkAnyhow)) {
+      prevHash = hash;
+      // eslint-disable-next-line no-continue
+      continue;
+    } else {
+      prevHash = hash;
+    }
 
     // cast to slightly different `ScrapingResult`
     const result: ScrapingResult = {
       success: false,
-      ...parseHtml(currentHtml),
+      ...parseHtml(html),
     };
     // always prepend the provider's slug
     result.slug = `${slugPrefix}-${result.slug}`;
 
     if (
       result.errors.length === 0 &&
-      _.isEqual(result, prevResult) &&
-      (isDoneCheck === null || isDoneCheck(result, curTimeout / timeout.max))
+      (isDoneCheck === null || isDoneCheck(result, i / (times - 1)))
     ) {
       // mark as success
       result.success = true;
       return result;
     }
     prevResult = result;
-    curTimeout *= timeout.factor;
   }
 
   // prevResult is the last extracted result.
@@ -78,30 +94,37 @@ const trySeveralTimes = async (
   url: string,
   parseHtml: (html: string) => ParserResult,
   isDoneCheck: null | ((arg0: ScrapingResult, arg1: number) => boolean) = null,
-  timeout = { max: 5000, start: 700, factor: 1.3 },
+  timeout = 1000,
   slugPrefix = 'yt',
 ) => {
   let lastRes = null;
+  const allErros = [];
   // eslint-disable-next-line no-empty-pattern
-  for (const {} of range(3)) {
+  for (const i of range(3)) {
     try {
       const getCurrentHtml = await getHtml(url);
+      // wait after loading since the rendering is still happening
+      await delay(timeout);
       const result = await waitUntilDone(
         getCurrentHtml,
         parseHtml,
         isDoneCheck,
         timeout,
+        8 + i * 4,
         slugPrefix,
       );
       if (result.success) return result;
+
       lastRes = result;
-      await getHtml('https://youtube.com');
-      await delay(2000);
     } catch (e) {
       console.error(e);
+      allErros.push(e);
     }
   }
-  if (lastRes === null) throw new Error('too many failed tries');
+  if (lastRes === null)
+    throw new Error(
+      `Too many failed tries to extract html: ${JSON.stringify(allErros)}`,
+    );
   return lastRes;
 };
 

@@ -20,7 +20,8 @@ const isWatchHistoryHolded = async (
 ) => {
   const getCurrentHtml = await getHtml(changeWatchHistoryUrl);
   for ({} of _.range(maxSteps)) {
-    const $hmtl = cheerio.load(await getCurrentHtml());
+    const { html } = await getCurrentHtml();
+    const $hmtl = cheerio.load(html);
 
     const buttonIcons = $hmtl(
       '#secondary #contents ytd-button-renderer svg path',

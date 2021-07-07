@@ -2,6 +2,7 @@
  * controlling the scraping window
  */
 
+import crypto from 'crypto';
 import { BrowserView, BrowserWindow, ipcMain } from 'electron';
 import { range } from 'lodash';
 import { delay } from '../utils/time';
@@ -59,7 +60,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
   ipcMain.handle('scraping-clear-storage', () => {
     const view = scrapingView;
-    view?.webContents.session.clearStorageData();
+    return view?.webContents.session.clearStorageData();
   });
 
   ipcMain.handle(
@@ -173,7 +174,9 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     const html = await scrapingView?.webContents.executeJavaScript(
       'document.documentElement.innerHTML',
     );
-    return html;
+    const hash = crypto.createHash('md5').update(html).digest('hex');
+
+    return { html, hash };
   });
 
   ipcMain.handle('scraping-scroll-down', async () => {
