@@ -1,7 +1,7 @@
 {
   "name": "dataskop-electron",
   "productName": "DataSkop",
-  "version": "0.1.0-40",
+  "version": "0.1.0-41",
   "description": "DataSkop Electron App: The Personal Data Dashboard (PeDD) of DataSkop",
   "scripts": {
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
