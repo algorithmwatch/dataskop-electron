@@ -15,7 +15,7 @@ import Sidebar from '../components/Sidebar';
 import routes from '../constants/routes.json';
 import { useConfig, useNavigation } from '../contexts';
 import { useScraping } from '../contexts/scraping';
-import logo from '../static/images/dslogo.svg';
+import logo from '../static/images/logos/dslogo.svg';
 import { postEvent } from '../utils/networking';
 
 const sidebarMenu = [

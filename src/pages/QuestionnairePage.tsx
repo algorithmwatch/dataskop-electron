@@ -1,6 +1,7 @@
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import ContentWrapper from '../components/ContentWrapper';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import { useNavigation } from '../contexts/navigation';
 
@@ -27,14 +28,17 @@ export default function QuestionnairePage(): JSX.Element {
 
   return (
     <>
-      <div className="p-6 max-w-lg mx-auto mb-10 text-center">
-        <div>
-          <div className="text-xl font-medium">Questionnaire</div>
-          {/* <p className="text-yellow-1200">
-            Hello and welcome to this early development version of DataSkop.
-          </p> */}
+      <ContentWrapper>
+        <div className="hl-4xl mb-6">Fragebogen</div>
+        <div className="space-y-4">
+          <p>
+            Bitte beantworte uns noch folgende Fragen. Du kannst auch manche
+            Antworten frei lassen oder alle gar nichts ausfüllen. Doch wir
+            möchten Dich bitten, alle Fragen zu beantworten:  Die Inforamtionen
+            können uns helfen, den YT-Algorithmus besser zu verstehen.
+          </p>
         </div>
-      </div>
+      </ContentWrapper>
       <FooterNav items={footerNavItems} />
     </>
   );

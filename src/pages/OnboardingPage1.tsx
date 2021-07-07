@@ -1,6 +1,7 @@
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import ContentWrapper from '../components/ContentWrapper';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import { useNavigation } from '../contexts/navigation';
 
@@ -27,14 +28,24 @@ export default function OnboardingPage1(): JSX.Element {
 
   return (
     <>
-      <div className="p-6 max-w-lg mx-auto mb-10 text-center">
-        <div>
-          <div className="text-xl font-medium">Onboarding 1</div>
-          {/* <p className="text-yellow-1200">
-            Hello and welcome to this early development version of DataSkop.
-          </p> */}
+      <ContentWrapper centerY>
+        <div className="hl-4xl mb-6 text-center">Login bei YouTube</div>
+        <div className="space-y-6 text-center">
+          <p>
+            Als Erstes möchten wir Dich bitten, Dich bei YouTube (YT)
+            anzumelden. Wir speichern Dein Passwort nicht.
+          </p>
+          <div>
+            <div className="hl-xl mb-4">Kein YouTube-Konto?</div>
+            <p>
+              Wenn Du Dich nicht einloggen möchtest oder kein YT-Konto hast,
+              kannst Du mit einem „Demo-Datensatz“ fortfahren. Wir fragen Dich
+              am Ende noch einmal, ob Du nicht doch Daten spenden könntest, um
+              unsere Untersuchung zu unterstützen.
+            </p>
+          </div>
         </div>
-      </div>
+      </ContentWrapper>
       <FooterNav items={footerNavItems} />
     </>
   );

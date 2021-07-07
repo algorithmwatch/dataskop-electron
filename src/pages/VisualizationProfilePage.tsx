@@ -12,7 +12,6 @@ export default function VisualizationProfilePage(): JSX.Element {
     state: {
       scrapingProgress: { step },
       isScrapingFinished,
-      scrapingConfig,
     },
   } = useScraping();
 
@@ -29,18 +28,8 @@ export default function VisualizationProfilePage(): JSX.Element {
       label: 'Weiter',
       // size: 'large',
       endIcon: faAngleRight,
-      disabled: !isScrapingFinished,
-      tippyOptions: !isScrapingFinished
-        ? {
-            content: 'Bitte warten Sie, bis alle Daten geladen sind.',
-            theme: 'process-info',
-            placement: 'left',
-          }
-        : undefined,
       clickHandler(history: RouteComponentProps['history']) {
-        if (isScrapingFinished) {
-          history.push(getNextPage('path'));
-        }
+        history.push(getNextPage('path'));
       },
     },
   ];

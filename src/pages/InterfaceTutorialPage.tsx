@@ -71,6 +71,7 @@ export default function InterfaceTutorialPage(): JSX.Element {
         <div className="p-6 max-w-lg mx-auto mb-10 text-center">
           <div>
             <div className="text-xl font-medium">Interface Tutorial</div>
+            <p>Hier kommt das Interface-Tutorial</p>
             {/* <p className="text-yellow-1200">
             Hello and welcome to this early development version of DataSkop.
           </p> */}

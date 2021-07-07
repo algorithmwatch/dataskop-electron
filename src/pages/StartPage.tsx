@@ -4,13 +4,13 @@ import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import { useConfig, useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
-import awlogo from '../static/images/aw-logo.png';
-import bmbflogo from '../static/images/bmbf-logo.png';
-import dslogo from '../static/images/dslogo.svg';
-import enslogo from '../static/images/ens-logo.png';
-import hplogo from '../static/images/fhp-logo.png';
-import mplogo from '../static/images/mp-logo.png';
-import uplogo from '../static/images/up-logo.png';
+import awlogo from '../static/images/logos/aw-logo.png';
+import bmbflogo from '../static/images/logos/bmbf-logo.png';
+import dslogo from '../static/images/logos/dslogo.svg';
+import enslogo from '../static/images/logos/ens-logo.png';
+import hplogo from '../static/images/logos/fhp-logo.png';
+import mplogo from '../static/images/logos/mp-logo.png';
+import uplogo from '../static/images/logos/up-logo.png';
 import { getActiveCampaigns } from '../utils/networking';
 
 export default function StartPage(): JSX.Element {
