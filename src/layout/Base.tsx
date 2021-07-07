@@ -5,15 +5,17 @@ import {
   faPaperPlane
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import classNames from 'classnames';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Button from '../components/Button';
 import ProcessIndicator from '../components/ProcessIndicator';
 import ScrapingProgressBar from '../components/ScrapingProgressBar';
 import Sidebar from '../components/Sidebar';
+import routes from '../constants/routes.json';
 import { useConfig, useNavigation } from '../contexts';
 import { useScraping } from '../contexts/scraping';
-import logo from '../static/logos/dslogo.svg';
+import logo from '../static/images/dslogo.svg';
 import { postEvent } from '../utils/networking';
 
 const sidebarMenu = [
@@ -90,7 +92,11 @@ export default function Base({
 
   return (
     <div className="relative flex flex-col h-screen justify-between">
-      <header className="flex items-center py-4 px-6">
+      <header
+        className={classNames('flex items-center py-4 px-6', {
+          'opacity-0': pathname === routes.START,
+        })}
+      >
         <div>
           <img src={logo} style={{ width: '8rem' }} alt="Dataskop Logo" />
         </div>

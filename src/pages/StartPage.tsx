@@ -4,6 +4,13 @@ import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import { useConfig, useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
+import awlogo from '../static/images/aw-logo.png';
+import bmbflogo from '../static/images/bmbf-logo.png';
+import dslogo from '../static/images/dslogo.svg';
+import enslogo from '../static/images/ens-logo.png';
+import hplogo from '../static/images/fhp-logo.png';
+import mplogo from '../static/images/mp-logo.png';
+import uplogo from '../static/images/up-logo.png';
 import { getActiveCampaigns } from '../utils/networking';
 
 export default function StartPage(): JSX.Element {
@@ -55,30 +62,27 @@ export default function StartPage(): JSX.Element {
 
   return (
     <>
-      <div className="p-6 max-w-lg mx-auto mb-10 text-center">
-        <div>
-          <div className="text-xl font-medium">Welcome</div>
-          <p className="text-yellow-1200">
-            Hello and welcome to this early development version of DataSkop.
-          </p>
+      <div className="mx-auto flex flex-col h-full">
+        <div className="flex-grow flex items-center max-h-96">
+          <img src={dslogo} alt="Dataskop Logo" className="w-80 mx-auto" />
+        </div>
+        <div className="bg-yellow-100">
+          <div className="text-center">
+            <div className="font-bold">Partner:</div>
+            <div className="flex flex-wrap items-center justify-center mb-8">
+              <img src={enslogo} alt="" className="mx-2.5 block w-24 h-auto" />
+              <img src={hplogo} alt="" className="mx-2.5 block w-52 h-auto" />
+              <img src={awlogo} alt="" className="mx-2.5 block w-48 h-auto" />
+              <img src={mplogo} alt="" className="mx-2.5 block w-44 h-auto" />
+              <img src={uplogo} alt="" className="mx-2.5 block w-48 h-auto" />
+            </div>
+          </div>
+          <div className="text-center">
+            <div className="font-bold">Gefördert durch:</div>
+            <img src={bmbflogo} alt="" className="block w-52 mx-auto" />
+          </div>
         </div>
       </div>
-      <div className="p-6 max-w-lg mx-auto">
-        <ul className="menu-list">
-          <li>
-            <a
-              className="underline"
-              target="_blank"
-              rel="noreferrer"
-              href="https://algorithmwatch.org/en/project/dataskop/"
-            >
-              About DataSkop
-            </a>
-          </li>
-        </ul>
-      </div>
-      {/* <RemoteScrapingConfig /> */}
-
       <FooterNav items={footerNavItems} />
     </>
   );
