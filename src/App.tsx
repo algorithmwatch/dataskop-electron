@@ -24,7 +24,6 @@ import DonationPage1 from './pages/DonationPage1';
 import DonationPage2 from './pages/DonationPage2';
 import DonationSuccessPage from './pages/DonationSuccessPage';
 import InterfaceTutorialPage from './pages/InterfaceTutorialPage';
-import IntroductionPage from './pages/IntroductionPage';
 import MyDataHintPage from './pages/MyDataHintPage';
 import OnboardingPage1 from './pages/OnboardingPage1';
 import OnboardingPage2 from './pages/OnboardingPage2';
@@ -115,7 +114,7 @@ export default function App() {
                 <Route path={routes.ONBOARDING_1} component={OnboardingPage1} />
                 <Route
                   path={routes.INTRODUCTION}
-                  component={IntroductionPage}
+                  component={VisualizationProfilePage}
                 />
                 <Route path={routes.START} component={StartPage} />
 
