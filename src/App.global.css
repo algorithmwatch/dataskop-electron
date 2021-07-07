@@ -21,7 +21,7 @@
 
 /* Theme process info */
 .tippy-box[data-theme~="process-info"] {
-  @apply text-yellow-100 bg-yellow-1500 rounded-none px-1 py-0.5;
+  @apply text-yellow-100 bg-yellow-1500 rounded-none p-0.5;
 }
 .tippy-box[data-theme~="process-info"][data-placement^="top"] > .tippy-arrow:before {
   border-top-color: theme("colors.yellow.1500");
@@ -40,7 +40,7 @@
 }
 
 .tippy-box[data-theme~="process-info-current"] {
-  @apply text-yellow-1500 bg-yellow-600 rounded-none px-1 py-0.5;
+  @apply text-yellow-1500 bg-yellow-600 rounded-none p-0.5;
 }
 .tippy-box[data-theme~="process-info-current"][data-placement^="top"] > .tippy-arrow:before {
   border-top-color: theme("colors.yellow.600");

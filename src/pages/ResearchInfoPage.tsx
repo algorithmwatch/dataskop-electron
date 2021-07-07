@@ -27,7 +27,7 @@ export default function ResearchInfoPage(): JSX.Element {
       disabled: !isScrapingFinished,
       tippyOptions: !isScrapingFinished
         ? {
-            content: 'Bitte warten Sie, bis alle Daten geladen sind.',
+            content: 'Bitte warte, bis alle Daten geladen sind.',
             theme: 'process-info',
             placement: 'left',
           }
