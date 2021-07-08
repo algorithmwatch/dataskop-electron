@@ -15,15 +15,19 @@ const postSimpleBackend = async (
   version: string,
   sessionId: string,
 ) => {
-  const res = await postJson(simpleBackendUrl, {
-    version,
-    sessionId,
-    slug: data.slug,
-    data: JSON.stringify(data),
-  });
-  const json = await res.json();
+  try {
+    const res = await postJson(simpleBackendUrl, {
+      version,
+      sessionId,
+      slug: data.slug,
+      data: JSON.stringify(data),
+    });
+    const json = await res.json();
 
-  if (!json.success) console.warn('error posting data to simple backend');
+    if (!json.success) console.warn('error posting data to simple backend');
+  } catch {
+    console.warn('error posting data to simple backend');
+  }
 };
 
 const getActiveCampaigns = async (platformUrl: string) => {

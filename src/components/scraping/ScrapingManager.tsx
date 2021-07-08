@@ -203,7 +203,7 @@ export default function ScrapingManager({
           scrapingProgress: { isActive: true, value: newFrac, step },
         });
 
-        if (!result.success) {
+        if (result === null || !result.success) {
           console.info(
             'The scraping result was marked as unsuccessful. However, we continue.',
           );

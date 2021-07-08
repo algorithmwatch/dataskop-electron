@@ -113,7 +113,7 @@ const trySeveralTimes = async (
         8 + i * 4,
         slugPrefix,
       );
-      if (result.success) return result;
+      if (result !== null && result.success) return result;
 
       lastRes = result;
     } catch (e) {
