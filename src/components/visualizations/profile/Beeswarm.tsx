@@ -11,14 +11,11 @@ import {
 import { select } from 'd3-selection';
 import React, { useEffect, useMemo, useRef } from 'react';
 
-console.log(Plot);
-
 function beeswarm(
   data,
   { gap = 1, ticks = 50, dynamic, direction = 'y', ...options },
 ) {
   const dots = Plot.dot(data, options);
-  console.log('options', options);
   const { render } = dots;
 
   dots.render = function () {
@@ -64,9 +61,10 @@ function beeswarm(
 }
 
 export default function Beeswarm({ data }) {
-  console.log('Beewswarm', data);
   const beeRef = useRef(null);
   const sumRef = useRef(null);
+
+  // TODO: Make charts dimensions listen to resize event with throttle
 
   const beeSvg = useMemo(
     () =>

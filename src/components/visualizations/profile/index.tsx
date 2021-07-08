@@ -28,8 +28,6 @@ export default function StatisticsChart({
 
   if (!db.history) return null;
 
-  console.log('data', data);
-
   return (
     <div className="cursor-default">
       <div className="m-7 mt-0 grid grid-cols-8 gap-4">
