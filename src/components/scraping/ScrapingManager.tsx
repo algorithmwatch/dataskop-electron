@@ -244,6 +244,9 @@ export default function ScrapingManager({
 
     await setNavigationCallback(cbSlugNav);
     ipcRenderer.on(cbSlugNav, checkLoginCb);
+
+    // manually check if a user is logged in to proceed immediately
+    checkLoginCb();
   };
 
   const cleanUpScraper = () => {
