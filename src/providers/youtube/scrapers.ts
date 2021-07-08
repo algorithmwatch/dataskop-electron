@@ -293,7 +293,20 @@ async function* scrapeSeedVideosAndFollow(
     }
   }
   // Should never be reached.
-  return [1, null];
+
+  const errMessage = `reached end of scrapeSeedVideosAndFollow with, initialStep: ${initialStep}, maxSteps: ${maxSteps},  followVideos: ${followVideos}, seedVideos: ${JSON.stringify(
+    seedVideos,
+  )}`;
+
+  // Should never be reached.
+  return [
+    1,
+    {
+      success: false,
+      fields: {},
+      errors: [{ message: errMessage, field: 'general error' }],
+    },
+  ];
 }
 
 async function* scrapeSeedVideos(
@@ -318,8 +331,20 @@ async function* scrapeSeedVideos(
       return [1, data];
     }
   }
+
+  const errMessage = `reached end of scapeSeedVideos with, initialStep: ${initialStep}, maxSteps: ${maxSteps}, seedVideoIds: ${JSON.stringify(
+    seedVideoIds,
+  )}`;
+
   // Should never be reached.
-  return [1, null];
+  return [
+    1,
+    {
+      success: false,
+      fields: {},
+      errors: [{ message: errMessage, field: 'general error' }],
+    },
+  ];
 }
 
 export const profileScraperSlugToFun: {
