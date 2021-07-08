@@ -15,7 +15,7 @@ export default function ResultsDetails({
 }): JSX.Element {
   const [rows, setRows] = useState<any>([]);
   const [stats, setStats] = useState<any>([]);
-  const [session, setSession] = useState<ScrapingSession>(null);
+  const [session, setSession] = useState<ScrapingSession | null>(null);
 
   useEffect(() => {
     const newRows = async () => {
