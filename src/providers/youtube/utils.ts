@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { Lookup, ScrapingResultSaved } from '../../db';
 
 const getThumbnails = (id: string) => {
   /**
@@ -25,6 +26,29 @@ const getThumbnails = (id: string) => {
 
 const getVideoUrl = (id: string) => `https://www.youtube.com/watch?v=${id}`;
 
+const redactWatchHistory = (
+  results: ScrapingResultSaved[],
+  lookups: Lookup[],
+) => {
+  // - private videos are not in lookups (cause they have no meta infos)
+  // - videos that are not unlisted are public
+  const publicVideos = new Set(
+    lookups
+      .filter((x) => !x.info.unlisted)
+      .map(({ info: { videoId } }) => videoId),
+  );
+
+  results.forEach((x) => {
+    if ('slug' in x && x.slug === 'yt-user-watch-history') {
+      x.fields.videos = x.fields.videos.filter((video) =>
+        publicVideos.has(video.id),
+      );
+    }
+  });
+
+  return results;
+};
+
 // data wrangling
 
 const groupByFollowId = (x: any[]) =>
@@ -36,4 +60,10 @@ const getVideos = (data: any[]) =>
 const getFollowGroups = (data: any[]) =>
   groupByFollowId(data.filter((x) => x.slug && x.slug.includes('video-page')));
 
-export { getThumbnails, getVideoUrl, getFollowGroups, getVideos };
+export {
+  redactWatchHistory,
+  getThumbnails,
+  getVideoUrl,
+  getFollowGroups,
+  getVideos,
+};

@@ -6,7 +6,8 @@ import { RouteComponentProps, useHistory } from 'react-router-dom';
 import Button from '../components/Button';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import { useConfig, useNavigation, useScraping } from '../contexts';
-import { getScrapingResultsBySession, getSessionById } from '../db';
+import { getLookups, getScrapingResultsBySession, getSessionById } from '../db';
+import { redactWatchHistory } from '../providers/youtube/utils';
 import { postDonation } from '../utils/networking';
 
 export default function DonationPage2(): JSX.Element {
@@ -64,10 +65,12 @@ export default function DonationPage2(): JSX.Element {
       return;
     }
 
+    const redactedResults = redactWatchHistory(results, await getLookups());
+
     const resp = await postDonation(
       platformUrl,
       email,
-      results,
+      redactedResults,
       scrapingSession,
     );
     if (resp.ok) {
