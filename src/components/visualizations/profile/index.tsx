@@ -118,12 +118,14 @@ const useData = (raw: Array<ScrapingResult>) => {
         const channelsNotification = channels.filter(
           (d) => d.notificationsEnabled,
         );
-        const channelUrls = channels.map((c) => c.channelUrl);
-        const topChannels = rollups(
-          history.filter((h) => channelUrls.includes(h.channelUrl)),
-          (v) => v.length,
-          (d) => d.channelName,
-        );
+        const topChannel = channels
+          .map((c) => ({
+            name: c.channelName,
+            num: history.filter((h) => h.channelUrl === c.channelUrl).length,
+          }))
+          .filter((c) => c.num)
+          .sort((a, b) => a.num - b.num)
+          .pop();
 
         setData({
           history,
@@ -135,7 +137,7 @@ const useData = (raw: Array<ScrapingResult>) => {
           watchTimeAverage,
           channels,
           channelsNotification,
-          topChannels,
+          topChannel,
         });
       } catch (error) {
         console.error(error);
@@ -180,7 +182,7 @@ export default function StatisticsChart({
   console.log('dsb', db);
 
   return (
-    <div className="p-7 grid grid-cols-6 gap-4">
+    <div className="p-7 grid grid-cols-6 gap-4 cursor-default">
       <Badge title="watch history" value={db.days} unit="days" />
       <Badge title="videos" value={db.history?.length} unit="" />
       <Badge
@@ -210,12 +212,14 @@ export default function StatisticsChart({
         value={db.channelsNotification.length}
         unit="channels"
       />
-      <Badge
-        title="favorite channel"
-        value={db.topChannels[0][0]}
-        small={true}
-        unit=""
-      />
+      {db.topChannel && (
+        <Badge
+          title="favorite channel"
+          value={db.topChannel.name}
+          small={true}
+          unit=""
+        />
+      )}
     </div>
   );
 }
