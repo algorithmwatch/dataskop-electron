@@ -31,6 +31,10 @@ const videoScraperStep = {
   ...emptyVideoProcedureConfig,
   followVideos: 7,
   seedVideosFixed: lorenzIds,
+};
+
+const videoScraperNewsStep = {
+  ...emptyVideoProcedureConfig,
   seedVideosDynamic: [
     {
       maxVideos: 5,
@@ -96,6 +100,7 @@ const defaultConfig: YtScrapingConfig = {
     deactivateWatchHistoryStep,
     profileScraperStep,
     videoScraperStep,
+    videoScraperNewsStep,
     searchStep,
     activateWatchHistoryStep,
     logOutVideoScraperStep,
