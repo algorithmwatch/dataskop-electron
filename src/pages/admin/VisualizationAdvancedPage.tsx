@@ -62,7 +62,7 @@ export default function VisualizationAdvancedPage() {
           </Select>
         </FormControl>
       </div>
-      <div className="overflow-y-auto h-5/6">
+      <div className="overflow-y-auto h-full">
         {visComp === 'small-multiple' && <SmallMultipleChart data={data} />}
         {visComp === 'statistics' && <StatisticsChart data={data} />}
         {visComp === 'recommender-map' && <RecommenderMap data={data} />}
