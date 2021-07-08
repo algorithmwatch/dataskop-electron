@@ -32,7 +32,7 @@ export default function StatisticsChart({
 
   return (
     <div className="cursor-default">
-      <div className="p-7 grid grid-cols-9 gap-4">
+      <div className="m-7 mt-0 grid grid-cols-9 gap-4">
         <Badge title="watch history" value={db.days} unit="days" />
         <Badge title="videos" value={db.history?.length} unit="" />
         <Badge
@@ -75,7 +75,7 @@ export default function StatisticsChart({
           />
         )}
       </div>
-      <div className="m-7 p-1 shadow rounded-lg backdrop-filter backdrop-opacity-50 backdrop-contrast-125 backdrop-brightness-110 backdrop-saturate-200">
+      <div className="m-7 mb-0 text-xs text-yellow-1300 p-2 shadow rounded-lg backdrop-filter backdrop-opacity-50 backdrop-contrast-125 backdrop-brightness-110 backdrop-saturate-200">
         <Beeswarm data={db.history} />
       </div>
     </div>

@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable react/no-danger */
 import * as Plot from '@observablehq/plot';
+import { sum } from 'd3-array';
 import {
   forceCollide,
   forceSimulation,
@@ -17,6 +18,7 @@ function beeswarm(
   { gap = 1, ticks = 50, dynamic, direction = 'y', ...options },
 ) {
   const dots = Plot.dot(data, options);
+  console.log('options', options);
   const { render } = dots;
 
   dots.render = function () {
@@ -49,10 +51,11 @@ function beeswarm(
       .tick(ticks)
       .stop();
     update();
-    if (dynamic) force.on('tick', update).restart();
+    // if (dynamic) force.on('tick', update).restart();
     return g;
 
     function update() {
+      // console.log('update');
       circles.attr(cx, (_, i) => nodes[i].x).attr(cy, (_, i) => nodes[i].y);
     }
   };
@@ -62,18 +65,30 @@ function beeswarm(
 
 export default function Beeswarm({ data }) {
   console.log('Beewswarm', data);
-  const svg = useRef(null);
-  const plotSvg = useMemo(
+  const beeRef = useRef(null);
+  const sumRef = useRef(null);
+
+  const beeSvg = useMemo(
     () =>
       Plot.plot({
-        width: 800,
+        width: 870,
+        height: 400,
         marginTop: 30,
-        marginLeft: 150,
+        marginBottom: 50,
+        marginLeft: 30,
         style: {
-          fontSize: '0.8em',
-          color: 'black',
+          // fontSize: '0.8em',
+          color: '#5c4d00',
         },
-        // y: { axis: null },
+        // grid: true,
+        // y: {
+        //   grid: false,
+
+        //   transforsm: (c) => `${c}`,
+        //   fill: (c) => c,
+        // },
+        y: { axis: null },
+        x: { types: 'time', ticks: 15, tickRotate: -45 },
         marks: [
           beeswarm(data, {
             marginTop: 50,
@@ -88,17 +103,63 @@ export default function Beeswarm({ data }) {
             gap: 1,
           }),
         ],
+      }),
+    [data],
+  );
+
+  const sumSvg = useMemo(
+    () =>
+      Plot.plot({
+        width: 300,
+        marginLeft: 140,
         height: 400,
+        marginTop: 30,
+        marginBottom: 50,
+        y: {
+          label: null,
+          axis: 'left',
+          //domain: d3.groupSort(watchHistory, g => -d3.sum(g, d => d.watchTime), d => d.category)
+        },
+        x: {
+          grid: false,
+          transform: (d) => d / 60,
+          // label: 'minutes watched',
+          label: null,
+        },
+        marks: [
+          Plot.barX(
+            data,
+            Plot.groupY(
+              {
+                x: 'sum',
+                title: (d) => {
+                  return `${Math.round(
+                    sum(d, (d) => d.watchTime) / 60,
+                  )} minutes`;
+                },
+              },
+              { y: 'category', fill: (d) => d.category, x: 'watchTime' },
+            ),
+          ),
+          //Plot.ruleX([0])
+        ],
       }),
     [data],
   );
 
   useEffect(() => {
-    if (svg.current) {
-      svg.current.replaceChildren(plotSvg);
+    if (beeRef.current) {
+      beeRef.current.replaceChildren(beeSvg);
+    }
+    if (sumRef.current) {
+      sumRef.current.replaceChildren(sumSvg);
     }
   }, []);
 
-  console.log('plopt', plotSvg);
-  return <div ref={svg} />;
+  return (
+    <div className="flex flex-row">
+      <div ref={sumRef} />
+      <div ref={beeRef} />
+    </div>
+  );
 }
