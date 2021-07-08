@@ -255,6 +255,7 @@
     "@visx/responsive": "^1.10.1",
     "@visx/scale": "^1.14.0",
     "ajv": "^8.6.1",
+    "chrono-node": "^2.3.0",
     "classnames": "^2.3.1",
     "d3-array": "^3.0.1",
     "d3-force": "^3.0.0",

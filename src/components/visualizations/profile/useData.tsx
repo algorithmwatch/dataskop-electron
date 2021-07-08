@@ -1,19 +1,27 @@
+import * as chrono from 'chrono-node';
 import { mean, rollups, sum } from 'd3-array';
-import { timeParse } from 'd3-time-format';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { getLookups } from '../../../db';
 import { ScrapingResult } from '../../../db/types';
 
 const parseDate = (() => {
-  const time = timeParse('%b %d');
   const today = new Date(new Date().setHours(0, 0, 0, 0));
   const yesterday = new Date(today - 864e5);
-  return (str) => {
+  return (str: string) => {
     if (str === 'Today') return today;
-    else if (str === 'Yesterday') return yesterday;
-    else if (str.split(' ').length == 1) return moment().day(str).toDate();
-    else return new Date(time(str).setFullYear(today.getFullYear()));
+    if (str === 'Yesterday') return yesterday;
+    if (str.split(' ').length === 1) {
+      try {
+        return moment().day(str).toDate();
+        // eslint-disable-next-line no-empty
+      } catch {}
+    }
+
+    const germanDate = chrono.de.parseDate(str);
+    if (germanDate !== null) return germanDate;
+
+    return chrono.en.parseDate(str);
   };
 })();
 
