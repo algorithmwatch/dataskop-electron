@@ -32,50 +32,47 @@ export default function StatisticsChart({
 
   return (
     <div className="cursor-default">
-      <div className="m-7 mt-0 grid grid-cols-9 gap-4">
-        <Badge title="watch history" value={db.days} unit="days" />
-        <Badge title="videos" value={db.history?.length} unit="" />
+      <div className="m-7 mt-0 grid grid-cols-8 gap-4">
+        <Badge title="Zeitraum" value={db.days} unit="Tage" />
+        <Badge title="Videos" value={db.history?.length} unit="" />
         <Badge
-          title="total watchtime"
+          title="geschaut insgesamt"
           value={Math.round(db.watchTime)}
-          unit="minutes"
+          unit="Minuten"
         />
         <Badge
-          title="average watched"
+          title="Ø Videolänge"
           value={Math.round(db.watchPercentAverage)}
           unit="%"
         />
         <Badge
-          title="average per video"
+          title="Ø Minuten pro Video"
           value={Math.round(db.watchTimeAverage)}
           unit="minutes"
         />
+
         <Badge
-          title="favorite category"
+          title="Kategoriefavorit"
           value={db.mostWatchedCategoriesTime[0][0]}
           small
           unit=""
         />
-        <Badge
-          title="subscribed to"
-          value={db.channels.length}
-          unit="channels"
-        />
-        <Badge
+        <Badge title="Abonnierte Kanäle" value={db.channels.length} unit="" />
+        {/* <Badge
           title="width notifications"
           value={db.channelsNotification.length}
           unit="channels"
-        />
+        /> */}
         {db.topChannel && (
           <Badge
-            title="favorite channel"
+            title="Kanalfavorit"
             value={db.topChannel.name}
             small
             unit=""
           />
         )}
       </div>
-      <div className="m-7 mb-0 text-xs text-yellow-1300 p-2 shadow rounded-lg backdrop-filter backdrop-opacity-50 backdrop-contrast-125 backdrop-brightness-110 backdrop-saturate-200">
+      <div className="m-7 mb-0 text-xs text-yellow-1300 p-2 shadow rounded-lg backdrop-filter backdrop-opacity-80 backdrop-contrast-125 backdrop-brightness-110 backdrop-saturate-200">
         <Beeswarm data={db.history} />
       </div>
     </div>
