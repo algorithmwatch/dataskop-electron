@@ -3,6 +3,7 @@ import { useScraping } from '../contexts';
 import { getScrapingResultsBySession } from '../db';
 import AutoplayChain from './visualizations/AutoplayChain';
 import NewsTop5 from './visualizations/NewsTop5';
+import Profile from './visualizations/profile';
 import SearchResultsCompare from './visualizations/SearchResultsCompare';
 
 export default function VisualizationWrapper({ name }: { name: string }) {
@@ -31,6 +32,9 @@ export default function VisualizationWrapper({ name }: { name: string }) {
   }
   if (name === 'searchresultscompare') {
     return <SearchResultsCompare data={data} />;
+  }
+  if (name === 'profile') {
+    return <Profile data={data} />;
   }
 
   return null;

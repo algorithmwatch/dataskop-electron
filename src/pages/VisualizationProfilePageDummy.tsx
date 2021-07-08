@@ -2,9 +2,13 @@ import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
-import VisualizationWrapper from '../components/VisualizationWrapper';
+import Profile from '../components/visualizations/profile';
+// import VisualizationWrapper from '../components/VisualizationWrapper';
 import { useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
+import dummyData from '../static/dummyResult.json';
+
+console.log(dummyData);
 
 export default function VisualizationProfilePage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -13,6 +17,7 @@ export default function VisualizationProfilePage(): JSX.Element {
     state: {
       scrapingProgress: { step },
       isScrapingFinished,
+      scrapingConfig,
     },
   } = useScraping();
 
@@ -29,15 +34,26 @@ export default function VisualizationProfilePage(): JSX.Element {
       label: 'Weiter',
       // size: 'large',
       endIcon: faAngleRight,
+      disabled: !isScrapingFinished,
+      tippyOptions: !isScrapingFinished
+        ? {
+            content: 'Bitte warten Sie, bis alle Daten geladen sind.',
+            theme: 'process-info',
+            placement: 'left',
+          }
+        : undefined,
       clickHandler(history: RouteComponentProps['history']) {
-        history.push(getNextPage('path'));
+        if (isScrapingFinished) {
+          history.push(getNextPage('path'));
+        }
       },
     },
   ];
 
   return (
     <>
-      <VisualizationWrapper name="profile" />
+      {/* <VisualizationWrapper name="profile" /> */}
+      <Profile data={dummyData} />
       <FooterNav items={footerNavItems} />
     </>
   );

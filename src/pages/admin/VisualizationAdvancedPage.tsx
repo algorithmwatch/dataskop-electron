@@ -2,6 +2,7 @@ import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import Button from '../../components/Button';
+import Profile from '../../components/visualizations/profile';
 import RecommenderMap from '../../components/visualizations/RecommenderMap';
 import SmallMultipleChart from '../../components/visualizations/SmallMultipleChart';
 import StatisticsChart from '../../components/visualizations/StatisticsChart';
@@ -17,6 +18,7 @@ export default function VisualizationAdvancedPage() {
 
   const visCompOptions = [
     'small-multiple',
+    'profile',
     'statistics',
     'recommender-map',
     'news-top5',
@@ -60,10 +62,11 @@ export default function VisualizationAdvancedPage() {
           </Select>
         </FormControl>
       </div>
-      <div className="overflow-y-auto h-5/6">
+      <div className="overflow-y-auto h-full">
         {visComp === 'small-multiple' && <SmallMultipleChart data={data} />}
         {visComp === 'statistics' && <StatisticsChart data={data} />}
         {visComp === 'recommender-map' && <RecommenderMap data={data} />}
+        {visComp === 'profile' && <Profile data={data} />}
       </div>
     </>
   );
