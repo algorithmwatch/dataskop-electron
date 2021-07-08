@@ -4,7 +4,8 @@ import { useModal } from '../../contexts/modal';
 import Button from '../Button';
 import ModalContentComponents from './ModalContentComponents';
 
-ReactModal.setAppElement('#root');
+// https://github.com/reactjs/react-modal/issues/632#issuecomment-378755186
+if (process.env.NODE_ENV !== 'test') ReactModal.setAppElement('#root');
 
 function Modal() {
   const {
