@@ -97,7 +97,13 @@ const trySeveralTimes = async (
   timeout = 1000,
   slugPrefix = 'yt',
 ) => {
-  let lastRes = null;
+  let lastRes = {
+    success: false,
+    fields: {},
+    errors: [],
+    slug: '',
+  } as ScrapingResult;
+
   const allErros = [];
   // eslint-disable-next-line no-empty-pattern
   for (const i of range(3)) {
@@ -121,10 +127,14 @@ const trySeveralTimes = async (
       allErros.push(e);
     }
   }
-  if (lastRes === null)
-    throw new Error(
-      `Too many failed tries to extract html: ${JSON.stringify(allErros)}`,
-    );
+  if (!lastRes.success) {
+    lastRes.errors.push({
+      message: `Too many failed tries to extract html: ${JSON.stringify(
+        allErros,
+      )}`,
+      field: 'general error',
+    });
+  }
   return lastRes;
 };
 

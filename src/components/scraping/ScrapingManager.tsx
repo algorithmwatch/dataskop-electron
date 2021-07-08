@@ -50,7 +50,6 @@ export default function ScrapingManager({
       stepGenerator,
       campaign,
       isUserLoggedIn,
-      bounds,
     },
     dispatch,
   } = useScraping();
@@ -208,6 +207,7 @@ export default function ScrapingManager({
             'The scraping result was marked as unsuccessful. However, we continue.',
           );
           console.info(result);
+          sendEvent(campaign, 'scraping error', result);
         }
 
         if (simpleBackendUrl)
