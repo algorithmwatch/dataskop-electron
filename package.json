@@ -246,7 +246,7 @@
     "@glidejs/glide": "^3.4.1",
     "@headlessui/react": "^1.3.0",
     "@material-ui/core": "^4.12.0",
-    "@sentry/electron": "^2.5.0",
+    "@sentry/electron": "^2.5.1",
     "@tippyjs/react": "^4.2.5",
     "@visx/group": "^1.7.0",
     "@visx/heatmap": "^1.7.0",
