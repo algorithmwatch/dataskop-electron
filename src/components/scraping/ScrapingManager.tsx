@@ -1,8 +1,10 @@
 /* eslint-disable no-restricted-syntax */
 import { ipcRenderer } from 'electron';
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { useConfig, useScraping } from '../../contexts';
+import routes from '../../constants/routes.json';
+import { useConfig, useModal, useScraping } from '../../contexts';
 import {
   addNewSession,
   addScrapingResult,
@@ -53,6 +55,9 @@ export default function ScrapingManager({
     },
     dispatch,
   } = useScraping();
+
+  const { dispatch: dispatchModal } = useModal();
+  const history = useHistory();
 
   const checkForLogIn = async () => {
     const cookies = await getCookies();
@@ -119,13 +124,10 @@ export default function ScrapingManager({
 
   useEffect(() => {
     const checkIfLoggedOut = async () => {
-      console.log(isUserLoggedIn, isScrapingStarted);
-
       if (!isUserLoggedIn && isScrapingStarted) {
         const logoutSteps = scrapingConfig.steps.filter(
           (x) => 'doLogout' in x && x.doLogout,
         );
-        console.log(logoutSteps);
         if (logoutSteps.length === 1) {
           const logoutStepIndex = scrapingConfig.steps.indexOf(logoutSteps[0]);
           console.log(scrapingProgress.step, logoutStepIndex);
@@ -139,7 +141,15 @@ export default function ScrapingManager({
 
             await resetScraping();
 
-            // TODO: go to 'oops!' site
+            dispatchModal({
+              type: 'set-modal-options',
+              options: { isOpen: true, componentName: 'logout' },
+            });
+
+            // go to start after some time
+            setTimeout(() => {
+              history.push(routes.START);
+            }, 2000);
           }
         }
       }
