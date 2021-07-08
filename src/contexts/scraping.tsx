@@ -168,6 +168,7 @@ function scrapingReducer(state: State, action: Action) {
     case 'scraping-has-finished': {
       return {
         ...state,
+        visibleWindow: false,
         isScrapingFinished: true,
         isScrapingPaused: true,
         isScrapingStarted: false,
