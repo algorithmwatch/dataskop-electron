@@ -95,7 +95,7 @@ const useData = (raw: Array<ScrapingResult>) => {
         const history = slugHistory.map((d) => {
           const date = parseDate(d.watchedAt);
           const watchTime = parseInt((d.duration * d.percWatched) / 100 / 1000);
-          const detail = lookups.find((l) => l.info.videoId === d.id).info;
+          const detail = lookups.find((l) => l.info.videoId === d.id)?.info;
           return { ...d, date, watchTime, ...detail };
         });
         const days = parseInt(
@@ -159,11 +159,11 @@ function Badge({ title, value, unit, small = false }) {
     <div className="flex flex-col shadow rounded-lg text-center w-45 overflow-hidden">
       <div className="p-2 backdrop-filter backdrop-contrast-125 backdrop-brightness-110 backdrop-saturate-200 flex justify-center items-center flex-grow flex-row">
         <div>
-          <span className={small ? 'hl-2xl' : 'hl-4xl'}>{value}</span>{' '}
-          <span className="text-sm ">{unit}</span>
+          <span className={small ? 'hl-1xl font-bold' : 'hl-3xl'}>{value}</span>{' '}
+          <span className="text-xs ">{unit}</span>
         </div>
       </div>
-      <div className="p-2 text-sm text-yellow-1300  backdrop-filter backdrop-saturate-50">
+      <div className="p-2 text-xs text-yellow-1300  backdrop-filter backdrop-saturate-50">
         {title}
       </div>
     </div>
@@ -177,12 +177,12 @@ export default function StatisticsChart({
 }) {
   const db = useData(data);
 
-  if (!db.history) return 'loading';
+  if (!db.history) return null;
 
   console.log('dsb', db);
 
   return (
-    <div className="p-7 grid grid-cols-6 gap-4 cursor-default">
+    <div className="p-7 grid grid-cols-9 gap-4 cursor-default">
       <Badge title="watch history" value={db.days} unit="days" />
       <Badge title="videos" value={db.history?.length} unit="" />
       <Badge
@@ -203,7 +203,7 @@ export default function StatisticsChart({
       <Badge
         title="favorite category"
         value={db.mostWatchedCategoriesTime[0][0]}
-        small={true}
+        small
         unit=""
       />
       <Badge title="subscribed to" value={db.channels.length} unit="channels" />
