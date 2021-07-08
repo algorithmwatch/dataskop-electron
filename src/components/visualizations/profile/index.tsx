@@ -1,158 +1,6 @@
-import { mean, rollups, sum } from 'd3-array';
-import { timeParse } from 'd3-time-format';
-import moment from 'moment';
-import React, { useEffect, useState } from 'react';
-import {
-  VictoryAxis,
-  VictoryBar,
-  VictoryChart,
-  VictoryHistogram,
-} from 'victory';
-import { getLookups } from '../../../db';
+import React from 'react';
 import { ScrapingResult } from '../../../db/types';
-
-function DsBarChart({ data, title, x, y }) {
-  return (
-    <div>
-      <h4>{title}</h4>
-      <VictoryChart
-        padding={{ left: 100, bottom: 100 }}
-        domainPadding={{ x: 10 }}
-        // width={200}
-        // height={200}
-      >
-        <VictoryAxis
-          dependentAxis
-          tickCount={3}
-          style={
-            {
-              // tickLabels: { fontSize: 5 },
-            }
-          }
-        />
-        <VictoryAxis
-          style={{
-            tickLabels: { fontSize: 10 },
-          }}
-        />
-        <VictoryBar
-          horizontal
-          barRatio={0.9}
-          style={{ data: { fill: '#c43a31' } }}
-          data={data}
-          y={y}
-          x={x}
-        />
-      </VictoryChart>
-    </div>
-  );
-}
-
-function DsHistogram({ data, field }) {
-  return (
-    <div>
-      <h4>{field}</h4>
-      <VictoryChart domainPadding={10}>
-        <VictoryHistogram
-          style={{ data: { fill: '#c43a31' } }}
-          data={data.map((row) => ({ x: row.fields[field] }))}
-        />
-      </VictoryChart>
-    </div>
-  );
-}
-
-const parseDate = (() => {
-  const time = timeParse('%b %d');
-  const today = new Date(new Date().setHours(0, 0, 0, 0));
-  const yesterday = new Date(today - 864e5);
-  return (str) => {
-    if (str === 'Today') return today;
-    else if (str === 'Yesterday') return yesterday;
-    else if (str.split(' ').length == 1) return moment().day(str).toDate();
-    else return new Date(time(str).setFullYear(today.getFullYear()));
-  };
-})();
-
-const useData = (raw: Array<ScrapingResult>) => {
-  const [data, setData] = useState({});
-
-  console.log(raw);
-
-  const slugHistory = raw.find(
-    (x) => x.success && x.slug.includes('user-watch-history'),
-  )?.fields.videos;
-
-  const channels = raw.find(
-    (x) => x.success && x.slug.includes('subscribed-channels'),
-  )?.fields.channels;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const lookups = await getLookups();
-
-        const history = slugHistory.map((d) => {
-          const date = parseDate(d.watchedAt);
-          const watchTime = parseInt((d.duration * d.percWatched) / 100 / 1000);
-          const detail = lookups.find((l) => l.info.videoId === d.id)?.info;
-          return { ...d, date, watchTime, ...detail };
-        });
-        const days = parseInt(
-          (history[0].date - history[history.length - 1].date) /
-            (1000 * 60 * 60 * 24),
-        );
-        const mostWatchedCategoriesTime = rollups(
-          history,
-          (v) => sum(v, (d) => d.watchTime),
-          (d) => d.category,
-        );
-        const mostWatchedCategoriesAmount = rollups(
-          history,
-          (v) => v.length,
-          (d) => d.category,
-        );
-        const watchTime = sum(history, (d) => d.watchTime) / 60;
-        const watchPercentAverage = mean(history, (d) => d.percWatched);
-        const watchTimeAverage = mean(history, (d) => d.watchTime) / 60;
-        const channelsNotification = channels.filter(
-          (d) => d.notificationsEnabled,
-        );
-        const topChannel = channels
-          .map((c) => ({
-            name: c.channelName,
-            num: history.filter((h) => h.channelUrl === c.channelUrl).length,
-          }))
-          .filter((c) => c.num)
-          .sort((a, b) => a.num - b.num)
-          .pop();
-
-        setData({
-          history,
-          days,
-          mostWatchedCategoriesTime,
-          mostWatchedCategoriesAmount,
-          watchTime,
-          watchPercentAverage,
-          watchTimeAverage,
-          channels,
-          channelsNotification,
-          topChannel,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    if (slugHistory) {
-      fetchData();
-    } else {
-      setData({ empty: true });
-    }
-  }, [slugHistory, channels]);
-
-  return data;
-};
+import { useData } from './useData';
 
 function Badge({ title, value, unit, small = false }) {
   return (
@@ -179,7 +27,7 @@ export default function StatisticsChart({
 
   if (!db.history) return null;
 
-  console.log('dsb', db);
+  console.log('data', data);
 
   return (
     <div className="p-7 grid grid-cols-9 gap-4 cursor-default">
@@ -216,7 +64,7 @@ export default function StatisticsChart({
         <Badge
           title="favorite channel"
           value={db.topChannel.name}
-          small={true}
+          small
           unit=""
         />
       )}
