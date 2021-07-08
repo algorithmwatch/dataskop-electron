@@ -24,19 +24,19 @@ import DonationPage1 from './pages/DonationPage1';
 import DonationPage2 from './pages/DonationPage2';
 import DonationSuccessPage from './pages/DonationSuccessPage';
 import InterfaceTutorialPage from './pages/InterfaceTutorialPage';
-import IntroductionPage from './pages/IntroductionPage';
+// import IntroductionPage from './pages/IntroductionPage';
 import MyDataHintPage from './pages/MyDataHintPage';
 import OnboardingPage1 from './pages/OnboardingPage1';
 import OnboardingPage2 from './pages/OnboardingPage2';
 import QuestionnairePage from './pages/QuestionnairePage';
 import ResearchInfoPage from './pages/ResearchInfoPage';
 import ScrapingExplanationPage from './pages/ScrapingExplanationPage';
+import StartPage from './pages/StartPage';
 import VisualizationAutoplayChainPage from './pages/VisualizationAutoplayChainPage';
 import VisualizationNewsPage from './pages/VisualizationNewsPage';
 import VisualizationProfilePage from './pages/VisualizationProfilePage';
 import VisualizationProfilePageDummy from './pages/VisualizationProfilePageDummy';
 import VisualizationSearchPage from './pages/VisualizationSearchPage';
-// import StartPage from './pages/StartPage';
 
 export default function App() {
   return (
@@ -114,15 +114,15 @@ export default function App() {
                 />
                 <Route path={routes.ONBOARDING_2} component={OnboardingPage2} />
                 <Route path={routes.ONBOARDING_1} component={OnboardingPage1} />
-                <Route
+                {/* <Route
                   path={routes.INTRODUCTION}
                   component={IntroductionPage}
-                />
-                {/* <Route path={routes.START} component={StartPage} /> */}
+                /> */}
                 <Route
-                  path={routes.START}
+                  path={routes.INTRODUCTION}
                   component={VisualizationProfilePageDummy}
                 />
+                <Route path={routes.START} component={StartPage} />
 
                 <Route path="/">
                   <Redirect to={routes.START} />
