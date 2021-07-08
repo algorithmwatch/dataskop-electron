@@ -3,6 +3,7 @@ import demoData from '../constants/demo.json';
 import { useScraping } from '../contexts';
 import { getLookups, getScrapingResultsBySession } from '../db';
 import AutoplayChain from './visualizations/AutoplayChain';
+import MyData from './visualizations/MyData';
 import NewsTop5 from './visualizations/NewsTop5';
 import Profile from './visualizations/profile';
 import SearchResultsCompare from './visualizations/SearchResultsCompare';
@@ -40,6 +41,9 @@ export default function VisualizationWrapper({ name }: { name: string }) {
   }
   if (name === 'profile') {
     return <Profile data={data.results} lookups={data.lookups} />;
+  }
+  if (name === 'data') {
+    return <MyData data={data} />;
   }
 
   return null;
