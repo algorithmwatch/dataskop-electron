@@ -17,6 +17,7 @@ import {
   BrowserWindow,
   ipcMain,
   powerSaveBlocker,
+  screen,
   session,
   shell,
 } from 'electron';
@@ -130,6 +131,11 @@ const createWindow = async () => {
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {
+      const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+      mainWindow.setBounds({
+        width: Math.floor(width * 0.9),
+        height: Math.floor(height * 0.9),
+      });
       mainWindow.show();
       mainWindow.focus();
     }
