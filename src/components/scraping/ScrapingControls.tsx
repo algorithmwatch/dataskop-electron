@@ -81,7 +81,9 @@ export default function ScrapingControls({
           )}
 
           <Button onClick={toggleIsMuted}>is {!isMuted && 'not'} muted</Button>
-          <Button onClick={toggleVis}>{!isMuted && 'not'} vis</Button>
+          <Button onClick={toggleVis}>
+            {!visibleWindow ? 'show' : 'hide'} scraping window
+          </Button>
         </div>
         {isScrapingStarted && (
           <progress className="progress" value={scrapingProgress.value} max="1">
