@@ -2,34 +2,22 @@ import {
   faBars,
   faChartPieAlt,
   faInfoCircle,
-  faPaperPlane,
+  faPaperPlane
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Button from '../components/Button';
+import Modal from '../components/modal/Modal';
 import ProcessIndicator from '../components/ProcessIndicator';
 import ScrapingProgressBar from '../components/ScrapingProgressBar';
 import Sidebar from '../components/Sidebar';
 import routes from '../constants/routes.json';
 import { useNavigation } from '../contexts';
+import { useModal } from '../contexts/modal';
 import logo from '../static/images/logos/dslogo.svg';
 
-const sidebarMenu = [
-  {
-    label: 'Menüpunkt 1',
-    icon: faChartPieAlt,
-  },
-  {
-    label: 'Menüpunkt 2',
-    icon: faPaperPlane,
-  },
-  {
-    label: 'Menüpunkt 3',
-    icon: faInfoCircle,
-  },
-];
 
 export default function Base({
   children,
@@ -39,13 +27,35 @@ export default function Base({
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const [sectionKey, setSectionKey] = useState('');
   const { pathname } = useLocation();
-
   const {
     state: { pageIndex, sections },
-    dispatch,
+    dispatch: dispatchNavigation,
     getCurrentPage,
     getPageIndexByPath,
   } = useNavigation();
+  const { dispatch: dispatchModal } = useModal();
+
+  const sidebarMenu = [
+    {
+      label: 'Menüpunkt 1',
+      icon: faChartPieAlt,
+      onClick: () => {
+        console.warn('asdasd');
+        dispatchModal({
+          type: 'set-modal-options',
+          options: { isOpen: true, componentName: 'about' },
+        });
+      },
+    },
+    {
+      label: 'Menüpunkt 2',
+      icon: faPaperPlane,
+    },
+    {
+      label: 'Menüpunkt 3',
+      icon: faInfoCircle,
+    },
+  ];
 
   // read config for current route
   useEffect(() => {
@@ -53,10 +63,11 @@ export default function Base({
 
     // set page index
     if (nextPageIndex !== -1) {
-      dispatch({ type: 'set-page-index', pageIndex: nextPageIndex });
+      dispatchNavigation({ type: 'set-page-index', pageIndex: nextPageIndex });
     }
   }, [pathname]);
 
+  // set dark mode, set process indicator
   useEffect(() => {
     const page = getCurrentPage();
 
@@ -81,6 +92,7 @@ export default function Base({
 
   return (
     <div className="relative flex flex-col h-screen justify-between">
+      <Modal />
       <header
         className={classNames('flex items-center py-4 px-6 z-20', {
           'opacity-0': pathname === routes.START,

@@ -14,6 +14,7 @@ export default function Sidebar({
   menuItems: {
     label: string;
     icon: IconDefinition;
+    onClick: () => void;
   }[];
   isOpen?: boolean;
   onIsOpenChange: (value: boolean) => void;
@@ -34,11 +35,12 @@ export default function Sidebar({
     <div>
       <div className={classes}>
         <div className="pl-8 mt-16 flex flex-col space-y-6 items-start">
-          {menuItems.map(({ label, icon }) => (
+          {menuItems.map(({ label, icon, onClick }) => (
             <button
               key={label}
               type="button"
               className="text-yellow-1500 text-lg focus:outline-none hover:text-yellow-1200"
+              onClick={onClick}
             >
               {icon && (
                 <FontAwesomeIcon icon={icon} className="mr-3" size="lg" />

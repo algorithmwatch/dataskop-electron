@@ -32,6 +32,7 @@ export default function OnboardingPage2(): JSX.Element {
       label: 'Weiter',
       clickHandler(history: RouteComponentProps['history']) {
         history.push(getNextPage('path'));
+        dispatch({ type: 'set-visible-window', visibleWindow: false });
       },
     });
   }
@@ -112,9 +113,9 @@ export default function OnboardingPage2(): JSX.Element {
 
             <p>
               Die dabei gesammelten Daten bleiben erst einmal auf Deinem Rechner
-              und werden am Ende von Dir gespendet.  Aber nur wenn Du dem
+              und werden am Ende von Dir gespendet. Aber nur wenn Du dem
               zustimmst. Für das Spenden musst Du ein DataSkop-Konto anlegen –
-               dafür brauchen wir nur Deine E-Mail-Adresse.
+              dafür brauchen wir nur Deine E-Mail-Adresse.
             </p>
 
             <p>

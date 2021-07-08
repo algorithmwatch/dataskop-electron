@@ -97,6 +97,15 @@ module.exports = {
       height: {
         max: 'max-content',
       },
+      zIndex: {
+        60: '60',
+      },
+      margin: {
+        '-1/2': '-50%',
+      },
+      maxHeight: {
+        '3/4': '75%',
+      },
     },
   },
   variants: {
