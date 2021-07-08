@@ -25,8 +25,12 @@ const config = {
   moduleDirectories: ['node_modules', 'src/node_modules'],
   setupFiles: ['./.erb/scripts/CheckBuildsExist.js'],
   // also transform our TS-only package harke and the ESM module lowdb (and others)
+
+  // profile vis / d3 problems, fix it later
+  //`d3-array|internmap|d3-force|d3-quadtree|d3-dispatch|d3-timer|d3-selection`
+
   transformIgnorePatterns: [
-    'node_modules/(?!(@algorithmwatch/harke|lowdb|p-queue|p-timeout))',
+    'node_modules/(?!(@algorithmwatch/harke|lowdb|p-queue|p-timeout|d3-array|internmap|d3-force|d3-quadtree|d3-dispatch|d3-timer|d3-selection))',
   ],
   // only throw warnings for TS problems
   globals: {
