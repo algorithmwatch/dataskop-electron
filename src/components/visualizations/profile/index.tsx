@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { ScrapingResult } from '../../../db/types';
 import Explainer from '../../Explainer';
+import Infobox from '../../Infobox';
 import Beeswarm from './Beeswarm';
 import { useData } from './useData';
 
@@ -44,15 +45,26 @@ export default function StatisticsChart({
           <div className="space-y-4">
             <p>
               Die Auswertung Deines YouTube-Profils basiert auf maximal 200 von
-              Dir zuletzt geschauten Videos. Wenn Du in deinen
-              YouTube-Einstellungen die Aufzeichnung der „Watch history“
+              Dir zuletzt geschauten Videos. Wenn Du in Deinen
+              YouTube-Einstellungen die Aufzeichnung der „Watch History“
               deaktiviert hast, bleibt die Auswertung weitgehend leer.
             </p>
             <p>
               Neben den Kennzahlen am oberen Rand siehst Du in der unteren
-              Visualisierung eine Auswertung nach Zeitpunkt und Kategorie. Der
-              Radius der Kreise basiert auf der Länge der Videos.
+              Visualisierung eine Auswertung nach Zeitpunkt des Schauens und
+              Kategorien der Videos. Der Radius der Kreise basiert auf der Länge
+              der Videos.
             </p>
+            <div>
+              <Infobox>
+                <p>
+                  Durch die Daten Deines Profils hoffen wir Rückschlüsse ziehen
+                  zu können, welche Faktoren YouTube für die Personalisierung
+                  von Empfehlungen und Suchergebnisse berücksichtigt. Das werden
+                  wir in den folgenden Experimenten ergründen.
+                </p>
+              </Infobox>
+            </div>
           </div>
         </div>
       </Explainer>
