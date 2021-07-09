@@ -269,9 +269,18 @@ async function* scrapeSeedVideosAndFollow(
       // skip over the follow steps
       step += followVideos;
 
-      // reached the end already?
-      if (step >= maxSteps) return [1, dataFromSeed];
-      break;
+      // since we skip over some data, we may have reached the end already
+      if (step >= maxSteps) {
+        log.info('reached early end');
+        return [1, dataFromSeed];
+      }
+
+      log.info('skipping over following videos');
+      // we have to continue because we should not try to get the following videos.
+      // thus we yield here already
+      yield [step / maxSteps, dataFromSeed];
+      // eslint-disable-next-line no-continue
+      continue;
     }
 
     yield [step / maxSteps, dataFromSeed];
