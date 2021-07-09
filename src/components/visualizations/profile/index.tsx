@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { ScrapingResult } from '../../../db/types';
 import Explainer from '../../Explainer';
-import Infobox from '../../Infobox';
 import Beeswarm from './Beeswarm';
 import { useData } from './useData';
 
@@ -41,28 +40,19 @@ export default function StatisticsChart({
       >
         <FontAwesomeIcon icon={faIdCard} size="6x" className="text-blue-200" />
         <div className="max-w-prose">
-          <h1 className="hl-4xl my-6">Mein YouTube-Profil</h1>
+          <h1 className="hl-4xl my-6">Profil-Dashboard</h1>
           <div className="space-y-4">
             <p>
-              Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas
-              Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein
-              Hund!« sagte er, es war, als sollte die Scham ihn überleben.
+              Die Auswertung Deines YouTube-Profils basiert auf maximal 200 von
+              Dir zuletzt geschauten Videos. Wenn Du in deinen
+              YouTube-Einstellungen die Aufzeichnung der „Watch history“
+              deaktiviert hast, bleibt die Auswertung weitgehend leer.
             </p>
             <p>
-              Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas
-              Böses getan hätte, wurde er eines Morgens verhaftet. »Wie ein
-              Hund!« sagte er, es war, als sollte die Scham ihn überleben.
+              Neben den Kennzahlen am oberen Rand siehst Du in der unteren
+              Visualisierung eine Auswertung nach Zeitpunkt und Kategorie. Der
+              Radius der Kreise basiert auf der Länge der Videos.
             </p>
-            <div>
-              <Infobox>
-                <p>
-                  Jemand musste Josef K. verleumdet haben, denn ohne dass er
-                  etwas Böses getan hätte, wurde er eines Morgens verhaftet.
-                  »Wie ein Hund!« sagte er, es war, als sollte die Scham ihn
-                  überleben.
-                </p>
-              </Infobox>
-            </div>
           </div>
         </div>
       </Explainer>
