@@ -21,7 +21,7 @@ const makeGetHtml = (logHtml: boolean): GetHtmlFunction => {
       const userFolder = await ipcRenderer.invoke('get-path-user-data');
       // on macOS: ~/Library/Application Support/Electron/html
       return async () => {
-        const { html } = await extractHtml();
+        const { html, hash } = await extractHtml();
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         !fs.existsSync(`${userFolder}/html`) &&
           fs.mkdirSync(`${userFolder}/html`);
@@ -29,7 +29,7 @@ const makeGetHtml = (logHtml: boolean): GetHtmlFunction => {
         const fn = `${url.replace(/[^a-z0-9]/gi, '')}.html`;
         fs.writeFileSync(`${userFolder}/html/${fn}`, html);
 
-        return html;
+        return { html, hash };
       };
     }
     return extractHtml;
