@@ -95,6 +95,7 @@ const trySeveralTimes = async (
   url: string,
   parseHtml: (html: string) => ParserResult,
   isDoneCheck: null | ((arg0: ScrapingResult, arg1: number) => boolean) = null,
+  enableLogging = false,
   timeout = 1000,
   slugPrefix = 'yt',
 ) => {
@@ -109,6 +110,7 @@ const trySeveralTimes = async (
   // eslint-disable-next-line no-empty-pattern
   for (const i of range(3)) {
     try {
+      if (enableLogging) log.info(`fetch ${url}, try: ${i}`);
       const getCurrentHtml = await getHtml(url);
       // wait after loading since the rendering is still happening
       await delay(timeout);
@@ -124,11 +126,16 @@ const trySeveralTimes = async (
 
       lastRes = result;
     } catch (e) {
+      if (enableLogging) log.error(JSON.stringify(e));
       console.error(e);
       allErros.push(e);
     }
   }
   if (!lastRes.success) {
+    if (enableLogging)
+      log.error(
+        `Too many failed tries to extract html: ${JSON.stringify(allErros)}`,
+      );
     lastRes.errors.push({
       message: `Too many failed tries to extract html: ${JSON.stringify(
         allErros,
@@ -178,6 +185,7 @@ const scrapeVideo = async (
   videoId: string,
   getHtml: GetHtmlFunction,
   _comments = false,
+  enableLogging = false,
 ): Promise<ScrapingResult> => {
   // comments are currently not implemented
   const url = `https://www.youtube.com/watch?v=${videoId}`;
@@ -187,6 +195,7 @@ const scrapeVideo = async (
     parseVideoPage,
     // at least 10 videos, still pass if timeout is reached
     (x, timeFrac) => timeFrac >= 1 || x.fields.recommendedVideos.length > 10,
+    enableLogging,
   );
 };
 
@@ -292,7 +301,12 @@ async function* scrapeSeedVideosAndFollow(
     for (const {} of [...Array(followVideos).keys()]) {
       let followVideo = null;
 
-      followVideo = await scrapeVideo(toScrapeId, getHtml, comments);
+      followVideo = await scrapeVideo(
+        toScrapeId,
+        getHtml,
+        comments,
+        enableLogging,
+      );
 
       followVideo.slug += '-followed';
       followVideo.fields.followId = followChainId;
