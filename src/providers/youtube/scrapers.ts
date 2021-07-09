@@ -9,6 +9,7 @@ import {
   parseVideoPage,
   parseWatchHistory,
 } from '@algorithmwatch/harke';
+import log from 'electron-log';
 import _, { range } from 'lodash';
 import { ScrapingResult } from '../../db/types';
 import { delay } from '../../utils/time';
@@ -244,10 +245,12 @@ async function* scrapeSeedVideosAndFollow(
   maxSteps: number,
   followVideos: number,
   comments: boolean,
+  enableLogging: boolean,
 ) {
   let step = initialStep;
 
   for (const { id, creator } of seedVideos) {
+    if (enableLogging) log.info(`do seed video: ${id}`);
     const followChainId = `${id}-${Date.now()}`;
     const dataFromSeed = await scrapeVideo(id, getHtml, comments);
     step += 1;
@@ -257,6 +260,10 @@ async function* scrapeSeedVideosAndFollow(
     dataFromSeed.fields.followId = followChainId;
     dataFromSeed.fields.seedCreator = creator;
 
+    if (enableLogging)
+      log.info(
+        `got the following number of seed videos: ${dataFromSeed.fields.recommendedVideos.length}`,
+      );
     // do not follow if there are no recommended videos
     if (dataFromSeed.fields.recommendedVideos.length === 0) {
       // skip over the follow steps

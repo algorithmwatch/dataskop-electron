@@ -61,6 +61,7 @@ async function* videosProcedure(
   sessionId: string,
   config: VideoProcedureConfig,
   scrapingConfig: YtScrapingConfig,
+  enableLogging: boolean,
 ) {
   const {
     followVideos,
@@ -161,6 +162,7 @@ async function* videosProcedure(
       maxSteps,
       followVideos,
       scrapeComments,
+      enableLogging,
     );
   }
 

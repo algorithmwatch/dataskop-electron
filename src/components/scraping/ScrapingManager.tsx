@@ -178,6 +178,7 @@ export default function ScrapingManager({
         makeGetHtml(logHtml),
         getHtmlLazy,
         sId,
+        logHtml,
       );
 
       dispatch({

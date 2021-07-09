@@ -16,11 +16,13 @@ const createProcedureGenMakers = (
   x: GetHtmlFunction,
   y: GetHtmlLazyFunction,
   sessiondId: string,
+  enableLogging: boolean,
 ) => any)[] => {
   const result: ((
     x: GetHtmlFunction,
     y: GetHtmlLazyFunction,
     sessiondId: string,
+    enableLogging: boolean,
   ) => any)[] = [];
 
   for (const step of config.steps) {
@@ -29,7 +31,8 @@ const createProcedureGenMakers = (
         x: GetHtmlFunction,
         y: GetHtmlLazyFunction,
         sessiondId: string,
-      ) => videosProcedure(x, y, sessiondId, step, config);
+        enableLogging: boolean,
+      ) => videosProcedure(x, y, sessiondId, step, config, enableLogging);
 
       result.push(f);
     }
@@ -38,6 +41,7 @@ const createProcedureGenMakers = (
         x: GetHtmlFunction,
         y: GetHtmlLazyFunction,
         sessiondId: string,
+        enableLogging: boolean,
       ) => profileProcedure(x, y, sessiondId, step);
 
       result.push(f);
@@ -47,6 +51,7 @@ const createProcedureGenMakers = (
         x: GetHtmlFunction,
         y: GetHtmlLazyFunction,
         sessiondId: string,
+        enableLogging: boolean,
       ) => searchProcedure(x, y, sessiondId, step);
 
       result.push(f);
@@ -57,6 +62,7 @@ const createProcedureGenMakers = (
         x: GetHtmlFunction,
         y: GetHtmlLazyFunction,
         sessiondId: string,
+        enableLogging: boolean,
       ) => actionProcedure(x, y, sessiondId, step);
 
       result.push(f);
@@ -71,6 +77,7 @@ const createSingleGenerator = (
   getHtml: GetHtmlFunction,
   getHtmlLazy: GetHtmlLazyFunction,
   sessionId: string,
+  enableLogging: boolean,
 ) => {
   const genMakers = createProcedureGenMakers(scrapingConfig);
 
@@ -78,7 +85,7 @@ const createSingleGenerator = (
     let i = 0;
 
     for (const genM of genMakers) {
-      const singleGen = genM(getHtml, getHtmlLazy, sessionId);
+      const singleGen = genM(getHtml, getHtmlLazy, sessionId, enableLogging);
 
       while (true) {
         const { value, done } = await singleGen.next();
