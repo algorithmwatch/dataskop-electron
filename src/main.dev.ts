@@ -115,6 +115,7 @@ const createWindow = async () => {
     maxHeight: 1080,
     icon: getAssetPath('icon.png'),
     webPreferences: {
+      backgroundThrottling: false,
       nodeIntegration: true,
       contextIsolation: false,
     },

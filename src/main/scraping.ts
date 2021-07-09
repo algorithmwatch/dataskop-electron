@@ -26,6 +26,8 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       const newView = new BrowserView({
         webPreferences: {
           contextIsolation: false,
+          partition: 'scraping',
+          backgroundThrottling: false,
         },
       });
 
