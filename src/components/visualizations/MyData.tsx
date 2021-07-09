@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import {
   faList,
   faPlay,
@@ -5,7 +7,7 @@ import {
   faUser,
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { ScrapingResult } from '../../db/types';
 export default function StatisticsChart({
   data,
@@ -60,6 +62,15 @@ export default function StatisticsChart({
     return megaBytes.toPrecision(2);
   }, [stringifiedData]);
 
+  const scrollTo = useCallback(() => {
+    console.log(jsonRef.current);
+    jsonRef?.current?.scrollTo({
+      top: Math.random() * 10000,
+      left: 0,
+      behavior: 'smooth',
+    });
+  }, [jsonRef]);
+
   return (
     <div className="cursor-default self-center h-full w-full">
       <div className="flex flex-row  h-full">
@@ -72,19 +83,19 @@ export default function StatisticsChart({
             spenden kannst.
           </div>
           <div className="divide-y-2 divide-yellow-600 divide-dashed">
-            <div className="p-2 ">
+            <div className="p-2" onClick={scrollTo}>
               <FontAwesomeIcon icon={faUser} className="mr-3" size="lg" />
               {db.channels.length} Kanäle, denen du folgst
             </div>
-            <div className="p-2 ">
+            <div className="p-2  " onClick={scrollTo}>
               <FontAwesomeIcon icon={faList} className="mr-3" size="lg" />
               Die letzten {db.history.length} Videos, die du gesehen hast
             </div>
-            <div className="p-2 ">
+            <div className="p-2 " onClick={scrollTo}>
               <FontAwesomeIcon icon={faPlay} className="mr-3" size="lg" />
               12 Videos mit insgesamt 120 Empfehlung
             </div>
-            <div className="p-2 ">
+            <div className="p-2 " onClick={scrollTo}>
               <FontAwesomeIcon icon={faSearch} className="mr-3" size="lg" />
               {db.queries.length} Suchbegriffe mit insg. 80 Ergebnissen
             </div>
