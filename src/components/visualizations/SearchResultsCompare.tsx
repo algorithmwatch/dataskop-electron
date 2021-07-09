@@ -1,5 +1,5 @@
 import { RecommendedVideo } from '@algorithmwatch/harke';
-import { faSearch } from '@fortawesome/pro-regular-svg-icons';
+import { faSearch } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import _ from 'lodash';
 import React, { useState } from 'react';
@@ -179,7 +179,7 @@ export default function SearchResultsCompare({
               alle um das Thema Bundestagswahl und sind zum Teil an aktuellen
               Ereignissen orientiert.
             </p>
-            <ul className="list-disc">
+            <ul className="list-disc list-inside">
               <li>Suchbegriff 1</li>
               <li>Suchbegriff 2</li>
               <li>Suchbegriff 3</li>
