@@ -23,7 +23,7 @@ export default function Sidebar({
     state: { version, showAdvancedMenu },
   } = useConfig();
 
-  const classes = classNames({
+  const sidebarClasses = classNames({
     'w-80 fixed inset-y-0 bg-yellow-300 z-50': true,
     'transition-all duration-200 ease-in-out': true,
     'flex flex-col justify-between': true,
@@ -33,7 +33,8 @@ export default function Sidebar({
 
   return (
     <div>
-      <div className={classes}>
+      <div className={sidebarClasses}>
+        {/* main menu */}
         <div className="pl-8 mt-16 flex flex-col space-y-6 items-start">
           {menuItems.map(({ label, icon, onClick }) => (
             <button
@@ -52,7 +53,7 @@ export default function Sidebar({
           ))}
         </div>
 
-        {/* menu footer */}
+        {/* footer menu */}
         <div className="pl-8 mb-4 relative">
           {showAdvancedMenu && (
             <div className="absolute right-8 bottom-0">
