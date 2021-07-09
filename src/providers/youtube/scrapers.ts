@@ -194,7 +194,10 @@ const scrapeVideo = async (
     url,
     parseVideoPage,
     // at least 10 videos, still pass if timeout is reached
-    (x, timeFrac) => timeFrac >= 1 || x.fields.recommendedVideos.length > 10,
+    (x, timeFrac) => {
+      if (enableLogging) log.info('not done yet', JSON.stringify(x));
+      return x.fields.recommendedVideos.length > 10;
+    },
     enableLogging,
   );
 };
