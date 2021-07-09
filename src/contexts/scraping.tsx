@@ -90,7 +90,7 @@ const initialState = {
   stepGenerator: null,
   isMuted: true,
   fixedWindow: false,
-  visibleWindow: true,
+  visibleWindow: false,
   bounds: { width: 100, height: 100, x: 100, y: 100 },
   logHtml: false,
   disableInput: false,
@@ -99,7 +99,11 @@ const initialState = {
 function scrapingReducer(state: State, action: Action) {
   switch (action.type) {
     case 'set-is-attached': {
-      return { ...state, isAttached: action.isAttached };
+      return {
+        ...state,
+        isAttached: action.isAttached,
+        visibleWindow: action.isAttached,
+      };
     }
 
     case 'set-scraping-config': {
