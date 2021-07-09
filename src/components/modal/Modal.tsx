@@ -35,10 +35,10 @@ function Modal() {
         },
       }}
       overlayClassName="z-60 fixed inset-0 bg-yellow-1400 bg-opacity-50 overflow-auto"
-      className="absolute top-1/2 left-1/2 right-auto bottom-auto -mr-1/2 outline-none h-full max-h-3/4 bg-yellow-100 p-8"
+      className="absolute top-1/2 left-1/2 right-auto bottom-auto -mr-1/2 outline-none h-full max-h-3/4 bg-yellow-100 py-8 pl-8 pr-4"
     >
       <div
-        className="max-w-prose overflow-y-scroll"
+        className="max-w-prose overflow-y-scroll pr-4"
         style={{ maxHeight: '90%' }}
       >
         {CurrentModalComponent && <CurrentModalComponent />}
