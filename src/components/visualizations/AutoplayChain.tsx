@@ -7,10 +7,7 @@ import {
   faUserHeadset,
   IconDefinition
 } from '@fortawesome/pro-regular-svg-icons';
-import {
-  faAngleDown,
-  faChevronRight
-} from '@fortawesome/pro-solid-svg-icons';
+import { faAngleDown, faChevronRight } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import _ from 'lodash';
@@ -203,7 +200,10 @@ export default function AutoplayChain({
 
   // console.warn('seedVideos', seedVideos);
   // console.warn('groups', groups);
-  // console.warn('currentGroup', currentGroup);
+  // console.warn(
+  //   'currentGroup',
+  //   _.get({  }),
+  // );
 
   return (
     <>
