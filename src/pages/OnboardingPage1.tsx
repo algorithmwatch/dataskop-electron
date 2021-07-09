@@ -4,6 +4,7 @@ import { RouteComponentProps, useHistory } from 'react-router-dom';
 import Button from '../components/Button';
 import ContentWrapper from '../components/ContentWrapper';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
+import routes from '../constants/routes.json';
 import { useConfig, useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
 
@@ -71,7 +72,9 @@ export default function OnboardingPage1(): JSX.Element {
             <div className="mt-4">
               <Button
                 onClick={() => {
+                  dispatch({ type: 'set-demo-mode', demoMode: true });
                   sendEvent(campaign, 'clicked use demo data', {});
+                  hist.push(routes.ONBOARDING_2);
                 }}
               >
                 Mit Demodaten fortfahren

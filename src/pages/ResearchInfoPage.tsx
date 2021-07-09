@@ -9,7 +9,7 @@ import { useNavigation } from '../contexts/navigation';
 export default function ResearchInfoPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const {
-    state: { isScrapingFinished },
+    state: { isScrapingFinished, demoMode },
   } = useScraping();
   const footerNavItems: FooterNavItem[] = [
     {
@@ -24,16 +24,17 @@ export default function ResearchInfoPage(): JSX.Element {
       label: 'Weiter',
       // size: 'large',
       endIcon: faAngleRight,
-      disabled: !isScrapingFinished,
-      tippyOptions: !isScrapingFinished
-        ? {
-            content: 'Bitte warte, bis alle Daten geladen sind.',
-            theme: 'process-info',
-            placement: 'left',
-          }
-        : undefined,
+      disabled: !isScrapingFinished && !demoMode,
+      tippyOptions:
+        !isScrapingFinished && !demoMode
+          ? {
+              content: 'Bitte warte, bis alle Daten geladen sind.',
+              theme: 'process-info',
+              placement: 'left',
+            }
+          : undefined,
       clickHandler(history: RouteComponentProps['history']) {
-        if (isScrapingFinished) {
+        if (isScrapingFinished || demoMode) {
           history.push(getNextPage('path'));
         }
       },

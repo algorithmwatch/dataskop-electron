@@ -5,7 +5,7 @@ import {
   faImages,
   faSpinnerThird,
   faUserHeadset,
-  IconDefinition
+  IconDefinition,
 } from '@fortawesome/pro-regular-svg-icons';
 import { faAngleDown, faChevronRight } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

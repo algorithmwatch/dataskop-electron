@@ -1,9 +1,10 @@
 import {
-  faBars, faFileContract,
+  faBars,
+  faFileContract,
   faInfoCircle,
   faPaperPlane,
   faQuestionCircle,
-  faUserSecret
+  faUserSecret,
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
@@ -15,7 +16,7 @@ import ProcessIndicator from '../components/ProcessIndicator';
 import ScrapingProgressBar from '../components/ScrapingProgressBar';
 import Sidebar from '../components/Sidebar';
 import routes from '../constants/routes.json';
-import { useNavigation } from '../contexts';
+import { useNavigation, useScraping } from '../contexts';
 import { useModal } from '../contexts/modal';
 import logo from '../static/images/logos/dslogo.svg';
 
@@ -34,6 +35,9 @@ export default function Base({
     getPageIndexByPath,
   } = useNavigation();
   const { dispatch: dispatchModal } = useModal();
+  const {
+    state: { demoMode },
+  } = useScraping();
 
   const sidebarMenu = [
     {
@@ -131,6 +135,9 @@ export default function Base({
       >
         <div>
           <img src={logo} style={{ width: '8rem' }} alt="Dataskop Logo" />
+        </div>
+        <div className="ml-10">
+          {demoMode && 'Johannes präsentiert die DataSkop Demo'}
         </div>
         <div className="flex items-center ml-auto mr-6">
           <div className="mr-4">

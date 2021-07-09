@@ -7,10 +7,10 @@ import RecommenderMap from '../../components/visualizations/RecommenderMap';
 import SmallMultipleChart from '../../components/visualizations/SmallMultipleChart';
 import StatisticsChart from '../../components/visualizations/StatisticsChart';
 import { useConfig } from '../../contexts/config';
-import { getScrapingResultsBySession } from '../../db';
+import { getLookups, getScrapingResultsBySession } from '../../db';
 
 export default function VisualizationAdvancedPage() {
-  const [data, setData] = useState<any>([]);
+  const [data, setData] = useState<any>(null);
   const { sessionId } = useParams();
   const {
     state: { isDebug },
@@ -29,7 +29,9 @@ export default function VisualizationAdvancedPage() {
 
   useEffect(() => {
     const loadData = async () => {
-      setData(await getScrapingResultsBySession(sessionId));
+      const results = await getScrapingResultsBySession(sessionId);
+      const lookups = await getLookups();
+      setData({ results, lookups });
     };
     loadData();
   }, [sessionId]);
@@ -63,10 +65,18 @@ export default function VisualizationAdvancedPage() {
         </FormControl>
       </div>
       <div className="overflow-y-auto h-full">
-        {visComp === 'small-multiple' && <SmallMultipleChart data={data} />}
-        {visComp === 'statistics' && <StatisticsChart data={data} />}
-        {visComp === 'recommender-map' && <RecommenderMap data={data} />}
-        {visComp === 'profile' && <Profile data={data} />}
+        {visComp === 'small-multiple' && data && (
+          <SmallMultipleChart data={data.results} />
+        )}
+        {visComp === 'statistics' && data && (
+          <StatisticsChart data={data.results} />
+        )}
+        {visComp === 'recommender-map' && data && (
+          <RecommenderMap data={data.results} />
+        )}
+        {visComp === 'profile' && data && (
+          <Profile data={data.results} lookups={data.lookups} />
+        )}
       </div>
     </>
   );

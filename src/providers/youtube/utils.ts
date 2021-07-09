@@ -26,6 +26,20 @@ const getThumbnails = (id: string) => {
 
 const getVideoUrl = (id: string) => `https://www.youtube.com/watch?v=${id}`;
 
+const filterLookupBySession = (
+  results: ScrapingResultSaved[],
+  lookups: Lookup[],
+) => {
+  const videoIds = new Set();
+
+  results.forEach((x) => {
+    if ('slug' in x && x.slug === 'yt-user-watch-history') {
+      x.fields.videos.forEach(({ id }) => videoIds.add(id));
+    }
+  });
+  return lookups.filter((x) => videoIds.has(x.info.videoId));
+};
+
 const redactWatchHistory = (
   results: ScrapingResultSaved[],
   lookups: Lookup[],
@@ -61,6 +75,7 @@ const getFollowGroups = (data: any[]) =>
   groupByFollowId(data.filter((x) => x.slug && x.slug.includes('video-page')));
 
 export {
+  filterLookupBySession,
   redactWatchHistory,
   getThumbnails,
   getVideoUrl,

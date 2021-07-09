@@ -1,7 +1,7 @@
 import { faIdCard } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
-import { ScrapingResult } from '../../../db/types';
+import { Lookup, ScrapingResult } from '../../../db/types';
 import Explainer from '../../Explainer';
 import Infobox from '../../Infobox';
 import Beeswarm from './Beeswarm';
@@ -25,11 +25,13 @@ function Badge({ title, value, unit, small = false }) {
 
 export default function StatisticsChart({
   data,
+  lookups,
 }: {
   data: Array<ScrapingResult>;
+  lookups: Array<Lookup>;
 }) {
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
-  const db = useData(data);
+  const db = useData(data, lookups);
 
   if (!db.history) return null;
 

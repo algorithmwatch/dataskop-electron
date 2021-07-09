@@ -37,7 +37,8 @@ type Action =
       stepGenerator: AsyncGenerator | null;
     }
   | { type: 'set-log-html'; logHtml: boolean }
-  | { type: 'set-disable-input'; disableInput: boolean };
+  | { type: 'set-disable-input'; disableInput: boolean }
+  | { type: 'set-demo-mode'; demoMode: boolean };
 
 type Dispatch = (action: Action) => void;
 type State = {
@@ -63,6 +64,7 @@ type State = {
   // store scraped HTML in log file (for debugging)
   logHtml: boolean;
   disableInput: boolean;
+  demoMode: boolean;
 };
 
 type ScrapingProviderProps = { children: React.ReactNode };
@@ -94,6 +96,7 @@ const initialState = {
   bounds: { width: 100, height: 100, x: 100, y: 100 },
   logHtml: false,
   disableInput: false,
+  demoMode: false,
 };
 
 function scrapingReducer(state: State, action: Action) {
@@ -205,6 +208,10 @@ function scrapingReducer(state: State, action: Action) {
 
     case 'set-disable-input': {
       return { ...state, disableInput: action.disableInput };
+    }
+
+    case 'set-demo-mode': {
+      return { ...state, demoMode: action.demoMode };
     }
 
     default: {

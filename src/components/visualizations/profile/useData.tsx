@@ -2,8 +2,7 @@ import * as chrono from 'chrono-node';
 import { mean, rollups, sum } from 'd3-array';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { getLookups } from '../../../db';
-import { ScrapingResult } from '../../../db/types';
+import { Lookup, ScrapingResult } from '../../../db/types';
 
 const parseDate = (() => {
   const today = new Date(new Date().setHours(0, 0, 0, 0));
@@ -25,7 +24,7 @@ const parseDate = (() => {
   };
 })();
 
-export const useData = (raw: Array<ScrapingResult>) => {
+export const useData = (raw: Array<ScrapingResult>, lookups: Array<Lookup>) => {
   const [data, setData] = useState({});
 
   const slugHistory = raw.find(
@@ -39,8 +38,6 @@ export const useData = (raw: Array<ScrapingResult>) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const lookups = await getLookups();
-
         const history = slugHistory.map((d) => {
           const date = parseDate(d.watchedAt);
           const watchTime = parseInt((d.duration * d.percWatched) / 100 / 1000);
