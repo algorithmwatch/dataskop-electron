@@ -3,7 +3,7 @@ import React from 'react';
 function About() {
   return (
     <div className="space-y-4">
-      <div className="hl-3xl">Über</div>
+      <div className="hl-3xl">Geschäftsbedingungen</div>
       <p>
         Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas Böses
         getan hätte, wurde er eines Morgens verhaftet. »Wie ein Hund!« sagte er,

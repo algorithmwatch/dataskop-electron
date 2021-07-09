@@ -39,11 +39,13 @@ export default function Sidebar({
             <button
               key={label}
               type="button"
-              className="text-yellow-1500 text-lg focus:outline-none hover:text-yellow-1200"
+              className="flex text-yellow-1500 text-lg focus:outline-none hover:text-yellow-1200"
               onClick={onClick}
             >
               {icon && (
-                <FontAwesomeIcon icon={icon} className="mr-3" size="lg" />
+                <span className="w-6 mr-3">
+                  <FontAwesomeIcon icon={icon} size="lg" />
+                </span>
               )}
               <span className="font-bold">{label}</span>
             </button>

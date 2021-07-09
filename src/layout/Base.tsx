@@ -1,8 +1,9 @@
 import {
-  faBars,
-  faChartPieAlt,
+  faBars, faFileContract,
   faInfoCircle,
-  faPaperPlane
+  faPaperPlane,
+  faQuestionCircle,
+  faUserSecret
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
@@ -17,7 +18,6 @@ import routes from '../constants/routes.json';
 import { useNavigation } from '../contexts';
 import { useModal } from '../contexts/modal';
 import logo from '../static/images/logos/dslogo.svg';
-
 
 export default function Base({
   children,
@@ -37,10 +37,9 @@ export default function Base({
 
   const sidebarMenu = [
     {
-      label: 'Menüpunkt 1',
-      icon: faChartPieAlt,
+      label: 'Über',
+      icon: faInfoCircle,
       onClick: () => {
-        console.warn('asdasd');
         dispatchModal({
           type: 'set-modal-options',
           options: { isOpen: true, componentName: 'about' },
@@ -48,12 +47,44 @@ export default function Base({
       },
     },
     {
-      label: 'Menüpunkt 2',
+      label: 'Kontakt',
       icon: faPaperPlane,
+      onClick: () => {
+        dispatchModal({
+          type: 'set-modal-options',
+          options: { isOpen: true, componentName: 'contact' },
+        });
+      },
     },
     {
-      label: 'Menüpunkt 3',
-      icon: faInfoCircle,
+      label: 'FAQ',
+      icon: faQuestionCircle,
+      onClick: () => {
+        dispatchModal({
+          type: 'set-modal-options',
+          options: { isOpen: true, componentName: 'faq' },
+        });
+      },
+    },
+    {
+      label: 'Geschäftsbedingungen',
+      icon: faFileContract, // faFileSignatur
+      onClick: () => {
+        dispatchModal({
+          type: 'set-modal-options',
+          options: { isOpen: true, componentName: 'terms' },
+        });
+      },
+    },
+    {
+      label: 'Datenschutz',
+      icon: faUserSecret,
+      onClick: () => {
+        dispatchModal({
+          type: 'set-modal-options',
+          options: { isOpen: true, componentName: 'privacy' },
+        });
+      },
     },
   ];
 
