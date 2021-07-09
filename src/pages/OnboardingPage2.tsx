@@ -11,7 +11,7 @@ import { providerToMeta } from '../providers';
 export default function OnboardingPage2(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const {
-    state: { scrapingConfig, isScrapingStarted },
+    state: { scrapingConfig, isScrapingStarted, isScrapingFinished },
     dispatch,
   } = useScraping();
   const resetScraping = async () => {
@@ -23,7 +23,7 @@ export default function OnboardingPage2(): JSX.Element {
   const footerNavItems: FooterNavItem[] = [
     {
       label: 'Zurück',
-      disabled: isScrapingStarted,
+      disabled: isScrapingStarted || isScrapingFinished,
       startIcon: faAngleLeft,
       theme: 'link',
       async clickHandler(history: RouteComponentProps['history']) {
