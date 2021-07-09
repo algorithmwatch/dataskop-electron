@@ -1,5 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import { RecommendedVideo, VideoPage } from '@algorithmwatch/harke';
+import { faPlayCircle } from '@fortawesome/pro-light-svg-icons';
 import {
   faImages,
   faSpinnerThird,
@@ -8,8 +9,7 @@ import {
 } from '@fortawesome/pro-regular-svg-icons';
 import {
   faAngleDown,
-  faChevronRight,
-  faSearch
+  faChevronRight
 } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
@@ -211,7 +211,11 @@ export default function AutoplayChain({
         isOpen={explainerIsOpen}
         onIsOpenChange={(val: boolean) => setExplainerIsOpen(val)}
       >
-        <FontAwesomeIcon icon={faSearch} size="6x" className="text-blue-200" />
+        <FontAwesomeIcon
+          icon={faPlayCircle}
+          size="6x"
+          className="text-blue-200"
+        />
         <div className="max-w-prose">
           <h1 className="hl-4xl my-6">AutoPlay Chain Viz</h1>
           <div className="space-y-4">
