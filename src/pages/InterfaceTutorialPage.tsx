@@ -1,4 +1,4 @@
-import { faAngleRight } from '@fortawesome/pro-regular-svg-icons';
+import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
 import React, { useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
@@ -14,24 +14,14 @@ export default function InterfaceTutorialPage(): JSX.Element {
   } = useScraping();
 
   const footerNavItems: FooterNavItem[] = [
-    // {
-    //   label: 'Zurück',
-    //   startIcon: faAngleLeft,
-    //   theme: 'link',
-    //   clickHandler(history: RouteComponentProps['history']) {
-    //     history.push(getPreviousPage('path'));
-
-    //     // logout user if logged in already
-    //     if (isUserLoggedIn) {
-    //       dispatch({ type: 'reset-scraping' });
-    //     }
-
-    //     // goToUrl(providerToMeta[scrapingConfig.provider].loginUrl, {
-    //     //   clear: true,
-    //     // });
-    //     dispatch({ type: 'set-visible-window', visibleWindow: false });
-    //   },
-    // },
+    {
+      label: 'Zurück',
+      startIcon: faAngleLeft,
+      theme: 'link',
+      clickHandler(history: RouteComponentProps['history']) {
+        history.push(getPreviousPage('path'));
+      },
+    },
     {
       label: 'Weiter',
       // size: 'large',

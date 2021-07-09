@@ -29,8 +29,18 @@ export default function VisualizationProfilePage(): JSX.Element {
       label: 'Weiter',
       // size: 'large',
       endIcon: faAngleRight,
+      disabled: !isScrapingFinished,
+      tippyOptions: !isScrapingFinished
+        ? {
+            content: 'Bitte warte, bis alle Daten geladen sind.',
+            theme: 'process-info',
+            placement: 'left',
+          }
+        : undefined,
       clickHandler(history: RouteComponentProps['history']) {
-        history.push(getNextPage('path'));
+        if (isScrapingFinished) {
+          history.push(getNextPage('path'));
+        }
       },
     },
   ];
