@@ -82,7 +82,7 @@ export default function StatisticsChart({
             Du siehst hier exakt die Daten in dem Format, wie du sie gleich
             spenden kannst.
           </div>
-          <div className="divide-y-2 divide-yellow-600 divide-dashed">
+          <div className="divide-y-2 divide-yellow-600 divide-dashed cursor-pointer">
             <div className="p-2" onClick={scrollTo}>
               <FontAwesomeIcon icon={faUser} className="mr-3" size="lg" />
               {db.channels.length} Kanäle, denen du folgst
@@ -103,7 +103,7 @@ export default function StatisticsChart({
           <div className="mt-8">Datenmenge: {filesize} MB</div>
         </div>
 
-        <div className="bg-gray-50 m-8 mb-2 flex relative w-7/12 flex-col p-4 border-black border-dashed border ">
+        <div className="bg-gray-50 m-8 mb-0 flex relative w-7/12 flex-col p-4 border-black border-dashed border ">
           <div>JSON-Preview</div>
           <div
             className="bg-white flex-grow w-full mt-2 h-20 overflow-scroll"
