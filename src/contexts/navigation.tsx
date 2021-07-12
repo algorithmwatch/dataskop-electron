@@ -108,7 +108,7 @@ function NavigationProvider({ children }: NavigationProviderProps) {
       [routes.SCRAPING_EXPLANATION]: { label: 'Was ist Scraping?' },
       [routes.VISUALIZATION_PROFILE]: { label: 'Mein YouTube-Profil' },
       [routes.RESEARCH_INFO]: { label: 'Was wir untersuchen' },
-      [routes.VISUALIZATION_AUTOPLAYCHAIN]: { label: 'AutoPlay Chain Viz' },
+      [routes.VISUALIZATION_AUTOPLAYCHAIN]: { label: 'AutoPlay Viz' },
       [routes.VISUALIZATION_NEWS]: { label: 'News Viz' },
       [routes.VISUALIZATION_SEARCH]: { label: 'Search Viz' },
       [routes.MY_DATA_HINT]: { label: 'Meine Daten' },

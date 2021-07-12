@@ -47,7 +47,9 @@ export default function OnboardingPage1(): JSX.Element {
             <div className="hl-4xl mb-6 text-center">Login bei YouTube</div>
             <p>
               Als Erstes möchten wir Dich bitten, Dich bei YouTube (YT)
-              anzumelden. Wir speichern Dein Passwort nicht.
+              anzumelden. Das geht mit deinem Google-/GMail-Konto. Wir speichern
+              die Login-Informationen nicht. Ggf. musst du den Login in deinem
+              Google-Mail-Konto bestätigen.
             </p>
             <div className="mt-4">
               <Button
@@ -77,7 +79,7 @@ export default function OnboardingPage1(): JSX.Element {
                   hist.push(routes.ONBOARDING_2);
                 }}
               >
-                Mit Demodaten fortfahren
+                Demo starten
               </Button>
             </div>
           </div>
