@@ -4,7 +4,7 @@ import {
   faInfoCircle,
   faPaperPlane,
   faQuestionCircle,
-  faUserSecret,
+  faUserSecret
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
@@ -136,9 +136,11 @@ export default function Base({
         <div>
           <img src={logo} style={{ width: '8rem' }} alt="Dataskop Logo" />
         </div>
-        <div className="ml-10">
-          {demoMode && 'Johannes präsentiert die DataSkop Demo'}
-        </div>
+        {demoMode && (
+          <div className="ml-3 text-sm bg-yellow-300 px-1.5 py-0.5 text-yellow-1200">
+            Demo-Modus
+          </div>
+        )}
         <div className="flex items-center ml-auto mr-6">
           <div className="mr-4">
             <ScrapingProgressBar />

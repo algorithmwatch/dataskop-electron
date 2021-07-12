@@ -9,7 +9,7 @@ import { useNavigation } from '../contexts/navigation';
 export default function InterfaceTutorialPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const {
-    state: { isScrapingStarted, isUserLoggedIn },
+    state: { isScrapingStarted, isUserLoggedIn, demoMode },
     dispatch,
   } = useScraping();
 
@@ -43,18 +43,20 @@ export default function InterfaceTutorialPage(): JSX.Element {
   return (
     <>
       <div>
-        <div className="absolute top-0 right-64">
-          <PerfectArrow
-            p1={{ x: 30, y: 170 }}
-            p2={{ x: 150, y: 80 }}
-            width={200}
-            height={180}
-          />
-          <div className="absolute top-36 -left-72 w-80">
-            Wenn DataSkop Daten erfasst, erscheint dieser Ladebalken. Per Klick
-            kannst Du dabei zuschauen.
+        {!demoMode && (
+          <div className="absolute top-0 right-64">
+            <PerfectArrow
+              p1={{ x: 30, y: 170 }}
+              p2={{ x: 150, y: 80 }}
+              width={200}
+              height={180}
+            />
+            <div className="absolute top-36 -left-72 w-80">
+              Wenn DataSkop Daten erfasst, erscheint dieser Ladebalken. Per
+              Klick kannst Du dabei zuschauen.
+            </div>
           </div>
-        </div>
+        )}
         <div className="absolute top-0 right-16">
           <PerfectArrow
             p1={{ x: 30, y: 320 }}
