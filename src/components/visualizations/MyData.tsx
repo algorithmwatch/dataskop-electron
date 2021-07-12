@@ -8,32 +8,29 @@ import {
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useMemo, useRef } from 'react';
-import { ScrapingResult } from '../../db/types';
-export default function StatisticsChart({
-  data,
-}: {
-  data: Array<ScrapingResult>;
-}) {
-  console.log(data);
+// import { ScrapingResult } from '../../db/types';
+export default function MyData({ data }) {
+  // console.log(data);
   const containerRef = useRef();
+  // TODO: Jump keys for missing entries
   const jumpRefs = new Map([
     ['user-watch-history', useRef()],
     ['subscribed-channels', useRef()],
-    ['user-search-history', useRef()],
+    ['search-results-videos', useRef()],
   ]);
 
   const db = useMemo(() => {
-    const history = data.find(
+    const history = data.results.find(
       (x) => x.success && x.slug.includes('user-watch-history'),
     )?.fields.videos;
 
-    const channels = data.find(
+    const channels = data.results.find(
       (x) => x.success && x.slug.includes('subscribed-channels'),
     )?.fields.channels;
 
-    const queries = data.find(
-      (x) => x.success && x.slug.includes('user-search-history'),
-    )?.fields.queries;
+    const queries = data.results.find(
+      (x) => x.success && x.slug.includes('search-results-videos'),
+    )?.fields.videos;
 
     return {
       history,
@@ -123,7 +120,7 @@ export default function StatisticsChart({
             </div>
             <div
               className="p-2 "
-              onClick={() => scrollTo('user-search-history')}
+              onClick={() => scrollTo('search-results-videos')}
             >
               <FontAwesomeIcon icon={faSearch} className="mr-3" size="lg" />
               {db.queries.length} Suchbegriffe mit insg. 80 Ergebnissen
