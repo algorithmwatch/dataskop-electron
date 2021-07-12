@@ -18,13 +18,13 @@ const emptyVideoProcedureConfig: VideoProcedureConfig = {
 
 const lorenzIds = [
   '4Y1lZQsyuSQ',
-  'WWwy4cYRFls',
-  '3z0gnXgK8Do',
-  'PNjG22Gbo6U',
-  'tNc5QEtV3po',
-  'F0JWsW6N_uw',
-  '1mVyK48rLjg',
-  '16u_2GvAJcE',
+  '0WcZ8PwZvGQ',
+  'a_NpJU12_LA',
+  'kQ_NA1MUbIc',
+  '2weZNQ1xmdE',
+  'IiNVZ9_-48c',
+  // '0ivb-YE-bpQ',
+  // '4-vuJeH6TWQ',
 ];
 
 const videoScraperStep = {
