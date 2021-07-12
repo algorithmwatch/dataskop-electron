@@ -138,7 +138,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
           if (withHtml) {
             const html = await view?.webContents.executeJavaScript(
-              'document.documentElement.innerHTML',
+              'document.documentElement.outerHTML',
             );
             return html;
           }
@@ -183,7 +183,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
   ipcMain.handle('scraping-get-current-html', async () => {
     const html = await scrapingView?.webContents.executeJavaScript(
-      'document.documentElement.innerHTML',
+      'document.documentElement.outerHTML',
     );
     const hash = crypto.createHash('md5').update(html).digest('hex');
 

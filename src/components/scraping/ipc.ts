@@ -57,12 +57,12 @@ const elementExists = async (selector: string) => {
   return ipcRenderer.invoke('scraping-element-exists', selector);
 };
 
-const submitForm = async (selector: string) => {
+const submitFormScraping = async (selector: string) => {
   return ipcRenderer.invoke('scraping-submit-form', selector);
 };
 
 export {
-  submitForm,
+  submitFormScraping,
   clearStorage,
   makeGetHtml,
   getCookies,
