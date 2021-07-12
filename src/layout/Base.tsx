@@ -1,10 +1,12 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import {
   faBars,
   faFileContract,
   faInfoCircle,
   faPaperPlane,
   faQuestionCircle,
-  faUserSecret
+  faUserSecret,
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
@@ -16,7 +18,7 @@ import ProcessIndicator from '../components/ProcessIndicator';
 import ScrapingProgressBar from '../components/ScrapingProgressBar';
 import Sidebar from '../components/Sidebar';
 import routes from '../constants/routes.json';
-import { useNavigation, useScraping } from '../contexts';
+import { useConfig, useNavigation, useScraping } from '../contexts';
 import { useModal } from '../contexts/modal';
 import logo from '../static/images/logos/dslogo.svg';
 
@@ -38,6 +40,8 @@ export default function Base({
   const {
     state: { demoMode },
   } = useScraping();
+
+  const { dispatch: dispatchConfig } = useConfig();
 
   const sidebarMenu = [
     {
@@ -125,6 +129,14 @@ export default function Base({
     }
   }, [pageIndex]);
 
+  const [logoClicked, setLogoClicked] = useState(0);
+
+  const handleLogoClicked = () => {
+    if (logoClicked > 3) {
+      dispatchConfig({ type: 'show-advanced-menu' });
+    } else setLogoClicked(logoClicked + 1);
+  };
+
   return (
     <div className="relative flex flex-col h-screen justify-between">
       <Modal />
@@ -134,7 +146,12 @@ export default function Base({
         })}
       >
         <div>
-          <img src={logo} style={{ width: '8rem' }} alt="Dataskop Logo" />
+          <img
+            src={logo}
+            style={{ width: '8rem' }}
+            alt="Dataskop Logo"
+            onClick={handleLogoClicked}
+          />
         </div>
         {demoMode && (
           <div className="ml-3 text-sm bg-yellow-300 px-1.5 py-0.5 text-yellow-1200">
