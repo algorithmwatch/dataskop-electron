@@ -7,7 +7,7 @@ import {
   faUser,
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { ScrapingResult } from '../../db/types';
 export default function StatisticsChart({
   data,
@@ -15,7 +15,13 @@ export default function StatisticsChart({
   data: Array<ScrapingResult>;
 }) {
   console.log(data);
-  const jsonRef = useRef();
+  const containerRef = useRef();
+  const jumpRefs = new Map([
+    ['user-watch-history', useRef()],
+    ['subscribed-channels', useRef()],
+    ['user-search-history', useRef()],
+  ]);
+
   const db = useMemo(() => {
     const history = data.find(
       (x) => x.success && x.slug.includes('user-watch-history'),
@@ -36,25 +42,37 @@ export default function StatisticsChart({
     };
   }, [data]);
   const stringifiedData = useMemo(() => JSON.stringify(data, null, 2), [data]);
-  const stringifiedHtml = useMemo(
-    () =>
-      stringifiedData.split('\n').map((l, i) => {
-        const field = l.split('":');
-        if (field.length === 2) {
-          if (field[0] === '      "videos') {
-            console.log(field);
-          }
+  const stringifiedHtml = useMemo(() => {
+    const lines = stringifiedData.split('\n');
+    const jumpRefsKeys = [...jumpRefs.keys()];
+
+    const html = lines.map((l, i) => {
+      const field = l.split('":');
+      if (field.length === 2) {
+        const jumpKey = jumpRefsKeys.find((j) => l.includes(j));
+        if (jumpKey) {
+          console.log('jumpKey', jumpKey);
           return (
-            <div key={i}>
+            <div key={i} ref={jumpRefs.get(jumpKey)}>
               <span className="font-bold text-blue-700">{field[0]}"</span>:
               {field[1]}
             </div>
           );
         }
-        return <div key={i}>{l}</div>;
-      }),
-    [stringifiedData],
-  );
+
+        return (
+          <div key={i}>
+            <span className="font-bold text-blue-700">{field[0]}"</span>:
+            {field[1]}
+          </div>
+        );
+      }
+      return <div key={i}>{l}</div>;
+    });
+
+    return html;
+  }, [stringifiedData, jumpRefs]);
+
   const filesize = useMemo(() => {
     const size = new TextEncoder().encode(stringifiedData).length;
     const kiloBytes = size / 1024;
@@ -62,14 +80,13 @@ export default function StatisticsChart({
     return megaBytes.toPrecision(2);
   }, [stringifiedData]);
 
-  const scrollTo = useCallback(() => {
-    console.log(jsonRef.current);
-    jsonRef?.current?.scrollTo({
-      top: Math.random() * 10000,
-      left: 0,
-      behavior: 'smooth',
-    });
-  }, [jsonRef]);
+  const scrollTo = (jumpKey) => {
+    const ref = jumpRefs.get(jumpKey);
+    console.log('scrollto', jumpKey, ref?.current);
+    if (ref?.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="cursor-default self-center h-full w-full">
@@ -83,19 +100,31 @@ export default function StatisticsChart({
             spenden kannst.
           </div>
           <div className="divide-y-2 divide-yellow-600 divide-dashed cursor-pointer">
-            <div className="p-2" onClick={scrollTo}>
+            <div
+              className="p-2"
+              onClick={() => scrollTo('subscribed-channels')}
+            >
               <FontAwesomeIcon icon={faUser} className="mr-3" size="lg" />
               {db.channels.length} Kanäle, denen du folgst
             </div>
-            <div className="p-2  " onClick={scrollTo}>
+            <div
+              className="p-2  "
+              onClick={() => scrollTo('user-watch-history')}
+            >
               <FontAwesomeIcon icon={faList} className="mr-3" size="lg" />
               Die letzten {db.history.length} Videos, die du gesehen hast
             </div>
-            <div className="p-2 " onClick={scrollTo}>
+            <div
+              className="p-2 "
+              onClick={() => scrollTo('subscribed-channels')}
+            >
               <FontAwesomeIcon icon={faPlay} className="mr-3" size="lg" />
               12 Videos mit insgesamt 120 Empfehlung
             </div>
-            <div className="p-2 " onClick={scrollTo}>
+            <div
+              className="p-2 "
+              onClick={() => scrollTo('user-search-history')}
+            >
               <FontAwesomeIcon icon={faSearch} className="mr-3" size="lg" />
               {db.queries.length} Suchbegriffe mit insg. 80 Ergebnissen
             </div>
@@ -107,7 +136,7 @@ export default function StatisticsChart({
           <div>JSON-Preview</div>
           <div
             className="bg-white flex-grow w-full mt-2 h-20 overflow-scroll"
-            ref={jsonRef}
+            ref={containerRef}
           >
             <pre className="text-xs">{stringifiedHtml}</pre>
           </div>
