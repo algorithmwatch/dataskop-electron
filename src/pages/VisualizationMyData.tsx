@@ -2,11 +2,9 @@ import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
-import MyData from '../components/visualizations/MyData';
-// import VisualizationWrapper from '../components/VisualizationWrapper';
+import VisualizationWrapper from '../components/VisualizationWrapper';
 import { useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
-import dummyData from '../static/dummyResult.json';
 
 export default function VisualizationMyData(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -39,8 +37,7 @@ export default function VisualizationMyData(): JSX.Element {
 
   return (
     <>
-      {/* <VisualizationWrapper name="data" /> */}
-      <MyData data={dummyData} />
+      <VisualizationWrapper name="data" />
       <FooterNav items={footerNavItems} />
     </>
   );
