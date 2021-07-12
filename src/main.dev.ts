@@ -226,6 +226,11 @@ autoUpdater.on('error', async (_event, error) => {
   mainWindow?.webContents.send('update_error', error);
 });
 
+ipcMain.handle('check-beta-update', () => {
+  autoUpdater.channel = 'beta';
+  return autoUpdater.checkForUpdatesAndNotify();
+});
+
 /**
  * comunicate with renderer
  */
