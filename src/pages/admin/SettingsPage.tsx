@@ -1,4 +1,5 @@
-import { Checkbox, FormControlLabel } from '@material-ui/core';
+import { Button, Checkbox, FormControlLabel } from '@material-ui/core';
+import { ipcRenderer } from 'electron';
 import React from 'react';
 import { useScraping } from '../../contexts';
 
@@ -13,19 +14,30 @@ export default function SettingsPage(): JSX.Element {
   };
 
   return (
-    <>
+    <div className="m-10">
       <h1>Settings</h1>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={logHtml}
-            onChange={handleLogHtmlChange}
-            name="checkedB"
-            color="primary"
-          />
-        }
-        label="Log HTML"
-      />
-    </>
+      <div className="pt-10 pb-10">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => ipcRenderer.invoke('check-beta-update')}
+        >
+          Check beta update
+        </Button>
+      </div>
+      <div>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={logHtml}
+              onChange={handleLogHtmlChange}
+              name="checkedB"
+              color="primary"
+            />
+          }
+          label="Log HTML"
+        />
+      </div>
+    </div>
   );
 }
