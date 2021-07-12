@@ -5,6 +5,7 @@ import { postEvent } from '../utils/networking';
 
 type Action =
   | { type: 'set-version'; version: string }
+  | { type: 'show-advanced-menu' }
   | { type: 'set-debug'; isDebug: boolean };
 type Dispatch = (action: Action) => void;
 type State = {
@@ -32,6 +33,10 @@ function configReducer(state: State, action: Action) {
       return { ...state, isDebug: action.isDebug };
     }
 
+    case 'show-advanced-menu': {
+      return { ...state, showAdvancedMenu: true };
+    }
+
     default: {
       throw new Error(`Unhandled action type: ${action}`);
     }
@@ -50,7 +55,7 @@ function ConfigProvider({ children }: ConfigProviderProps) {
   const [state, dispatch] = React.useReducer(configReducer, {
     version: 'loading...',
     isDebug,
-    showAdvancedMenu: true,
+    showAdvancedMenu: false,
     simpleBackendUrl,
     platformUrl,
     trackEvents,
