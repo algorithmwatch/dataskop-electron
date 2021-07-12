@@ -43,6 +43,9 @@ export default function InterfaceTutorialPage(): JSX.Element {
   return (
     <>
       <div>
+        <div className="absolute top-48 left-32 hl-4xl text-yellow-1500">
+          Interface-Erklärung
+        </div>
         {!demoMode && (
           <div className="absolute top-0 right-64">
             <PerfectArrow
