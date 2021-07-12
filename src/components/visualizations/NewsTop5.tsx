@@ -11,7 +11,6 @@ import Explainer from '../Explainer';
 import Infobox from '../Infobox';
 import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
 
-
 interface NewsTop5DataItem {
   video: {
     id: string;
@@ -51,7 +50,7 @@ function VideoList({
 }
 
 function Visual({ session }: { session: NewsTop5DataItem }) {
-  const [displayCount, setDisplayCount] = useState(8);
+  const displayCount = 10;
 
   return (
     <div className="flex bg-yellow-200 border-2 border-yellow-400 w-full max-w-2xl mx-auto px-5 py-4 cursor-auto">
@@ -73,19 +72,6 @@ function Visual({ session }: { session: NewsTop5DataItem }) {
           <div className="text-sm ml-2 flex items-center">
             {session.video.channel.name}
           </div>
-        </div>
-
-        <div className="mt-4 text-right">
-          <input
-            className="border border-yellow-1100 bg-yellow-200 rounded-none pl-2 text-sm"
-            type="number"
-            min="5"
-            max="16"
-            value={displayCount}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setDisplayCount(Number(event.target.value))
-            }
-          />
         </div>
       </div>
       <div className="flex">

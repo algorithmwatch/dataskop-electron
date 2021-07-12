@@ -70,7 +70,7 @@ export default function StatisticsChart({
           </div>
         </div>
       </Explainer>
-      <div className="cursor-default">
+      <div className="cursor-default mx-auto max-w-screen-xl">
         <div className="m-7 mt-0 grid grid-cols-8 gap-4">
           <Badge title="Zeitraum" value={db.days} unit="Tage" />
           <Badge title="Videos" value={db.history?.length} unit="" />
