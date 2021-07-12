@@ -35,7 +35,7 @@ export default function Sidebar({
     <div>
       <div className={sidebarClasses}>
         {/* main menu */}
-        <div className="pl-8 mt-16 flex flex-col space-y-6 items-start">
+        <div className="px-8 mt-16 flex flex-col space-y-6 items-start">
           {menuItems.map(({ label, icon, onClick }) => (
             <button
               key={label}
@@ -51,6 +51,17 @@ export default function Sidebar({
               <span className="font-bold">{label}</span>
             </button>
           ))}
+
+          <div className="border border-yellow-900 border-opacity-50 text-sm text-yellow-1300 p-3">
+            <strong>Hast Du technische Probleme?</strong> Schreibe eine Mail an{' '}
+            <a
+              href="mailto:support@dataskop.net"
+              className="underline hover:no-underline"
+            >
+              support@dataskop.net
+            </a>
+            .
+          </div>
         </div>
 
         {/* footer menu */}
