@@ -59,26 +59,26 @@ export default function InterfaceTutorialPage(): JSX.Element {
         )}
         <div className="absolute top-0 right-16">
           <PerfectArrow
-            p1={{ x: 30, y: 320 }}
+            p1={{ x: 100, y: 320 }}
             p2={{ x: 240, y: 80 }}
             width={300}
             height={350}
-            options={{ flip: true, bow: 0.15 }}
+            options={{ flip: true }}
           />
-          <div className="absolute bottom-0 -left-64 w-72">
+          <div className="absolute -bottom-4 -left-44 w-72">
             Hier kannst Du jederzeit betrachten, was DataSkop über Dich erfasst
             hat.
           </div>
         </div>
         <div className="absolute top-0 right-0">
           <PerfectArrow
-            p1={{ x: 270, y: 450 }}
+            p1={{ x: 290, y: 450 }}
             p2={{ x: 415, y: 80 }}
             width={450}
             height={500}
-            options={{ flip: true, bow: 0.15 }}
+            options={{ flip: true, bow: 0.1 }}
           />
-          <div className="absolute bottom-0 left-0 w-72">
+          <div className="absolute bottom-0 left-6 w-72">
             Im Menü kannst Du mehr zu den Hintergründen von DataSkop erfahren.
           </div>
         </div>
