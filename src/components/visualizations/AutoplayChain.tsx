@@ -5,7 +5,7 @@ import {
   faImages,
   faSpinnerThird,
   faUserHeadset,
-  IconDefinition,
+  IconDefinition
 } from '@fortawesome/pro-regular-svg-icons';
 import { faAngleDown, faChevronRight } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -217,7 +217,7 @@ export default function AutoplayChain({
           className="text-blue-200"
         />
         <div className="max-w-prose">
-          <h1 className="hl-4xl my-6">AutoPlay Chain Viz</h1>
+          <h1 className="hl-4xl my-6">AutoPlay</h1>
           <div className="space-y-4">
             <p>
               In der folgenden Visualisierungen kannst Du du oben aus acht
