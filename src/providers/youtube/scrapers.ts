@@ -96,6 +96,7 @@ const trySeveralTimes = async (
   parseHtml: (html: string) => ParserResult,
   isDoneCheck: null | ((arg0: ScrapingResult, arg1: number) => boolean) = null,
   enableLogging = false,
+  numTries = 3,
   timeout = 1000,
   slugPrefix = 'yt',
 ) => {
@@ -108,7 +109,7 @@ const trySeveralTimes = async (
 
   const allErros = [];
   // eslint-disable-next-line no-empty-pattern
-  for (const i of range(3)) {
+  for (const i of range(numTries)) {
     try {
       if (enableLogging) log.info(`fetch ${url}, try: ${i}`);
       const getCurrentHtml = await getHtml(url);
@@ -199,6 +200,7 @@ const scrapeVideo = async (
       return x.fields.recommendedVideos.length > 10;
     },
     enableLogging,
+    1,
   );
 };
 
