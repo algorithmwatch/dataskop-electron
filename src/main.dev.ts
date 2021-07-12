@@ -26,6 +26,7 @@ import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import 'regenerator-runtime/runtime';
 import { registerExportHandlers, registerScrapingHandlers } from './main';
+import registerBackgroundScrapingHandlers from './main/background-scraping';
 import MenuBuilder from './main/menu';
 
 const DEBUG =
@@ -179,6 +180,9 @@ const createWindow = async () => {
   // register handlers
   registerScrapingHandlers(mainWindow);
   registerExportHandlers(mainWindow);
+
+  // window not needed
+  registerBackgroundScrapingHandlers();
 };
 
 /**

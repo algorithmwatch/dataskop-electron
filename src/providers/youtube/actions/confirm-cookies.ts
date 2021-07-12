@@ -1,13 +1,16 @@
 /* eslint-disable no-restricted-syntax */
 import cheerio from 'cheerio';
 import { currentDelay } from '../..';
-import { submitForm } from '../../../components/scraping/ipc';
+import { submitFormScraping } from '../../../components/scraping/ipc';
 import { getUniquePath } from '../../../utils/cheerio-unique-selector';
 import { GetHtmlFunction } from '../types';
 
 const rootUrl = 'https://www.youtube.com/';
 
-const submitConfirmForm = async (getHtml: GetHtmlFunction) => {
+const submitConfirmForm = async (
+  getHtml: GetHtmlFunction,
+  submitForm = submitFormScraping,
+) => {
   const getCurrentHtml = await getHtml(rootUrl);
   // try 10 times and then give up
   const maxSteps = 10;
