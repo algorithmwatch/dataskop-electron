@@ -80,14 +80,14 @@ export default function StatisticsChart({
             unit="Minuten"
           />
           <Badge
-            title="Ø Videolänge"
-            value={Math.round(db.watchPercentAverage)}
-            unit="%"
+            title="Ø Länge pro Video"
+            value={Math.round(db.watchTimeAverage)}
+            unit="Minuten"
           />
           <Badge
-            title="Ø Minuten pro Video"
-            value={Math.round(db.watchTimeAverage)}
-            unit="minutes"
+            title="Ø der geschauten Länge"
+            value={Math.round(db.watchPercentAverage)}
+            unit="%"
           />
 
           <Badge
@@ -102,14 +102,14 @@ export default function StatisticsChart({
           value={db.channelsNotification.length}
           unit="channels"
         /> */}
-          {db.topChannel && (
-            <Badge
-              title="Kanalfavorit"
-              value={db.topChannel.name}
-              small
-              unit=""
-            />
-          )}
+          {/* {db.topChannel && ( */}
+          <Badge
+            title="Kanalfavorit"
+            value={db.topChannel ? db.topChannel.name : 'keine Daten'}
+            small
+            unit=""
+          />
+          {/* )} */}
         </div>
         <div className="m-7 mb-0 text-xs text-yellow-1300 p-2 shadow rounded-lg backdrop-filter backdrop-opacity-80 backdrop-contrast-125 backdrop-brightness-110 backdrop-saturate-200">
           <Beeswarm data={db.history} />
