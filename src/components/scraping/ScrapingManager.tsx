@@ -12,6 +12,7 @@ import {
 } from '../../db';
 import { providerToMeta } from '../../providers';
 import { YtScrapingConfig } from '../../providers/youtube';
+import { onlySubmitConsentForm } from '../../providers/youtube/actions/confirm-cookies';
 import { createSingleGenerator } from '../../providers/youtube/procedures/setup';
 import { postSimpleBackend } from '../../utils/networking';
 import { delay } from '../../utils/time';
@@ -160,6 +161,17 @@ export default function ScrapingManager({
   const checkLoginCb = async () => {
     const loggedIn = await checkForLogIn();
 
+    const url = await ipcRenderer.invoke('scraping-get-url');
+
+    if (
+      !loggedIn &&
+      url !== null &&
+      url.startsWith('https://consent.youtube.com') &&
+      url.includes('account')
+    ) {
+      onlySubmitConsentForm((await extractHtml()).html);
+    }
+
     if (loggedIn) dispatch({ type: 'set-disable-input', disableInput: true });
   };
 
@@ -189,8 +201,6 @@ export default function ScrapingManager({
 
       await addNewSession(sId, scrapingConfig, campaign);
     };
-
-    console.log('x', isScrapingStarted);
 
     if (isScrapingStarted) startScraping();
     // eslint-disable-next-line react-hooks/exhaustive-deps

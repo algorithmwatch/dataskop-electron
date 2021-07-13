@@ -7,6 +7,23 @@ import { GetHtmlFunction } from '../types';
 
 const rootUrl = 'https://www.youtube.com/';
 
+const onlySubmitConsentForm = async (html) => {
+  const $hmtl = cheerio.load(html);
+
+  const forms = $hmtl('form')
+    .toArray()
+    .map((ele) => [ele, $hmtl(ele).attr('action')]);
+
+  const theForm = forms.filter((x) => x[1] === 'https://consent.youtube.com/s');
+
+  if (theForm.length === 0) {
+    await currentDelay();
+  } else {
+    const selectorPath = getUniquePath($hmtl(theForm[0][0]), $hmtl);
+    submitFormScraping(selectorPath);
+  }
+};
+
 const submitConfirmForm = async (
   getHtml: GetHtmlFunction,
   submitForm = submitFormScraping,
@@ -31,7 +48,6 @@ const submitConfirmForm = async (
       await currentDelay();
     } else {
       const selectorPath = getUniquePath($hmtl(theForm[0][0]), $hmtl);
-
       submitForm(selectorPath);
 
       // it's over
@@ -41,4 +57,4 @@ const submitConfirmForm = async (
   return [null, null];
 };
 
-export { submitConfirmForm };
+export { submitConfirmForm, onlySubmitConsentForm };

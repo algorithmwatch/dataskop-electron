@@ -162,6 +162,8 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     return cookies;
   });
 
+  ipcMain.handle('scraping-get-url', () => scrapingView?.webContents.getURL());
+
   ipcMain.handle(
     'scraping-navigation-cb',
     async (event, cbSlug, remove = false) => {
