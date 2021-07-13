@@ -18,6 +18,14 @@ export default function VisualizationMyData(): JSX.Element {
     },
   ];
 
+  // useEffect(() => {
+  //   // set dark mode
+  //   document.documentElement.classList.add('dark');
+  //   return () => {
+  //     document.documentElement.classList.remove('dark');
+  //   };
+  // }, []);
+
   return (
     <>
       <VisualizationWrapper name="mydata" />

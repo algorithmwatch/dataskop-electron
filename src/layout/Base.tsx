@@ -123,15 +123,6 @@ export default function Base({
   useEffect(() => {
     const page = getCurrentPage();
 
-    // set dark mode
-    if (page.isDarkMode) {
-      if (page.isDarkMode === true) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    }
-
     // set processIndicator
     if (typeof page.sectionKey !== 'undefined') {
       if (page.sectionKey === null) {
@@ -204,9 +195,11 @@ export default function Base({
         {children}
       </main>
 
-      <footer>
-        <ProcessIndicator steps={sections} currentStep={sectionKey} />
-      </footer>
+      {pathname !== routes.MY_DATA && (
+        <footer>
+          <ProcessIndicator steps={sections} currentStep={sectionKey} />
+        </footer>
+      )}
     </div>
   );
 }
