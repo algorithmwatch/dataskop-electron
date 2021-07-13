@@ -4,13 +4,13 @@ import {
   faBars,
   faFileContract,
   faInfoCircle,
-  faPaperPlane, faUserSecret
+  faPaperPlane,
+  faUserSecret
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import React, { ReactNode, useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
-import Button from '../components/Button';
+import { useLocation } from 'react-router-dom';
 import Modal from '../components/modal/Modal';
 import ProcessIndicator from '../components/ProcessIndicator';
 import ScrapingProgressBar from '../components/ScrapingProgressBar';
@@ -38,7 +38,6 @@ export default function Base({
   const {
     state: { demoMode },
   } = useScraping();
-  const history = useHistory();
   const [logoClicked, setLogoClicked] = useState(0);
   const {
     dispatch: dispatchConfig,
@@ -49,14 +48,6 @@ export default function Base({
       dispatchConfig({ type: 'show-advanced-menu' });
     } else setLogoClicked(logoClicked + 1);
   };
-  const handleMyDataClick = () => {
-    if (pathname === routes.MY_DATA) {
-      history.push(getCurrentPage('path'));
-    } else {
-      history.push(routes.MY_DATA);
-    }
-  };
-
   const sidebarMenu = [
     {
       label: 'Über',
@@ -89,7 +80,7 @@ export default function Base({
     //   },
     // },
     {
-      label: 'Geschäftsbedingungen',
+      label: 'Datenspendevertrag',
       icon: faFileContract, // faFileSignatur
       onClick: () => {
         dispatchModal({
@@ -164,20 +155,6 @@ export default function Base({
           <div className="mr-4">
             <ScrapingProgressBar />
           </div>
-
-          {/* MyData vault */}
-          {pageIndex > 3 && (
-            <div>
-              <Button
-                key="my-data"
-                size="small"
-                theme="blue"
-                onClick={handleMyDataClick}
-              >
-                Meine Daten
-              </Button>
-            </div>
-          )}
         </div>
         <div>
           <button
@@ -201,11 +178,9 @@ export default function Base({
         {children}
       </main>
 
-      {pathname !== routes.MY_DATA && (
-        <footer>
-          <ProcessIndicator steps={sections} currentStep={sectionKey} />
-        </footer>
-      )}
+      <footer>
+        <ProcessIndicator steps={sections} currentStep={sectionKey} />
+      </footer>
     </div>
   );
 }

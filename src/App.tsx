@@ -26,7 +26,7 @@ import DonationPage2 from './pages/DonationPage2';
 import DonationSuccessPage from './pages/DonationSuccessPage';
 import InterfaceTutorialPage from './pages/InterfaceTutorialPage';
 import IntroductionPage from './pages/IntroductionPage';
-import MyDataHintPage from './pages/MyDataHintPage';
+import MyDataPage from './pages/MyDataPage';
 import OnboardingPage1 from './pages/OnboardingPage1';
 import OnboardingPage2 from './pages/OnboardingPage2';
 import QuestionnairePage from './pages/QuestionnairePage';
@@ -34,7 +34,6 @@ import ResearchInfoPage from './pages/ResearchInfoPage';
 import ScrapingExplanationPage from './pages/ScrapingExplanationPage';
 import StartPage from './pages/StartPage';
 import VisualizationAutoplayChainPage from './pages/VisualizationAutoplayChainPage';
-import VisualizationMyData from './pages/VisualizationMyData';
 import VisualizationNewsPage from './pages/VisualizationNewsPage';
 import VisualizationProfilePage from './pages/VisualizationProfilePage';
 import VisualizationSearchPage from './pages/VisualizationSearchPage';
@@ -85,14 +84,7 @@ export default function App() {
                     path={routes.QUESTIONNAIRE}
                     component={QuestionnairePage}
                   />
-                  <Route
-                    path={routes.MY_DATA}
-                    component={VisualizationMyData}
-                  />
-                  <Route
-                    path={routes.MY_DATA_HINT}
-                    component={MyDataHintPage}
-                  />
+                  <Route path={routes.MY_DATA} component={MyDataPage} />
                   <Route
                     path={routes.VISUALIZATION_SEARCH}
                     component={VisualizationSearchPage}

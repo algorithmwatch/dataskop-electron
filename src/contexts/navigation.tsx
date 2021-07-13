@@ -84,8 +84,8 @@ function NavigationProvider({ children }: NavigationProviderProps) {
         sectionKey: routes.VISUALIZATION_SEARCH,
       },
       {
-        path: routes.MY_DATA_HINT,
-        sectionKey: routes.MY_DATA_HINT,
+        path: routes.MY_DATA,
+        sectionKey: routes.MY_DATA,
       },
       {
         path: routes.QUESTIONNAIRE,
@@ -111,7 +111,7 @@ function NavigationProvider({ children }: NavigationProviderProps) {
       [routes.VISUALIZATION_AUTOPLAYCHAIN]: { label: 'AutoPlay Viz' },
       [routes.VISUALIZATION_NEWS]: { label: 'News Viz' },
       [routes.VISUALIZATION_SEARCH]: { label: 'Search Viz' },
-      [routes.MY_DATA_HINT]: { label: 'Meine Daten' },
+      [routes.MY_DATA]: { label: 'Meine Daten' },
       [routes.QUESTIONNAIRE]: { label: 'Umfrage' },
       [routes.DONATION1]: { label: 'Die Datenspende' },
       [routes.DONATION_SUCCESS]: { label: 'Ende' },

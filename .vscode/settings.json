@@ -41,5 +41,10 @@
       "source.organizeImports": true
     }
   },
-  "editor.rulers": [80]
+  "editor.rulers": [
+    80
+  ],
+  "[django-html]": {
+    "editor.defaultFormatter": "HookyQR.beautify"
+  }
 }

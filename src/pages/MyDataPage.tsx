@@ -3,12 +3,12 @@ import React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import ContentWrapper from '../components/ContentWrapper';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
-import { PerfectArrow } from '../components/PerfectArrow';
+import VisualizationWrapper from '../components/VisualizationWrapper';
 import routes from '../constants/routes.json';
 import { useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
 
-export default function MyDataHintPage(): JSX.Element {
+export default function MyDataPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const {
     state: { demoMode },
@@ -42,20 +42,8 @@ export default function MyDataHintPage(): JSX.Element {
 
   return (
     <>
-      <ContentWrapper centerY>
-        <div className="absolute top-0 right-16">
-          <PerfectArrow
-            p1={{ x: 110, y: 200 }}
-            p2={{ x: 240, y: 80 }}
-            width={300}
-            height={225}
-            options={{ bow: 0.14 }}
-          />
-          <div className="absolute bottom-0 -left-48 w-72 text-right">
-            Klicke hier, um Dir deine Daten anzeigen zu lassen.
-          </div>
-        </div>
-        {demoMode && (
+      {demoMode ? (
+        <ContentWrapper centerY>
           <div className="text-center space-y-4 max-w-md">
             <div className="hl-3xl">Die Demo ist hier zu Ende</div>
             <p>
@@ -81,8 +69,10 @@ export default function MyDataHintPage(): JSX.Element {
               und im Newsletter von AW.
             </p>
           </div>
-        )}
-      </ContentWrapper>
+        </ContentWrapper>
+      ) : (
+        <VisualizationWrapper name="mydata" />
+      )}
       <FooterNav items={footerNavItems} />
     </>
   );
