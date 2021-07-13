@@ -59,10 +59,10 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
     },
   );
 
-  ipcMain.handle('save-screenshot', async (_event, filename) => {
+  ipcMain.handle('save-screenshot', async (_event, rect, filename) => {
     if (mainWindow === null) return;
-    console.log('save-screenshot', mainWindow);
-    const nativeImage = await mainWindow.webContents.capturePage();
+    // console.log('save-screenshot', mainWindow);
+    const nativeImage = await mainWindow.webContents.capturePage(rect);
     const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
       defaultPath: filename,
     });

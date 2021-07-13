@@ -1,7 +1,7 @@
 import { faIdCard } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ipcRenderer } from 'electron';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Lookup, ScrapingResult } from '../../../db/types';
 import Button from '../../Button';
 import Explainer from '../../Explainer';
@@ -9,11 +9,6 @@ import Infobox from '../../Infobox';
 import Beeswarm from './Beeswarm';
 import Loading from './Loading';
 import { useData } from './useData';
-
-const invokeScreenshot = async () => {
-  const filename = `dataskop-dashboard.png`;
-  ipcRenderer.invoke('save-screenshot', filename);
-};
 
 function Badge({ title, value, unit, small = false }) {
   return (
@@ -40,6 +35,21 @@ export default function StatisticsChart({
 }) {
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
   const db = useData(data, lookups);
+  const visRef = useRef();
+
+  const invokeScreenshot = async () => {
+    const filename = `dataskop-dashboard.png`;
+    const bbox = visRef?.current.getBoundingClientRect();
+    const { x, y, width, height } = bbox;
+    const pt = 30;
+    const rect = {
+      x: parseInt(x),
+      y: parseInt(y - pt),
+      width: parseInt(width),
+      height: parseInt(height + pt * 2),
+    };
+    ipcRenderer.invoke('save-screenshot', rect, filename);
+  };
 
   if (!db.history) return <Loading />;
 
@@ -79,48 +89,54 @@ export default function StatisticsChart({
         </div>
       </Explainer>
       <div className="cursor-default mx-auto max-w-screen-xl">
-        <div className="m-7 mt-0 grid grid-cols-8 gap-4">
-          <Badge title="Zeitraum" value={db.days} unit="Tage" />
-          <Badge title="Videos" value={db.history?.length} unit="" />
-          <Badge
-            title="geschaut insgesamt"
-            value={Math.round(db.watchTime)}
-            unit="Minuten"
-          />
-          <Badge
-            title="Ø Länge pro Video"
-            value={Math.round(db.watchTimeAverage)}
-            unit="Minuten"
-          />
-          <Badge
-            title="Ø der geschauten Länge"
-            value={Math.round(db.watchPercentAverage)}
-            unit="%"
-          />
+        <div ref={visRef}>
+          <div className="m-7 mt-0 grid grid-cols-8 gap-4">
+            <Badge title="Zeitraum" value={db.days} unit="Tage" />
+            <Badge title="Videos" value={db.history?.length} unit="" />
+            <Badge
+              title="geschaut insgesamt"
+              value={Math.round(db.watchTime)}
+              unit="Minuten"
+            />
+            <Badge
+              title="Ø Länge pro Video"
+              value={Math.round(db.watchTimeAverage)}
+              unit="Minuten"
+            />
+            <Badge
+              title="Ø der geschauten Länge"
+              value={Math.round(db.watchPercentAverage)}
+              unit="%"
+            />
 
-          <Badge
-            title="Kategoriefavorit"
-            value={db.mostWatchedCategoriesTime[0][0]}
-            small
-            unit=""
-          />
-          <Badge title="Abonnierte Kanäle" value={db.channels.length} unit="" />
-          {/* <Badge
+            <Badge
+              title="Kategoriefavorit"
+              value={db.mostWatchedCategoriesTime[0][0]}
+              small
+              unit=""
+            />
+            <Badge
+              title="Abonnierte Kanäle"
+              value={db.channels.length}
+              unit=""
+            />
+            {/* <Badge
           title="width notifications"
           value={db.channelsNotification.length}
           unit="channels"
         /> */}
-          {/* {db.topChannel && ( */}
-          <Badge
-            title="Kanalfavorit"
-            value={db.topChannel ? db.topChannel.name : 'keine Daten'}
-            small
-            unit=""
-          />
-          {/* )} */}
-        </div>
-        <div className="m-7 mb-0 text-xs text-yellow-1300 p-2 shadow rounded-lg backdrop-filter backdrop-opacity-80 backdrop-contrast-125 backdrop-brightness-110 backdrop-saturate-200">
-          <Beeswarm data={db.history} />
+            {/* {db.topChannel && ( */}
+            <Badge
+              title="Kanalfavorit"
+              value={db.topChannel ? db.topChannel.name : 'keine Daten'}
+              small
+              unit=""
+            />
+            {/* )} */}
+          </div>
+          <div className="m-7 mb-0 text-xs text-yellow-1300 p-2 shadow rounded-lg backdrop-filter backdrop-opacity-80 backdrop-contrast-125 backdrop-brightness-110 backdrop-saturate-200">
+            <Beeswarm data={db.history} />
+          </div>
         </div>
         <div className="mt-7 ml-6">
           <Button onClick={async () => invokeScreenshot()}>
