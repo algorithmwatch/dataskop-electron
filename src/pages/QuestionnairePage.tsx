@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
+import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import { Field, Form, Formik, useField, useFormikContext } from 'formik';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';

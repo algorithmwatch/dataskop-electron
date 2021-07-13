@@ -1,4 +1,4 @@
-import { faAngleLeft } from '@fortawesome/pro-regular-svg-icons';
+import { faTimes } from '@fortawesome/pro-solid-svg-icons';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
@@ -11,7 +11,7 @@ export default function VisualizationMyData(): JSX.Element {
     {
       label: 'Schließen',
       theme: 'link',
-      startIcon: faAngleLeft,
+      startIcon: faTimes,
       clickHandler(history: RouteComponentProps['history']) {
         history.push(getCurrentPage('path'));
       },

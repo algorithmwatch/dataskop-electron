@@ -1,4 +1,4 @@
-import { faAngleLeft } from '@fortawesome/pro-solid-svg-icons';
+import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import ContentWrapper from '../components/ContentWrapper';
@@ -36,6 +36,7 @@ export default function OnboardingPage2(): JSX.Element {
     },
     {
       label: 'Weiter',
+      endIcon: faAngleRight,
       classNames: 'ml-auto',
       clickHandler(history: RouteComponentProps['history']) {
         history.push(getNextPage('path'));

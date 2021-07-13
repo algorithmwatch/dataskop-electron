@@ -1,4 +1,4 @@
-import { faAngleLeft } from '@fortawesome/pro-regular-svg-icons';
+import { faAngleLeft } from '@fortawesome/pro-solid-svg-icons';
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import Button from '../components/Button';

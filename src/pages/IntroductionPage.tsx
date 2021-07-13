@@ -1,9 +1,10 @@
-import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
+import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import ContentWrapper from '../components/ContentWrapper';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import { useNavigation } from '../contexts/navigation';
+
 
 export default function IntroductionPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();

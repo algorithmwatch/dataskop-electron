@@ -1,4 +1,4 @@
-import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
+import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import ContentWrapper from '../components/ContentWrapper';
