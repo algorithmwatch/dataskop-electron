@@ -57,7 +57,7 @@ function ConfigProvider({ children }: ConfigProviderProps) {
   const [state, dispatch] = React.useReducer(configReducer, {
     version: 'loading...',
     isDebug,
-    showAdvancedMenu: false,
+    showAdvancedMenu: isDebug,
     simpleBackendUrl,
     platformUrl,
     trackEvents,
