@@ -7,8 +7,16 @@ import {
   faUser,
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import dayjs from 'dayjs';
+import { ipcRenderer } from 'electron';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 // import { ScrapingResult } from '../../db/types';
+import Button from '../Button';
+
+const invokeExport = async (data) => {
+  const filename = `dataskop-${dayjs().format('YYYY-MM-DD-HH-mm-s')}.json`;
+  ipcRenderer.invoke('results-export', JSON.stringify(data), filename);
+};
 
 export default function MyData({ data }) {
   // console.log(data);
@@ -143,7 +151,11 @@ export default function MyData({ data }) {
               </div>
             )}
           </div>
-          <div className="mt-8">Datenmenge: {filesize} MB</div>
+          <div className="mt-9">
+            <Button onClick={async () => invokeExport(data)}>
+              Daten herunterladen ({filesize} MB)
+            </Button>
+          </div>
         </div>
 
         <div className="bg-gray-50 m-8 mb-0 flex relative w-7/12 flex-col p-4 border-black border-dashed border ">
@@ -152,7 +164,9 @@ export default function MyData({ data }) {
             className="bg-white flex-grow w-full mt-2 h-20 overflow-scroll"
             ref={containerRef}
           >
-            <pre className="text-xs">{stringifiedHtml}</pre>
+            <pre className="text-xs flex flex-col whitespace-pre-wrap w-full">
+              {stringifiedHtml}
+            </pre>
           </div>
         </div>
       </div>
