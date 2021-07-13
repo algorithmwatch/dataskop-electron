@@ -15,6 +15,7 @@ import 'core-js/stable';
 import {
   app,
   BrowserWindow,
+  dialog,
   ipcMain,
   powerSaveBlocker,
   screen,
@@ -140,6 +141,19 @@ const createWindow = async () => {
       });
       mainWindow.show();
       mainWindow.focus();
+    }
+  });
+
+  mainWindow.on('close', function (e) {
+    const choice = dialog.showMessageBoxSync(this, {
+      type: 'question',
+      buttons: ['Abbrechen', 'Ja, beenden'],
+      title: 'Bestätigen',
+      message:
+        'Willst du DataSkop wirklich beenden? Möglicherweise läuft noch das Scrapen.',
+    });
+    if (choice == 0) {
+      e.preventDefault();
     }
   });
 
