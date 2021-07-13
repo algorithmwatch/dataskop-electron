@@ -88,7 +88,7 @@ export default function StartPage(): JSX.Element {
               <img
                 src={uplogo}
                 alt=""
-                className="mx-3 py-1 block w-44 h-auto"
+                className="mx-3 py-1 block w-36 h-auto"
               />
               <img
                 src={fhplogo}
