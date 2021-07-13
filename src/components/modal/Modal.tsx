@@ -38,7 +38,7 @@ function Modal() {
       className="absolute top-1/2 left-1/2 right-auto bottom-auto -mr-1/2 outline-none h-full max-h-3/4 bg-yellow-100 py-8 pl-8 pr-4"
     >
       <div
-        className="max-w-prose overflow-y-scroll pr-4"
+        className="max-w-prose overflow-y-auto pr-4"
         style={{ maxHeight: '90%' }}
       >
         {CurrentModalComponent && <CurrentModalComponent />}

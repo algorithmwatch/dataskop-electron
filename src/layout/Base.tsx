@@ -4,9 +4,7 @@ import {
   faBars,
   faFileContract,
   faInfoCircle,
-  faPaperPlane,
-  faQuestionCircle,
-  faUserSecret,
+  faPaperPlane, faUserSecret
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
@@ -80,16 +78,16 @@ export default function Base({
         });
       },
     },
-    {
-      label: 'FAQ',
-      icon: faQuestionCircle,
-      onClick: () => {
-        dispatchModal({
-          type: 'set-modal-options',
-          options: { isOpen: true, componentName: 'faq' },
-        });
-      },
-    },
+    // {
+    //   label: 'FAQ',
+    //   icon: faQuestionCircle,
+    //   onClick: () => {
+    //     dispatchModal({
+    //       type: 'set-modal-options',
+    //       options: { isOpen: true, componentName: 'faq' },
+    //     });
+    //   },
+    // },
     {
       label: 'Geschäftsbedingungen',
       icon: faFileContract, // faFileSignatur

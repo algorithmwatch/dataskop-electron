@@ -15,6 +15,10 @@
   }
 }
 
+.link-blue {
+  @apply underline hover:no-underline text-blue-600;
+}
+
 /* TippyJS  */
 
 @import "tippy.js/dist/tippy.css";
