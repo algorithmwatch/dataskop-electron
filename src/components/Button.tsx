@@ -67,15 +67,13 @@ export default function Button({
       'border-2 focus:outline-none text-yellow-1500': true,
       'border-yellow-700 hover:text-yellow-1200 focus:ring-4 focus:ring-yellow-500 focus:ring-opacity-50':
         !disabled,
-      'border-yellow-1200 text-yellow-1200 opacity-20': disabled,
+      'border-yellow-1200 text-yellow-1200 opacity-50': disabled,
     }),
-    link: cn({
-      'text-yellow-1500 focus:outline-none': true,
+    link: cn('text-yellow-1500 focus:outline-none', {
       'hover:underline': !disabled,
-      'text-gray-400': disabled,
+      'opacity-20': disabled,
     }),
-    blue: cn({
-      'border-2 focus:outline-none text-white': true,
+    blue: cn('border-2 focus:outline-none text-white', {
       'border-blue-500 bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50':
         !disabled,
     }),

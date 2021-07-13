@@ -3,10 +3,14 @@ import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import VisualizationWrapper from '../components/VisualizationWrapper';
+import { useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
 
 export default function VisualizationAutoplayChainPage() {
   const { getNextPage, getPreviousPage } = useNavigation();
+  const {
+    state: { isScrapingFinished, demoMode },
+  } = useScraping();
   const footerNavItems: FooterNavItem[] = [
     {
       label: 'Zurück',
@@ -18,9 +22,21 @@ export default function VisualizationAutoplayChainPage() {
     },
     {
       label: 'Weiter',
+      // size: 'large',
       endIcon: faAngleRight,
+      disabled: !isScrapingFinished && !demoMode,
+      tippyOptions:
+        !isScrapingFinished && !demoMode
+          ? {
+              content: 'Bitte warte, bis alle Daten geladen sind.',
+              theme: 'process-info',
+              placement: 'left',
+            }
+          : undefined,
       clickHandler(history: RouteComponentProps['history']) {
-        history.push(getNextPage('path'));
+        if (isScrapingFinished || demoMode) {
+          history.push(getNextPage('path'));
+        }
       },
     },
   ];

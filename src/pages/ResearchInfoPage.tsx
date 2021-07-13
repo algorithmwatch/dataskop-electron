@@ -1,5 +1,5 @@
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import ContentWrapper from '../components/ContentWrapper';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
@@ -8,8 +8,13 @@ import { useNavigation } from '../contexts/navigation';
 
 export default function ResearchInfoPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
+  const [nextButtonIsDisabled, setNextButtonIsDisabled] = useState(true);
   const {
-    state: { isScrapingFinished, demoMode },
+    state: {
+      demoMode,
+      scrapingConfig,
+      scrapingProgress: { step },
+    },
   } = useScraping();
   const footerNavItems: FooterNavItem[] = [
     {
@@ -24,9 +29,9 @@ export default function ResearchInfoPage(): JSX.Element {
       label: 'Weiter',
       // size: 'large',
       endIcon: faAngleRight,
-      disabled: !isScrapingFinished && !demoMode,
+      disabled: nextButtonIsDisabled && !demoMode,
       tippyOptions:
-        !isScrapingFinished && !demoMode
+        nextButtonIsDisabled && !demoMode
           ? {
               content: 'Bitte warte, bis alle Daten geladen sind.',
               theme: 'process-info',
@@ -34,12 +39,19 @@ export default function ResearchInfoPage(): JSX.Element {
             }
           : undefined,
       clickHandler(history: RouteComponentProps['history']) {
-        if (isScrapingFinished || demoMode) {
+        if (!nextButtonIsDisabled || demoMode) {
           history.push(getNextPage('path'));
         }
       },
     },
   ];
+
+  useEffect(() => {
+    const stepIndex = scrapingConfig.steps.findIndex((s) => s.type === 'video');
+    if (demoMode || step > stepIndex) {
+      setNextButtonIsDisabled(false);
+    }
+  }, [step, demoMode]);
 
   return (
     <>
