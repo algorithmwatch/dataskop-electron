@@ -173,12 +173,13 @@ export default function Base({
         onIsOpenChange={(val: boolean) => setMenuIsOpen(val)}
       />
 
-      {/*  h-full hides the debug button for long pages */}
-      <main className="flex flex-grow flex-col justify-between overflow-auto pt-4">
+      <div className="absolute inset-x-0 bottom-0 py-12 bg-gradient-to-b	from-transparent to-yellow-100" />
+
+      <main className="flex flex-grow flex-col justify-between overflow-auto pt-4 pb-2">
         {children}
       </main>
 
-      <footer>
+      <footer className="fixed bottom-0 inset-x-0">
         <ProcessIndicator steps={sections} currentStep={sectionKey} />
       </footer>
     </div>

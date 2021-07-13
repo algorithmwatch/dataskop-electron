@@ -11,7 +11,7 @@ function FooterNav({ items = [] }: { items: FooterNavItem[] }) {
   const history = useHistory();
 
   return (
-    <nav className="h-32 flex-shrink-0 flex justify-between items-center px-6">
+    <nav className="relative z-10 h-32 flex-shrink-0 flex justify-between items-center px-6">
       {items.map(
         ({
           label,
