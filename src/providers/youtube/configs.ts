@@ -16,21 +16,19 @@ const emptyVideoProcedureConfig: VideoProcedureConfig = {
   doLogout: false,
 };
 
-const lorenzIds = [
+const btw2021Ids = [
   '4Y1lZQsyuSQ',
   '0WcZ8PwZvGQ',
   'a_NpJU12_LA',
   'kQ_NA1MUbIc',
   '2weZNQ1xmdE',
-  'IiNVZ9_-48c',
-  // '0ivb-YE-bpQ',
-  // '4-vuJeH6TWQ',
+  '4-vuJeH6TWQ',
 ];
 
 const videoScraperStep = {
   ...emptyVideoProcedureConfig,
   followVideos: 7,
-  seedVideosFixed: lorenzIds,
+  seedVideosFixed: btw2021Ids,
 };
 
 const videoScraperNewsStep = {
@@ -66,9 +64,11 @@ const searchStep: SearchProcedureConfig = {
   queries: [
     'Baerbock',
     'Laschet',
-    'Bundeswehr Afghanistan',
-    'Hitzewelle Kanada',
-    'Corona Delta',
+    'Scholz',
+    'Bundestagswahl 2021 wen wählen',
+    'Impfpflicht',
+    'Benzinpreis',
+    'Gendern',
   ],
 };
 
