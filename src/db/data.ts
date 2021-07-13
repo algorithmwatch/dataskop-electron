@@ -259,29 +259,44 @@ const getStatisticsForSession = async (sessiondId: string) => {
   if (!firstResult) return {};
 
   const { startedAt } = firstResult;
-  const allTimes = new Map();
+  const allTimesSlug = new Map();
+  const allTimesStep = new Map();
   let previousTime = startedAt;
 
   for (let i = 0; i < allTasks.length; i += 1) {
-    const { slug, scrapedAt } = allTasks[i];
+    const { slug, scrapedAt, step } = allTasks[i];
     const duration = scrapedAt - previousTime;
 
-    if (allTimes.has(slug)) {
-      const oldTimes = allTimes.get(slug);
+    if (allTimesSlug.has(slug)) {
+      const oldTimes = allTimesSlug.get(slug);
       const newTimes = oldTimes.concat([duration]);
-      allTimes.set(slug, newTimes);
+      allTimesSlug.set(slug, newTimes);
     } else {
-      allTimes.set(slug, [duration]);
+      allTimesSlug.set(slug, [duration]);
+    }
+
+    if (allTimesStep.has(step)) {
+      const oldTimes = allTimesStep.get(step);
+      const newTimes = oldTimes.concat([duration]);
+      allTimesStep.set(step, newTimes);
+    } else {
+      allTimesStep.set(step, [duration]);
     }
 
     previousTime = scrapedAt;
   }
 
-  const result: { [key: string]: any } = {};
-  allTimes.forEach((value, key: string) => {
-    result[key] = statsForArray(value);
+  const resultSlug: { [key: string]: any } = {};
+  allTimesSlug.forEach((value, key: string) => {
+    resultSlug[key] = statsForArray(value);
   });
-  return result;
+
+  const resultStep: { [key: string]: any } = {};
+  allTimesStep.forEach((value, key: string) => {
+    resultStep[key] = statsForArray(value);
+  });
+
+  return { steps: resultStep, slugs: resultSlug };
 };
 
 export {
