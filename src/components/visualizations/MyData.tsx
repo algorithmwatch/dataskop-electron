@@ -4,10 +4,10 @@ import {
   faList,
   faPlay,
   faSearch,
-  faUser
+  faUser,
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 // import { ScrapingResult } from '../../db/types';
 
 export default function MyData({ data }) {
@@ -19,6 +19,8 @@ export default function MyData({ data }) {
     ['subscribed-channels', useRef()],
     ['search-results-videos', useRef()],
   ]);
+
+  const [renderJson, setRenderJson] = useState(false);
 
   const db = useMemo(() => {
     const history = data.results.find(
@@ -41,6 +43,8 @@ export default function MyData({ data }) {
   }, [data]);
   const stringifiedData = useMemo(() => JSON.stringify(data, null, 2), [data]);
   const stringifiedHtml = useMemo(() => {
+    if (!renderJson) return <div>Loading</div>;
+
     const lines = stringifiedData.split('\n');
     const jumpRefsKeys = [...jumpRefs.keys()];
 
@@ -69,7 +73,13 @@ export default function MyData({ data }) {
     });
 
     return html;
-  }, [stringifiedData, jumpRefs]);
+  }, [stringifiedData, jumpRefs, renderJson]);
+
+  useEffect(() => {
+    if (containerRef?.current && !renderJson) {
+      setRenderJson(true);
+    }
+  }, [containerRef, setRenderJson]);
 
   const filesize = useMemo(() => {
     const size = new TextEncoder().encode(stringifiedData).length;
