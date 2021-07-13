@@ -1,11 +1,18 @@
 import { faIdCard } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ipcRenderer } from 'electron';
 import React, { useState } from 'react';
 import { Lookup, ScrapingResult } from '../../../db/types';
+import Button from '../../Button';
 import Explainer from '../../Explainer';
 import Infobox from '../../Infobox';
 import Beeswarm from './Beeswarm';
 import { useData } from './useData';
+
+const invokeScreenshot = async () => {
+  const filename = `dataskop-dashboard.png`;
+  ipcRenderer.invoke('save-screenshot', filename);
+};
 
 function Badge({ title, value, unit, small = false }) {
   return (
@@ -33,7 +40,7 @@ export default function StatisticsChart({
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
   const db = useData(data, lookups);
 
-  if (!db.history) return null;
+  if (!db.history) return <div>Loading</div>;
 
   return (
     <>
@@ -113,6 +120,11 @@ export default function StatisticsChart({
         </div>
         <div className="m-7 mb-0 text-xs text-yellow-1300 p-2 shadow rounded-lg backdrop-filter backdrop-opacity-80 backdrop-contrast-125 backdrop-brightness-110 backdrop-saturate-200">
           <Beeswarm data={db.history} />
+        </div>
+        <div className="mt-7 ml-6">
+          <Button onClick={async () => invokeScreenshot()}>
+            Dashboard als Bild speichern
+          </Button>
         </div>
       </div>
     </>

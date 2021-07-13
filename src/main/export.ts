@@ -58,4 +58,15 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
       await Promise.all(input);
     },
   );
+
+  ipcMain.handle('save-screenshot', async (_event, filename) => {
+    if (mainWindow === null) return;
+    console.log('save-screenshot', mainWindow);
+    const nativeImage = await mainWindow.webContents.capturePage();
+    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+      defaultPath: filename,
+    });
+    if (canceled || !filePath) return;
+    fs.writeFileSync(filePath, nativeImage.toPNG());
+  });
 }
