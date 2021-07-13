@@ -29,11 +29,10 @@ import IntroductionPage from './pages/IntroductionPage';
 import MyDataHintPage from './pages/MyDataHintPage';
 import OnboardingPage1 from './pages/OnboardingPage1';
 import OnboardingPage2 from './pages/OnboardingPage2';
-import Questionaire from './pages/Questionaire';
 import QuestionnairePage from './pages/QuestionnairePage';
 import ResearchInfoPage from './pages/ResearchInfoPage';
 import ScrapingExplanationPage from './pages/ScrapingExplanationPage';
-// import StartPage from './pages/StartPage';
+import StartPage from './pages/StartPage';
 import VisualizationAutoplayChainPage from './pages/VisualizationAutoplayChainPage';
 import VisualizationNewsPage from './pages/VisualizationNewsPage';
 import VisualizationProfilePage from './pages/VisualizationProfilePage';
@@ -129,7 +128,7 @@ export default function App() {
                     path={routes.INTRODUCTION}
                     component={IntroductionPage}
                   />
-                  <Route path={routes.START} component={Questionaire} />
+                  <Route path={routes.START} component={StartPage} />
 
                   <Route path="/">
                     <Redirect to={routes.START} />
