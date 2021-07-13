@@ -47,7 +47,7 @@ export default function InterfaceTutorialPage(): JSX.Element {
           Interface-Erklärung
         </div>
         {!demoMode && (
-          <div className="absolute top-0 right-48">
+          <div className="absolute top-0 right-40">
             <PerfectArrow
               p1={{ x: 30, y: 170 }}
               p2={{ x: 150, y: 80 }}

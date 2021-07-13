@@ -7,9 +7,8 @@ import { useScraping } from '../contexts';
 export default function ScrapingProgressBar() {
   const {
     state: {
-      scrapingConfig,
       visibleWindow,
-      scrapingProgress: { isActive, value, step },
+      scrapingProgress: { isActive, value },
       finishedTasks,
     },
     dispatch,
@@ -39,28 +38,18 @@ export default function ScrapingProgressBar() {
     return null;
   }
 
-  const typeDescriptionMap = {
-    action: 'Scraping…',
-    profile: 'Profildaten…',
-    video: 'Empfehlungsexperimente…',
-    search: 'Suchexperiment…',
-  };
-  const currentType = scrapingConfig.steps[step].type;
-  const description = typeDescriptionMap[currentType];
-
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
-      className="max-w-min h-10 relative flex items-center cursor-pointer group"
+      className="w-64 h-10 relative flex items-center cursor-pointer group"
       onClick={() =>
         dispatch({ type: 'set-visible-window', visibleWindow: !visibleWindow })
       }
     >
-      <div className="z-20 flex items-center px-2 space-x-2 text-yellow-1300 group-hover:text-yellow-1100">
+      <div className="z-20 w-full flex items-center justify-center px-2 space-x-2 text-yellow-1300 group-hover:text-yellow-1100">
         <FontAwesomeIcon icon={faSpinnerThird} spin size="sm" className="" />
         <div className="relative text-sm whitespace-nowrap pr-3">
-          {description}
-          {etaMin}
+          Scraping: Noch ca. {etaMin}
         </div>
       </div>
       <div className="z-0 absolute bottom-0 inset-x-0 h-1 bg-yellow-300">
