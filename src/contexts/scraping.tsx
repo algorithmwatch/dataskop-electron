@@ -241,14 +241,18 @@ function ScrapingProvider({ children }: ScrapingProviderProps) {
   // Learn more in http://kcd.im/optimize-context
 
   const getEtaUntil = (checkUntilStep = null) => {
-    // finishedTasks is off by one
     const { startedAt, finishedTasks } = state;
     if (startedAt === null) return null;
 
     const untilIndex = checkUntilStep || demoData.results.length - 1;
 
+    const finishedFixed =
+      finishedTasks - 1 < demoData.results.length
+        ? finishedTasks - 1
+        : demoData.results.length - 1;
+
     const demoStartedAt = demoData.results[0].scrapedAt - 10000; // ~ 10 seconds
-    const demoTime = demoData.results[finishedTasks].scrapedAt;
+    const demoTime = demoData.results[finishedFixed].scrapedAt;
     const demoDuration = demoTime - demoStartedAt;
     const demoRemaining = demoData.results[untilIndex].scrapedAt - demoTime;
 
