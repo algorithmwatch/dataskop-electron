@@ -2,6 +2,7 @@ import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import Button from '../../components/Button';
+import MyData from '../../components/visualizations/MyData';
 import Profile from '../../components/visualizations/profile';
 import RecommenderMap from '../../components/visualizations/RecommenderMap';
 import SmallMultipleChart from '../../components/visualizations/SmallMultipleChart';
@@ -22,6 +23,7 @@ export default function VisualizationAdvancedPage() {
     'statistics',
     'recommender-map',
     'news-top5',
+    'mydata',
   ];
   const [visComp, setVisComp] = useState(visCompOptions[0]);
 
@@ -77,6 +79,7 @@ export default function VisualizationAdvancedPage() {
         {visComp === 'profile' && data && (
           <Profile data={data.results} lookups={data.lookups} />
         )}
+        {visComp === 'mydata' && data && <MyData data={data} />}
       </div>
     </>
   );
