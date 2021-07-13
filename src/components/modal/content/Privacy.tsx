@@ -1,296 +1,400 @@
 import React from 'react';
 
-function About() {
+function Privacy() {
   return (
     <div className="space-y-4">
       <div className="hl-3xl">
-        Allgemeine Nutzungsbedingungen für die Nutzung von Dataskop und die
-        Durchführung einer Datenspende („Datenspendevertrag“)
+        Datenschutzerklärung für dataskop.net und die Abgabe von Datenspenden
+        mit der DataSkop App
       </div>
 
-      <div>Stand: 14. Juli 2021</div>
-
-      <p>1. Geltungsbereich</p>
       <p>
-        Die nachfolgenden Allgemeinen Nutzungsbedingungen (im Folgenden
-        „Nutzungsbedingungen“) enthalten die grundlegenden Regeln für die
-        Registrierung für und die Nutzung des Angebotes „Dataskop“ und die
-        Abgabe einer Datenspende durch die Nutzer:innen. Dataskop ist ein
-        Angebot der AW AlgorithmWatch gGmbH, Linienstr.13 10178 Berlin (im
-        Folgenden „Algorithmwatch“).
-      </p>
-
-      <p>2.Vertragsgegenstand, Begriffsbestimmungen</p>
-
-      <p>
-        2.1. Algorithmwatch stellt mit DataSkop eine Plattform für Datenspenden
-        bereit, auf der Nutzer:innen zuvor gesammelte personenbezogene Daten
-        abrufen und Algorithmwatch und verbundenen Partnerinstitutionen zur
-        Forschung und Untersuchung zur Verfügung stellen können.{' '}
+        Die AW AlgorithmWatch gGmbH, Linienstr. 13, 10178 Berlin (nachfolgend
+        als „wir“ bezeichnet) betreibt die unter www.dataskop.net und
+        datenspende.dataskop.net abrufbaren Websites (nachfolgend auch
+        „Websites“) sowie die „DataSkop Desktop-App“ einschließlich der
+        Datenspenden-Services (nachfolgend „DataSkop“ oder die „Desktop-App“
+        oder „Software“).
       </p>
 
       <p>
-        2.2. Mit Ihrer Datenspende tragen Sie dazu bei, algorithmische
-        Entscheidungssysteme zu untersuchen und so die digitale Souveränität
-        aller Nutzer:innen zu stärken. Algorithmwatch will zudem die Kompetenzen
-        des Individuums stärken und Menschen dazu befähigen, informiert mit
-        Daten umzugehen, sicher in digitalen Umgebungen zu agieren,
-        algorithmische Strukturen zu erkennen und diese in ihren Grundzügen zu
-        verstehen.{' '}
+        Wir möchten Sie mit dieser Datenschutzerklärung darüber informieren,
+        welche Daten wir in welcher Form verarbeiten, wenn Sie unsere Websites
+        oder die Desktop-App nutzen. Hiermit kommen wir zugleich unseren
+        Informationspflichten gem. Art. 13 Datenschutz-Grundverordnung (DSGVO)
+        Ihnen gegenüber nach.
+      </p>
+
+      <p>I. Verantwortlicher</p>
+
+      <p>
+        Die datenschutzrechtlich Verantwortliche für die auf der Websites und
+        bei den Datenspenden über die Desktop-App stattfindenden
+        Datenverarbeitungen ist die:
+      </p>
+
+      <p>AW AlgorithmWatch gGmbH</p>
+      <p>Linienstraße 13</p>
+      <p>10178 Berlin </p>
+      <p> </p>
+      <p>E-Mail: info@algorithmwatch.org</p>
+      <p>Telefon: +49 30 994049000</p>
+
+      <p>
+        II. Zwecke und Rechtsgrundlage der Datenverarbeitung sowie ggf.
+        Speicherdauer
+      </p>
+
+      <p>1.Besuch der Websites</p>
+      <p> </p>
+      <p>
+        Die Server unserer Websites erfassen automatisch Ihre Zugriffe auf die
+        Websites. Wenn Sie also unsere Websites besuchen oder nutzen, werden
+        automatisch gewisse technische Daten an uns übermittelt. Dabei handelt
+        es sich um die folgenden Informationen:{' '}
+      </p>
+      <p> </p>
+      <p>-        IP-Adresse,</p>
+      <p>-        Inhalte auf die zugegriffen wurde, </p>
+      <p>-        Informationen über die Übertragung,</p>
+      <p>-        Datum des Zugriffs, </p>
+      <p>-        die Menge an übertragenen Daten,</p>
+      <p>-        den Referrer,</p>
+      <p>-        den Web-Browser/User Agent.</p>
+      <p> </p>
+      <p>
+        Die Erfassung der IP-Adresse beim Verbindungsaufbau basiert auf Art. 6
+        Abs. 1 lit. b) DSGVO und dient dazu, Ihre Anfrage zu bedienen und die
+        Nutzung der Websites durch Sie zu ermöglichen.
+      </p>
+      <p> </p>
+      <p>
+        Unsere Hoster legt zudem zur Erhaltung der Systemsicherheit sog.
+        Logfiles zur Erfassung von Systemevents und Systemfehlern an, die ggf.
+        Ihre Besucher-ID enthalten können. Diese Verarbeitung erfolgt, um die
+        Sicherheit und Integrität unserer IT-Systeme zu gewährleisten. Die
+        genannten Zwecke stellen zugleich das berechtigte Interesse dar, zu
+        dessen Wahrung die Verarbeitung erfolgt (Art. 6 Abs. 1 lit. f) DSGVO).
+      </p>
+      <p> </p>
+      <p>
+        Wir speichern die Logfiles für einen Zeitraum von 14  Tagen und löschen
+        sie danach.
+      </p>
+      <p> </p>
+      <p>2.Allgemeine Nutzung der Desktop-App</p>
+      <p />
+      <p>
+        Die Software läuft lokal auf Ihrem Endgerät. Zur Nutzung der Software
+        können Sie über unsere Websites oder in der Software Projekte auswählen,
+        um Protokolle über die Nutzung von bestimmten Online-Plattformen (z.B.
+        YouTube) anzulegen und sich Ihre Nutzung der Online-Plattform sowie die
+        erkannten Algorithmen in der Software interaktiv visualisieren zu
+        lassen. Eine Übermittlung dieser Protokolldateien an uns erfolgt dabei
+        nur auf Ihre aktive Freigabe als Datenspende hin, sodass diese
+        Informationen zunächst nur auf Ihrem Endgerät gespeichert und
+        verarbeitet werden, ohne dass wir Kenntnis von den Daten erlangen.
+      </p>
+      <p> </p>
+      <p>3.Anlegen eines DataSkop-Nutzungskontos für Datenspenden</p>
+      <p> </p>
+      <p>
+        Wenn Sie die Daten an uns und unsere Kooperationspartner spenden
+        möchten, können Sie einen DataSkop-Nutzungskonto erstellen.{' '}
+      </p>
+      <p> </p>
+      <p>
+        Dafür erheben wir,Ihre E-Mail-Adresse. Anschließend speichern und nutzen
+        wir diese Zugangsdaten, um Sie beim Login zu authentifizieren und Ihnen
+        den Zugang zu den Datenspende-Funktionen der Software zu gewähren.
+      </p>
+      <p> </p>
+      <p>
+        Rechtsgrundlage ist Art. 6 Abs. 1 lit. b) DSGVO. Wir verarbeiten die
+        Daten, um ihnen das DataSkop-Nutzungskonto und dessen Funktionen zur
+        Verfügung zu stellen. Wir speichern Ihre E-Mail-Adresse, solange Sie Ihr
+        DataSkop-Nutzungskonto bei uns unterhalten. Sie können Ihr
+        DataSkop-Nutzungskonto jederzeit über unsere Websites löschen.
+      </p>
+      <p> </p>
+      <p>4. Datenspenden</p>
+      <p> </p>
+      <p>
+        Sie können unter Verwendung der Software-Funktionen Datenspenden zu den
+        von Ihnen gewählten Projekten an uns sowie an unsere Kooperationspartner
+        bereitstellen. Nähere Informationen zu den konkreten Daten und Zwecken
+        sowie zu den Kooperationspartnern finden Sie in der jeweiligen
+        Projektbeschreibung.
       </p>
 
       <p>
-        2.3. „Nutzer:innen“ im Sinne dieser Nutzungsbedingungen sind alle
-        natürlichen Person, die DataSkop verwenden, sich für die Nutzung von
-        DataSkop registrieren oder zu registrieren beabsichtigen. Soweit von
-        „der Nutzer:in“ gesprochen wird, sind hierbei ausdrücklich alle
-        Nutzer:innen umfasst.
+        Soweit nicht im konkreten Projekt anders ausgewiesen, verarbeiten wir
+        Ihre Datenspende im Rahmen und zur Durchführung des Projekts zur
+        Erfüllung des Datenspendevertrags (Art. 6 Abs. 1 lit. b) DSGVO). Die
+        Datenspenden werden dabei grundsätzlich für die Dauer des jeweiligen
+        Forschungsprojekts verarbeitet.{' '}
+      </p>
+      <p> </p>
+      <p>
+        Solange Sie ein Nutzungskonto bei uns haben, können Sie Ihre Daten
+        darüber aufrufen und auch löschen.
+      </p>
+      <p> </p>
+      <p>
+        Je nach Ausgestaltung der Kooperation mit den Partnern, können wir
+        gemeinsam mit ihnen verantwortlich sein. Nähere Informationen zu den
+        wesentlichen Inhalten der Kooperation sowie zu den Zuständigkeiten
+        finden Sie in den Projektinformationen sowie in den
+        Datenschutzerklärungen der jeweiligen Kooperationspartner.
+      </p>
+      <p> </p>
+      <p>5. Netzwerkzugriff durch die Software</p>
+      <p> </p>
+      <p>
+        Damit Sie die Datenspende-Funktionen nutzen können, ist es notwendig,
+        dass die Software auf Ihren Internetzugang zugreift. Bei Ihrem Zugriff
+        auf unseren Server werden die Serverlogdaten verarbeitet. Insoweit
+        verweisen wir auf die Angaben unter Ziffer II. 1 „Besuch der Websites“.{' '}
+      </p>
+      <p> </p>
+      <p>
+        Diese Datenverarbeitung erfolgt auf Grundlage der Nutzungsbedingungen
+        nach Art. 6 Abs. 1 lit. b) DSGVO, um Ihnen die Datenspende-Funktionen
+        bereitzustellen.
+      </p>
+
+      <p>6. Kontakt</p>
+      <p> </p>
+      <p>
+        Wir bieten Ihnen die Möglichkeit, zu uns Kontakt aufzunehmen, zum
+        Beispiel über unsere oben genannte E-Mail-Adresse. In diesen Fällen
+        teilen Sie uns Ihre E-Mail-Adresse sowie ggf. Ihren Namen, einen Betreff
+        und den Inhalt der Nachricht mit.{' '}
+      </p>
+      <p> </p>
+      <p>
+        Wir verarbeiten diese Daten, um Ihre Anfrage beantworten zu können. In
+        diesem Zweck liegt zugleich unser berechtigtes Interesse an der
+        Datenverarbeitung (Art. 6 Abs. 1 lit. f) DSGVO). Wir speichern Ihre
+        E-Mail-Anfrage für einen Zeitraum von 12 Monaten und löschen Sie danach,
+        sofern keine weitere Aufbewahrung erforderlich ist (siehe dazu Ziffer
+        IV.)
+      </p>
+
+      <p>III.Kooperationspartner und weitere Empfänger der Daten</p>
+
+      <p>
+        Wir nutzen Ihre Datenspenden (ggf. in Zusammenarbeit mit unseren
+        Kooperationspartnern) für Forschungszwecke.{' '}
+      </p>
+      <p> </p>
+      <p>
+        Die gesammelten Datensätze aus dem Projekt einschließlich Ihrer
+        Datenspende werden an die in der jeweiligen Projektinformation
+        ausgewiesenen Kooperationspartner übermittelt. Einzelheiten zu den
+        Verarbeitungen durch die Kooperationspartner können Sie den
+        Informationen bei der Abgabe der Datenspende und den ggf. zusätzlich
+        gegebenen Informationen der Kooperationspartner entnehmen.{' '}
+      </p>
+      <p> </p>
+      <p>
+        Ggf. werden die Datenspenden auch zu einem späteren Zeitpunkt mit
+        weiteren Kooperationspartnern geteilt. In diesem Fall teilen wir Ihnen
+        eine solche geplante Übermittlung mit angemessener Frist im Vorfeld mit
+        und geben Ihnen die Möglichkeit, der Weitergabe der Daten an den
+        weiteren Kooperationspartner zu widersprechen.{' '}
       </p>
 
       <p>
-        2.4. „Datenspende“ im Sinne dieser Nutzungsbedingungen sind die von den
-        Nutzer:innen mittels der DataSkop-Software gesammelten und freiwillig an
-        Algorithmwatch übermittelten personenbezogenen Daten.
+        Wir setzen zudem ggf. weitere externe Dienstleister ein, soweit wir
+        Leistungen nicht oder nicht sinnvoll selbst vornehmen können. Diese
+        externen Dienstleister sind dabei vor allem Anbieter von
+        IT-Dienstleistungen, wie zum Beispiel unser Hoster, E-Mail-Provider oder
+        Telekommunikationsanbieter.
       </p>
 
       <p>
-        2.5. „Partnerinstitution“ im Sinne dieser Nutzungsbedingungen sind mit
-        Algorithmwatch zusammenarbeitende Redaktionen, Forschungseinrichtungen
-        und Nichtregierungsorganisationen.
+        Wir übermitteln Ihre Daten nicht in Drittstaaten außerhalb des
+        Europäischen Wirtschaftsraums. Außer im Rahmen des Downloads der App
+        über ein Contend Delivery Network (CDN): Dafür nutzen wir einen Anbieter
+        aus der Schweiz, der die Europäische Kommission ein angemessenes
+        Schutzniveau für personenbezogene Daten bescheinigt.
+      </p>
+      <p> </p>
+
+      <p>IV.Allgemeine Betroffenenrechte</p>
+      <p> </p>
+      <p>
+        Die Datenschutz-Grundverordnung garantiert Ihnen gewisse Rechte, die Sie
+        uns gegenüber – soweit die gesetzlichen Voraussetzungen vorliegen –
+        geltend machen können.{' '}
       </p>
 
       <p>
-        2.6. „Datenspendevertrag“ im Sinne dieser Nutzungsbedingungen ist die
-        zwischen Algorithmwatch und den Nutzer:innen geschlossene Vereinbarung
-        unter Geltung dieser Nutzungsbedingungen.
+        -Art. 15 DSGVO – Auskunftsrecht der betroffenen Person: Sie haben das
+        Recht, von uns eine Bestätigung darüber zu verlangen, ob Sie betreffende
+        personenbezogene Daten verarbeitet werden und wenn ja, welche dies sind
+        sowie die näheren Umstände der Datenverarbeitung.
       </p>
-
-      <p>3. Nutzungsvoraussetzungen</p>
-
-      <p>3.1. DataSkop steht ausschließlich natürlichen Personen offen.</p>
-
-      <p>3.2. Nutzer:innen müssen volljährig sein. </p>
-
-      <p>4. Abschluss des Datenspendevertrags, Nutzungskonto</p>
-
+      <p> </p>
       <p>
-        4.1. Die Nutzung von DataSkop ist grundsätzlich ohne Registrierung
-        möglich, erst die Datenspende erfordert eine Registrierung bei DataSkop
-        und setzt die Einrichtung eines Nutzungskontos für die Plattform voraus.
-        Die Nutzer:innen sind verpflichtet, die bei der Registrierung erhobenen
-        Daten wahrheitsgemäß und vollständig anzugeben.{' '}
+        -Art. 16 DSGVO – Recht auf Berichtigung: Sie haben das Recht, von uns
+        unverzüglich die Berichtigung Sie betreffender unrichtiger
+        personenbezogener Daten zu verlangen. Dabei haben Sie unter
+        Berücksichtigung der Zwecke der Verarbeitung auch das Recht, die
+        Vervollständigung unvollständiger personenbezogener Daten – auch mittels
+        einer ergänzenden Erklärung – zu verlangen.
       </p>
-
+      <p> </p>
       <p>
-        4.2. Mit Absendung des Registrierungsformulars geben Nutzer:innen ein
-        Angebot auf den Abschluss eines Vertrages über die Nutzung von DataSkop
-        ab. Bis zu diesem Zeitpunkt können Nutzer:innen ihre Angaben jederzeit
-        in den Angabefeldern ändern. Algorithmwatch kann das Vertragsangebot
-        durch eine ausdrückliche Erklärung gegenüber der Nutzer:in annehmen. Die
-        Ermöglichung des Zugangs zum Log-In-Bereich steht einer ausdrücklichen
-        Annahmeerklärung gleich. Mit Annahme des Angebotes kommt der
-        Datenspendevertrag unter Geltung dieser Allgemeinen Nutzungsbedingungen
-        zustande.
+        -Art. 17 DSGVO – Recht auf Löschung: Sie haben das Recht, von uns zu
+        verlangen, dass Sie betreffende personenbezogene Daten unverzüglich
+        gelöscht werden.
       </p>
-
+      <p> </p>
       <p>
-        4.3. Der Abschluss des Datenspendevertrags ist lediglich in deutscher
-        Sprache möglich. Der wesentliche Inhalt des geschlossenen
-        Datenspendevertrags ergibt sich aus diesen Allgemeinen
-        Nutzungsbedingungen. Sie werden den Nurtzer:innen nach der Registrierung
-        mit einer Bestätigungs-E-Mail übermittelt. Auf der Website von
-        Algorithmwatch sind die Allgemeinen Nutzungsbedingungen lediglich in der
-        jeweils aktuellen Fassung abrufbar.
+        -Art. 18 DSGVO – Recht auf Einschränkung der Verarbeitung: Sie haben das
+        Recht, von uns die Einschränkung der Verarbeitung zu verlangen.
       </p>
-
-      <p>5. Leistungsumfang von DataSkop</p>
-
+      <p> </p>
       <p>
-        5.1. DataSkop ermöglicht es Nutzer:innen Daten zu sammeln, sie zu
-        betrachten und anschließend für ein Projekt zu spenden.
+        -Art. 20 DSGVO – Recht auf Datenübertragbarkeit: Sie haben das Recht, im
+        Falle der Verarbeitung aufgrund einer Einwilligung oder zur Erfüllung
+        eines Vertrags, die Sie betreffenden personenbezogenen Daten, die Sie
+        uns bereitgestellt haben, in einem strukturierten, gängigen und
+        maschinenlesbaren Format zu erhalten, und diese Daten einem anderen
+        Verantwortlichen ohne Behinderung durch uns zu übermitteln oder die
+        Daten direkt an den anderen Verantwortlichen übermitteln zu lassen,
+        soweit dies technisch machbar ist.
       </p>
 
       <p>
-        5.2. Für die Nutzung von DataSkop ist es zunächst erforderlich, dass
-        Nutzer:innen sich die DataSkop App herunterladen und auf ihrem Endgerät
-        installieren.{' '}
+        -Art. 77 DSGVO i. V. m. § 19 BDSG – Recht auf Beschwerde bei einer
+        Aufsichtsbehörde: Sie haben das Recht, jederzeit Beschwerde bei einer
+        Aufsichtsbehörde, insbesondere in dem Mitgliedstaat Ihres
+        Aufenthaltsorts, Ihres Arbeitsplatzes oder des Orts des mutmaßlichen
+        Verstoßes, einzulegen, wenn Sie der Ansicht sind, dass die Verarbeitung
+        der Sie betreffenden personenbezogenen Daten gegen geltendes Recht
+        verstößt.
+      </p>
+
+      <p>V.Insbesondere Widerspruchsrecht und Widerruf einer Einwilligung</p>
+
+      <p>1. Widerspruchsrecht</p>
+
+      <p>
+        Sie haben das Recht, aus Gründen, die sich aus Ihrer besonderen
+        Situation ergeben, jederzeit gegen die Verarbeitung Sie betreffender
+        personenbezogener Daten, die aufgrund eines berechtigten Interesses
+        unsererseits oder zur Wahrung einer Aufgabe im öffentlichen Interesse
+        erforderlich ist, oder die in Ausübung öffentlicher Gewalt erfolgt,
+        Widerspruch einzulegen.{' '}
+      </p>
+      <p> </p>
+      <p>
+        Legen Sie Widerspruch ein, werden wir Ihre personenbezogenen Daten nicht
+        mehr verarbeiten, es sei denn, wir können zwingende schutzwürdige Gründe
+        für die Verarbeitung nachweisen, die Ihre Interessen, Rechte und
+        Freiheiten überwiegen, oder die Verarbeitung dient der Geltendmachung,
+        Ausübung oder Verteidigung von Rechtsansprüchen.
+      </p>
+      <p>
+        Soweit wir Ihre personenbezogenen Daten verarbeiten, um Direktwerbung zu
+        betreiben, haben Sie das Recht, jederzeit Widerspruch gegen die
+        Verarbeitung einzulegen. Widersprechen Sie der Verarbeitung für Zwecke
+        der Direktwerbung, so werden wir Ihre personenbezogenen Daten nicht mehr
+        für diese Zwecke verarbeiten.
+      </p>
+      <p> </p>
+      <p>
+        Um Ihr Widerspruchsrecht auszuüben, können Sie uns bspw. eine Nachricht
+        an die oben genannte Kontaktadresse senden.{' '}
+      </p>
+      <p> </p>
+
+      <p>2.Widerruf einer Einwilligung</p>
+
+      <p> </p>
+      <p>
+        Wenn Sie uns eine Einwilligung erteilt haben, haben Sie das Recht, Ihre
+        Einwilligung jederzeit zu widerrufen. Alle Datenverarbeitungen die wir
+        bis zu Ihrem Widerruf vorgenommen haben, bleiben in diesem Fall
+        rechtmäßig. Zu diesem Zweck können Sie sich an die oben genannten
+        Kontaktadressen wenden.
+      </p>
+
+      <p>VI.Pflicht zur Bereitstellung von Daten</p>
+
+      <p />
+      <p>
+        Sie haben keine vertragliche oder gesetzliche Pflicht, uns
+        personenbezogene Daten bereitzustellen.{' '}
       </p>
 
       <p>
-        5.3. Die Datensammlung erfolgt dadurch, dass Nutzer:innen auf der
-        Website dataskop.net ein Projekt auswählen und dieses in der App öffnen.
-        In der App melden sich die Nutzer:innen bei dem jeweiligen von dem
-        Projekt untersuchten Dienst eines Drittanbieters mit ihren Zugangsdaten
-        an. Die App erhebt und analysiert die Daten der Nutzer:innen aus dem
-        Dienst. Die Datenerhebung erfolgt in diesem Schritt ausschließlich lokal
-        auf dem Gerät der Nutzer:innen. Algorithmwatch erhält keine Kenntnis von
-        den gesammelten Informationen.
+        VII.Bestehen von automatisierten Entscheidungsfindungen (einschließlich
+        Profiling)
       </p>
 
       <p>
-        5.4. Die App stellt den Nutzer:innen die Daten aufbereitet und
-        visualisiert dar und erklärt den Nutzer:innen, worum es in dem von ihr
-        gewählten Projekt geht. Anschließend werden die Nutzer:innen gefragt, ob
-        sie ihre Daten Algorithmwatch und ggf. der Partnerinstitution als
-        Datenspende zur Verfügung stellen will. Die Datenspende richtet sich
-        nach der folgenden Ziffer 6 dieser Nutzungsbedingungen.
+        Wir verwenden keine automatisierten Entscheidungsfindungen gemäß Art. 22
+        DSGVO, die Ihnen gegenüber rechtliche Wirkungen entfalten oder Sie
+        beeinträchtigen.
       </p>
 
+      <p> </p>
+      <p>VIII.Cookies und andere Technologien</p>
+
       <p>
-        5.5. Im Nutzungskonto stehen die getätigten Datenspenden für die
-        Nutzer:innen zur An- und Übersicht zur Verfügung.{' '}
+        Für den Betrieb unserer Websites verwenden wir einen Cookies, die auf
+        Ihrem Endgerät gesetzt werden Cookies führen keine Programme aus und
+        können Ihre Endgeräte auch nicht mit Viren oder anderer Schadsoftware
+        infizieren. Wir verwenden sowohl sog. Session-Cookies, die sich
+        automatisch löschen, nachdem Sie Ihre Browsersitzung beenden als auch
+        Cookies, die sich erst nach dem Erreichen einer gewissen Speicherdauer
+        selbständig löschen.{' '}
       </p>
-
+      <p> </p>
       <p>
-        5.6. DataSkop benötigt für die Forschung eine möglichst breite
-        Datenbasis. Ein wichtiger Teil von DataSkop ist es daher, dass, solange
-        die Nutzer:innen auf der Plattform registriert sind und deren Vorteile
-        genießen, auch ihre geleisteten Datenspenden Algorithmwatch und
-        ausgesuchten Partnerinstitutionen für die Forschung zur Verfügung
-        stehen. Über die konkreten Zwecke der Verarbeitungen werden Nutzer:innen
-        selbstverständlich stets transparent informiert.
+        Wir nutzen Cookies und andere Technologien dafür, um Ihnen gewisse
+        technische Funktionen bereitzustellen, die Ihre Nutzung unserer Websites
+        angenehmer und komfortabler machen oder den Login zu ermöglichen. Die
+        damit zusammenhängenden Verarbeitungen erfolgen in unserem berechtigten
+        Interesse, die Websites für Sie komfortabel nutzbar zu machen. Soweit
+        die Cookies und anderen Technologien nicht zur Bereitstellung der
+        Websites erforderlich sind, setzen wir diese nur auf Grundlage Ihrer
+        Einwilligung (Art. 6 Abs. 1 lit. a) DSGVO).
       </p>
-
-      <p>6. Datenspende</p>
-
+      <p> </p>
+      <p>Widerrufen können Sie eine einmal gegebene Einwilligung hier: </p>
+      <p> </p>
       <p>
-        6.1. Nutzer:innen können ihre gesammelten personenbezogenen Daten an
-        Algorithmwatch sowie die Partnerinstitution spenden und damit dazu
-        beitragen, Licht in die Black-Box-Algorithmen dieser Systeme zu bringen,
-        um zu verstehen, wie sie Empfehlungen, Bewertungen und Entscheidungen
-        berechnen.
+        <a href="https://dataskop.net/kontakt" target="_blank" rel="noreferrer">
+          https://dataskop.net/kontakt
+        </a>
       </p>
-
+      <p> </p>
       <p>
-        6.2. Die Nutzer:innen sind vollständig in der Entscheidung frei, ob sie
-        Ihre personenbezogenen Daten Algorithmwatch und den jeweiligen
-        Partnerinstitutionen für die Projektzwecke zur Verfügung stellen.
+        Falls Sie die Verwendung von Cookies ganz allgemein unterbinden wollen,
+        besteht dazu bei Ihrem Browser die Möglichkeit, die Annahme und
+        Speicherung neuer Cookies zu verhindern. Um herauszufinden, wie das bei
+        dem von Ihnen verwendeten Browser funktioniert, können Sie die
+        Hilfe-Funktion Ihres Browsers benutzen oder sich an den Hersteller
+        wenden. Wir weisen Sie darauf hin, dass unsere Websites in diesem Fall
+        möglicherweise nicht vollumfänglich genutzt werden kann.
       </p>
-
+      <p> </p>
       <p>
-        6.3. Die Abgabe der Datenspende erfolgt, nachdem die DataSkop App die
-        Daten der Nutzer:innen gesammelt hat. Den Nutzer:innen werden dann
-        ausführliche Informationen zum jeweiligen Projekt und den damit
-        verbundenen Verarbeitungszwecken ihrer Daten zur Verfügung gestellt und
-        sie können entscheiden, ob sie die Datenspende vornehmen wollen. Mit
-        einem Klick auf die Schaltfläche „Daten spenden“ bestätigen die
-        Nutzer:innen ausdrücklich zur Spende bereit und mit den damit
-        verbundenen Verarbeitungen einverstanden zu sein.{' '}
-      </p>
-
-      <p>
-        6.4. Die Datenspende ist für die Nutzer:innen grundsätzlich verbindlich
-        und Algorithmwatch darf – natürlich im Rahmen der strengen
-        Datenschutzgesetze – die Daten verwenden. Nutzer:innen sind an die
-        Datenspende solange gebunden, bis sie den Datenspendevertrag mit
-        Algorithmwatch beenden. Danach werden die Datenspenden von
-        Algorithmwatch gelöscht. Algorithmwatch wird die Partnerinstitutionen,
-        denen die Daten übermittelt wurden ebenfalls über den Löschwunsch in
-        Kenntnis setzen.
-      </p>
-
-      <p>
-        7. Verwendung der Datenspende für weitere gemeinwohlorientierte
-        Forschungs- und Recherchevorhaben 
-      </p>
-
-      <p>
-        Algorithmwatch will mit den geleisteten Spenden gemeinwohlorientierte
-        Forschung sowie Recherchen ermöglichen. Solange Nutzer:innen daher ein
-        Nutzungskonto haben und Teil von DataSkop sind, wird Algorithmwatch die
-        gespendeten Daten möglicherweise auch anderen Partnerinstitutionen zur
-        Verfügung stellen. Algorithmwatch wird diese Partnerinstitutionen
-        selbstverständlich zu jeder Zeit sorgfältig aussuchen und ausdrücklich
-        überprüfen, ob die Verwendung für das neue Forschungsvorhaben mit dem
-        ursprünglichen Spendenzweck kompatibel und vereinbar ist. Nutzer:innen
-        können jederzeit bestimmen, welchen Forschungsvhorhaben sie/er seine
-        Daten zur Verfügung stellen möchte. Bei Beginn eines neuen
-        Forschungsvorhaben wird Algorithmwatch die betroffenen Nutzer:innen
-        informieren und ihnen einen Zeitraum von 15 Tagen geben, der Datenspende
-        zu widersprechen.
-      </p>
-
-      <p>8. Vergütung </p>
-
-      <p>
-        Die Nutzung von DataSkop ist für die Nutzer:innen kostenfrei möglich.
-        Die Nutzer:innen erhalten für die Abgabe ihrer Datenspenden ebenfalls
-        keine Vergütung.
-      </p>
-
-      <p>9.Pflichten der Nutzer:innen</p>
-
-      <p>
-        Nutzer:innen sind verpflichtet, alle Handlungen zu unterlassen, die über
-        eine bestimmungsgemäße Nutzung der Plattform hinausgehen. Nutzer:innen
-        sind insbesondere verpflichtet, es zu unterlassen, die Plattform in
-        einer Art und Weise zu benutzen, durch die ein sicherer Betrieb der
-        Systeme von Algorithmwatch oder Dritten gefährdet werden könnte, z. B.
-        indem die Infrastruktur von Algorithmwatch einer übermäßigen Belastung
-        aussetzt wird oder auf andere Weise das Funktionieren von DataSkop
-        gestört oder gefährdet wird.
-      </p>
-
-      <p>10. Vertragslaufzeit, Vertragsbeendigung </p>
-
-      <p>
-        10.1. Der Datenspendevertrag wird auf unbestimmte Zeit geschlossen. Er
-        kann von den Nutzer:innen und Algorithmwatch jederzeit ohne Einhaltung
-        einer Frist gekündigt werden.
-      </p>
-
-      <p>
-        10.2. Das Recht der Parteien zur außerordentlichen Kündigung des
-        Vertrags aus wichtigem Grund bleibt unberührt.{' '}
-      </p>
-
-      <p>10.3. Jede Kündigung bedarf der Textform.</p>
-
-      <p>11. Verfügbarkeit, Wartung</p>
-
-      <p>
-        11.1. Algorithmwatch bemüht sich um eine durchgehende Verfügbarkeit und
-        fehlerfreie Funktionalität der Plattform. Die Nutzer:in erkennt jedoch
-        an, dass bereits aus technischen Gründen und aufgrund der Abhängigkeit
-        von äußeren Einflüssen z. B. im Rahmen der Fernmeldenetze eine
-        ununterbrochene Verfügbarkeit der Plattform nicht realisierbar ist.
-      </p>
-
-      <p>
-        11.2. Algorithmwatch führt an den Systemen der Plattform zur
-        Sicherstellung des Betriebes und zum Zwecke der Erweiterung der
-        Plattform gelegentlich Wartungsarbeiten durch, die zu einer
-        vorübergehenden Beeinträchtigung der Nutzbarkeit der Plattform führen
-        können. Algorithmwatch wird die Wartungsarbeiten, sofern möglich, in
-        nutzungsarmen Zeiten durchführen.
-      </p>
-
-      <p>12. Datenschutz</p>
-
-      <p>
-        Algorithmwatch erhebt und verarbeitet personenbezogene Daten der
-        Nutzer:innen. Informationen zur Datenverarbeitung und zum Datenschutz
-        enthält die Datenschutzerklärung von Algorithmwatch.
-      </p>
-
-      <p>13. Schlussbestimmungen</p>
-
-      <p>
-        13.1. Soweit nach diesen Nutzungsbedingungen die Übermittlung von
-        Erklärungen oder Informationen durch Algorithmwatch an die Nutzer:in
-        vorgesehen ist, erfolgt diese Übermittlung in aller Regel per E-Mail an
-        die von der Nutzer:in im Rahmen ihrer Registrierung angegebene bzw. im
-        Nutzungskonto hinterlegte E-Mail-Adresse.
-      </p>
-
-      <p>
-        13.2. Sollten einzelne Bestimmungen dieses Vertrages ungültig sein oder
-        werden, bleibt die Gültigkeit der übrigen Bestimmungen unberührt.{' '}
-      </p>
-
-      <p>
-        13.3. Auf den Datenspendevertrag findet ausschließlich das Recht der
-        Bundesrepublik Deutschland Anwendung.
+        Die bei Aufruf von{' '}
+        <a
+          href="http://datenspende.dataskop.net"
+          target="_blank"
+          rel="noreferrer"
+        >
+          datenspende.dataskop.net
+        </a>{' '}
+        von uns gesetzten Cookie hat die Bezeichnung „sessionid“ und wird nach
+        24 Stunden ungültig und{' '}
       </p>
 
       <p>Berlin, Juli 2021</p>
@@ -298,4 +402,4 @@ function About() {
   );
 }
 
-export default About;
+export default Privacy;
