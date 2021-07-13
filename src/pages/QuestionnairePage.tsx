@@ -1,5 +1,7 @@
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
-import { Field, Form, Formik } from 'formik';
+import { Field, Form, Formik, useField, useFormikContext } from 'formik';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import Button from '../components/Button';
@@ -56,6 +58,26 @@ export default function QuestionnairePage(): JSX.Element {
     console.log('onSubmit', values);
   };
 
+  const LimitCheckbox = (props) => {
+    const { values, touched, setFieldValue } = useFormikContext();
+    const valuesField = values[props.name];
+    const touchField = touched[props.name];
+    const [field, meta] = useField(props);
+
+    React.useEffect(() => {
+      if (touchField && valuesField?.length > 3) {
+        setFieldValue(props.name, valuesField.slice(0, 3));
+      }
+    }, [valuesField, setFieldValue, touchField, props.name]);
+
+    return (
+      <>
+        <input {...props} {...field} />
+        {!!meta.touched && !!meta.error && <div>{meta.error}</div>}
+      </>
+    );
+  };
+
   return (
     <>
       <div className="mx-auto max-w-4xl flex flex-col justify-center w-full">
@@ -80,7 +102,7 @@ export default function QuestionnairePage(): JSX.Element {
                     />
                     <span>
                       Dürfen Dich die beteiligten Forscher*innen oder
-                      Journalist*innen mit Nachfragen kontaktieren
+                      Journalist*innen mit Nachfragen kontaktieren?
                     </span>
                   </label>
                 </div>
@@ -174,7 +196,7 @@ export default function QuestionnairePage(): JSX.Element {
                   >
                     {categories.map((c) => (
                       <label key={c}>
-                        <Field
+                        <LimitCheckbox
                           type="checkbox"
                           name="categories"
                           value={c}
