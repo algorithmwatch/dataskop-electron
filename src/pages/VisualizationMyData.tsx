@@ -9,7 +9,7 @@ export default function VisualizationMyData(): JSX.Element {
   const { getCurrentPage } = useNavigation();
   const footerNavItems: FooterNavItem[] = [
     {
-      label: 'Zurück',
+      label: 'Schließen',
       theme: 'link',
       startIcon: faAngleLeft,
       clickHandler(history: RouteComponentProps['history']) {

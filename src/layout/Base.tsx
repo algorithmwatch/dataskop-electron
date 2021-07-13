@@ -146,7 +146,7 @@ export default function Base({
     <div className="relative flex flex-col h-screen justify-between">
       <Modal />
       <header
-        className={classNames('flex items-center py-4 px-6 z-20', {
+        className={classNames('flex items-center py-4 px-6 z-20 h-18', {
           'opacity-0': pathname === routes.START,
         })}
       >
@@ -169,16 +169,18 @@ export default function Base({
           </div>
 
           {/* MyData vault */}
-          <div>
-            <Button
-              key="my-data"
-              size="small"
-              theme="blue"
-              onClick={handleMyDataClick}
-            >
-              Meine Daten
-            </Button>
-          </div>
+          {pageIndex > 3 && (
+            <div>
+              <Button
+                key="my-data"
+                size="small"
+                theme="blue"
+                onClick={handleMyDataClick}
+              >
+                Meine Daten
+              </Button>
+            </div>
+          )}
         </div>
         <div>
           <button

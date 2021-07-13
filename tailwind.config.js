@@ -95,6 +95,7 @@ module.exports = {
         192: '48rem',
       },
       height: {
+        18: '4.375rem',
         max: 'max-content',
       },
       zIndex: {
