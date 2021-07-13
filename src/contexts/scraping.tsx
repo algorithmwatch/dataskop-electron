@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
+import demoData from '../constants/demo.json';
 import { Campaign, ScrapingConfig } from '../providers/types';
 import { defaultConfig } from '../providers/youtube';
 
@@ -38,7 +39,10 @@ type Action =
     }
   | { type: 'set-log-html'; logHtml: boolean }
   | { type: 'set-disable-input'; disableInput: boolean }
-  | { type: 'set-demo-mode'; demoMode: boolean };
+  | { type: 'set-demo-mode'; demoMode: boolean }
+  | {
+      type: 'increment-finished';
+    };
 
 type Dispatch = (action: Action) => void;
 type State = {
@@ -65,13 +69,15 @@ type State = {
   logHtml: boolean;
   disableInput: boolean;
   demoMode: boolean;
+  startedAt: number | null;
+  finishedTasks: number;
 };
 
 type ScrapingProviderProps = { children: React.ReactNode };
 // started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
 
 const ScrapingStateContext = React.createContext<
-  { state: State; dispatch: Dispatch } | undefined
+  { state: State; dispatch: Dispatch; getEtaUntil: any } | undefined
 >(undefined);
 
 const initialState = {
@@ -97,6 +103,8 @@ const initialState = {
   logHtml: false,
   disableInput: false,
   demoMode: false,
+  startedAt: null,
+  finishedTasks: 0,
 };
 
 function scrapingReducer(state: State, action: Action) {
@@ -169,6 +177,7 @@ function scrapingReducer(state: State, action: Action) {
         isScrapingFinished: false,
         isScrapingPaused: false,
         scrapingProgress: { isActive: true, value: 0, step: 0 },
+        startedAt: Date.now(),
       };
     }
 
@@ -214,6 +223,10 @@ function scrapingReducer(state: State, action: Action) {
       return { ...state, demoMode: action.demoMode };
     }
 
+    case 'increment-finished': {
+      return { ...state, finishedTasks: state.finishedTasks + 1 };
+    }
+
     default: {
       throw new Error(`Unhandled action type: ${action}`);
     }
@@ -227,7 +240,26 @@ function ScrapingProvider({ children }: ScrapingProviderProps) {
   // NOTE: you *might* need to memoize this value
   // Learn more in http://kcd.im/optimize-context
 
-  const value = { state, dispatch };
+  const getEtaUntil = (checkUntilStep = null) => {
+    // finishedTasks is off by one
+    const { startedAt, finishedTasks } = state;
+    if (startedAt === null) return null;
+
+    const untilIndex = checkUntilStep || demoData.results.length - 1;
+
+    const demoStartedAt = demoData.results[0].scrapedAt - 10000; // ~ 10 seconds
+    const demoTime = demoData.results[finishedTasks].scrapedAt;
+    const demoDuration = demoTime - demoStartedAt;
+    const demoRemaining = demoData.results[untilIndex].scrapedAt - demoTime;
+
+    const ourTime = Date.now() - startedAt;
+
+    const etaRemaining = (ourTime / demoDuration) * demoRemaining;
+
+    return etaRemaining;
+  };
+
+  const value = { state, dispatch, getEtaUntil };
 
   return (
     <ScrapingStateContext.Provider value={value}>

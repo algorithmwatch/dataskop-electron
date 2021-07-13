@@ -245,6 +245,8 @@ export default function ScrapingManager({
           // Store data w/ async
           addScrapingResult(sessionId, step, result);
         }
+
+        dispatch({ type: 'increment-finished' });
       } catch (err) {
         dispatch({ type: 'set-scraping-error', scrapingError: err });
         console.error(err);

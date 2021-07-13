@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { faSpinnerThird } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useScraping } from '../contexts';
 
 export default function ScrapingProgressBar() {
@@ -9,9 +10,31 @@ export default function ScrapingProgressBar() {
       scrapingConfig,
       visibleWindow,
       scrapingProgress: { isActive, value, step },
+      finishedTasks,
     },
     dispatch,
+    getEtaUntil,
   } = useScraping();
+
+  const [etaMin, setEtaMin] = useState('10 Minuten');
+
+  useEffect(() => {
+    if (finishedTasks > 5) {
+      const etaMs = getEtaUntil();
+      if (etaMs === null) return;
+      const minutes = Math.round(etaMs / 1000 / 60);
+      if (minutes >= 2) {
+        setEtaMin(`${minutes} Minuten`);
+      } else if (minutes === 1) {
+        setEtaMin('eine Minute');
+      } else {
+        setEtaMin('unter eine Minute');
+      }
+    } else {
+      setEtaMin('10 Minuten');
+    }
+  }, [finishedTasks]);
+
   if (!isActive) {
     return null;
   }
@@ -37,6 +60,7 @@ export default function ScrapingProgressBar() {
         <FontAwesomeIcon icon={faSpinnerThird} spin size="sm" className="" />
         <div className="relative text-sm whitespace-nowrap pr-3">
           {description}
+          {etaMin}
         </div>
       </div>
       <div className="z-0 absolute bottom-0 inset-x-0 h-1 bg-yellow-300">
