@@ -27,7 +27,7 @@ export default function DonationPage2(): JSX.Element {
   ];
 
   const {
-    state: { platformUrl },
+    state: { platformUrl, seriousProtection },
   } = useConfig();
 
   const {
@@ -69,6 +69,7 @@ export default function DonationPage2(): JSX.Element {
 
     const resp = await postDonation(
       platformUrl,
+      seriousProtection,
       email,
       redactedResults,
       scrapingSession,

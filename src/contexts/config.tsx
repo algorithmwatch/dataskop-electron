@@ -15,6 +15,7 @@ type State = {
   simpleBackendUrl: string | null;
   platformUrl: string | null;
   trackEvents: boolean;
+  seriousProtection: string | null;
 };
 type ConfigProviderProps = { children: React.ReactNode };
 // started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
@@ -50,6 +51,7 @@ function ConfigProvider({ children }: ConfigProviderProps) {
   const simpleBackendUrl = process.env.SIMPLE_BACKEND ?? null;
   const platformUrl = process.env.PLATFORM_URL ?? null;
   const trackEvents = !!process.env.TRACK_EVENTS;
+  const seriousProtection = process.env.SERIOUS_PROTECTION ?? null;
 
   // initial value gets overriden with `useEffect`
   const [state, dispatch] = React.useReducer(configReducer, {
@@ -59,6 +61,7 @@ function ConfigProvider({ children }: ConfigProviderProps) {
     simpleBackendUrl,
     platformUrl,
     trackEvents,
+    seriousProtection,
   });
 
   // NOTE: you *might* need to memoize this value
@@ -77,6 +80,7 @@ function ConfigProvider({ children }: ConfigProviderProps) {
     if (trackEvents && platformUrl !== null) {
       postEvent(
         platformUrl,
+        seriousProtection,
         campaign === null ? -1 : campaign.id,
         message,
         data,

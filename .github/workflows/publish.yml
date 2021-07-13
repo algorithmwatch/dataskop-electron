@@ -69,6 +69,7 @@ jobs:
       - name: Setup dotenv files (for renderer)
         run: >
           echo "PLATFORM_URL=${{ secrets.PLATFORM_URL }}" >> .env &&
+          echo "SERIOUS_PROTECTION=${{ secrets.SERIOUS_PROTECTION }}" >> .env &&
           echo "TRACK_EVENTS=${{ secrets.TRACK_EVENTS }}" >> .env
 
       - name: Publish releases

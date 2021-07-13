@@ -1,11 +1,19 @@
+import base64 from 'base-64';
 import { ScrapingSession } from '../db';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-const postJson = (url: string, body: Object) => {
+const postJson = (
+  url: string,
+  seriousProtection: string | null,
+  body: Object,
+) => {
   return fetch(url, {
     method: 'POST',
     body: JSON.stringify(body),
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Basic ${base64.encode(`user:${seriousProtection}`)}`,
+    },
   });
 };
 
@@ -16,7 +24,7 @@ const postSimpleBackend = async (
   sessionId: string,
 ) => {
   try {
-    const res = await postJson(simpleBackendUrl, {
+    const res = await postJson(simpleBackendUrl, null, {
       version,
       sessionId,
       slug: data.slug,
@@ -30,31 +38,50 @@ const postSimpleBackend = async (
   }
 };
 
-const getActiveCampaigns = async (platformUrl: string) => {
+const getActiveCampaigns = async (
+  platformUrl: string,
+  seriousProtection: string | null,
+) => {
   const url = `${platformUrl}/api/campaigns/`;
-  const activeCampaigns = await (await fetch(url)).json();
+
+  console.log('x');
+  console.log(seriousProtection);
+
+  const activeCampaigns = await (
+    await fetch(url, {
+      headers: {
+        Authorization: `Basic ${base64.encode(`user:${seriousProtection}`)}`,
+      },
+    })
+  ).json();
   return activeCampaigns;
 };
 
 const postEvent = async (
   platformUrl: string,
+  seriousProtection: string | null,
   campaign: number,
   message: string,
   data: any,
 ) => {
   const url = `${platformUrl}/api/events/`;
-  const res = await postJson(url, { campaign, message, data });
+  const res = await postJson(url, seriousProtection, {
+    campaign,
+    message,
+    data,
+  });
   if (!res.ok) console.warn(res);
 };
 
 const postDonation = async (
   platformUrl: string,
+  seriousProtection: string | null,
   email: string,
   result: any,
   session: ScrapingSession,
 ) => {
   const url = `${platformUrl}/api/donations/`;
-  const res = await postJson(url, {
+  const res = await postJson(url, seriousProtection, {
     unauthorized_email: email,
     campaign: session.campaign?.id,
     results: { scrapingResult: result, session },

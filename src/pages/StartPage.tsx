@@ -15,7 +15,7 @@ import { getActiveCampaigns } from '../utils/networking';
 
 export default function StartPage(): JSX.Element {
   const {
-    state: { platformUrl },
+    state: { platformUrl, seriousProtection },
     sendEvent,
   } = useConfig();
 
@@ -27,7 +27,7 @@ export default function StartPage(): JSX.Element {
     if (platformUrl == null) return;
 
     try {
-      const cams = await getActiveCampaigns(platformUrl);
+      const cams = await getActiveCampaigns(platformUrl, seriousProtection);
       const remoteCampaign = cams[0];
 
       if (remoteCampaign == null) return;
