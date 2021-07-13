@@ -41,7 +41,7 @@ export default function StatisticsChart({
     const filename = `dataskop-dashboard.png`;
     const bbox = visRef?.current.getBoundingClientRect();
     const { x, y, width, height } = bbox;
-    const pt = 30;
+    const pt = 25;
     const rect = {
       x: parseInt(x),
       y: parseInt(y - pt),
