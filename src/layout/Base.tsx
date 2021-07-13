@@ -6,12 +6,12 @@ import {
   faInfoCircle,
   faPaperPlane,
   faQuestionCircle,
-  faUserSecret,
+  faUserSecret
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import React, { ReactNode, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import Button from '../components/Button';
 import Modal from '../components/modal/Modal';
 import ProcessIndicator from '../components/ProcessIndicator';
@@ -40,8 +40,21 @@ export default function Base({
   const {
     state: { demoMode },
   } = useScraping();
-
+  const history = useHistory();
+  const [logoClicked, setLogoClicked] = useState(0);
   const { dispatch: dispatchConfig } = useConfig();
+  const handleLogoClicked = () => {
+    if (logoClicked > 3) {
+      dispatchConfig({ type: 'show-advanced-menu' });
+    } else setLogoClicked(logoClicked + 1);
+  };
+  const handleMyDataClick = () => {
+    if (pathname === routes.MY_DATA) {
+      history.push(getCurrentPage('path'));
+    } else {
+      history.push(routes.MY_DATA);
+    }
+  };
 
   const sidebarMenu = [
     {
@@ -129,14 +142,6 @@ export default function Base({
     }
   }, [pageIndex]);
 
-  const [logoClicked, setLogoClicked] = useState(0);
-
-  const handleLogoClicked = () => {
-    if (logoClicked > 3) {
-      dispatchConfig({ type: 'show-advanced-menu' });
-    } else setLogoClicked(logoClicked + 1);
-  };
-
   return (
     <div className="relative flex flex-col h-screen justify-between">
       <Modal />
@@ -169,7 +174,7 @@ export default function Base({
               key="my-data"
               size="small"
               theme="blue"
-              onClick={() => false}
+              onClick={handleMyDataClick}
             >
               Meine Daten
             </Button>

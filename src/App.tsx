@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Redirect,
   Route,
-  Switch,
+  Switch
 } from 'react-router-dom';
 import './App.global.css';
 import ScrapingAttached from './components/scraping/ScrapingAttached';
@@ -34,6 +34,7 @@ import ResearchInfoPage from './pages/ResearchInfoPage';
 import ScrapingExplanationPage from './pages/ScrapingExplanationPage';
 import StartPage from './pages/StartPage';
 import VisualizationAutoplayChainPage from './pages/VisualizationAutoplayChainPage';
+import VisualizationMyData from './pages/VisualizationMyData';
 import VisualizationNewsPage from './pages/VisualizationNewsPage';
 import VisualizationProfilePage from './pages/VisualizationProfilePage';
 import VisualizationSearchPage from './pages/VisualizationSearchPage';
@@ -83,6 +84,10 @@ export default function App() {
                   <Route
                     path={routes.QUESTIONNAIRE}
                     component={QuestionnairePage}
+                  />
+                  <Route
+                    path={routes.MY_DATA}
+                    component={VisualizationMyData}
                   />
                   <Route
                     path={routes.MY_DATA_HINT}

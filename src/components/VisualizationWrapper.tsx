@@ -42,7 +42,7 @@ export default function VisualizationWrapper({ name }: { name: string }) {
   if (name === 'profile') {
     return <Profile data={data.results} lookups={data.lookups} />;
   }
-  if (name === 'data') {
+  if (name === 'mydata') {
     return <MyData data={data} />;
   }
 

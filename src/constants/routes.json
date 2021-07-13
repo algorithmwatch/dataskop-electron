@@ -10,6 +10,7 @@
   "DONATION2": "/donation2",
   "DONATION1": "/donation1",
   "QUESTIONNAIRE": "/questionnaire",
+  "MY_DATA": "/visualization/mydata",
   "MY_DATA_HINT": "/my-data-hint",
   "VISUALIZATION_SEARCH": "/visualization/search",
   "VISUALIZATION_NEWS": "/visualization/news",
