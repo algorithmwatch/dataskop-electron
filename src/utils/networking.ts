@@ -44,9 +44,6 @@ const getActiveCampaigns = async (
 ) => {
   const url = `${platformUrl}/api/campaigns/`;
 
-  console.log('x');
-  console.log(seriousProtection);
-
   const activeCampaigns = await (
     await fetch(url, {
       headers: {

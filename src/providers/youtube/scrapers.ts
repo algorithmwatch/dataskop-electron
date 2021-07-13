@@ -97,6 +97,7 @@ const trySeveralTimes = async (
   isDoneCheck: null | ((arg0: ScrapingResult, arg1: number) => boolean) = null,
   enableLogging = false,
   numTries = 3,
+  baseTimeout = 8,
   timeout = 1000,
   slugPrefix = 'yt',
 ) => {
@@ -120,7 +121,7 @@ const trySeveralTimes = async (
         parseHtml,
         isDoneCheck,
         timeout,
-        8 + i * 4,
+        baseTimeout + i * 4,
         slugPrefix,
       );
       if (result !== null && result.success) return result;
@@ -208,7 +209,16 @@ const scrapeWatchedVideos = async (
   getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
   const url = 'https://www.youtube.com/feed/history';
-  const results = await trySeveralTimes(getHtml, url, parseWatchHistory);
+  const results = await trySeveralTimes(
+    getHtml,
+    url,
+    parseWatchHistory,
+    null,
+    false,
+    2,
+    20,
+    2000,
+  );
 
   // - we need to figure out if a video is private / unlisted
   // - we need to scrape all those videos here because otherwise we need to set
