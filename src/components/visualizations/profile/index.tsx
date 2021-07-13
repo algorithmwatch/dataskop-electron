@@ -7,6 +7,7 @@ import Button from '../../Button';
 import Explainer from '../../Explainer';
 import Infobox from '../../Infobox';
 import Beeswarm from './Beeswarm';
+import Loading from './Loading';
 import { useData } from './useData';
 
 const invokeScreenshot = async () => {
@@ -40,7 +41,7 @@ export default function StatisticsChart({
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
   const db = useData(data, lookups);
 
-  if (!db.history) return <div>Loading</div>;
+  if (!db.history) return <Loading />;
 
   return (
     <>
