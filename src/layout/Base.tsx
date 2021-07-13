@@ -6,7 +6,7 @@ import {
   faInfoCircle,
   faPaperPlane,
   faQuestionCircle,
-  faUserSecret
+  faUserSecret,
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
@@ -42,7 +42,10 @@ export default function Base({
   } = useScraping();
   const history = useHistory();
   const [logoClicked, setLogoClicked] = useState(0);
-  const { dispatch: dispatchConfig } = useConfig();
+  const {
+    dispatch: dispatchConfig,
+    state: { version },
+  } = useConfig();
   const handleLogoClicked = () => {
     if (logoClicked > 3) {
       dispatchConfig({ type: 'show-advanced-menu' });
@@ -149,6 +152,11 @@ export default function Base({
             onClick={handleLogoClicked}
           />
         </div>
+        {version.includes('beta') && (
+          <div className="ml-3 text-sm bg-yellow-300 px-1.5 py-0.5 text-grey-1200">
+            Beta
+          </div>
+        )}
         {demoMode && (
           <div className="ml-3 text-sm bg-yellow-300 px-1.5 py-0.5 text-yellow-1200">
             Demo-Modus
