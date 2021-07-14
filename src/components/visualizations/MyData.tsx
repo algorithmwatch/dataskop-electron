@@ -4,7 +4,7 @@ import {
   faList,
   faPlay,
   faSearch,
-  faUser
+  faUser,
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
@@ -97,7 +97,7 @@ export default function MyData({ data }) {
             {db.channels && db.channels.length > 0 && (
               <div
                 className="p-2"
-                onClick={() => scrollTo('subscribed-channels')}
+                // onClick={() => scrollTo('subscribed-channels')}
               >
                 <FontAwesomeIcon icon={faUser} className="mr-3" size="lg" />
                 {db.channels.length} Kanäle, denen du folgst
@@ -106,7 +106,7 @@ export default function MyData({ data }) {
             {db.history && db.history.length > 0 && (
               <div
                 className="p-2  "
-                onClick={() => scrollTo('user-watch-history')}
+                // onClick={() => scrollTo('user-watch-history')}
               >
                 <FontAwesomeIcon icon={faList} className="mr-3" size="lg" />
                 Die letzten {db.history.length} Videos, die du gesehen hast
@@ -115,7 +115,7 @@ export default function MyData({ data }) {
             {db.scrapes && db.scrapes.length > 0 && (
               <div
                 className="p-2 "
-                onClick={() => scrollTo('video-page-seed-follow')}
+                // onClick={() => scrollTo('video-page-seed-follow')}
               >
                 <FontAwesomeIcon icon={faPlay} className="mr-3" size="lg" />
                 {db.scrapes.length} Videos mit insgesamt {db.scrapesResultsNum}{' '}
@@ -125,10 +125,10 @@ export default function MyData({ data }) {
             {db.queries && db.queries.length > 0 && (
               <div
                 className="p-2 "
-                onClick={() => scrollTo('search-results-videos')}
+                // onClick={() => scrollTo('search-results-videos')}
               >
                 <FontAwesomeIcon icon={faSearch} className="mr-3" size="lg" />
-                {db.queries.length} Suchbegriffe mit insg.
+                {db.queries.length} Suchbegriffe
               </div>
             )}
           </div>
