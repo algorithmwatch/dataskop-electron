@@ -15,7 +15,7 @@ export default function ScrapingProgressBar() {
     getEtaUntil,
   } = useScraping();
 
-  const [etaMin, setEtaMin] = useState('10 Minuten');
+  const [etaMin, setEtaMin] = useState('15 Minuten');
 
   useEffect(() => {
     if (finishedTasks > 5) {
@@ -30,7 +30,7 @@ export default function ScrapingProgressBar() {
         setEtaMin('unter eine Minute');
       }
     } else {
-      setEtaMin('10 Minuten');
+      setEtaMin('15 Minuten');
     }
   }, [finishedTasks]);
 
