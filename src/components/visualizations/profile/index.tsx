@@ -26,7 +26,7 @@ function Badge({ title, value, unit, small = false }) {
   );
 }
 
-export default function StatisticsChart({
+export default function ProfileVis({
   data,
   lookups,
 }: {
@@ -39,16 +39,16 @@ export default function StatisticsChart({
 
   const invokeScreenshot = async () => {
     const filename = `dataskop-dashboard.png`;
-    const bbox = visRef?.current.getBoundingClientRect();
-    const { x, y, width, height } = bbox;
-    const pt = 25;
-    const rect = {
-      x: parseInt(x),
-      y: parseInt(y - pt),
-      width: parseInt(width),
-      height: parseInt(height + pt * 2),
-    };
-    ipcRenderer.invoke('save-screenshot', rect, filename);
+    // const bbox = visRef?.current.getBoundingClientRect();
+    // const { x, y, width, height } = bbox;
+    // const pt = 25;
+    // const rect = {
+    //   x: parseInt(x),
+    //   y: parseInt(y - pt),
+    //   width: parseInt(width),
+    //   height: parseInt(height + pt * 2),
+    // };
+    ipcRenderer.invoke('save-screenshot', undefined, filename);
   };
 
   if (!db.history) return <Loading />;
