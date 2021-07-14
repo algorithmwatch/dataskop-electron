@@ -45,6 +45,19 @@ export default function InterfaceTutorialPage(): JSX.Element {
   return (
     <>
       <div>
+        {demoMode && (
+          <div className="absolute top-0 left-40">
+            <PerfectArrow
+              p1={{ x: 160, y: 155 }}
+              p2={{ x: 60, y: 80 }}
+              width={200}
+              height={180}
+            />
+            <div className="absolute top-36 left-44 w-80">
+              Du befindest dich im Demo-Modus.
+            </div>
+          </div>
+        )}
         <div className="z-10 absolute top-1/3 left-48 py-6 px-8 text-yellow-1500 border-2 border-dashed border-yellow-700 bg-yellow-200 bg-opacity-30 flex">
           <div className="mr-5 mt-2">
             <FontAwesomeIcon icon={faMousePointer} size="3x" />
@@ -52,7 +65,7 @@ export default function InterfaceTutorialPage(): JSX.Element {
           <div>
             <p className="hl-2xl mb-1.5">Die Benutzeroberfläche</p>
             <p className="max-w-md text-lg">
-              Bevor es los geht, zeigen wir dir die wichtigsten Elemente der
+              Bevor es losgeht, zeigen wir dir die wichtigsten Elemente der
               Benutzeroberfläche.
             </p>
           </div>
@@ -67,7 +80,7 @@ export default function InterfaceTutorialPage(): JSX.Element {
             />
             <div className="absolute top-36 -left-72 w-80">
               Wenn DataSkop Daten erfasst, erscheint dieser Ladebalken. Per
-              Klick kannst Du dabei zuschauen.
+              Klick auf den Ladebalken kannst du dabei zuschauen.
             </div>
           </div>
         )}
@@ -80,7 +93,7 @@ export default function InterfaceTutorialPage(): JSX.Element {
             options={{ flip: true, bow: 0.1 }}
           />
           <div className="absolute bottom-0 left-6 w-72">
-            Im Menü kannst Du mehr zu den Hintergründen von DataSkop erfahren.
+            Im Menü kannst du mehr zu den Hintergründen von DataSkop erfahren.
           </div>
         </div>
         <div className="absolute bottom-8 left-56">
@@ -91,7 +104,7 @@ export default function InterfaceTutorialPage(): JSX.Element {
             height={170}
           />
           <div className="absolute -top-14 -left-28 w-72 text-center">
-            Diese Leiste zeigt an, wo Du Dich im Ablauf von DataSkop befindest.
+            Diese Leiste zeigt an, wo du Dich im Ablauf von DataSkop befindest.
           </div>
         </div>
 

@@ -187,24 +187,22 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
           <h1 className="hl-4xl my-6">News Viz</h1>
           <div className="space-y-4">
             <p>
-              YouTube bietet auf seiner Website in einem Bereich aktuelle
-              Nachrichten-Videos an. Wir haben eben dort die aktuellsten fünf
-              ersten Videos ausgelesen. Wir zeigen Dir für jedes dieser
-              News-Videos in der linken Spalte die ersten zehn Videos an, die Du
-              empfohlen bekommst, wenn Du mit Deinem YT-Konto eingeloggt bist.
-              Zum Vergleich stehen in der rechten Spalte, die Videos, die
-              empfohlen werden, wenn Du nicht bei YouTube angemeldet bist.
-              [Erklärung ergänzen, falls es die gleichen Filter gibt wie bei
-              Autoplay Chain Viz]
+              In einem Bereich der Website bietet YouTube aktuelle
+              Nachrichten-Videos an. Wir haben soeben dort die aktuellsten fünf
+              Videos ausgelesen. Wir zeigen dir für jedes dieser News-Videos in
+              der linken Spalte die ersten zehn Videos an, die du empfohlen
+              bekommst, wenn du mit deinem YT-Konto eingeloggt bist. Zum
+              Vergleich stehen in der rechten Spalte die Videos, die empfohlen
+              werden, wenn du nicht bei YouTube angemeldet bist.
             </p>
             <div>
               <Infobox classname="mt-6">
                 <p>
                   Hier wollen wir untersuchen, ob die Empfehlungen bei der sich
                   schnell verändernden Nachrichtenauswahl, deutlich
-                  personalisiert werden, Dabei interessiert und vor allem auch
-                  die Vergleichsmöglichkeit zwischen den Empfehlungen, wenn Du
-                  eingeloggt bist und wenn Du es nicht bist.
+                  personalisiert werden. Dabei interessiert uns vor allem der
+                  Vergleich zwischen den Empfehlungen, die du erhältst, wenn du
+                  eingeloggt bist und wenn du es nicht wärst.
                 </p>
               </Infobox>
             </div>

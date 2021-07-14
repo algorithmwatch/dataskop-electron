@@ -1,9 +1,7 @@
 import { faIdCard } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ipcRenderer } from 'electron';
 import React, { useRef, useState } from 'react';
 import { Lookup, ScrapingResult } from '../../../db/types';
-import Button from '../../Button';
 import ContentWrapper from '../../ContentWrapper';
 import Explainer from '../../Explainer';
 import Infobox from '../../Infobox';
@@ -40,19 +38,19 @@ export default function ProfileVis({
 
   // console.log('PROFILE', db, data);
 
-  const invokeScreenshot = async () => {
-    const filename = `dataskop-dashboard.png`;
-    // const bbox = visRef?.current.getBoundingClientRect();
-    // const { x, y, width, height } = bbox;
-    // const pt = 25;
-    // const rect = {
-    //   x: parseInt(x),
-    //   y: parseInt(y - pt),
-    //   width: parseInt(width),
-    //   height: parseInt(height + pt * 2),
-    // };
-    ipcRenderer.invoke('save-screenshot', undefined, filename);
-  };
+  // const invokeScreenshot = async () => {
+  //   const filename = `dataskop-dashboard.png`;
+  // const bbox = visRef?.current.getBoundingClientRect();
+  // const { x, y, width, height } = bbox;
+  // const pt = 25;
+  // const rect = {
+  //   x: parseInt(x),
+  //   y: parseInt(y - pt),
+  //   width: parseInt(width),
+  //   height: parseInt(height + pt * 2),
+  // };
+  //   ipcRenderer.invoke('save-screenshot', undefined, filename);
+  // };
 
   if (db.loading) return <Loading />;
   if (db.empty)
@@ -151,11 +149,11 @@ export default function ProfileVis({
             <Beeswarm data={db.history} />
           </div>
         </div>
-        <div className="mt-7 ml-6">
+        {/* <div className="mt-7 ml-6">
           <Button onClick={async () => invokeScreenshot()}>
             Dashboard als Bild speichern
           </Button>
-        </div>
+        </div> */}
       </div>
     </>
   );

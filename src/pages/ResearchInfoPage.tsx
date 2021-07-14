@@ -5,6 +5,7 @@ import ContentWrapper from '../components/ContentWrapper';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import { useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
+import visual from '../static/images/research-info/visual.svg';
 
 export default function ResearchInfoPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -59,52 +60,66 @@ export default function ResearchInfoPage(): JSX.Element {
         <div className="hl-4xl mb-6">Was wollen wir untersuchen?</div>
         <div className="space-y-4">
           <p>
-            Nun geht es an die Experimente. Was wir genau mit diesen Daten
-            vorhaben, und warum Deine Datenspende dafür von unschätzbarem Wert
-            ist, möchten wir jetzt kurz erklären:
+            Nun geht es um die Experimente. Was wir genau mit deinen Daten
+            vorhaben und warum deine Datenspende für uns so wertvoll ist,
+            möchten wir dir hier kurz erklären:
           </p>
 
           <p>
-            Obwohl unsere Forschung nicht den „YouTube-Algorithmus“ wird
-            komplett entschlüsseln können, sind wir auf Datenspenden von
-            möglichst vielen echten Usern angewiesen: Denn Deine „echten“ Daten
-            ermöglichen auf einzigartige Weise, YouTubes Empfehlungssystem unter
-            echten Voraussetzungen zu untersuchen: So können die Ergebnisse der
+            Wir sind auf Datenspenden von möglichst vielen echten Nutzerinnen
+            und Nutzern angewiesen, denn eure „echten“ Daten ermöglichen auf
+            einzigartige Weise, YouTubes Empfehlungssystem unter echten
+            Voraussetzungen zu untersuchen. Nur so können die Ergebnisse unserer
             Forschung tatsächlich beanspruchen, reale Nutzungsszenarien auf der
-            Plattform abzubilden.
+            Plattform abzubilden. Einschränkend müssen wir jedoch anmerken, dass
+            unsere Forschung den YouTube-Algorithmus noch nicht vollständig
+            entschlüsseln wird. Wir hoffen aber mit eurer Hilfe möglichst viele
+            Hinweise auf seine Funktionsweise zu finden.
+          </p>
+
+          <div className="py-6">
+            <img src={visual} alt="" className="w-3/4 mx-auto block" />
+          </div>
+
+          <p>
+            Für die nachfolgenden Experimente hat DataSkop nach deinem Login
+            vorhin bei YouTube unter deinem Profil verschiedene, von uns
+            festgelegte Suchanfragen gestartet sowie Videos aufgerufen und ist
+            den Videos der Autoplay-Funktion und deren ersten Empfehlungen
+            gefolgt. So können wir einen Eindruck bekommen, welche verschiedenen
+            Inhalte YouTube als Empfehlung für dich auswählt. Der Vergleich mit
+            anderen Datenspenden zeigt uns, welche Nutzerinnen und Nutzer welche
+            Art von Inhalten empfohlen bekommen. Das Gleiche gilt für die
+            Ergebnisse der Suchanfragen.
           </p>
 
           <p>
-            Für die nachfolgenden Experimente hat DataSkop nach Deinem Login
-            vorhin bei YouTube unter Deinem Profil verschiedene, von uns
-            festgelegte Suchanfragen gestartet sowie Videos aufgerufen und deren
-            ersten Empfehlung gefolgt (autoplay). So können wir einen Eindruck
-            darüber zu erhalten, welche verschiedenen Inhalte YouTube als
-            Empfehlung auswählt und User welche Art Inhalte empfohlen bekommt.
-            Das Gleiche gilt für die Ergebnisse der Suchanfragen.
+            Inhaltlich untersuchen wir dabei zwei Themenfelder:
+            Nachrichteninhalte und Inhalte zur Bundestagswahl 2021. Dabei
+            verfolgen wir verschiedene Fragen: Welche Auswahl an
+            Nachrichtenquellen stellt YouTube durch sein Empfehlungssystem
+            zusammen? Werden Nutzerinnen und Nutzer bei journalistischen Videos
+            gehalten? Falls nicht: Wohin führen die Empfehlungen?
           </p>
 
           <p>
-            Inhaltlich gibt es dabei zwei Themenfelder: Nachrichteninhalte und
-            Inhalte zur Bundestagswahl 2021. Dabei verfolgen wir verschiedene
-            Fragen: Welche Auswahl an Nachrichtenquellen stellt YouTube durch
-            sein Empfehlungssystem zusammen? Werden User überhaupt bei
-            journalistischen Videos gehalten und wenn nicht: wohin führen die
-            Empfehlungen?
+            Wir haben aus Wahlprogrammen, journalistischen Quellen und Social
+            Media eine Reihe von Videos und Suchanfragen zusammengestellt, die
+            Themenfelder der Bundestagswahl 2021 repräsentieren. Dazu gehören
+            unter anderem Suchbegriffe wie „Laschet“ und „Baerbock“ sowie Videos
+            wie Rezos „Zerstörung der CDU“.
           </p>
 
           <p>
-            Zur Erforschung von Inhalten zur Bundestagswahl 2021 haben wir eine
-            Reihe von Videos und Suchanfragen zusammengestellt, welche die
-            Themenfelder der Wahl repräsentieren, wie wir sie aus
-            Wahlprogrammen, journalistischen Quellen und Social Media entnommen
-            haben. Dazu gehören unter anderem Suchbegriffe wie „Laschet“ und
-            „Baerbock“ sowie Videos wie Rezos „Zerstörung der CDU“.
+            Wir hoffen, dass du die folgenden drei Experimente interessant
+            findest. Viel Spaß dabei.
           </p>
 
-          <p>
-            Wir hoffen, dass Du die folgenden drei Experimente interessant
-            findest. Viel Spaß beim Erkunden der Daten.
+          <p className="border border-yellow-700 p-4">
+            <strong>Hinweis:</strong> Es kann sein, dass du noch einige Minuten
+            warten musst, bis die Daten ausgelesen sind. Per Klick auf den
+            Ladebalken oben kannst du sehen, was DataSkop bei YouTube gerade
+            macht.
           </p>
         </div>
       </ContentWrapper>

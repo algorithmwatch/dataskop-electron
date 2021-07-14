@@ -1,7 +1,11 @@
+import { faCheckCircle } from '@fortawesome/pro-duotone-svg-icons';
 import { faAngleLeft } from '@fortawesome/pro-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import FooterNav, { FooterNavItem } from '../components/FooterNav';
+import ContactContainer from '../components/ContactContaier';
+import ContentWrapper from '../components/ContentWrapper';
+import { FooterNavItem } from '../components/FooterNav';
 import { useNavigation } from '../contexts/navigation';
 
 export default function DonationSuccessPage(): JSX.Element {
@@ -19,15 +23,28 @@ export default function DonationSuccessPage(): JSX.Element {
 
   return (
     <>
-      <div className="p-6 max-w-lg mx-auto mb-10 text-center">
-        <div>
-          <div className="text-xl font-medium">Donation Success</div>
-          {/* <p className="text-yellow-1200">
-            Hello and welcome to this early development version of DataSkop.
-          </p> */}
+      <ContentWrapper centerY>
+        <div className="text-center relative -top-16">
+          <FontAwesomeIcon
+            icon={faCheckCircle}
+            size="5x"
+            className="text-green-600 mb-3"
+          />
+          <div className="hl-4xl mb-5">Vielen Dank für deine Spende!</div>
+
+          <div className="space-y-6 text-lg max-w-2xl mx-auto">
+            <p>
+              Bitte denke daran, für das DataSkop-Konto deine E-Mailadresse zu
+              bestätigen.
+            </p>
+
+            <ContactContainer />
+
+            <p className="text-sm">Du kannst die Anwendung nun schließen.</p>
+          </div>
         </div>
-      </div>
-      <FooterNav items={footerNavItems} />
+      </ContentWrapper>
+      {/* <FooterNav items={footerNavItems} /> */}
     </>
   );
 }

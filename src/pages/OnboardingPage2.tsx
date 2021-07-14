@@ -46,52 +46,54 @@ export default function OnboardingPage2(): JSX.Element {
 
   return (
     <>
-      <ContentWrapper>
+      <ContentWrapper centerY>
         <div className="hl-4xl text-center mb-6">Anmeldung erfolgreich</div>
         <div className="hl-2xl mb-6 text-center">
           Was passiert als Nächstes?
         </div>
         <div className="space-y-4">
-          <p>
-            Wir zeigen Dir eine Auswertung Deiner Sehgewohnheiten und lassen
-            Dich drei Experimente durchführen. Dafür:
-          </p>
+          <p>Wir zeigen dir eine Auswertung deiner Sehgewohnheiten. Dafür</p>
           <ul className="list-disc pl-4">
-            <li>liest DataSkop aus, welche YT-Kanäle Du abonniert hast</li>
+            <li>liest DataSkop aus, welche YT-Kanäle du abonniert hast</li>
 
             <li>
-              erfasst die letzten 50 Videos, die Du geschaut hast (wenn Du diese
-              Funktion aktiviert hast). Private Videos werden nicht erfasst.
+              und erfasst maximal die letzten 200 Videos, die du geschaut hast.
+              Voraussetzung ist, dass du die Funktion in deinen
+              YouTube-Einstellungen aktiviert hast, die den Verlauf speichert.
+              Private Videos werden dagegen nicht gespeichert.
+            </li>
+          </ul>
+
+          <p>Wir lassen dich drei Experimente durchführen. Dafür</p>
+          <ul className="list-disc pl-4">
+            <li>
+              ruft DataSkop automatisiert einige Videos auf und liest die
+              dazugehörigen empfohlenen Videos aus.
             </li>
 
             <li>
-              Für die später folgenden Experimente ruft DataSkop automatisiert
-              einige Videos auf und liest die dazugehörigen empfohlenen Videos
-              (recommendations) aus.
+              gibt DataSkop automatisiert einige Suchbegriffe in die
+              YouTube-Suche ein und speichert die ersten zehn vorgeschlagenen
+              Ergebnisse.
             </li>
 
             <li>
-              Automatisiert werden einige Suchbegriffe in die YouTube-Suche
-              eingegeben und die ersten zehn vorgeschlagenen Ergebnisse
-              gespeichert.
-            </li>
-
-            <li>
-              Dann loggt Dich DataSkop aus Deinem YT-Konto automatisch aus.
+              Zum Schluss loggt dich DataSkop aus deinem YT-Konto automatisch
+              aus.
             </li>
           </ul>
 
           <p>
-            Die dabei gesammelten Daten bleiben erst einmal auf Deinem Rechner
-            und werden am Ende von Dir gespendet. Aber nur wenn Du dem
-            zustimmst. Für das Spenden musst Du ein DataSkop-Konto anlegen –
-            dafür brauchen wir nur Deine E-Mail-Adresse.
+            Die von uns auf diese Weise gesammelten Daten bleiben zunächst auf
+            deinem Rechner und werden erst am Ende von dir gespendet. Aber nur,
+            wenn du dem zustimmst. Für das Spenden musst du ein DataSkop-Konto
+            anlegen. Dafür brauchen wir lediglich deine E-Mail-Adresse.
           </p>
 
           <p>
             Deine gespendeten Daten werden nie für kommerzielle Zwecke
             verwendet, sondern nur für Forschung und Journalismus. Du kannst sie
-            später jederzeit löschen.
+            über dein DataSkop-Konto jederzeit löschen.
           </p>
         </div>
       </ContentWrapper>

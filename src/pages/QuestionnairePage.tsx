@@ -99,7 +99,7 @@ export default function QuestionnairePage(): JSX.Element {
         <div className="hl-4xl mb-6">Fragebogen</div>
         <div className="max-w-2xl mb-6">
           <p>
-            Um Deine Datenspende nützlich auswerten zu können, bitten wir Dich,
+            Um deine Datenspende besser auswerten zu können, bitten wir Dich,
             folgende Fragen zu beantworten. Du kannst auch nur einige oder keine
             Fragen beantworten.
           </p>
@@ -116,8 +116,8 @@ export default function QuestionnairePage(): JSX.Element {
                       className="mr-2 semibold"
                     />
                     <span>
-                      Dürfen Dich die beteiligten Forscher*innen oder
-                      Journalist*innen mit Nachfragen kontaktieren?
+                      Ja, mich dürfen die beteiligten Forscher*innen oder
+                      Journalist*innen mit Nachfragen kontaktieren.
                     </span>
                   </label>
                 </div>
@@ -170,15 +170,18 @@ export default function QuestionnairePage(): JSX.Element {
                     Alter
                   </label>
                   <Field
-                    type="text"
+                    type="number"
                     name="age"
                     // pattern="[1-9][1-9]"
                     maxLength="2"
-                    min="1"
+                    min="18"
                     max="99"
                     step="1"
                     className="ml-2 p-1 w-20 text-center border rounded "
                   />
+                  <span className="text-xs ml-2">
+                    (du musst mind. 18 Jahre alt sein)
+                  </span>
                 </div>
                 <div className="p-3">
                   <label
@@ -201,7 +204,7 @@ export default function QuestionnairePage(): JSX.Element {
                 </div>
                 <div className="p-3">
                   <label htmlFor="categories" className="font-medium">
-                    Nach Gefühl: Welche drei Kategorien schaust Du am meisten
+                    Nach Gefühl: Welche drei Kategorien schaust du am meisten
                     auf YouTube?
                   </label>
                   <div
@@ -243,7 +246,7 @@ export default function QuestionnairePage(): JSX.Element {
               </div>
               <div className="mt-3">
                 <Button size="small" theme="blue" type="submit">
-                  Antworten speichern
+                  Speichern & weiter
                 </Button>
               </div>
             </Form>

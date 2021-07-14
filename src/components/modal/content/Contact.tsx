@@ -24,7 +24,7 @@ function About() {
           href="https://twitter.com/dataskop_net"
           rel="noreferrer"
         >
-          https://twitter.com/dataskop_net
+          @dataskop_net
         </a>
       </p>
       <p>

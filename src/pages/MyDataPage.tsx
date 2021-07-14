@@ -1,6 +1,7 @@
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
+import ContactContainer from '../components/ContactContaier';
 import ContentWrapper from '../components/ContentWrapper';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import VisualizationWrapper from '../components/VisualizationWrapper';
@@ -56,18 +57,7 @@ export default function MyDataPage(): JSX.Element {
               </Link>
               .
             </p>
-            <p>
-              Neuigkeiten über DataSkop gibt es{' '}
-              <a
-                href="https://twitter.com/dataskop_net"
-                target="_blank"
-                className="underline hover:no-underline text-blue-600"
-                rel="noreferrer"
-              >
-                bei Twitter
-              </a>{' '}
-              und im Newsletter von AW.
-            </p>
+            <ContactContainer />
           </div>
         </ContentWrapper>
       ) : (

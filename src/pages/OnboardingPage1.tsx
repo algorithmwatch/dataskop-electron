@@ -46,10 +46,11 @@ export default function OnboardingPage1(): JSX.Element {
           <div>
             <div className="hl-4xl mb-6 text-center">Login bei YouTube</div>
             <p>
-              Als Erstes möchten wir Dich bitten, Dich bei YouTube (YT)
+              Als Erstes möchten wir dich bitten, dich bei YouTube (YT)
               anzumelden. Das geht mit deinem Google-/GMail-Konto. Wir speichern
               die Login-Informationen nicht. Ggf. musst du den Login in deinem
-              Google-Mail-Konto bestätigen.
+              Google-Mail-Konto bestätigen. du musst mind. 18 Jahre alt sein, um
+              Daten an uns spenden zu können.
             </p>
             <div className="mt-4">
               <Button
@@ -66,9 +67,9 @@ export default function OnboardingPage1(): JSX.Element {
           <div>
             <div className="hl-xl mb-4">Kein YouTube-Konto?</div>
             <p>
-              Wenn Du Dich nicht einloggen möchtest oder kein YT-Konto hast,
-              kannst Du mit einem „Demo-Datensatz“ fortfahren. Wir fragen Dich
-              am Ende noch einmal, ob Du nicht doch Daten spenden könntest, um
+              Wenn du dich nicht einloggen möchtest oder kein YT-Konto hast,
+              kannst du mit einem „Demo-Datensatz“ fortfahren. Wir fragen dich
+              am Ende noch einmal, ob du nicht doch Daten spenden könntest, um
               unsere Untersuchung zu unterstützen.
             </p>
             <div className="mt-4">

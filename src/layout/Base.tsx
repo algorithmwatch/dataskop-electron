@@ -142,12 +142,12 @@ export default function Base({
           />
         </div>
         {version.includes('beta') && (
-          <div className="ml-3 text-sm bg-yellow-300 px-1.5 py-0.5 text-grey-1200">
+          <div className="ml-3 text-sm bg-yellow-300 px-1.5 py-0.5 text-yellow-1300">
             Beta
           </div>
         )}
         {demoMode && (
-          <div className="ml-3 text-sm bg-yellow-300 px-1.5 py-0.5 text-yellow-1200">
+          <div className="ml-3 text-sm bg-yellow-300 px-1.5 py-0.5 text-yellow-1300">
             Demo-Modus
           </div>
         )}
@@ -179,7 +179,7 @@ export default function Base({
         {children}
       </main>
 
-      <footer className="fixed bottom-0 inset-x-0">
+      <footer className="fixed bottom-0 inset-x-0 z-10">
         <ProcessIndicator steps={sections} currentStep={sectionKey} />
       </footer>
     </div>

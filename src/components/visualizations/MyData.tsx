@@ -4,7 +4,7 @@ import {
   faList,
   faPlay,
   faSearch,
-  faUser,
+  faUser
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
@@ -134,7 +134,7 @@ export default function MyData({ data }) {
           </div>
           <div className="mt-9">
             <Button onClick={async () => invokeExport(data)}>
-              Daten herunterladen ({filesize} MB)
+              Daten speichern ({filesize} MB)
             </Button>
           </div>
         </div>

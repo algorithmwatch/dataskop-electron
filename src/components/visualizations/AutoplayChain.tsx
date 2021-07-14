@@ -220,23 +220,22 @@ export default function AutoplayChain({
           <h1 className="hl-4xl my-6">AutoPlay</h1>
           <div className="space-y-4">
             <p>
-              In der folgenden Visualisierungen kannst Du du oben aus acht
-              Videos auswählen. Das sind zum einen bekannte und bedeutende
-              Videos aus den letzten Jahren. Zum anderen Videos, die dieser Tage
-              aktuell viel Aufmerksamkeit erfahren.  Für jedes dieser Videos
-              zeigen wir in der ersten Spalte das ursprüngliche Video plus die
-              sieben Videos. Es sind die, die YouTube Dir automatisch gezeigt
-              hätte (autoplay), wenn Du YouTube einfach laufen lassen würdest.
-              Für jedes dieser automatisch  abgespielten Videos zeigen wir in
-              der dazugehörigen Spalte die ersten zehn von YouTube empfohlenen
-              Videos (recommendations).
+              In der folgenden Visualisierungen kannst du oben aus sechs Videos
+              auswählen. Das sind zum einen bekannte und bedeutende Videos aus
+              den letzten Jahren. Zum anderen Videos, die aktuell viel
+              Aufmerksamkeit erfahren. Für jedes dieser Videos zeigen wir in der
+              ersten Spalte das ursprüngliche Video plus die sieben Videos, die
+              YouTube dir automatisch gezeigt hätte (Autoplay-Feature), wenn du
+              die Plattform einfach laufen lassen würdest. Für jedes dieser
+              automatisch abgespielten Videos zeigen wir in der dazugehörigen
+              Spalte die ersten zehn von YouTube empfohlenen Videos.
             </p>
             <p>
-              Wenn Du Deinen Mauszeiger über eines der Videos bewegst, siehst
-              Du, sowohl den Titel usw. des Videos, aber auch, ob es unter den
-              80 empfohlenen Videos noch ein- oder mehre Male auftaucht. Mit den
-              Filtern oben rechts kannst Du die Ansicht umstellten: Statt der
-              Titelbilder der Videos kannst Du etwa die Kategorien der
+              Wenn du deinen Mauszeiger über eines der Videos bewegst, siehst du
+              sowohl den Titel des Videos als auch, ob es unter den 60
+              empfohlenen Videos noch ein oder mehrere Male auftaucht. Mit den
+              Filtern oben rechts kannst du die Ansicht umstellten: Statt der
+              Titelbilder der Videos kannst du etwa die Kategorien der
               empfohlenen Videos sehen oder wie alt sie sind.
             </p>
             <p className="py-4">
@@ -246,11 +245,10 @@ export default function AutoplayChain({
               <Infobox>
                 <p>
                   Wir erhoffen uns, durch dieses Experiment Muster erkennen zu
-                  können, die Rückschlüsse erlauben, inwiefern YouTube Dir
-                  Videos abhängig von Deiner Watch-History und welchen Kanälen
-                  Du folgst, empfiehlt. Dafür hilft es, wenn viele Leute ihre
-                  Daten spenden, weil wir dann viele Ergebnisse miteinander
-                  vergleichen können.
+                  können, wie YouTube dir Videos in Abhängigkeit von deinem
+                  Verlauf und den Kanälen, denen du folgst, empfiehlt. Je mehr
+                  Leute ihre Daten spenden, um so besser können wir viele
+                  Ergebnisse miteinander vergleichen und Rückschlüsse ziehen.
                 </p>
               </Infobox>
             </div>

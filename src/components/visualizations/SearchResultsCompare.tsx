@@ -55,7 +55,9 @@ function Visual({ session }: { session: SearchResultsCompareDataItem }) {
           Suchbegriff
         </div>
         <div className="w-80 h-44 bg-yellow-300 overflow-hidden flex place-items-center place-content-center relative">
-          <div className="z-20 text-2xl">„{session.query}“</div>
+          <div className="z-20 text-2xl px-6 text-center">
+            „{session.query}“
+          </div>
           <div className="flex place-items-center place-content-center absolute inset-0 z-10">
             <FontAwesomeIcon
               icon={faSearch}
@@ -160,31 +162,26 @@ export default function SearchResultsCompare({
           <h1 className="hl-4xl my-6">Search Viz</h1>
           <div className="space-y-4">
             <p>
-              Visuell sieht dieses Experiment dem zu den Nachrichten sehr
-              ähnlich. Doch wir schauen diesmal auf die Suche. Statt einem Video
-              kannst Du eine Reihe von Suchbegriffen betrachten. Die drehen sich
-              alle um das Thema Bundestagswahl und sind zum Teil an aktuellen
-              Ereignissen orientiert.
+              Visuell sieht dieses Experiment sehr ähnlich aus wie das
+              Nachrichten-Experiment. Doch wir schauen diesmal auf die Suche.
+              Statt einem Video kannst du eine Reihe von Suchbegriffen erkunden.
+              Sie drehen sich alle um das Thema Bundestagswahl und sind zum Teil
+              an aktuellen Ereignissen orientiert.
             </p>
-            <ul className="list-disc list-inside">
-              <li>Suchbegriff 1</li>
-              <li>Suchbegriff 2</li>
-              <li>Suchbegriff 3</li>
-              <li>Suchbegriff 4</li>
-            </ul>
             <p>
-              Statt Empfehlungen zeigen wir Dir hier die Liste der ersten zehn
-              Suchergebnisse an. Links, wenn Du eingeloggst bist und recht die
-              Ergbenisse, wenn Du nicht eingeloggt bist. [Erklärung ergänzen,
-              falls es die gleichen Filter gibt wie bei Autoplay Chain Viz]
+              Statt Empfehlungen zeigen wir dir hier die Liste der ersten zehn
+              Suchergebnisse an, die auf die Eingabe der Suchbegriffe folgen.
+              Dabei unterscheiden wir wieder die beiden Spalten: Links die
+              Ergebnisse, wenn du eingeloggt bist, und rechts die Ergebnisse,
+              wenn du nicht eingeloggt bist.
             </p>
             <div>
               <Infobox classname="mt-6">
                 <p>
                   Bei diesem Experiment interessiert uns die Personalisierung
-                  bei den Suchbegriffen: Wie beinflussen die historischen Daten
-                  deines Profils und deine Kanalabos, was Du als Ergebnisse
-                  erhälst?
+                  der Suchergebnisse: Wie beeinflussen die Verlaufsdaten deines
+                  Profils und deine abonnierten Kanäle, was du als Ergebnisse
+                  angezeigt bekommst?
                 </p>
               </Infobox>
             </div>

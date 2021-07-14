@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import ContentWrapper from '../components/ContentWrapper';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import { useNavigation } from '../contexts/navigation';
-
+import visual from '../static/images/start/visual.svg';
 
 export default function IntroductionPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -31,29 +31,32 @@ export default function IntroductionPage(): JSX.Element {
     <>
       <ContentWrapper centerY>
         <div className="hl-4xl mb-6">
-          Wahlempfehlungen: Was zeigt Dir der YouTube-Algorithmus zur
+          Wahlempfehlungen: Was zeigt dir der YouTube-Algorithmus zur
           Bundestagswahl?
         </div>
         <div className="space-y-4">
           <p>
-            Willkommen beim Premierenprojekt der Datenspendeplattform DataSkop.
-            In den nächsten 15 Minuten ergründen wir gemeinsam mit Dir Dein
-            YouTube-Konto. Und führen einige Experimente mit dem
-            Empfehlungsalgorithmus dieser Videoplattform von Google durch. 
+            Willkommen beim Premierenprojekt der Datenspendeplattform DataSkop!
+            In den nächsten 15 Minuten ergründen wir gemeinsam mit dir dein
+            YouTube-Konto und führen einige Experimente mit dem
+            Empfehlungsalgorithmus dieser Videoplattform von Google durch.
           </p>
 
           <p>
-            Dabei erklären und zeigen wir, warum wir die auf Dich
-            zugeschnittenen Daten benötigen: Um die Rolle von Personalisierung
-            im Vorschlagverfahren (recommendations) von YouTube gründlicher
-            erforschen zu können. Einen Schwerpunkt legen wir dabei auf das
-            Thema Bundestagswahl 2021. 
+            Wir bitten dich um deine auf dich zugeschnittenen Daten, weil wir
+            sie benötigen, um die Rolle von Personalisierung im
+            Vorschlagverfahren (Englisch: „recommendations“) von YouTube
+            gründlicher erforschen zu können. Einen Schwerpunkt legen wir dabei
+            auf das Thema Bundestagswahl 2021.
           </p>
 
           <p>
-            Keine Sorge: Es werden ohne Deine Zustimmung keine Daten
-            übermittelt.
+            Keine Sorge: Es werden ohne deine Zustimmung keine Daten an uns
+            übermittelt!
           </p>
+        </div>
+        <div className="mt-8">
+          <img src={visual} alt="" className="w-11/12" />
         </div>
       </ContentWrapper>
       <FooterNav items={footerNavItems} />

@@ -87,14 +87,15 @@ export default function DonationPage2(): JSX.Element {
   return (
     <>
       <div className="p-6 max-w-prose mx-auto text-center">
-        <div className="text-2xl font-bold mb-6">Die Datenspende</div>
+        <div className="hl-4xl mb-6">Du hast es fast geschafft!</div>
         <div className="space-y-4">
           <p>
-            Du hast es fast geschafft! Gebe Deine E-Mail-Adresse für Deinen
-            DataSkop-Account ein. Im Anschluss erhältst Du eine E-Mail mit einem
-            Link, den Du bestätigen musst. Die Datenspende ist nach diesem
-            Schritt abgeschlossen.
+            Gebe deine E-Mail-Adresse ein. Damit wird für dich ein
+            DataSkop-Konto eingerichtet. Im Anschluss erhältst du eine E-Mail
+            mit einem Link, den du bestätigen musst. Bitte schaue in dein
+            Postfach.
           </p>
+          <p>Die Datenspende ist nach diesem Schritt abgeschlossen.</p>
           {status.length > 0 && <div className="text-red-700">{status}</div>}
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -107,7 +108,9 @@ export default function DonationPage2(): JSX.Element {
               className="p-2.5 w-80 text-base bg-white border border-yellow-600 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 transition-all"
               {...register('email')}
             />
-            <Button type="submit">Absenden</Button>
+            <Button type="submit" size="large">
+              Daten spenden
+            </Button>
           </form>
         </div>
       </div>
