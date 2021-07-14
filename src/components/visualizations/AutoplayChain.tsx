@@ -227,7 +227,7 @@ export default function AutoplayChain({
               YouTube dir automatisch gezeigt hätte (Autoplay-Feature), wenn du
               die Plattform einfach laufen lassen würdest. Für jedes dieser
               automatisch abgespielten Videos zeigen wir in der dazugehörigen
-              Spalte die ersten zehn von YouTube empfohlenen Videos.
+              Zeile die ersten zehn von YouTube empfohlenen Videos.
             </p>
             <p>
               Wenn du deinen Mauszeiger über eines der Videos bewegst, siehst du
