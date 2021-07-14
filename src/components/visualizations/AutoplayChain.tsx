@@ -3,6 +3,8 @@ import { RecommendedVideo, VideoPage } from '@algorithmwatch/harke';
 import { faPlayCircle } from '@fortawesome/pro-light-svg-icons';
 import {
   faImages,
+  faLongArrowDown,
+  faLongArrowRight,
   faSpinnerThird,
   faUserHeadset,
   IconDefinition
@@ -111,7 +113,7 @@ const ViewSwitcher = React.memo(function ViewSwitcher({
   const items = [
     { label: 'Thumbnails', icon: faImages },
     // { label: 'Kategorien', icon: faTags },
-    { label: 'Creator', icon: faUserHeadset },
+    { label: 'Kanäle', icon: faUserHeadset },
   ];
   const selectedItem = items[modeIndex];
 
@@ -199,11 +201,8 @@ export default function AutoplayChain({
   const recommendedVideosLimit = 10;
 
   // console.warn('seedVideos', seedVideos);
-  // console.warn('groups', groups);
-  // console.warn(
-  //   'currentGroup',
-  //   _.get({  }),
-  // );
+  console.warn('groups', groups);
+  // console.warn(currentGroup);
 
   return (
     <>
@@ -235,8 +234,8 @@ export default function AutoplayChain({
               sowohl den Titel des Videos als auch, ob es unter den 60
               empfohlenen Videos noch ein oder mehrere Male auftaucht. Mit den
               Filtern oben rechts kannst du die Ansicht umstellten: Statt der
-              Titelbilder der Videos kannst du etwa die Kategorien der
-              empfohlenen Videos sehen oder wie alt sie sind.
+              Titelbilder der Videos kannst du dir die Kanalnamen anzeigen
+              lassen.
             </p>
             <p className="py-4">
               <img src={explainerImage} alt="" />
@@ -258,21 +257,29 @@ export default function AutoplayChain({
       <div className="mx-auto space-y-6">
         {/* Seed videos menu */}
         {seedVideos.length > 0 && (
-          <div className="flex h-20">
-            <SeedVideoMenu
-              seedVideos={seedVideos}
-              currentVideoIndex={currentSeedVideoIndex}
-              onSelect={(index) => setCurrentSeedVideoIndex(index)}
-              // displaySpinner={isScrapingStarted && !isScrapingPaused}
-              // - you can't get on the page if not all are loaded
-              // - scraping may still be running (for search etc.)
-              displaySpinner={false}
-            />
-            <div className="ml-4">
-              <ViewSwitcher
-                modeIndex={modeIndex}
-                onModeIndexChange={(index: number) => setModeIndex(index)}
-              />
+          <div className="flex justify-between">
+            <div className="flex flex-col">
+              <div className="font-bold mb-1">Ausgangsvideos</div>
+              <div className="flex  h-20">
+                <SeedVideoMenu
+                  seedVideos={seedVideos}
+                  currentVideoIndex={currentSeedVideoIndex}
+                  onSelect={(index) => setCurrentSeedVideoIndex(index)}
+                  // displaySpinner={isScrapingStarted && !isScrapingPaused}
+                  // - you can't get on the page if not all are loaded
+                  // - scraping may still be running (for search etc.)
+                  displaySpinner={false}
+                />
+              </div>
+            </div>
+            <div className="flex flex-col ml-4">
+              <div className="font-bold mb-1">Filter</div>
+              <div className="flex h-20">
+                <ViewSwitcher
+                  modeIndex={modeIndex}
+                  onModeIndexChange={(index: number) => setModeIndex(index)}
+                />
+              </div>
             </div>
           </div>
         )}
@@ -283,47 +290,58 @@ export default function AutoplayChain({
             <div className="flex max-w-6xl">
               {/* Column 1: Autoplay videos */}
               <div className="space-y-2 mr-6">
-                <div className="text-sm whitespace-nowrap mb-3">
-                  Autoplay Videos
+                <div className="flex text-sm whitespace-nowrap">
+                  <div className="mr-1">
+                    <FontAwesomeIcon icon={faLongArrowDown} size="1x" />
+                  </div>
+                  <div>Autoplay</div>
                 </div>
                 {currentGroup.map((scrapeResult, index) => (
                   <div
                     key={`autoplay-${scrapeResult.fields.id}-${index}`}
                     className="relative"
                   >
-                    <VideoThumbnail
-                      videoId={scrapeResult.fields.id}
-                      tippyOptions={{
-                        content: (
-                          <TooltipContent
-                            video={{
-                              title: scrapeResult.fields.title,
-                              channel: scrapeResult.fields.channel,
-                              uploadDate: scrapeResult.fields.uploadDate,
-                              viewCount: scrapeResult.fields.viewCount,
-                              upvotes: scrapeResult.fields.upvotes,
-                              downvotes: scrapeResult.fields.downvotes,
-                            }}
-                          />
-                        ),
-                        theme: 'process-info',
-                      }}
-                      onMouseOverCallback={() =>
-                        setHoveringVideoIdDebounced(scrapeResult.fields.id)
-                      }
-                      onMouseOutCallback={() =>
-                        setHoveringVideoIdDebounced(null)
-                      }
-                      className={
-                        hoveringVideoId &&
-                        hoveringVideoId !== scrapeResult.fields.id
-                          ? 'opacity-40'
-                          : undefined
-                      }
-                    />
+                    {index > 0 ? (
+                      <VideoThumbnail
+                        videoId={scrapeResult.fields.id}
+                        tippyOptions={{
+                          content: (
+                            <TooltipContent
+                              video={{
+                                title: scrapeResult.fields.title,
+                                channel: scrapeResult.fields.channel,
+                                uploadDate: scrapeResult.fields.uploadDate,
+                                viewCount: scrapeResult.fields.viewCount,
+                                upvotes: scrapeResult.fields.upvotes,
+                                downvotes: scrapeResult.fields.downvotes,
+                              }}
+                            />
+                          ),
+                          theme: 'process-info',
+                        }}
+                        onMouseOverCallback={() =>
+                          setHoveringVideoIdDebounced(scrapeResult.fields.id)
+                        }
+                        onMouseOutCallback={() =>
+                          setHoveringVideoIdDebounced(null)
+                        }
+                        className={classNames({
+                          'opacity-40':
+                            hoveringVideoId &&
+                            hoveringVideoId !== scrapeResult.fields.id,
+                        })}
+                      />
+                    ) : (
+                      <div className="w-24 h-14 bg-yellow-600 flex items-center justify-center text-sm">
+                        Ausgangs-
+                        <br />
+                        video
+                      </div>
+                    )}
+
                     <FontAwesomeIcon
                       icon={faChevronRight}
-                      className="absolute -right-3 top-5 text-yellow-1500"
+                      className="absolute -right-4 top-5 text-yellow-1500"
                     />
                   </div>
                 ))}
@@ -331,8 +349,11 @@ export default function AutoplayChain({
 
               {/* Column 2: Recommended videos of autoplayed videos */}
               <div className="space-y-2 overflow-hidden">
-                <div className="text-sm whitespace-nowrap mb-3">
-                  Empfohlene Videos
+                <div className="flex text-sm whitespace-nowrap">
+                  <div>Empfohlene Videos</div>
+                  <div className="ml-1">
+                    <FontAwesomeIcon icon={faLongArrowRight} size="1x" />
+                  </div>
                 </div>
                 {currentGroup
                   .slice(0, recommendedVideosLimit)
@@ -347,6 +368,7 @@ export default function AutoplayChain({
                             key={`${video.id}-${index}-${index2}`}
                             videoId={video.id}
                             type={modeIndex}
+                            creatorName={video.channelName}
                             tippyOptions={{
                               content: (
                                 <TooltipContent

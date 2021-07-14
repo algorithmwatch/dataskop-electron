@@ -1,7 +1,5 @@
 /* eslint-disable jsx-a11y/mouse-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events */
 import { Channel } from '@algorithmwatch/harke';
-import { faImages } from '@fortawesome/pro-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tippy, { TippyProps } from '@tippyjs/react';
 import React from 'react';
 import dayjs from '../utils/dayjs';
@@ -28,6 +26,7 @@ export default function VideoThumbnail({
   videoId,
   url,
   type = 0,
+  creatorName,
   tippyOptions,
   className,
   onClickCallback,
@@ -37,6 +36,7 @@ export default function VideoThumbnail({
   videoId?: string;
   url?: string;
   type?: 0 | 1;
+  creatorName?: string;
   tippyOptions?: TippyProps;
   className?: string;
   onClickCallback?: () => void;
@@ -65,14 +65,17 @@ export default function VideoThumbnail({
       );
     }
     if (type === 1) {
-      // const getCategoryIcon = categoriesIconMap[]
+      const truncatedString = _.truncate(creatorName, {
+        length: 10,
+        omission: '…',
+      });
       return (
         <div
-          className={`w-full h-full ${className}`}
+          className={`w-full h-full bg-yellow-300 flex items-center justify-center text-xs font-medium leading-relaxed ${className}`}
           onMouseOver={() => onMouseOverCallback && onMouseOverCallback()}
           onMouseOut={() => onMouseOutCallback && onMouseOutCallback()}
         >
-          <FontAwesomeIcon icon={faImages} />
+          {truncatedString}
         </div>
       );
     }
