@@ -104,7 +104,7 @@ function NavigationProvider({ children }: NavigationProviderProps) {
       },
     ],
     sections: {
-      [routes.INTERFACE_TUTORIAL]: { label: 'Interface Tutorial' },
+      [routes.INTERFACE_TUTORIAL]: { label: 'Die Benutzeroberfläche' },
       [routes.SCRAPING_EXPLANATION]: { label: 'Was ist Scraping?' },
       [routes.VISUALIZATION_PROFILE]: { label: 'Mein YouTube-Profil' },
       [routes.RESEARCH_INFO]: { label: 'Was wir untersuchen' },

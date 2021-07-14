@@ -1,4 +1,6 @@
+import { faMousePointer } from '@fortawesome/pro-light-svg-icons';
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
@@ -43,8 +45,17 @@ export default function InterfaceTutorialPage(): JSX.Element {
   return (
     <>
       <div>
-        <div className="absolute top-48 left-32 hl-4xl text-yellow-1500">
-          Interface-Erklärung
+        <div className="z-10 absolute top-1/3 left-48 py-6 px-8 text-yellow-1500 border-2 border-dashed border-yellow-700 bg-yellow-200 bg-opacity-30 flex">
+          <div className="mr-5 mt-2">
+            <FontAwesomeIcon icon={faMousePointer} size="3x" />
+          </div>
+          <div>
+            <p className="hl-2xl mb-1.5">Die Benutzeroberfläche</p>
+            <p className="max-w-md text-lg">
+              Bevor es los geht, zeigen wir dir die wichtigsten Elemente der
+              Benutzeroberfläche.
+            </p>
+          </div>
         </div>
         {!demoMode && (
           <div className="absolute top-0 right-40">

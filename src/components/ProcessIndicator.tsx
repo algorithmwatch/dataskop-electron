@@ -20,10 +20,10 @@ function ProcessIndicator({
   const stepsCount = stepsKeys.length;
   const currentStepIndex = stepsKeys.indexOf(currentStep);
   const barWidth = (100 * currentStepIndex) / (stepsCount - 1);
-  const barWidthPlusPadding = `calc(${barWidth}% + 1.5rem)`;
+  const barWidthPlusPadding = `calc(${barWidth}% + 3rem)`;
 
   return (
-    <div className="px-6">
+    <div className="px-12">
       <div
         className={classNames(
           'relative h-2 w-full transition-opacity',
@@ -53,7 +53,7 @@ function ProcessIndicator({
                 className="h-full w-0.5 bg-yellow-1500"
               >
                 <Tippy {...tippyProps}>
-                  <div className="h-full -mx-6 " />
+                  <div className="h-full -mx-12 " />
                 </Tippy>
               </div>
             );
@@ -62,7 +62,7 @@ function ProcessIndicator({
 
         {/* bar */}
         <div
-          className="z-0 absolute -left-6 inset-y-0 bg-yellow-700 h-full transition-all duration-500 ease-in-out"
+          className="z-0 absolute -left-12 inset-y-0 bg-yellow-700 h-full transition-all duration-500 ease-in-out"
           style={{ width: barWidthPlusPadding }}
         />
       </div>
