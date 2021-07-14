@@ -5,7 +5,7 @@ import { getActiveCampaigns } from '../../utils/networking';
 
 export default function RemoteScrapingConfig() {
   const {
-    state: { platformUrl },
+    state: { platformUrl, seriousProtection },
   } = useConfig();
 
   const { dispatch } = useScraping();
@@ -25,7 +25,7 @@ export default function RemoteScrapingConfig() {
 
   const fetchCams = async () => {
     if (platformUrl == null) return;
-    const options = await getActiveCampaigns(platformUrl);
+    const options = await getActiveCampaigns(platformUrl, seriousProtection);
     setCamOptions(options);
   };
 
