@@ -3,13 +3,21 @@
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import { Field, Form, Formik, useField, useFormikContext } from 'formik';
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import Button from '../components/Button';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
+import { useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
+import { addQuestionnaireToSession } from '../db';
 
 export default function QuestionnairePage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
+
+  const hist = useHistory();
+
+  const {
+    state: { sessionId },
+  } = useScraping();
 
   const footerNavItems: FooterNavItem[] = [
     {
@@ -55,7 +63,14 @@ export default function QuestionnairePage(): JSX.Element {
   };
 
   const onSubmit = (values) => {
-    console.log('onSubmit', values);
+    if (sessionId === null) {
+      console.log('onSubmit', values);
+      console.error('session is not set');
+    } else {
+      addQuestionnaireToSession(sessionId, values);
+    }
+
+    hist.push(getNextPage('path'));
   };
 
   const LimitCheckbox = (props) => {

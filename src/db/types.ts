@@ -19,6 +19,7 @@ interface ScrapingSession {
   finishedAt: number | null; // number of millisecconds in UTC
   scrapingConfig: ScrapingConfig;
   campaign: Campaign | null;
+  questionnaire: any;
 }
 
 interface Lookup {

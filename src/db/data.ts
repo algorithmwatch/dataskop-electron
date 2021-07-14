@@ -80,6 +80,25 @@ const setSessionFinishedAt = async (sessionId: string) => {
   db.write();
 };
 
+const addQuestionnaireToSession = async (
+  sessionId: string,
+  questionnaire: any,
+) => {
+  await setUpDb();
+
+  if (db === null || db?.data === null) throw Error();
+
+  const theSession = db.data.scrapingSessions.filter(
+    (x) => x.sessionId === sessionId,
+  )[0];
+
+  db.data.scrapingSessions = [
+    { ...theSession, questionnaire } as ScrapingSession,
+  ].concat(db.data.scrapingSessions.filter((x) => x.sessionId !== sessionId));
+
+  db.write();
+};
+
 const getSessions = async () => {
   const data = await setUpDb();
 
@@ -317,4 +336,5 @@ export {
   modifyScrapingConfig,
   getStoredScrapingConfigs,
   setSessionFinishedAt,
+  addQuestionnaireToSession,
 };
