@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { faSpinnerThird } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useScraping } from '../../../contexts';
 
 export default function ScrapingProgressBar() {
@@ -18,22 +18,22 @@ export default function ScrapingProgressBar() {
 
   const [etaMin, setEtaMin] = useState('1 Minute');
 
-  useEffect(() => {
-    if (finishedTasks > 5) {
-      const etaMs = getEtaUntil(1);
-      if (etaMs === null) return;
-      const minutes = Math.round(etaMs / 1000 / 60);
-      if (minutes >= 2) {
-        setEtaMin(`${minutes} Minuten`);
-      } else if (minutes === 1) {
-        setEtaMin('eine Minute');
-      } else {
-        setEtaMin('unter eine Minute');
-      }
-    } else {
-      setEtaMin('10 Minuten');
-    }
-  }, [finishedTasks]);
+  // useEffect(() => {
+  //   if (finishedTasks > 5) {
+  //     const etaMs = getEtaUntil(1);
+  //     if (etaMs === null) return;
+  //     const minutes = Math.round(etaMs / 1000 / 60);
+  //     if (minutes >= 2) {
+  //       setEtaMin(`${minutes} Minuten`);
+  //     } else if (minutes === 1) {
+  //       setEtaMin('eine Minute');
+  //     } else {
+  //       setEtaMin('unter eine Minute');
+  //     }
+  //   } else {
+  //     setEtaMin('10 Minuten');
+  //   }
+  // }, [finishedTasks]);
 
   // if (!isActive) {
   //   return null;
