@@ -39,6 +39,8 @@ export default function OnboardingPage1(): JSX.Element {
     }
   }, [isUserLoggedIn]);
 
+  useEffect(() => dispatch({ type: 'set-demo-mode', demoMode: false }), []);
+
   return (
     <>
       <ContentWrapper centerY>
