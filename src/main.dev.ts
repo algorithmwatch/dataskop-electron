@@ -150,7 +150,7 @@ const createWindow = async () => {
       buttons: ['Abbrechen', 'Ja, beenden'],
       title: 'Bestätigen',
       message:
-        'Willst du DataSkop wirklich beenden? Möglicherweise läuft noch das Scrapen.',
+        'Willst du DataSkop wirklich beenden? Möglicherweise läuft noch das Scraping.',
     });
     if (choice == 0) {
       e.preventDefault();

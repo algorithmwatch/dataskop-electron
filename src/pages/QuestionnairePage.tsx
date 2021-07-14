@@ -243,7 +243,7 @@ export default function QuestionnairePage(): JSX.Element {
               </div>
               <div className="mt-3">
                 <Button size="small" theme="blue" type="submit">
-                  Abschicken
+                  Antworten speichern
                 </Button>
               </div>
             </Form>
