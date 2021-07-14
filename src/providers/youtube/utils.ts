@@ -46,17 +46,30 @@ const redactWatchHistory = (
 ) => {
   // - private videos are not in lookups (cause they have no meta infos)
   // - videos that are not unlisted are public
+  // - safe the amount of videos before redaction + number of unlisted videos
   const publicVideos = new Set(
     lookups
       .filter((x) => !x.info.unlisted)
       .map(({ info: { videoId } }) => videoId),
   );
 
+  const unlistedVideos = new Set(
+    lookups
+      .filter((x) => x.info.unlisted)
+      .map(({ info: { videoId } }) => videoId),
+  );
+
   results.forEach((x) => {
     if ('slug' in x && x.slug === 'yt-user-watch-history') {
+      x.fields.numVideosBeforeRedaction = x.fields.videos.length;
+
       x.fields.videos = x.fields.videos.filter((video) =>
         publicVideos.has(video.id),
       );
+
+      x.fields.numVideosRedactedUnlisted = x.fields.videos.filter((video) =>
+        unlistedVideos.has(video.id),
+      ).length;
     }
   });
 
