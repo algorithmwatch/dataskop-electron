@@ -71,7 +71,8 @@ jobs:
       # (maybe this can be fixed to always use this .env files)
       - name: Setup dotenv files (for renderer)
         run: >
-          if [ $GITHUB_TAG_VERSION == *"beta"* ]; then
+          echo $GITHUB_TAG_VERSION &&
+          if [[ $GITHUB_TAG_VERSION == *"beta"* ]]; then
           echo "PLATFORM_URL=${{ secrets.BETA_PLATFORM_URL }}" >> .env; else
           echo "PLATFORM_URL=${{ secrets.PLATFORM_URL }}" >> .env; fi &&
           echo "SERIOUS_PROTECTION=${{ secrets.SERIOUS_PROTECTION }}" >> .env &&
@@ -96,7 +97,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: >
           if [ "$RUNNER_OS" == "Linux" ]; then TARGET="--linux --win"; else TARGET="--mac"; fi &&
-          if [ $GITHUB_TAG_VERSION == *"beta"* ]; then SENTRY_DSN="${{ secrets.SENTRY_DSN }}"; else SENTRY_DSN=""; fi &&
+          if [[ $GITHUB_TAG_VERSION == *"beta"* ]]; then SENTRY_DSN="${{ secrets.SENTRY_DSN }}"; else SENTRY_DSN=""; fi &&
           yarn cross-env SENTRY_DSN=$SENTRY_DSN UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }} yarn build &&
           yarn electron-builder --publish always $TARGET
 

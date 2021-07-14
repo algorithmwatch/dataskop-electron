@@ -1,13 +1,17 @@
 import { Button, Checkbox, FormControlLabel } from '@material-ui/core';
 import { ipcRenderer } from 'electron';
 import React from 'react';
-import { useScraping } from '../../contexts';
+import { useConfig, useScraping } from '../../contexts';
 
 export default function SettingsPage(): JSX.Element {
   const {
     state: { logHtml },
     dispatch,
   } = useScraping();
+
+  const {
+    state: { platformUrl },
+  } = useConfig();
 
   const handleLogHtmlChange = (event) => {
     dispatch({ type: 'set-log-html', logHtml: event.target.checked });
@@ -25,7 +29,7 @@ export default function SettingsPage(): JSX.Element {
           Check beta update
         </Button>
       </div>
-      <div>
+      <div className="pb-10">
         <FormControlLabel
           control={
             <Checkbox
@@ -38,6 +42,7 @@ export default function SettingsPage(): JSX.Element {
           label="Log HTML"
         />
       </div>
+      <div>Platform url: {platformUrl}</div>
     </div>
   );
 }
