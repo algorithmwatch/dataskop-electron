@@ -96,7 +96,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: >
           if [ "$RUNNER_OS" == "Linux" ]; then TARGET="--linux --win"; else TARGET="--mac"; fi &&
-          if [ $GITHUB_TAG_VERSION == *"beta"* ]; then $SENTRY_DSN="${{ secrets.SENTRY_DSN }}"; else $SENTRY_DSN=""; fi &&
+          if [ $GITHUB_TAG_VERSION == *"beta"* ]; then SENTRY_DSN="${{ secrets.SENTRY_DSN }}"; else SENTRY_DSN=""; fi &&
           yarn cross-env SENTRY_DSN=$SENTRY_DSN UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }} yarn build &&
           yarn electron-builder --publish always $TARGET
 
