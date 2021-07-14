@@ -11,7 +11,6 @@ import dayjs from 'dayjs';
 import { ipcRenderer } from 'electron';
 import React, { useMemo } from 'react';
 import { FixedSizeList as List } from 'react-window';
-// import { ScrapingResult } from '../../db/types';
 import Button from '../Button';
 import useDimensions from '../hooks/useDimensions';
 
@@ -26,7 +25,7 @@ const Row = ({ index, style, data }) => {
 };
 
 export default function MyData({ data }) {
-  // console.log(data);
+  console.log(data);
   const [containerRef, containerDimensions] = useDimensions();
   const listRef = React.createRef();
 
@@ -36,6 +35,14 @@ export default function MyData({ data }) {
     const history = data.results.find(
       (x) => x.success && x.slug.includes('user-watch-history'),
     )?.fields.videos;
+
+    const scrapes = data.results.filter(
+      (x) => x.success && x.slug.includes('video-page-seed-follow'),
+    );
+
+    const scrapesResultsNum = scrapes.reduce((acc, curr) => {
+      return acc + curr.fields?.recommendedVideos.length || 0;
+    }, 0);
 
     const channels = data.results.find(
       (x) => x.success && x.slug.includes('subscribed-channels'),
@@ -47,7 +54,9 @@ export default function MyData({ data }) {
 
     return {
       history,
+      scrapes,
       channels,
+      scrapesResultsNum,
       queries,
     };
   }, [data]);
@@ -57,38 +66,6 @@ export default function MyData({ data }) {
     () => stringifiedData.split('\n'),
     [stringifiedData],
   );
-  // const stringifiedHtml = useMemo(() => {
-  //   if (!renderJson) return <div>Loading</div>;
-
-  //   const lines = stringifiedData.split('\n');
-  //   const jumpRefsKeys = [...jumpRefs.keys()];
-
-  //   const html = lines.map((l, i) => {
-  //     const field = l.split('":');
-  //     if (field.length === 2) {
-  //       const jumpKey = jumpRefsKeys.find((j) => l.includes(j));
-  //       if (jumpKey) {
-  //         console.log('jumpKey', jumpKey);
-  //         return (
-  //           <div key={i} ref={jumpRefs.get(jumpKey)}>
-  //             <span className="font-bold text-blue-700">{field[0]}"</span>:
-  //             {field[1]}
-  //           </div>
-  //         );
-  //       }
-
-  //       return (
-  //         <div key={i}>
-  //           <span className="font-bold text-blue-700">{field[0]}"</span>:
-  //           {field[1]}
-  //         </div>
-  //       );
-  //     }
-  //     return <div key={i}>{l}</div>;
-  //   });
-
-  //   return html;
-  // }, [stringifiedData, jumpRefs]);
 
   const filesize = useMemo(() => {
     const size = new TextEncoder().encode(stringifiedData).length;
@@ -135,20 +112,23 @@ export default function MyData({ data }) {
                 Die letzten {db.history.length} Videos, die du gesehen hast
               </div>
             )}
-            <div
-              className="p-2 "
-              onClick={() => scrollTo('subscribed-channels')}
-            >
-              <FontAwesomeIcon icon={faPlay} className="mr-3" size="lg" />
-              12 Videos mit insgesamt 120 Empfehlung
-            </div>
+            {db.scrapes && db.scrapes.length > 0 && (
+              <div
+                className="p-2 "
+                onClick={() => scrollTo('video-page-seed-follow')}
+              >
+                <FontAwesomeIcon icon={faPlay} className="mr-3" size="lg" />
+                {db.scrapes.length} Videos mit insgesamt {db.scrapesResultsNum}{' '}
+                Empfehlung
+              </div>
+            )}
             {db.queries && db.queries.length > 0 && (
               <div
                 className="p-2 "
                 onClick={() => scrollTo('search-results-videos')}
               >
                 <FontAwesomeIcon icon={faSearch} className="mr-3" size="lg" />
-                {db.queries.length} Suchbegriffe mit insg. 80 Ergebnissen
+                {db.queries.length} Suchbegriffe mit insg.
               </div>
             )}
           </div>
@@ -166,7 +146,6 @@ export default function MyData({ data }) {
             className="bg-white flex-grow w-full mt-2 h-20 text-xs"
             ref={containerRef}
           >
-            {/* <JsonList data={stringifiedDataSplit} /> */}
             {containerDimensions?.width && (
               <List
                 itemData={stringifiedDataSplit}
