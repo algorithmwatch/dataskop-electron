@@ -138,6 +138,8 @@ const createWindow = async () => {
       mainWindow.setBounds({
         width: Math.floor(width * 0.9),
         height: Math.floor(height * 0.9),
+        x: Math.floor(width * 0.05),
+        y: Math.floor(height * 0.05),
       });
       mainWindow.show();
       mainWindow.focus();
