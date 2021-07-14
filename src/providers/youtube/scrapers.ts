@@ -138,6 +138,18 @@ const trySeveralTimes = async (
       log.error(
         `Too many failed tries to extract html: ${JSON.stringify(allErros)}`,
       );
+
+    // hotfix to overcome channel error
+    if (lastRes.errors.length === 1 && lastRes.errors[0].field === 'channel') {
+      lastRes.success = true;
+      lastRes.fields.channel = {
+        id: 'invalid',
+        name: '',
+        url: '',
+        thumbnail: '',
+      };
+      return lastRes;
+    }
     lastRes.errors.push({
       message: `Too many failed tries to extract html: ${JSON.stringify(
         allErros,
