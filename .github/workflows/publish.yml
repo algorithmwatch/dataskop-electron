@@ -28,6 +28,9 @@ jobs:
       - name: Checkout git repo
         uses: actions/checkout@v2
 
+      - name: Set current version (in tag)
+        run: echo "GITHUB_TAG_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
       - name: Install Node, NPM and Yarn
         uses: actions/setup-node@v2
         with:
@@ -68,7 +71,9 @@ jobs:
       # (maybe this can be fixed to always use this .env files)
       - name: Setup dotenv files (for renderer)
         run: >
-          echo "PLATFORM_URL=${{ secrets.PLATFORM_URL }}" >> .env &&
+          if [ $GITHUB_TAG_VERSION == *"beta"* ]; then
+          echo "PLATFORM_URL=${{ secrets.BETA_PLATFORM_URL }}" >> .env; else
+          echo "PLATFORM_URL=${{ secrets.PLATFORM_URL }}" >> .env; fi &&
           echo "SERIOUS_PROTECTION=${{ secrets.SERIOUS_PROTECTION }}" >> .env &&
           echo "TRACK_EVENTS=${{ secrets.TRACK_EVENTS }}" >> .env
 
@@ -91,7 +96,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: >
           if [ "$RUNNER_OS" == "Linux" ]; then TARGET="--linux --win"; else TARGET="--mac"; fi &&
-          yarn cross-env SENTRY_DSN=${{ secrets.SENTRY_DSN }} UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }} yarn build &&
+          if [ $GITHUB_TAG_VERSION == *"beta"* ]; then $SENTRY_DSN="${{ secrets.SENTRY_DSN }}"; else $SENTRY_DSN=""; fi &&
+          yarn cross-env SENTRY_DSN=$SENTRY_DSN UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }} yarn build &&
           yarn electron-builder --publish always $TARGET
 
       # Add the notification step as the last one
