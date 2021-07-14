@@ -1,6 +1,8 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react-hooks/exhaustive-deps */
+import { faTimesCircle } from '@fortawesome/pro-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ipcRenderer } from 'electron';
 import { pick, round } from 'lodash';
 import React, { useEffect } from 'react';
@@ -104,7 +106,7 @@ export default function ScrapingWindow({
         onClick={() => {
           dispatch({ type: 'set-visible-window', visibleWindow: false });
         }}
-        className="bg-gray-500 text-center"
+        className="flex items-center justify-center cursor-pointer"
         style={{
           width: 30,
           height: 30,
@@ -114,7 +116,11 @@ export default function ScrapingWindow({
           color: 'white',
         }}
       >
-        X
+        <FontAwesomeIcon
+          icon={faTimesCircle}
+          size="2x"
+          className="text-yellow-1500 relative -top-3 -right-3"
+        />
       </div>
     </div>
   );
