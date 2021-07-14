@@ -25,7 +25,7 @@ const parseDate = (() => {
 })();
 
 export const useData = (raw: Array<ScrapingResult>, lookups: Array<Lookup>) => {
-  const [data, setData] = useState({});
+  const [data, setData] = useState({ loading: true });
 
   // console.log(raw, lookups);
 
@@ -46,10 +46,12 @@ export const useData = (raw: Array<ScrapingResult>, lookups: Array<Lookup>) => {
           const detail = lookups.find((l) => l.info.videoId === d.id)?.info;
           return { ...d, date, watchTime, ...detail };
         });
-        const days = parseInt(
-          (history[0].date - history[history.length - 1].date) /
-            (1000 * 60 * 60 * 24),
-        );
+        const days = history.length
+          ? parseInt(
+              (history[0].date - history[history.length - 1].date) /
+                (1000 * 60 * 60 * 24),
+            )
+          : 0;
         const mostWatchedCategoriesTime = rollups(
           history,
           (v) => sum(v, (d) => d.watchTime),
@@ -86,18 +88,19 @@ export const useData = (raw: Array<ScrapingResult>, lookups: Array<Lookup>) => {
           channels,
           channelsNotification,
           topChannel,
+          loading: false,
         });
       } catch (error) {
         console.error(error);
       }
     };
 
-    if (slugHistory) {
+    if (slugHistory && slugHistory.length === 0) {
+      setData({ loading: false, empty: true });
+    } else if (slugHistory && channels) {
       fetchData();
-    } else {
-      setData({ empty: true });
     }
-  }, [slugHistory, channels]);
+  }, [slugHistory, channels, lookups]);
 
   return data;
 };
