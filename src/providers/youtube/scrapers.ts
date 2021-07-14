@@ -325,7 +325,7 @@ async function* scrapeSeedVideosAndFollow(
 
     // using `for (const .. of ..)` to work with `await`
     // eslint-disable-next-line no-empty-pattern
-    for (const {} of [...Array(followVideos).keys()]) {
+    for (const loopI of _.range(followVideos)) {
       let followVideo = null;
 
       followVideo = await scrapeVideo(
@@ -341,9 +341,19 @@ async function* scrapeSeedVideosAndFollow(
       step += 1;
 
       // proceed if: 1) we didn't meet the max number of steps 2) there are actually recommended videos
-      if (step < maxSteps && followVideo.fields.recommendedVideos.length > 0) {
-        toScrapeId = followVideo.fields.recommendedVideos[0].id;
-        yield [step / maxSteps, followVideo];
+      if (step < maxSteps) {
+        if (followVideo.fields.recommendedVideos.length > 0) {
+          toScrapeId = followVideo.fields.recommendedVideos[0].id;
+          yield [step / maxSteps, followVideo];
+        } else {
+          // if we DO NOT have a another video to follow, we have to get out of the loop
+          step += followVideos - loopI;
+          // are we already at the end?
+          if (step < maxSteps) return [1, followVideo];
+          yield [step / maxSteps, followVideo];
+          // continue with new seed video
+          break;
+        }
       } else {
         return [1, followVideo];
       }
