@@ -4,6 +4,7 @@ import { ipcRenderer } from 'electron';
 import React, { useRef, useState } from 'react';
 import { Lookup, ScrapingResult } from '../../../db/types';
 import Button from '../../Button';
+import ContentWrapper from '../../ContentWrapper';
 import Explainer from '../../Explainer';
 import Infobox from '../../Infobox';
 import Beeswarm from './Beeswarm';
@@ -37,6 +38,8 @@ export default function ProfileVis({
   const db = useData(data, lookups);
   const visRef = useRef();
 
+  // console.log('PROFILE', db, data);
+
   const invokeScreenshot = async () => {
     const filename = `dataskop-dashboard.png`;
     // const bbox = visRef?.current.getBoundingClientRect();
@@ -51,7 +54,13 @@ export default function ProfileVis({
     ipcRenderer.invoke('save-screenshot', undefined, filename);
   };
 
-  if (!db.history) return <Loading />;
+  if (db.loading) return <Loading />;
+  if (db.empty)
+    return (
+      <ContentWrapper centerY>
+        <Infobox>Keine Watchhistory-Daten vorhanden.</Infobox>
+      </ContentWrapper>
+    );
 
   return (
     <>
@@ -111,7 +120,11 @@ export default function ProfileVis({
 
             <Badge
               title="Kategoriefavorit"
-              value={db.mostWatchedCategoriesTime[0][0]}
+              value={
+                db.mostWatchedCategoriesTime.length
+                  ? db.mostWatchedCategoriesTime[0][0]
+                  : 'Keinen'
+              }
               small
               unit=""
             />
