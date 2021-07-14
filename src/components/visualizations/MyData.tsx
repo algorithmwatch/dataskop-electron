@@ -9,19 +9,26 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import { ipcRenderer } from 'electron';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
+import { FixedSizeList as List } from 'react-window';
 // import { ScrapingResult } from '../../db/types';
 import Button from '../Button';
+import useDimensions from '../hooks/useDimensions';
 
 const invokeExport = async (data) => {
   const filename = `dataskop-${dayjs().format('YYYY-MM-DD-HH-mm-s')}.json`;
   ipcRenderer.invoke('results-export', JSON.stringify(data), filename);
 };
 
+const Row = ({ index, style, data }) => {
+  const item = data[index];
+  return <pre style={style}>{item}</pre>;
+};
+
 export default function MyData({ data }) {
   // console.log(data);
-  const containerRef = useRef();
-  // TODO: Jump keys for missing entries
+  const [containerRef, containerDimensions] = useDimensions();
+  console.log(containerDimensions);
   const jumpRefs = new Map([
     ['user-watch-history', useRef()],
     ['subscribed-channels', useRef()],
@@ -49,45 +56,44 @@ export default function MyData({ data }) {
       queries,
     };
   }, [data]);
+
   const stringifiedData = useMemo(() => JSON.stringify(data, null, 2), [data]);
-  const stringifiedHtml = useMemo(() => {
-    if (!renderJson) return <div>Loading</div>;
+  const stringifiedDataSplit = useMemo(
+    () => stringifiedData.split('\n'),
+    [stringifiedData],
+  );
+  // const stringifiedHtml = useMemo(() => {
+  //   if (!renderJson) return <div>Loading</div>;
 
-    const lines = stringifiedData.split('\n');
-    const jumpRefsKeys = [...jumpRefs.keys()];
+  //   const lines = stringifiedData.split('\n');
+  //   const jumpRefsKeys = [...jumpRefs.keys()];
 
-    const html = lines.map((l, i) => {
-      const field = l.split('":');
-      if (field.length === 2) {
-        const jumpKey = jumpRefsKeys.find((j) => l.includes(j));
-        if (jumpKey) {
-          console.log('jumpKey', jumpKey);
-          return (
-            <div key={i} ref={jumpRefs.get(jumpKey)}>
-              <span className="font-bold text-blue-700">{field[0]}"</span>:
-              {field[1]}
-            </div>
-          );
-        }
+  //   const html = lines.map((l, i) => {
+  //     const field = l.split('":');
+  //     if (field.length === 2) {
+  //       const jumpKey = jumpRefsKeys.find((j) => l.includes(j));
+  //       if (jumpKey) {
+  //         console.log('jumpKey', jumpKey);
+  //         return (
+  //           <div key={i} ref={jumpRefs.get(jumpKey)}>
+  //             <span className="font-bold text-blue-700">{field[0]}"</span>:
+  //             {field[1]}
+  //           </div>
+  //         );
+  //       }
 
-        return (
-          <div key={i}>
-            <span className="font-bold text-blue-700">{field[0]}"</span>:
-            {field[1]}
-          </div>
-        );
-      }
-      return <div key={i}>{l}</div>;
-    });
+  //       return (
+  //         <div key={i}>
+  //           <span className="font-bold text-blue-700">{field[0]}"</span>:
+  //           {field[1]}
+  //         </div>
+  //       );
+  //     }
+  //     return <div key={i}>{l}</div>;
+  //   });
 
-    return html;
-  }, [stringifiedData, jumpRefs, renderJson]);
-
-  useEffect(() => {
-    if (containerRef?.current && !renderJson) {
-      setRenderJson(true);
-    }
-  }, [containerRef, setRenderJson]);
+  //   return html;
+  // }, [stringifiedData, jumpRefs]);
 
   const filesize = useMemo(() => {
     const size = new TextEncoder().encode(stringifiedData).length;
@@ -160,13 +166,23 @@ export default function MyData({ data }) {
 
         <div className="bg-gray-50 m-8 mb-0 flex relative w-7/12 flex-col p-4 border-black border-dashed border ">
           <div>JSON-Preview</div>
+
           <div
-            className="bg-white flex-grow w-full mt-2 h-20 overflow-scroll"
+            className="bg-white flex-grow w-full mt-2 h-20 text-xs"
             ref={containerRef}
           >
-            <pre className="text-xs flex flex-col whitespace-pre-wrap w-full">
-              {stringifiedHtml}
-            </pre>
+            {/* <JsonList data={stringifiedDataSplit} /> */}
+            {containerDimensions?.width && (
+              <List
+                itemData={stringifiedDataSplit}
+                width={containerDimensions.width}
+                height={containerDimensions.height}
+                itemCount={stringifiedDataSplit.length}
+                itemSize={20}
+              >
+                {Row}
+              </List>
+            )}
           </div>
         </div>
       </div>
