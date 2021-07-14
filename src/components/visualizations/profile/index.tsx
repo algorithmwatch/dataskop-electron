@@ -71,24 +71,26 @@ export default function ProfileVis({
           <h1 className="hl-4xl my-6">Profil-Dashboard</h1>
           <div className="space-y-4">
             <p>
-              Die Auswertung Deines YouTube-Profils basiert auf maximal 200 von
-              Dir zuletzt geschauten Videos. Wenn Du in Deinen
-              YouTube-Einstellungen die Aufzeichnung der „Watch History“
-              deaktiviert hast, bleibt die Auswertung weitgehend leer.
+              Die Auswertung deines YouTube-Profils basiert auf maximal 200 von
+              dir zuletzt geschauten Videos. Wenn du in deinen
+              YouTube-Einstellungen die Aufzeichnung des Verlaufs deaktiviert
+              hast, bleibt die Auswertung leider weitgehend leer.
             </p>
             <p>
-              Neben den Kennzahlen am oberen Rand siehst Du in der unteren
+              Neben den Kennzahlen am oberen Rand siehst du in der unteren
               Visualisierung eine Auswertung nach Zeitpunkt des Schauens und
-              Kategorien der Videos. Der Radius der Kreise basiert auf der Länge
-              der Videos.
+              Kategorien der Videos. Der Radius der Kreise in der Ansicht nach
+              Tagen/Wochen basiert auf der Länge der Videos. Die Angabe
+              „Kanalfavorit“ zeigt, welchen der von dir abonnierten Kanäle du am
+              meisten geschaut hast.
             </p>
             <div>
               <Infobox>
                 <p>
-                  Durch die Daten Deines Profils hoffen wir Rückschlüsse ziehen
-                  zu können, welche Faktoren YouTube für die Personalisierung
-                  von Empfehlungen und Suchergebnisse berücksichtigt. Das werden
-                  wir in den folgenden Experimenten ergründen.
+                  Durch die Daten deines Profils hoffen wir Rückschlüsse ziehen
+                  zu können, wie YouTube bei der Personalisierung von
+                  Empfehlungen und Suchergebnisse vorgeht. Das werden wir in den
+                  folgenden Experimenten ergründen.
                 </p>
               </Infobox>
             </div>
