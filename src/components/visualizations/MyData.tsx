@@ -9,7 +9,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import { ipcRenderer } from 'electron';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo } from 'react';
 import { FixedSizeList as List } from 'react-window';
 // import { ScrapingResult } from '../../db/types';
 import Button from '../Button';
@@ -28,14 +28,9 @@ const Row = ({ index, style, data }) => {
 export default function MyData({ data }) {
   // console.log(data);
   const [containerRef, containerDimensions] = useDimensions();
-  console.log(containerDimensions);
-  const jumpRefs = new Map([
-    ['user-watch-history', useRef()],
-    ['subscribed-channels', useRef()],
-    ['search-results-videos', useRef()],
-  ]);
+  const listRef = React.createRef();
 
-  const [renderJson, setRenderJson] = useState(false);
+  // console.log(containerDimensions);
 
   const db = useMemo(() => {
     const history = data.results.find(
@@ -103,11 +98,11 @@ export default function MyData({ data }) {
   }, [stringifiedData]);
 
   const scrollTo = (jumpKey) => {
-    const ref = jumpRefs.get(jumpKey);
-    console.log('scrollto', jumpKey, ref?.current);
-    if (ref?.current) {
-      ref.current.scrollIntoView({ behavior: 'smooth' });
-    }
+    const index = stringifiedDataSplit.findIndex((l) => l.includes(jumpKey));
+    if (!index) return;
+    const line = stringifiedDataSplit[index];
+    // console.log('scrollto', jumpKey, index, line);
+    listRef.current.scrollToItem(index, 'start');
   };
 
   return (
@@ -179,6 +174,7 @@ export default function MyData({ data }) {
                 height={containerDimensions.height}
                 itemCount={stringifiedDataSplit.length}
                 itemSize={20}
+                ref={listRef}
               >
                 {Row}
               </List>
