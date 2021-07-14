@@ -265,7 +265,10 @@ export default function AutoplayChain({
               seedVideos={seedVideos}
               currentVideoIndex={currentSeedVideoIndex}
               onSelect={(index) => setCurrentSeedVideoIndex(index)}
-              displaySpinner={isScrapingStarted && !isScrapingPaused}
+              // displaySpinner={isScrapingStarted && !isScrapingPaused}
+              // - you can't get on the page if not all are loaded
+              // - scraping may still be running (for search etc.)
+              displaySpinner={false}
             />
             <div className="ml-4">
               <ViewSwitcher
