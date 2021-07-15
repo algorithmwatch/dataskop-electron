@@ -127,11 +127,7 @@ export function TooltipContent({
   }
 
   if (video.viewCount) {
-    tooltipContent.push(
-      <div key="view-count">
-        {String(video.viewCount).replace(/(.)(?=(\d{3})+$)/g, '$1.')} Aufrufe
-      </div>,
-    );
+    tooltipContent.push(<div key="view-count">{video.viewCount} Aufrufe</div>);
   }
 
   return <>{tooltipContent}</>;
