@@ -24,17 +24,6 @@ function ContactContainer() {
           Facebook
         </a>
       </div>
-      <div>
-        Abonniere unseren{' '}
-        <a
-          href="https://algorithmwatch.org/de/newsletter/"
-          className="link-blue"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Newsletter
-        </a>
-      </div>
     </div>
   );
 }

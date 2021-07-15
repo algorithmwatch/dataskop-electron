@@ -7,6 +7,7 @@ import { goToUrl } from '../components/scraping/ipc';
 import { useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
 import { providerToMeta } from '../providers';
+import whatsHappening from '../static/images/start/img_was_passiert.jpg';
 
 export default function OnboardingPage2(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -46,7 +47,7 @@ export default function OnboardingPage2(): JSX.Element {
 
   return (
     <>
-      <ContentWrapper centerY>
+      <ContentWrapper>
         <div className="hl-4xl text-center mb-6">Anmeldung erfolgreich</div>
         <div className="hl-2xl mb-6 text-center">
           Was passiert als Nächstes?
@@ -63,6 +64,13 @@ export default function OnboardingPage2(): JSX.Element {
               Private Videos werden dagegen nicht gespeichert.
             </li>
           </ul>
+
+          <div className="p-2">
+            <img src={whatsHappening} alt="Teaser" height={200} />
+            <div className="text-center text-sm pt-1">
+              Zwei der folgenden Visualisierungen
+            </div>
+          </div>
 
           <p>Wir lassen dich drei Experimente durchführen. Dafür</p>
           <ul className="list-disc pl-4">
@@ -83,14 +91,14 @@ export default function OnboardingPage2(): JSX.Element {
             </li>
           </ul>
 
-          <p>
+          <p className="text-sm">
             Die von uns auf diese Weise gesammelten Daten bleiben zunächst auf
             deinem Rechner und werden erst am Ende von dir gespendet. Aber nur,
             wenn du dem zustimmst. Für das Spenden musst du ein DataSkop-Konto
             anlegen. Dafür brauchen wir lediglich deine E-Mail-Adresse.
           </p>
 
-          <p>
+          <p className="text-sm">
             Deine gespendeten Daten werden nie für kommerzielle Zwecke
             verwendet, sondern nur für Forschung und Journalismus. Du kannst sie
             über dein DataSkop-Konto jederzeit löschen.

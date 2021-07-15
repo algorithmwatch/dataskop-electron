@@ -51,6 +51,12 @@ export default function IntroductionPage(): JSX.Element {
           </p>
 
           <p>
+            Die Daten werden unter strengen Datenschutzanforderungen von
+            Wissenschaftler*innen der Europa-Universität Viadrina (Frankfurt O.)
+            und Journalist*innen von DER SPIEGEL ausgewertet.
+          </p>
+
+          <p>
             Keine Sorge: Es werden ohne deine Zustimmung keine Daten an uns
             übermittelt!
           </p>

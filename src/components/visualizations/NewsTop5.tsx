@@ -194,8 +194,6 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
               empfohlen bekommst, wenn Du mit Deinem YT-Konto eingeloggt bist.
               Zum Vergleich stehen in der rechten Spalte, die Videos, die
               empfohlen werden, wenn Du nicht bei YouTube angemeldet bist.
-              [Erklärung ergänzen, falls es die gleichen Filter gibt wie bei
-              Autoplay Chain Viz]
             </p>
             <div>
               <Infobox classname="mt-6">

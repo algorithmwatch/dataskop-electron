@@ -7,7 +7,7 @@ import {
   faLongArrowRight,
   faSpinnerThird,
   faUserHeadset,
-  IconDefinition
+  IconDefinition,
 } from '@fortawesome/pro-regular-svg-icons';
 import { faAngleDown, faChevronRight } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -219,7 +219,7 @@ export default function AutoplayChain({
           <h1 className="hl-4xl my-6">AutoPlay</h1>
           <div className="space-y-4">
             <p>
-              In der folgenden Visualisierungen kannst du oben aus sechs Videos
+              In der folgenden Visualisierung kannst du oben aus sechs Videos
               auswählen. Das sind zum einen bekannte und bedeutende Videos aus
               den letzten Jahren. Zum anderen Videos, die aktuell viel
               Aufmerksamkeit erfahren. Für jedes dieser Videos zeigen wir in der
