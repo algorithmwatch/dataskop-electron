@@ -257,7 +257,7 @@
     "@visx/mock-data": "^1.7.0",
     "@visx/responsive": "^1.10.1",
     "@visx/scale": "^1.14.0",
-    "ajv": "^8.6.1",
+    "ajv": "^8.6.2",
     "base-64": "^1.0.0",
     "chrono-node": "^2.3.0",
     "classnames": "^2.3.1",
