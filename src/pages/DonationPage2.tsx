@@ -102,6 +102,7 @@ export default function DonationPage2(): JSX.Element {
             className="flex flex-col space-y-4 items-center"
           >
             <input
+              required
               pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
               title="Invalid email address"
               type="email"
