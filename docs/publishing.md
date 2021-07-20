@@ -1,28 +1,28 @@
 # Publishing Releases
 
-We are using <https://www.electron.build/> to publish releases.
+We are using <https://www.electron.build/> to publish releases via Github Actions.
 
 ## Versioning
 
 We have to update two `versions` in two `package.json`s.
 We have a helper script so run the following commands.
 
-New pre-release of new minor version:
+**IMPORTANT**: You need to have clean git status (no unstaged changes etc.).
+
+### Beta Release
+
+New pre-release of new minor version, such as `v0.1.0-12`
 
 ```bash
 yarn run version:preminor
 ```
 
-In the default yarn versioning, there are no alpha or beta releases.
-Only prereleases, such as `v0.1.0-12`.
+### Production Release
 
-## Channels
+To release a new patch for a production version:
 
-Unfortunatly, electron builder considers the pre-version suffix `-12` as an own channel.
-So we specify channel in the `package.json` to ensure that there is only one channel.
-
-```json
-  "channel": "latest"
+```bash
+yarn run version:patch
 ```
 
 ## Deployment via GitHub Actions (CI)
