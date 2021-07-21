@@ -252,7 +252,7 @@
     "@observablehq/plot": "^0.1.0",
     "@sentry/electron": "^2.5.0",
     "@tippyjs/react": "^4.2.5",
-    "@visx/group": "^1.7.0",
+    "@visx/group": "^1.17.1",
     "@visx/heatmap": "^1.7.0",
     "@visx/mock-data": "^1.7.0",
     "@visx/responsive": "^1.10.1",

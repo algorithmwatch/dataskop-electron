@@ -2287,7 +2287,7 @@
     "@typescript-eslint/types" "4.17.0"
     eslint-visitor-keys "^2.0.0"
 
-"@visx/group@1.7.0", "@visx/group@^1.7.0":
+"@visx/group@1.7.0":
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/@visx/group/-/group-1.7.0.tgz#e0ef2efbe00ef05326215d65b3d8a2b114df4f35"
   integrity sha512-rzSXtV0+MHUyK+rwhVSV4qaHdzGi3Me3PRFXJSIAKVfoJIZczOkudUOLy34WvSrRlVyoFvGL7k9U5g8wHyY3nw==
@@ -2295,6 +2295,15 @@
     "@types/classnames" "^2.2.9"
     "@types/react" "*"
     classnames "^2.2.5"
+    prop-types "^15.6.2"
+
+"@visx/group@^1.17.1":
+  version "1.17.1"
+  resolved "https://registry.yarnpkg.com/@visx/group/-/group-1.17.1.tgz#23818d3233511dc2360de4febc2a3ecd43c3c9d0"
+  integrity sha512-g8pSqy8TXAisiOzypnVycDynEGlBhfxtVlwDmsbYB+XSFGEjnOheQSDohDI+ia7ek54Mw9uYe05tx5kP1hRMYw==
+  dependencies:
+    "@types/react" "*"
+    classnames "^2.3.1"
     prop-types "^15.6.2"
 
 "@visx/heatmap@^1.7.0":
