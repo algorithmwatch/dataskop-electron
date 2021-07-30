@@ -200,7 +200,7 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
                 <p>
                   Hier wollen wir untersuchen, ob die Empfehlungen bei der sich
                   schnell verändernden Nachrichtenauswahl, deutlich
-                  personalisiert werden, Dabei interessiert und vor allem auch
+                  personalisiert werden, dabei interessiert uns vor allem auch
                   die Vergleichsmöglichkeit zwischen den Empfehlungen, wenn Du
                   eingeloggt bist und wenn Du es nicht bist.
                 </p>
