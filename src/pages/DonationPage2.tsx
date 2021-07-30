@@ -90,10 +90,9 @@ export default function DonationPage2(): JSX.Element {
         <div className="hl-4xl mb-6">Du hast es fast geschafft!</div>
         <div className="space-y-4">
           <p>
-            Gebe deine E-Mail-Adresse ein. Damit wird für dich ein
-            DataSkop-Konto eingerichtet. Im Anschluss erhältst du eine E-Mail
-            mit einem Link, den du bestätigen musst. Bitte schaue in dein
-            Postfach.
+            Gib deine E-Mail-Adresse ein. Damit wird für dich ein DataSkop-Konto
+            eingerichtet. Im Anschluss erhältst du eine E-Mail mit einem Link,
+            den du bestätigen musst. Bitte schaue in dein Postfach.
           </p>
           <p>Die Datenspende ist nach diesem Schritt abgeschlossen.</p>
           {status.length > 0 && <div className="text-red-700">{status}</div>}

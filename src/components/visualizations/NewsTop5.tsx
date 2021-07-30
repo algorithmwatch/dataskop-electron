@@ -199,7 +199,7 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
               <Infobox classname="mt-6">
                 <p>
                   Hier wollen wir untersuchen, ob die Empfehlungen bei der sich
-                  schnell verändernden Nachrichtenauswahl, deutlich
+                  schnell verändernden Nachrichtenauswahl deutlich
                   personalisiert werden, dabei interessiert uns vor allem auch
                   die Vergleichsmöglichkeit zwischen den Empfehlungen, wenn Du
                   eingeloggt bist und wenn Du es nicht bist.

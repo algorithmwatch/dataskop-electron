@@ -101,7 +101,7 @@ export default function DonationPage1(): JSX.Element {
               <li>
                 Die von dir gespendeten Daten werden unter strengen
                 Datenschutzvorschriften Forscher*innen der Europa-Universät
-                Viadrina sowie Datenjournalist*innen von Der Spiegel zur
+                Viadrina sowie Datenjournalist*innen von Der Spiegel zur
                 Auswertung weiter übergeben.
               </li>
               <li>
