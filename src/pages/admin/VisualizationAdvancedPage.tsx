@@ -4,9 +4,6 @@ import { useHistory, useParams } from 'react-router-dom';
 import Button from '../../components/Button';
 import MyData from '../../components/visualizations/MyData';
 import Profile from '../../components/visualizations/profile';
-import RecommenderMap from '../../components/visualizations/RecommenderMap';
-import SmallMultipleChart from '../../components/visualizations/SmallMultipleChart';
-import StatisticsChart from '../../components/visualizations/StatisticsChart';
 import { useConfig } from '../../contexts/config';
 import { getLookups, getScrapingResultsBySession } from '../../db';
 
@@ -17,14 +14,7 @@ export default function VisualizationAdvancedPage() {
     state: { isDebug },
   } = useConfig();
 
-  const visCompOptions = [
-    'small-multiple',
-    'profile',
-    'statistics',
-    'recommender-map',
-    'news-top5',
-    'mydata',
-  ];
+  const visCompOptions = ['profile', 'mydata'];
   const [visComp, setVisComp] = useState(visCompOptions[0]);
 
   const history = useHistory();
@@ -67,15 +57,6 @@ export default function VisualizationAdvancedPage() {
         </FormControl>
       </div>
       <div className="overflow-y-auto h-full">
-        {visComp === 'small-multiple' && data && (
-          <SmallMultipleChart data={data.results} />
-        )}
-        {visComp === 'statistics' && data && (
-          <StatisticsChart data={data.results} />
-        )}
-        {visComp === 'recommender-map' && data && (
-          <RecommenderMap data={data.results} />
-        )}
         {visComp === 'profile' && data && (
           <Profile data={data.results} lookups={data.lookups} />
         )}

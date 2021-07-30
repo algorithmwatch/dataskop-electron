@@ -12,8 +12,6 @@ updates:
       - dependency-name: "prettier"
       - dependency-name: "typescript"
     ignore:
-      # Ignore victory since the updates comes very frequently
-      - dependency-name: "victory"
       - dependency-name: "electron"
         update-types: ["version-update:semver-major"]
       - dependency-name: "tailwindcss"

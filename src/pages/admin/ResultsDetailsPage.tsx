@@ -45,7 +45,7 @@ export default function ResultsDetailsPage() {
             )
           }
         >
-          Show visualizations
+          Show profile visualizations
         </Button>
         <Button
           onClick={() =>
