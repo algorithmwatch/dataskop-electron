@@ -97,7 +97,7 @@ const trySeveralTimes = async (
   isDoneCheck: null | ((arg0: ScrapingResult, arg1: number) => boolean) = null,
   enableLogging = false,
   numTries = 3,
-  baseTimeout = 8,
+  baseTimeout = 13,
   timeout = 1000,
   slugPrefix = 'yt',
 ) => {
