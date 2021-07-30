@@ -1,11 +1,9 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import {
   faBars,
   faFileContract,
   faInfoCircle,
   faPaperPlane,
-  faUserSecret
+  faUserSecret,
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
@@ -38,16 +36,9 @@ export default function Base({
   const {
     state: { demoMode },
   } = useScraping();
-  const [logoClicked, setLogoClicked] = useState(0);
   const {
-    dispatch: dispatchConfig,
     state: { version },
   } = useConfig();
-  const handleLogoClicked = () => {
-    if (logoClicked > 3) {
-      dispatchConfig({ type: 'show-advanced-menu' });
-    } else setLogoClicked(logoClicked + 1);
-  };
   const sidebarMenu = [
     {
       label: 'Über',
@@ -134,12 +125,7 @@ export default function Base({
         })}
       >
         <div>
-          <img
-            src={logo}
-            style={{ width: '8rem' }}
-            alt="Dataskop Logo"
-            onClick={handleLogoClicked}
-          />
+          <img src={logo} style={{ width: '8rem' }} alt="Dataskop Logo" />
         </div>
         {version.includes('beta') && (
           <div className="ml-3 text-sm bg-yellow-300 px-1.5 py-0.5 text-yellow-1300">

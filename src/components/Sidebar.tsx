@@ -1,7 +1,9 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { IconDefinition } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
-import React from 'react';
+import React, { useState } from 'react';
 import routes from '../constants/routes.json';
 import { useConfig } from '../contexts/config';
 import AdvancedMenu from './AdvancedMenu';
@@ -21,7 +23,16 @@ export default function Sidebar({
 }): JSX.Element | null {
   const {
     state: { version, showAdvancedMenu },
+    dispatch,
   } = useConfig();
+
+  // click the version to unlock the advanced menu
+  const [versionClicked, setVersionClicked] = useState(0);
+  const handleversionClicked = () => {
+    if (versionClicked > 2) {
+      dispatch({ type: 'show-advanced-menu' });
+    } else setVersionClicked(versionClicked + 1);
+  };
 
   const sidebarClasses = classNames({
     'w-80 fixed inset-y-0 bg-yellow-300 z-50': true,
@@ -85,7 +96,10 @@ export default function Sidebar({
             </div>
           )}
 
-          <div className="text-sm text-yellow-1100">
+          <div
+            className="text-sm text-yellow-1100"
+            onClick={handleversionClicked}
+          >
             DataSkop
             <br />
             Version: {version}
