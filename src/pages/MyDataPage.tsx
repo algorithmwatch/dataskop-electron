@@ -48,7 +48,9 @@ export default function MyDataPage(): JSX.Element {
           <div className="text-center space-y-4 max-w-md">
             <div className="hl-3xl">Die Demo ist hier zu Ende</div>
             <p>
-              Wenn Du Dataskop mit einer Datenspende unterstützen möchtest,{' '}
+              <span className="line-through">
+                Wenn Du Dataskop mit einer Datenspende unterstützen möchtest,
+              </span>{' '}
               <Link
                 to={routes.ONBOARDING_1}
                 className="underline hover:no-underline text-blue-600"
@@ -56,6 +58,10 @@ export default function MyDataPage(): JSX.Element {
                 melde Dich bitte mit deinem YouTube-Konto an
               </Link>
               .
+            </p>
+            <p>
+              Hinweis: Es können keine Daten mehr gespendet werden – die
+              Software kann aber weiterhin vollumfänglich genutzt werden.
             </p>
             <ContactContainer />
           </div>

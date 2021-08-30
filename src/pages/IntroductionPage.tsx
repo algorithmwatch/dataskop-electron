@@ -35,6 +35,11 @@ export default function IntroductionPage(): JSX.Element {
           Bundestagswahl?
         </div>
         <div className="space-y-4">
+          <p className="hl-xl">
+            Hinweis: Es können keine Daten mehr gespendet werden – die Software
+            kann aber weiterhin vollumfänglich genutzt werden.
+          </p>
+
           <p>
             Willkommen beim Premierenprojekt der Datenspendeplattform DataSkop!
             In den nächsten 15 Minuten ergründen wir gemeinsam mit dir dein
