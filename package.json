@@ -276,7 +276,7 @@
     "react-json-view": "^1.21.3",
     "react-modal": "^3.14.3",
     "react-rnd": "^10.3.4",
-    "react-router-dom": "^5.2.0",
+    "react-router-dom": "^5.2.1",
     "react-use": "^17.2.4",
     "react-window": "^1.8.6",
     "regenerator-runtime": "^0.13.9",
