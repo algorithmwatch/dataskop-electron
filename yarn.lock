@@ -5381,9 +5381,9 @@ electron-updater@^4.3.10:
     semver "^7.3.5"
 
 electron@12:
-  version "12.0.16"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-12.0.16.tgz#f2e96fe664b305f68d967591ee32e52df085b59f"
-  integrity sha512-h8OKl+/QN31G6jXJsH9ifCBf/iJLlse9sivEFyGsNSb9VZ+y1JPnxtvVqrLwyOXv97XTvOU9DfWogNiKsBHspQ==
+  version "12.0.18"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-12.0.18.tgz#34e0106567eaf1a3b2a277126d5684463970a966"
+  integrity sha512-1WZiCFHBA83thPp/o6Sh9obwKQf5AvKQn8UuRS2m56fqgs+ss5TKv6lgsUUm2BqvfTXjZCsOku2eSKROF934XA==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^14.6.2"
