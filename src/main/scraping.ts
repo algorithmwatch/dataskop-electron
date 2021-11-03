@@ -5,7 +5,7 @@
 import crypto from 'crypto';
 import { BrowserView, BrowserWindow, ipcMain } from 'electron';
 import { range } from 'lodash';
-import { delay } from '../utils/time';
+import { delay } from '../renderer/utils/time';
 
 let scrapingView: BrowserView | null = null;
 
@@ -25,7 +25,6 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
       const newView = new BrowserView({
         webPreferences: {
-          contextIsolation: false,
           partition: 'scraping',
           backgroundThrottling: false,
         },
@@ -172,7 +171,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       // TODO: find a better event?
       const navEvent = 'page-title-updated';
       const cb = () => {
-        event.sender.send(cbSlug);
+        mainWindow.webContents.send(cbSlug);
       };
 
       if (remove) {

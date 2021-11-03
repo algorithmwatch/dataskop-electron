@@ -1,0 +1,19 @@
+{
+  "name": "dataskop-electron",
+  "productName": "DataSkop",
+  "version": "0.1.10",
+  "description": "DataSkop Electron App: The Personal Data Dashboard (PeDD) of DataSkop",
+  "main": "./dist/main/main.js",
+  "author": {
+    "name": "AW AlgorithmWatch gGmbH",
+    "email": "it@algorithmwatch.org",
+    "url": "https://algorithmwatch.org"
+  },
+  "scripts": {
+    "electron-rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
+    "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.js",
+    "postinstall": "npm run electron-rebuild && npm run link-modules"
+  },
+  "license": "MIT",
+  "dependencies": {}
+}

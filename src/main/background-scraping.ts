@@ -6,12 +6,14 @@ import crypto from 'crypto';
 import { BrowserWindow, ipcMain, session } from 'electron';
 import fetch from 'electron-fetch';
 import pLimit from 'p-limit';
-import { getVideoUrl } from '../providers/youtube/utils';
+// import { getVideoUrl } from 'renderer/providers/youtube/utils';
+
+const getVideoUrl = (id: string) => `https://www.youtube.com/watch?v=${id}`;
 
 let backgroundScrapingWindow: null | BrowserWindow = null;
 
 export default function registerBackgroundScrapingHandlers() {
-  ipcMain.handle('scraping-background-init', (_event, videoIds) => {
+  ipcMain.handle('scraping-background-init', (_event) => {
     backgroundScrapingWindow = new BrowserWindow({
       show: false,
       width: 1280,
@@ -19,8 +21,6 @@ export default function registerBackgroundScrapingHandlers() {
       webPreferences: {
         session: session.fromPartition('background-scraping'),
         backgroundThrottling: false,
-        nodeIntegration: true,
-        contextIsolation: false,
       },
     });
     return backgroundScrapingWindow.loadURL('https://youtube.com');

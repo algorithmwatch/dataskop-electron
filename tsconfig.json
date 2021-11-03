@@ -1,15 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
-    "module": "CommonJS",
-    "lib": ["dom", "esnext"],
+    "target": "es2021",
+    "module": "commonjs",
+    "lib": [
+      "dom",
+      "esnext"
+    ],
     "declaration": true,
     "declarationMap": true,
-    "noEmit": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "strict": true,
     "pretty": true,
     "sourceMap": true,
+    "baseUrl": "./src",
     /* Additional Checks */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -20,14 +23,13 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "allowJs": true
+    "allowJs": true,
+    "outDir": "release/app/dist",
   },
   "exclude": [
     "test",
-    "release",
-    "src/main.prod.js",
-    "src/renderer.prod.js",
-    "src/dist",
-    ".erb/dll"
+    "release/build",
+    "release/app/dist",
+    ".erb/dll",
   ]
 }
