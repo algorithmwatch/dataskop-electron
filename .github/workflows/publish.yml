@@ -1,4 +1,4 @@
-name: Publish
+name: Publish release
 
 # Build on Linux for Linux + Windows, and on macOS for macOS in order to keep precious macOS-usage down (10x more expensive).
 
@@ -31,41 +31,31 @@ jobs:
       - name: Set current version (in tag)
         run: echo "GITHUB_TAG_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
-      - name: Install Node, NPM and Yarn
+      - name: Install Node and NPM
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 16
 
-      # NB: it used to work w/o "always-auth=true" but it's now required
       - name: Setup NPM auth token for font awesome pro & github packages
         run: >
-          echo "always-auth=true" >> .npmrc &&
           echo "//npm.fontawesome.com/:_authToken=${{ secrets.FONT_AWESOME_TOKEN }}" >> .npmrc &&
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_PACKAGES_TOKEN }}" >> .npmrc
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - uses: actions/cache@v2
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      # - Using cached `node_modules`
-      # - not running dev `postinstall` (used for dev)
-      # - we need `yarn install` to t
       - name: Install dependencies
-        run: yarn install --prefer-offline --frozen-lockfile --network-timeout 300000
-        env:
-          NOYARNPOSTINSTALL: 1
+        run: npm ci --ignore-scripts
 
-      - name: Postinstall for prod
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn run postinstall:prod
+      # TODO: check if this works right now
+      # # - Using cached `node_modules`
+      # # - not running dev `postinstall` (used for dev)
+      # # - we need `yarn install` to t
+      # - name: Install dependencies
+      #   run: yarn install --prefer-offline --frozen-lockfile --network-timeout 300000
+      #   env:
+      #     NOYARNPOSTINSTALL: 1
+
+      # - name: Postinstall for prod
+      #   if: steps.yarn-cache.outputs.cache-hit != 'true'
+      #   run: yarn run postinstall:prod
 
       # further below, we set ENV values for renderer + main
       # (maybe this can be fixed to always use this .env files)
@@ -98,12 +88,13 @@ jobs:
         run: >
           if [ "$RUNNER_OS" == "Linux" ]; then TARGET="--linux --win"; else TARGET="--mac"; fi &&
           if [[ $GITHUB_TAG_VERSION == *"beta"* ]]; then SENTRY_DSN="${{ secrets.SENTRY_DSN }}"; else SENTRY_DSN=""; fi &&
-          yarn cross-env SENTRY_DSN=$SENTRY_DSN UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }} yarn build &&
-          yarn electron-builder --publish always $TARGET
+          npm run postinstall &&
+          cross-env SENTRY_DSN=$SENTRY_DSN UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }} npm run build &&
+          npm exec electron-builder -- --publish always $TARGET
 
-      # Add the notification step as the last one
+      # Only notification for macOS since this runner takes usually the longest.
       - uses: "marvinpinto/action-keybase-notifications@latest"
-        if: runner.os == 'Linux'
+        if: runner.os == 'macOS'
         with:
           job_status: ${{ job.status }}
           opensentinel_token: ${{ secrets.OSL_TOKEN }}
