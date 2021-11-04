@@ -15,8 +15,15 @@
     "start:main": "cross-env NODE_ENV=development electron -r ts-node/register/transpile-only  ./src/main/main.ts",
     "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
     "test": "jest",
+    "cross-env": "cross-env",
     "format": "prettier --write .",
-    "ytschema": "./node_modules/.bin/ts-json-schema-generator --path './src/providers/youtube/types.ts' --type 'YtScrapingConfig' --out './src/providers/youtube/validation/scraping-config-validation.json' && prettier --write './src/providers/youtube/validation/scraping-config-validation.json'"
+    "ytschema": "./node_modules/.bin/ts-json-schema-generator --path './src/providers/youtube/types.ts' --type 'YtScrapingConfig' --out './src/providers/youtube/validation/scraping-config-validation.json' && prettier --write './src/providers/youtube/validation/scraping-config-validation.json'",
+    "version:pre": "cd release/app && npm version prerelease --no-git-tag-version --preid beta && cd ../.. && npm version prerelease --no-git-tag-version --preid beta",
+    "version:preminor": "cd release/app && npm version preminor --no-git-tag-version --preid beta && cd ../.. && npm version preminor --no-git-tag-version --preid beta",
+    "version:prepatch": "cd release/app && npm version prepatch --no-git-tag-version --preid beta && cd ../.. && npm version prepatch --no-git-tag-version --preid beta",
+    "version:minor": "cd release/app && npm version minor --no-git-tag-version && cd ../.. && npm version minor --no-git-tag-version",
+    "version:patch": "cd release/app && npm version patch --no-git-tag-version && cd ../.. && npm version patch --no-git-tag-version",
+    "postversion": "./scripts/postversion.sh $npm_package_version"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -288,7 +295,7 @@
     "uuid": "^8.3.1"
   },
   "devEngines": {
-    "node": ">=14.x",
+    "node": ">=16.x",
     "npm": ">=7.x"
   },
   "browserslist": [],

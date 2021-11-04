@@ -23,7 +23,7 @@ To install all private packages (location as GitHub Packages):
 //npm.pkg.github.com/:_authToken=thetoken
 ```
 
-Finally, restart your terminal and proceed:
+Finally, restart your terminal and proceed.
 
 #### Setup Font Awesome Pro
 
@@ -37,14 +37,12 @@ You may add the following (replace the token) to aforementioned `~/.npmrc`:
 
 ### Installation
 
-First, install [yarn](https://yarnpkg.com/getting-started/install).
-
-Then, clone the repo via git and install dependencies:
+First, install Node v16+. Then, clone the repo via git and install dependencies:
 
 ```bash
 git clone git@github.com:algorithmwatch/dataskop-electron.git
 cd dataskop-electron
-yarn install
+npm i
 ```
 
 We are storing large files in this repositry wit git-lfs.
@@ -56,20 +54,20 @@ We recommend [VS Code](https://code.visualstudio.com/) as text editor.
 VS Code will automatically format the code and manage imports when you save a file.
 
 ```bash
-yarn start
+npm start
 ```
 
 This starts the renderer process in [**hot-module-replacement**](https://webpack.js.org/guides/hmr-react/) mode and starts a webpack dev server that sends hot updates to the renderer process.
 
 ### Static Files
 
-Put static files used insige the app in `src/static` and not in `resources`.
+Put static files used insige the app in `src/renderer/static` and not in `resources`.
 The latter is only used for the application icon.
 
 ## Tests
 
 ```bash
-yarn test
+npm test
 ```
 
 Pay attention to the error messages and run the required commands.
@@ -81,13 +79,13 @@ Pay attention to the error messages and run the required commands.
 To package apps for the local platform:
 
 ```bash
-yarn package
+npm run package
 ```
 
 To debug a production build:
 
 ```bash
-yarn cross-env DEBUG_PROD=true yarn package
+npm run cross-env DEBUG_PROD=true npm run package
 ```
 
 ### Production

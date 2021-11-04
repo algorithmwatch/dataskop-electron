@@ -13,7 +13,7 @@ set -x
 
 if [ "$(git diff --name-only --cached | wc -l)" -eq "0" ]; then
   git add package.json
-  git add 'src/package.json'
+  git add 'release/app/package.json'
 
   if [ "$(git diff --name-only --cached | wc -l)" -eq "2" ]; then
     git commit --no-verify -m "v$1"

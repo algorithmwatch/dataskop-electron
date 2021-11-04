@@ -9,7 +9,7 @@ There is a hard-to-reprocude bug with indexdb: https://github.com/dfahlander/Dex
 This
 
 ```
-yarn rebuild && yarn start
+npm run rebuild && npm start
 ```
 
 seems to fix it. However, all the data is lost. :/

@@ -89,7 +89,7 @@ jobs:
           if [ "$RUNNER_OS" == "Linux" ]; then TARGET="--linux --win"; else TARGET="--mac"; fi &&
           if [[ $GITHUB_TAG_VERSION == *"beta"* ]]; then SENTRY_DSN="${{ secrets.SENTRY_DSN }}"; else SENTRY_DSN=""; fi &&
           npm run postinstall &&
-          cross-env SENTRY_DSN=$SENTRY_DSN UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }} npm run build &&
+          npm run cross-env SENTRY_DSN=$SENTRY_DSN UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }} npm run build &&
           npm exec electron-builder -- --publish always $TARGET
 
       # Only notification for macOS since this runner takes usually the longest.
