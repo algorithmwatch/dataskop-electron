@@ -13,7 +13,7 @@ import { ScrapingConfig } from '../../providers/types';
 import {
   activateWatchHistory,
   deactivateWatchHistory,
-} from '../../providers/youtube/actions/manage-watch-history';
+} from '../../providers/youtube/lib/actions/manage-watch-history';
 
 export default function AdvancedScrapingPage(): JSX.Element {
   const {

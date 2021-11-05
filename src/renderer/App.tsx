@@ -1,53 +1,3 @@
-// import { MemoryRouter as Router, Route, Switch } from 'react-router-dom';
-// // import './App.css';
-
-// const Hello = () => {
-//   return (
-//     <div>
-//       <div className="Hello"></div>
-//       <h1>electron-react-boilerplate</h1>
-//       <div className="Hello">
-//         <a
-//           href="https://electron-react-boilerplate.js.org/"
-//           target="_blank"
-//           rel="noreferrer"
-//         >
-//           <button type="button">
-//             <span role="img" aria-label="books">
-//               📚
-//             </span>
-//             Read our docs
-//           </button>
-//         </a>
-//         <a
-//           href="https://github.com/sponsors/electron-react-boilerplate"
-//           target="_blank"
-//           rel="noreferrer"
-//         >
-//           <button type="button">
-//             <span role="img" aria-label="books">
-//               🙏
-//             </span>
-//             Donate
-//           </button>
-//         </a>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default function App() {
-//   // window.electron.ipcRenderer.myPing();
-
-//   return (
-//     <Router>
-//       <Switch>
-//         <Route path="/" component={Hello} />
-//       </Switch>
-//     </Router>
-//   );
-// }
-
 import {
   BrowserRouter as Router,
   Redirect,
@@ -58,10 +8,12 @@ import './App.global.css';
 import ScrapingAttached from './components/scraping/ScrapingAttached';
 import UpdateNotification from './components/UpdateNotification';
 import routes from './constants/routes.json';
-import { ConfigProvider } from './contexts/config';
-import { ModalProvider } from './contexts/modal';
-import { NavigationProvider } from './contexts/navigation';
-import { ScrapingProvider } from './contexts/scraping';
+import {
+  ConfigProvider,
+  ModalProvider,
+  NavigationProvider,
+  ScrapingProvider,
+} from './contexts';
 import BaseLayout from './layout/Base';
 import ResultsDetailsPage from './pages/admin/ResultsDetailsPage';
 import ResultsPage from './pages/admin/ResultsPage';
@@ -70,22 +22,8 @@ import ScrapingConfigEditorPage from './pages/admin/ScrapingConfigEditorPage';
 import SettingsPage from './pages/admin/SettingsPage';
 import VisualizationAdvancedPage from './pages/admin/VisualizationAdvancedPage';
 import VisualizationExperimentsPage from './pages/admin/VisualizationExperimentsPage';
-import DonationPage1 from './pages/DonationPage1';
-import DonationPage2 from './pages/DonationPage2';
-import DonationSuccessPage from './pages/DonationSuccessPage';
-import InterfaceTutorialPage from './pages/InterfaceTutorialPage';
-import IntroductionPage from './pages/IntroductionPage';
-import MyDataPage from './pages/MyDataPage';
-import OnboardingPage1 from './pages/OnboardingPage1';
-import OnboardingPage2 from './pages/OnboardingPage2';
-import QuestionnairePage from './pages/QuestionnairePage';
-import ResearchInfoPage from './pages/ResearchInfoPage';
-import ScrapingExplanationPage from './pages/ScrapingExplanationPage';
 import StartPage from './pages/StartPage';
-import VisualizationAutoplayChainPage from './pages/VisualizationAutoplayChainPage';
-import VisualizationNewsPage from './pages/VisualizationNewsPage';
-import VisualizationProfilePage from './pages/VisualizationProfilePage';
-import VisualizationSearchPage from './pages/VisualizationSearchPage';
+import ytRoutes from './providers/youtube/routes';
 
 export default function App() {
   return (
@@ -123,59 +61,10 @@ export default function App() {
                   {/*
                   Sections:
                 */}
-                  <Route
-                    path={routes.DONATION_SUCCESS}
-                    component={DonationSuccessPage}
-                  />
-                  <Route path={routes.DONATION2} component={DonationPage2} />
-                  <Route path={routes.DONATION1} component={DonationPage1} />
-                  <Route
-                    path={routes.QUESTIONNAIRE}
-                    component={QuestionnairePage}
-                  />
-                  <Route path={routes.MY_DATA} component={MyDataPage} />
-                  <Route
-                    path={routes.VISUALIZATION_SEARCH}
-                    component={VisualizationSearchPage}
-                  />
-                  <Route
-                    path={routes.VISUALIZATION_NEWS}
-                    component={VisualizationNewsPage}
-                  />
-                  <Route
-                    path={routes.VISUALIZATION_AUTOPLAYCHAIN}
-                    component={VisualizationAutoplayChainPage}
-                  />
-                  <Route
-                    path={routes.RESEARCH_INFO}
-                    component={ResearchInfoPage}
-                  />
-                  <Route
-                    path={routes.VISUALIZATION_PROFILE}
-                    component={VisualizationProfilePage}
-                  />
-                  <Route
-                    path={routes.SCRAPING_EXPLANATION}
-                    component={ScrapingExplanationPage}
-                  />
-                  <Route
-                    path={routes.INTERFACE_TUTORIAL}
-                    component={InterfaceTutorialPage}
-                  />
-                  <Route
-                    path={routes.ONBOARDING_2}
-                    component={OnboardingPage2}
-                  />
-                  <Route
-                    path={routes.ONBOARDING_1}
-                    component={OnboardingPage1}
-                  />
-                  <Route
-                    path={routes.INTRODUCTION}
-                    component={IntroductionPage}
-                  />
+                  {Object.values(ytRoutes).map(({ path, comp }) => (
+                    <Route path={path} component={comp} />
+                  ))}
                   <Route path={routes.START} component={StartPage} />
-
                   <Route path="/">
                     <Redirect to={routes.START} />
                   </Route>

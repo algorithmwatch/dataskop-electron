@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import AutoplayChain from '../../components/visualizations/AutoplayChain';
-import NewsTop5 from '../../components/visualizations/NewsTop5';
-import SearchResultsCompare from '../../components/visualizations/SearchResultsCompare';
 import { useConfig } from '../../contexts/config';
 import { getScrapingResultsBySession } from '../../db';
+import AutoplayChain from '../../providers/youtube/components/visualizations/AutoplayChain';
+import NewsTop5 from '../../providers/youtube/components/visualizations/NewsTop5';
+import SearchResultsCompare from '../../providers/youtube/components/visualizations/SearchResultsCompare';
 
 interface LocationState {
   sessionId: string;

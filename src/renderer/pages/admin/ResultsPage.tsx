@@ -14,7 +14,7 @@ import {
   importSessionRows,
 } from '../../db';
 import { ScrapingResultSaved } from '../../db/types';
-import { getVideos } from '../../providers/youtube/utils';
+import { getVideos } from '../../providers/youtube/lib/utils';
 
 const invokeExport = async () => {
   const filename = `dataskop-${dayjs().format('YYYY-MM-DD-HH-mm-s')}.json`;

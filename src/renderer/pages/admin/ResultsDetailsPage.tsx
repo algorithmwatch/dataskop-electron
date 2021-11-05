@@ -6,7 +6,7 @@ import ResultsDetails from '../../components/results/ResultDetails';
 import routes from '../../constants/routes.json';
 import { useScraping } from '../../contexts';
 import { getLookups, getScrapingResultsBySession } from '../../db';
-import { filterLookupBySession } from '../../providers/youtube/utils';
+import { filterLookupBySession } from '../../providers/youtube/lib/utils';
 
 export default function ResultsDetailsPage() {
   const { sessionId }: { sessionId: string } = useParams();

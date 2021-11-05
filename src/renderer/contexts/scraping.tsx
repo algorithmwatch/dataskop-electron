@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import React from 'react';
 import { Campaign, ScrapingConfig } from 'renderer/providers/types';
-import demoData from '../constants/demo.json';
-import { defaultConfig } from '../providers/youtube';
+import { defaultConfig } from '../providers/youtube/';
+import demoData from '../providers/youtube/static/demo.json';
 
 export type ScrapingProgress = {
   isActive: boolean;

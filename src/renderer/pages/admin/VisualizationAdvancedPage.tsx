@@ -2,10 +2,10 @@ import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import Button from '../../components/Button';
-import MyData from '../../components/visualizations/MyData';
-import Profile from '../../components/visualizations/profile';
 import { useConfig } from '../../contexts/config';
 import { getLookups, getScrapingResultsBySession } from '../../db';
+import MyData from '../../providers/youtube/components/visualizations/MyData';
+import Profile from '../../providers/youtube/components/visualizations/profile';
 
 export default function VisualizationAdvancedPage() {
   const [data, setData] = useState<any>(null);

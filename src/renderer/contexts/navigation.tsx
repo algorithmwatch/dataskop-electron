@@ -1,6 +1,5 @@
 import React from 'react';
-// started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
-import routes from '../constants/routes.json';
+import { navigationConfig } from 'renderer/providers/youtube/routes';
 
 type Action = { type: 'set-page-index'; pageIndex: number };
 type Dispatch = (action: Action) => void;
@@ -36,87 +35,10 @@ function NavigationReducer(state: State, action: Action): State {
 
 function NavigationProvider({ children }: NavigationProviderProps) {
   // initial value gets overriden with `useEffect`
-  const [state, dispatch] = React.useReducer(NavigationReducer, {
-    pageIndex: 0,
-    pages: [
-      {
-        path: routes.START,
-        sectionKey: null,
-      },
-      {
-        path: routes.INTRODUCTION,
-        sectionKey: null,
-      },
-      {
-        path: routes.ONBOARDING_1,
-        sectionKey: null,
-      },
-      {
-        path: routes.ONBOARDING_2,
-        sectionKey: null,
-      },
-      {
-        path: routes.INTERFACE_TUTORIAL,
-        sectionKey: routes.INTERFACE_TUTORIAL,
-      },
-      {
-        path: routes.SCRAPING_EXPLANATION,
-        sectionKey: routes.SCRAPING_EXPLANATION,
-      },
-      {
-        path: routes.VISUALIZATION_PROFILE,
-        sectionKey: routes.VISUALIZATION_PROFILE,
-      },
-      {
-        path: routes.RESEARCH_INFO,
-        sectionKey: routes.RESEARCH_INFO,
-      },
-      {
-        path: routes.VISUALIZATION_AUTOPLAYCHAIN,
-        sectionKey: routes.VISUALIZATION_AUTOPLAYCHAIN,
-      },
-      {
-        path: routes.VISUALIZATION_NEWS,
-        sectionKey: routes.VISUALIZATION_NEWS,
-      },
-      {
-        path: routes.VISUALIZATION_SEARCH,
-        sectionKey: routes.VISUALIZATION_SEARCH,
-      },
-      {
-        path: routes.MY_DATA,
-        sectionKey: routes.MY_DATA,
-      },
-      {
-        path: routes.QUESTIONNAIRE,
-        sectionKey: routes.QUESTIONNAIRE,
-      },
-      {
-        path: routes.DONATION1,
-        sectionKey: routes.DONATION1,
-      },
-      {
-        path: routes.DONATION2,
-      },
-      {
-        path: routes.DONATION_SUCCESS,
-        sectionKey: routes.DONATION_SUCCESS,
-      },
-    ],
-    sections: {
-      [routes.INTERFACE_TUTORIAL]: { label: 'Die Benutzeroberfläche' },
-      [routes.SCRAPING_EXPLANATION]: { label: 'Wie funktioniert Scraping?' },
-      [routes.VISUALIZATION_PROFILE]: { label: 'Mein YouTube-Profil' },
-      [routes.RESEARCH_INFO]: { label: 'Was wir untersuchen' },
-      [routes.VISUALIZATION_AUTOPLAYCHAIN]: { label: 'AutoPlay Viz' },
-      [routes.VISUALIZATION_NEWS]: { label: 'News Viz' },
-      [routes.VISUALIZATION_SEARCH]: { label: 'Search Viz' },
-      [routes.MY_DATA]: { label: 'Meine Daten' },
-      [routes.QUESTIONNAIRE]: { label: 'Umfrage' },
-      [routes.DONATION1]: { label: 'Die Datenspende' },
-      [routes.DONATION_SUCCESS]: { label: 'Ende' },
-    },
-  });
+  const [state, dispatch] = React.useReducer(
+    NavigationReducer,
+    navigationConfig,
+  );
 
   const getNextPage = (propName?: string) => {
     const nextIndex = state.pageIndex + 1;

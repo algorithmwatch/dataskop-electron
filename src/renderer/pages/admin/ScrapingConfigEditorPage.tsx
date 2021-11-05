@@ -17,7 +17,7 @@ import Button from '../../components/Button';
 import { getStoredScrapingConfigs, modifyScrapingConfig } from '../../db';
 import { ScrapingConfig } from '../../providers/types';
 import { defaultConfig } from '../../providers/youtube';
-import { getValidErrors } from '../../providers/youtube/validation/validate';
+import { getValidErrors } from '../../providers/youtube/lib/validation/validate';
 
 export default function ScrapingConfigEditorPage(): JSX.Element {
   const [rows, setRows] = useState<ScrapingConfig[]>([]);
