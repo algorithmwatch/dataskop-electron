@@ -2,29 +2,15 @@
 
 import * as chrono from 'chrono-node';
 import { mean, rollups, sum } from 'd3-array';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { Lookup, ScrapingResult } from '../../../../../db/types';
 
-const parseDate = (() => {
-  const today = new Date(new Date().setHours(0, 0, 0, 0));
-  const yesterday = new Date(today - 864e5);
-  return (str: string) => {
-    if (str === 'Today') return today;
-    if (str === 'Yesterday') return yesterday;
-    if (str.split(' ').length === 1) {
-      try {
-        return moment().day(str).toDate();
-        // eslint-disable-next-line no-empty
-      } catch {}
-    }
+const parseDate = (str: string, referenceDate: Date) => {
+  const germanDate = chrono.de.parseDate(str, referenceDate);
+  if (germanDate !== null) return germanDate;
 
-    const germanDate = chrono.de.parseDate(str);
-    if (germanDate !== null) return germanDate;
-
-    return chrono.en.parseDate(str);
-  };
-})();
+  return chrono.en.parseDate(str, referenceDate);
+};
 
 export const useData = (raw: Array<ScrapingResult>, lookups: Array<Lookup>) => {
   const [data, setData] = useState({ loading: true });
@@ -42,8 +28,9 @@ export const useData = (raw: Array<ScrapingResult>, lookups: Array<Lookup>) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const referenceDate = new Date(raw[0].scrapedAt);
         const history = slugHistory.map((d) => {
-          const date = parseDate(d.watchedAt);
+          const date = parseDate(d.watchedAt, referenceDate);
           const watchTime = parseInt((d.duration * d.percWatched) / 100 / 1000);
           const detail = lookups.find((l) => l.info.videoId === d.id)?.info;
           return { ...d, date, watchTime, ...detail };
