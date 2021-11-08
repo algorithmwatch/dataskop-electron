@@ -3,10 +3,10 @@ import { useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import Button from '../../components/Button';
 import ResultsDetails from '../../components/results/ResultDetails';
-import routes from '../../constants/routes.json';
 import { useScraping } from '../../contexts';
 import { getLookups, getScrapingResultsBySession } from '../../db';
 import { filterLookupBySession } from '../../providers/youtube/lib/utils';
+import routes from '../../routes';
 
 export default function ResultsDetailsPage() {
   const { sessionId }: { sessionId: string } = useParams();
@@ -34,13 +34,16 @@ export default function ResultsDetailsPage() {
   return (
     <>
       <div className="bg-gray-50 overflow-hidden rounded-lg px-4 py-5 sm:p-6 space-x-4">
-        <Button onClick={() => history.back()}>Go back</Button>
+        <Button onClick={() => history.goBack()}>Go back</Button>
         <Button onClick={invokeExport}>Export session</Button>
 
         <Button
           onClick={() =>
             history.push(
-              routes.VISUALIZATION_ADVANCED.replace(':sessionId', sessionId),
+              routes.VISUALIZATION_ADVANCED.path.replace(
+                ':sessionId',
+                sessionId,
+              ),
             )
           }
         >
@@ -48,7 +51,7 @@ export default function ResultsDetailsPage() {
         </Button>
         <Button
           onClick={() =>
-            history.push(routes.VISUALIZATION_EXPERIMENT, {
+            history.push(routes.VISUALIZATION_EXPERIMENT.path, {
               sessionId,
               type: 'newstop5',
             })
@@ -58,7 +61,7 @@ export default function ResultsDetailsPage() {
         </Button>
         <Button
           onClick={() =>
-            history.push(routes.VISUALIZATION_EXPERIMENT, {
+            history.push(routes.VISUALIZATION_EXPERIMENT.path, {
               sessionId,
               type: 'search-results-compare',
             })
@@ -68,7 +71,7 @@ export default function ResultsDetailsPage() {
         </Button>
         <Button
           onClick={() =>
-            history.push(routes.VISUALIZATION_EXPERIMENT, {
+            history.push(routes.VISUALIZATION_EXPERIMENT.path, {
               sessionId,
               type: 'autoplay-chain',
             })

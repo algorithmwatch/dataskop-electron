@@ -39,7 +39,7 @@ export default function VisualizationAdvancedPage() {
   return (
     <>
       <div className="space-x-4 mb-10 px-6">
-        <Button onClick={() => history.back()}>Go back</Button>
+        <Button onClick={() => history.goBack()}>Go back</Button>
         <FormControl>
           <InputLabel id="demo-simple-select-label">Visualization</InputLabel>
           <Select

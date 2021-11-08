@@ -5,10 +5,10 @@ import { providerToMeta } from 'renderer/providers';
 import { YtScrapingConfig } from 'renderer/providers/youtube';
 import { onlySubmitConsentForm } from 'renderer/providers/youtube/lib/actions/confirm-cookies';
 import { createSingleGenerator } from 'renderer/providers/youtube/lib/procedures/setup';
+import routes from 'renderer/routes';
 import { postSimpleBackend } from 'renderer/utils/networking';
 import { delay } from 'renderer/utils/time';
 import { v4 as uuidv4 } from 'uuid';
-import routes from '../../constants/routes.json';
 import { useConfig, useModal, useScraping } from '../../contexts';
 import {
   addNewSession,
@@ -148,7 +148,7 @@ export default function ScrapingManager({
 
             // go to start after some time
             setTimeout(() => {
-              history.push(routes.START);
+              history.push(routes.START.path);
             }, 2000);
           }
         }

@@ -4,7 +4,8 @@ import { IconDefinition } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { useState } from 'react';
-import routes from '../constants/routes.json';
+import ytRoutes from 'renderer/providers/youtube/routes';
+import routes from 'renderer/routes';
 import { useConfig } from '../contexts/config';
 import AdvancedMenu from './AdvancedMenu';
 
@@ -82,15 +83,18 @@ export default function Sidebar({
               <AdvancedMenu
                 onItemClicked={() => onIsOpenChange(false)}
                 menuItems={[
-                  { label: 'start', to: routes.START },
-                  { label: 'advanced scraping', to: routes.SCRAPING_ADVANCED },
+                  { label: 'start', to: routes.START.path },
+                  {
+                    label: 'advanced scraping',
+                    to: routes.SCRAPING_ADVANCED.path,
+                  },
                   {
                     label: 'scraping config editor',
-                    to: routes.SCRAPING_CONFIG_EDITOR,
+                    to: routes.SCRAPING_CONFIG_EDITOR.path,
                   },
-                  { label: 'results', to: routes.RESULTS },
-                  { label: 'settings', to: routes.SETTINGS },
-                  { label: 'donation', to: routes.DONATION1 },
+                  { label: 'results', to: routes.RESULTS.path },
+                  { label: 'settings', to: routes.SETTINGS.path },
+                  { label: 'yt donation', to: ytRoutes.DONATION1.path },
                 ]}
               />
             </div>

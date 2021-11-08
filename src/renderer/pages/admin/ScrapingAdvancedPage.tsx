@@ -7,13 +7,13 @@ import { makeGetHtml } from '../../components/scraping/ipc';
 import LocalScrapinogConfigSelect from '../../components/scraping/LocalScrapingConfigSelect';
 import RemoteScrapingConfig from '../../components/scraping/RemoteScrapingConfigSelect';
 import ScrapingControls from '../../components/scraping/ScrapingControls';
-import routes from '../../constants/routes.json';
 import { useScraping } from '../../contexts/scraping';
 import { ScrapingConfig } from '../../providers/types';
 import {
   activateWatchHistory,
   deactivateWatchHistory,
 } from '../../providers/youtube/lib/actions/manage-watch-history';
+import routes from '../../routes';
 
 export default function AdvancedScrapingPage(): JSX.Element {
   const {
@@ -55,7 +55,7 @@ export default function AdvancedScrapingPage(): JSX.Element {
           <Button
             onClick={() =>
               history.push(
-                routes.RESULTS_DETAILS.replace(':sessionId', sessionId),
+                routes.RESULTS_DETAILS.path.replace(':sessionId', sessionId),
               )
             }
           >

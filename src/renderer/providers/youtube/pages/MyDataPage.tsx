@@ -3,10 +3,10 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import ContactContainer from 'renderer/components/ContactContaier';
 import ContentWrapper from 'renderer/components/ContentWrapper';
 import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
-import routes from 'renderer/constants/routes.json';
 import { useScraping } from 'renderer/contexts';
 import { useNavigation } from 'renderer/contexts/';
 import VisualizationWrapper from '../components/VisualizationWrapper';
+import routes from '../routes';
 
 export default function MyDataPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -51,7 +51,7 @@ export default function MyDataPage(): JSX.Element {
                 Wenn Du Dataskop mit einer Datenspende unterstützen möchtest,
               </span>{' '}
               <Link
-                to={routes.ONBOARDING_1}
+                to={routes.ONBOARDING_1.path}
                 className="underline hover:no-underline text-blue-600"
               >
                 melde Dich bitte mit deinem YouTube-Konto an

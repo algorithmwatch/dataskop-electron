@@ -13,8 +13,8 @@ import Modal from '../components/Modal';
 import ProcessIndicator from '../components/ProcessIndicator';
 import ScrapingProgressBar from '../components/ScrapingProgressBar';
 import Sidebar from '../components/Sidebar';
-import routes from '../constants/routes.json';
 import { useConfig, useModal, useNavigation, useScraping } from '../contexts';
+import routes from '../routes';
 import logo from '../static/images/logos/dslogo.svg';
 
 export default function Base({
@@ -120,7 +120,7 @@ export default function Base({
       <Modal />
       <header
         className={classNames('flex items-center py-4 px-6 z-20 h-18', {
-          'opacity-0': pathname === routes.START,
+          'opacity-0': pathname === routes.START.path,
         })}
       >
         <div>

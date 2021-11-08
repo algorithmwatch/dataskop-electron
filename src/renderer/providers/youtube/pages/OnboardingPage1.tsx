@@ -4,8 +4,8 @@ import { RouteComponentProps, useHistory } from 'react-router-dom';
 import Button from 'renderer/components/Button';
 import ContentWrapper from 'renderer/components/ContentWrapper';
 import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
-import routes from 'renderer/constants/routes.json';
 import { useConfig, useNavigation, useScraping } from 'renderer/contexts';
+import routes from '../routes';
 
 export default function OnboardingPage1(): JSX.Element {
   const [_showLoginWindow, setShowLoginWindow] = useState(false);
@@ -78,7 +78,7 @@ export default function OnboardingPage1(): JSX.Element {
                 onClick={() => {
                   dispatch({ type: 'set-demo-mode', demoMode: true });
                   sendEvent(campaign, 'clicked use demo data', {});
-                  hist.push(routes.ONBOARDING_2);
+                  hist.push(routes.ONBOARDING_2.path);
                 }}
               >
                 Demo starten

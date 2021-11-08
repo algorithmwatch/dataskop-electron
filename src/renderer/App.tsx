@@ -7,7 +7,6 @@ import {
 import './App.global.css';
 import ScrapingAttached from './components/scraping/ScrapingAttached';
 import UpdateNotification from './components/UpdateNotification';
-import routes from './constants/routes.json';
 import {
   ConfigProvider,
   ModalProvider,
@@ -15,15 +14,8 @@ import {
   ScrapingProvider,
 } from './contexts';
 import BaseLayout from './layout/Base';
-import ResultsDetailsPage from './pages/admin/ResultsDetailsPage';
-import ResultsPage from './pages/admin/ResultsPage';
-import AdvancedScrapingPage from './pages/admin/ScrapingAdvancedPage';
-import ScrapingConfigEditorPage from './pages/admin/ScrapingConfigEditorPage';
-import SettingsPage from './pages/admin/SettingsPage';
-import VisualizationAdvancedPage from './pages/admin/VisualizationAdvancedPage';
-import VisualizationExperimentsPage from './pages/admin/VisualizationExperimentsPage';
-import StartPage from './pages/StartPage';
 import ytRoutes from './providers/youtube/routes';
+import routes from './routes';
 
 export default function App() {
   return (
@@ -35,38 +27,17 @@ export default function App() {
             <Router>
               <BaseLayout>
                 <Switch>
-                  <Route
-                    path={routes.SCRAPING_ADVANCED}
-                    component={AdvancedScrapingPage}
-                  />
-                  <Route
-                    path={routes.SCRAPING_CONFIG_EDITOR}
-                    component={ScrapingConfigEditorPage}
-                  />
-                  <Route
-                    path={routes.RESULTS_DETAILS}
-                    component={ResultsDetailsPage}
-                  />
-                  <Route path={routes.RESULTS} component={ResultsPage} />
-                  <Route path={routes.SETTINGS} component={SettingsPage} />
-                  <Route
-                    path={routes.VISUALIZATION_ADVANCED}
-                    component={VisualizationAdvancedPage}
-                  />
-                  <Route
-                    path={routes.VISUALIZATION_EXPERIMENT}
-                    component={VisualizationExperimentsPage}
-                  />
-
-                  {/*
-                  Sections:
-                */}
+                  {/* YouTube sections */}
                   {Object.values(ytRoutes).map(({ path, comp }) => (
-                    <Route path={path} component={comp} />
+                    <Route path={path} component={comp} key={path} />
                   ))}
-                  <Route path={routes.START} component={StartPage} />
+                  {/* Global sections */}
+                  {Object.values(routes).map(({ path, comp }) => (
+                    <Route path={path} component={comp} key={path} />
+                  ))}
+                  {/* Start route */}
                   <Route path="/">
-                    <Redirect to={routes.START} />
+                    <Redirect to={routes.START.path} />
                   </Route>
                 </Switch>
               </BaseLayout>

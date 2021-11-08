@@ -1,5 +1,5 @@
 import React from 'react';
-import { navigationConfig } from 'renderer/providers/youtube/routes';
+import ytNavigationConfig from '../providers/youtube/navigation';
 
 type Action = { type: 'set-page-index'; pageIndex: number };
 type Dispatch = (action: Action) => void;
@@ -37,7 +37,7 @@ function NavigationProvider({ children }: NavigationProviderProps) {
   // initial value gets overriden with `useEffect`
   const [state, dispatch] = React.useReducer(
     NavigationReducer,
-    navigationConfig,
+    ytNavigationConfig,
   );
 
   const getNextPage = (propName?: string) => {
