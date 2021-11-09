@@ -1,4 +1,4 @@
-import { ScrapingConfig } from '../types';
+import { ScrapingConfig } from '../../types';
 
 export type GetCurrentHtml = () => Promise<{ html: string; hash: string }>;
 

@@ -87,7 +87,7 @@ const ScrapingStateContext = React.createContext<
   { state: State; dispatch: Dispatch; getEtaUntil: any } | undefined
 >(undefined);
 
-const initialState = {
+const initialState: State = {
   isAttached: false,
   scrapingConfig: defaultConfig,
   campaign: null,
