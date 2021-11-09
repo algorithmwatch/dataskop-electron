@@ -274,7 +274,7 @@
     "electron-log": "^4.4.1",
     "electron-updater": "^4.6.1",
     "formik": "^2.2.9",
-    "history": "^5.0.1",
+    "history": "^5.1.0",
     "lodash": "^4.17.21",
     "lowdb": "^2.1.0",
     "p-limit": "3",
