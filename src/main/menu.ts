@@ -57,7 +57,7 @@ export default class MenuBuilder {
       label: 'Electron',
       submenu: [
         {
-          label: 'About ElectronReact',
+          label: 'About DataSkop',
           selector: 'orderFrontStandardAboutPanel:',
         },
         { type: 'separator' },
