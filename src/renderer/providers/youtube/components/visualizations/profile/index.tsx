@@ -3,6 +3,8 @@
 import { faIdCard } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRef, useState } from 'react';
+import Button from 'renderer/components/Button';
+import { exportCsv } from 'renderer/utils/export';
 import ContentWrapper from '../../../../../components/ContentWrapper';
 import Explainer from '../../../../../components/Explainer';
 import Infobox from '../../../../../components/Infobox';
@@ -158,6 +160,14 @@ export default function ProfileVis({
             Dashboard als Bild speichern
           </Button>
         </div> */}
+        <div className="mt-7 text-center">
+          <Button
+            theme={'link'}
+            onClick={() => exportCsv('watch-history', db.history)}
+          >
+            CSV exportieren
+          </Button>
+        </div>
       </div>
     </>
   );

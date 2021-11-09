@@ -3,7 +3,7 @@
 import cheerio from 'cheerio';
 import _ from 'lodash';
 import { clickElement, elementExists } from 'renderer/components/scraping/ipc';
-import { getUniquePath } from 'renderer/utils/cheerio-unique-selector';
+import { getUniquePath } from 'renderer/vendor/cheerio-unique-selector';
 import { currentDelay } from '../../..';
 import { GetHtmlFunction } from '../types';
 

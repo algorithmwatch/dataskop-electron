@@ -15,6 +15,8 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import debounce from 'lodash/debounce';
 import React, { useMemo, useState } from 'react';
+import Button from 'renderer/components/Button';
+import { exportCsv } from 'renderer/utils/export';
 import Explainer from '../../../../components/Explainer';
 import Infobox from '../../../../components/Infobox';
 import { ScrapingResultSaved } from '../../../../db/types';
@@ -398,6 +400,14 @@ export default function AutoplayChain({
                     </div>
                   ))}
               </div>
+            </div>
+            <div className="mt-7 text-center">
+              <Button
+                theme={'link'}
+                onClick={() => exportCsv('autoplay', groups)}
+              >
+                CSV exportieren
+              </Button>
             </div>
           </>
         )}

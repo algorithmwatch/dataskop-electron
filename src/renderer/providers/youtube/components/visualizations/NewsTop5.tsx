@@ -1,10 +1,10 @@
-// @ts-nocheck
-
 import { Channel, RecommendedVideo } from '@algorithmwatch/harke';
 import { faNewspaper } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import _ from 'lodash';
 import { useState } from 'react';
+import Button from 'renderer/components/Button';
+import { exportCsv } from 'renderer/utils/export';
 import { Placement } from 'tippy.js';
 import { Carousel, Slide } from '../../../../components/Carousel';
 import { Options } from '../../../../components/Carousel/types';
@@ -32,7 +32,7 @@ function VideoList({
 }) {
   return (
     <div className="space-y-2">
-      {items.map(({ channelName, duration, id, percWatched, title }) => (
+      {items.map(({ channelName, id, title }) => (
         <VideoThumbnail
           key={id}
           videoId={id}
@@ -219,6 +219,11 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
             </Slide>
           ))}
       </Carousel>
+      <div className="mt-7 mx-auto">
+        <Button theme={'link'} onClick={() => exportCsv('news', transformed)}>
+          CSV exportieren
+        </Button>
+      </div>
     </>
   );
 }

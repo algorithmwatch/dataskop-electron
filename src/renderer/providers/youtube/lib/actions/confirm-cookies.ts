@@ -2,7 +2,7 @@
 import cheerio from 'cheerio';
 import { submitFormScraping } from 'renderer/components/scraping/ipc';
 import { currentDelay } from '../../..';
-import { getUniquePath } from '../../../../utils/cheerio-unique-selector';
+import { getUniquePath } from '../../../../vendor/cheerio-unique-selector';
 import { GetHtmlFunction } from '../types';
 
 const rootUrl = 'https://www.youtube.com/';

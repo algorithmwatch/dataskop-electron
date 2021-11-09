@@ -3,6 +3,8 @@ import { faSearch } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import _ from 'lodash';
 import { useState } from 'react';
+import Button from 'renderer/components/Button';
+import { exportCsv } from 'renderer/utils/export';
 import { Placement } from 'tippy.js';
 import { Carousel, Slide } from '../../../../components/Carousel';
 import { Options } from '../../../../components/Carousel/types';
@@ -196,6 +198,11 @@ export default function SearchResultsCompare({
             </Slide>
           ))}
       </Carousel>
+      <div className="mt-7 mx-auto">
+        <Button theme={'link'} onClick={() => exportCsv('search', queryGroups)}>
+          CSV exportieren
+        </Button>
+      </div>
     </>
   );
 }
