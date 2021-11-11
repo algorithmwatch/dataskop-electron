@@ -86,14 +86,14 @@ export default function Sidebar({
                   { label: 'start', to: routes.START.path },
                   {
                     label: 'advanced scraping',
-                    to: routes.SCRAPING_ADVANCED.path,
+                    to: routes.ADMIN_SCRAPING_ADVANCED.path,
                   },
                   {
                     label: 'scraping config editor',
-                    to: routes.SCRAPING_CONFIG_EDITOR.path,
+                    to: routes.ADMIN_SCRAPING_CONFIG_EDITOR.path,
                   },
-                  { label: 'results', to: routes.RESULTS.path },
-                  { label: 'settings', to: routes.SETTINGS.path },
+                  { label: 'results', to: routes.ADMIN_RESULTS.path },
+                  { label: 'settings', to: routes.ADMIN_SETTINGS.path },
                   { label: 'yt donation', to: ytRoutes.DONATION1.path },
                 ]}
               />

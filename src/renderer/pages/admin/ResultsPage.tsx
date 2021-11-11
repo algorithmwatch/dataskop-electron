@@ -81,7 +81,11 @@ export default function ResultsPage(): JSX.Element {
               setRows([]);
             }}
           />
-          <Button onClick={() => clearLookups()}>clear lookup table</Button>
+          <ConfirmDialog
+            title="clear lookup table"
+            text="you sure?"
+            handleConfirm={clearLookups}
+          />
           <Button onClick={async () => invokeExport()}>export data</Button>
           <Button onClick={async () => invokeImport(importRowCb)}>
             import data

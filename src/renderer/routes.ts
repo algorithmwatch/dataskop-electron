@@ -4,27 +4,29 @@ import AdvancedScrapingPage from './pages/admin/ScrapingAdvancedPage';
 import ScrapingConfigEditorPage from './pages/admin/ScrapingConfigEditorPage';
 import SettingsPage from './pages/admin/SettingsPage';
 import VisualizationAdvancedPage from './pages/admin/VisualizationAdvancedPage';
-import VisualizationExperimentsPage from './pages/admin/VisualizationExperimentsPage';
 import StartPage from './pages/StartPage';
 
 const routes = {
-  SCRAPING_ADVANCED: { path: '/scraping/advanced', comp: AdvancedScrapingPage },
-  SCRAPING_CONFIG_EDITOR: {
-    path: '/scraping/editor',
+  ADMIN_SCRAPING_ADVANCED: {
+    path: '/admin/scraping/advanced',
+    comp: AdvancedScrapingPage,
+  },
+  ADMIN_SCRAPING_CONFIG_EDITOR: {
+    path: '/admin/scraping/editor',
     comp: ScrapingConfigEditorPage,
   },
-  RESULTS_DETAILS: { path: '/results/:sessionId', comp: ResultsDetailsPage },
-  RESULTS: { path: '/results', comp: ResultsPage },
-  VISUALIZATION_ADVANCED: {
-    path: '/visualization/advanced/:sessionId',
+  ADMIN_RESULTS_DETAILS: {
+    path: '/admin/results/:sessionId',
+    comp: ResultsDetailsPage,
+  },
+  // NB: the order of the details page is important!
+  ADMIN_RESULTS: { path: '/admin/results', comp: ResultsPage },
+  ADMIN_VISUALIZATION_ADVANCED: {
+    path: '/admin/visualization/advanced/:sessionId',
     comp: VisualizationAdvancedPage,
   },
-  VISUALIZATION_EXPERIMENT: {
-    path: '/visualization/experiment',
-    comp: VisualizationExperimentsPage,
-  },
-  SETTINGS: {
-    path: '/settings',
+  ADMIN_SETTINGS: {
+    path: '/admin/settings',
     comp: SettingsPage,
   },
   START: {

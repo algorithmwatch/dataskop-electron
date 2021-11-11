@@ -36,9 +36,6 @@ async function downloadYtImage(ytId, folder) {
   const p = path.join(folder, `${ytId}.jpg`);
   const dest = fs.createWriteStream(p);
   res.body.pipe(dest);
-
-  // const buffer = await response.buffer();
-  // writeFile(`./${yt_id}.jpg`, buffer);
 }
 
 export default function registerExportHandlers(mainWindow: BrowserWindow) {
@@ -82,9 +79,8 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
     },
   );
 
-  ipcMain.handle('save-screenshot', async (_event, rect, filename) => {
+  ipcMain.handle('results-save-screenshot', async (_event, rect, filename) => {
     if (mainWindow === null) return;
-    // console.log('save-screenshot', mainWindow);
     const nativeImage = await mainWindow.webContents.capturePage(rect);
     const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
       defaultPath: filename,

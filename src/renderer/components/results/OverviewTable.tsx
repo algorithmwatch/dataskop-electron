@@ -40,7 +40,7 @@ export default function OverviewTable({ rows }: { rows: any }) {
               key={row.sessionId}
               onClick={() =>
                 history.push(
-                  routes.RESULTS_DETAILS.path.replace(
+                  routes.ADMIN_RESULTS_DETAILS.path.replace(
                     ':sessionId',
                     row.sessionId,
                   ),

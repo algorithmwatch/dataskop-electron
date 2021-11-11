@@ -1,32 +1,6 @@
 import _ from 'lodash';
 import { Lookup, ScrapingResultSaved } from 'renderer/db';
 
-const getThumbnails = (id: string): any => {
-  /**
-   * Returns all thumbnails to given YT video it.
-    https://yt-thumb.canbeuseful.com/en
-   */
-
-  // the first image is the `default` image.
-  const small = [1, 2, 3].map(
-    (x) => `https://img.youtube.com/vi/${id}/${x}.jpg`,
-  );
-
-  small.unshift(`https://img.youtube.com/vi/${id}/default.jpg`);
-
-  const defaultImage = {
-    mq: `https://img.youtube.com/vi/${id}/mqdefault.jpg`,
-    hq: `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
-    sd: `https://img.youtube.com/vi/${id}/sddefault.jpg`,
-    maxRes: `https://img.youtube.com/vi/${id}/maxresdefault.jpg`,
-  };
-
-  return { small, default: defaultImage };
-};
-
-const getVideoUrl = (id: string): string =>
-  `https://www.youtube.com/watch?v=${id}`;
-
 const filterLookupBySession = (
   results: ScrapingResultSaved[],
   lookups: Lookup[],
@@ -91,8 +65,6 @@ const getFollowGroups = (data: any[]) =>
 export {
   filterLookupBySession,
   redactWatchHistory,
-  getThumbnails,
-  getVideoUrl,
   getFollowGroups,
   getVideos,
 };

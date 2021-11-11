@@ -1,6 +1,9 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import AutoplayChain from 'renderer/providers/youtube/components/visualizations/AutoplayChain';
+import NewsTop5 from 'renderer/providers/youtube/components/visualizations/NewsTop5';
+import SearchResultsCompare from 'renderer/providers/youtube/components/visualizations/SearchResultsCompare';
 import Button from '../../components/Button';
 import { useConfig } from '../../contexts/config';
 import { getLookups, getScrapingResultsBySession } from '../../db';
@@ -14,7 +17,13 @@ export default function VisualizationAdvancedPage() {
     state: { isDebug },
   } = useConfig();
 
-  const visCompOptions = ['profile', 'mydata'];
+  const visCompOptions = [
+    'profile',
+    'mydata',
+    'newstop5',
+    'search-results-compare',
+    'autoplay-chain',
+  ];
   const [visComp, setVisComp] = useState(visCompOptions[0]);
 
   const history = useHistory();
@@ -41,10 +50,10 @@ export default function VisualizationAdvancedPage() {
       <div className="space-x-4 mb-10 px-6">
         <Button onClick={() => history.goBack()}>Go back</Button>
         <FormControl>
-          <InputLabel id="demo-simple-select-label">Visualization</InputLabel>
+          <InputLabel id="vis-select-label">Visualization</InputLabel>
           <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
+            labelId="vis-select-label"
+            id="vis-select"
             value={visComp}
             onChange={handleChange}
           >
@@ -61,6 +70,11 @@ export default function VisualizationAdvancedPage() {
           <Profile data={data.results} lookups={data.lookups} />
         )}
         {visComp === 'mydata' && data && <MyData data={data} />}
+        {visComp === 'newstop5' && <NewsTop5 data={data.results} />}
+        {visComp === 'search-results-compare' && (
+          <SearchResultsCompare data={data.results} />
+        )}
+        {visComp === 'autoplay-chain' && <AutoplayChain data={data.results} />}
       </div>
     </>
   );

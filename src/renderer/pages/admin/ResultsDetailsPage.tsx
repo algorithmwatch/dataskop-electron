@@ -40,44 +40,14 @@ export default function ResultsDetailsPage() {
         <Button
           onClick={() =>
             history.push(
-              routes.VISUALIZATION_ADVANCED.path.replace(
+              routes.ADMIN_VISUALIZATION_ADVANCED.path.replace(
                 ':sessionId',
                 sessionId,
               ),
             )
           }
         >
-          Show profile visualizations
-        </Button>
-        <Button
-          onClick={() =>
-            history.push(routes.VISUALIZATION_EXPERIMENT.path, {
-              sessionId,
-              type: 'newstop5',
-            })
-          }
-        >
-          News Top-5
-        </Button>
-        <Button
-          onClick={() =>
-            history.push(routes.VISUALIZATION_EXPERIMENT.path, {
-              sessionId,
-              type: 'search-results-compare',
-            })
-          }
-        >
-          Search Results Compare
-        </Button>
-        <Button
-          onClick={() =>
-            history.push(routes.VISUALIZATION_EXPERIMENT.path, {
-              sessionId,
-              type: 'autoplay-chain',
-            })
-          }
-        >
-          Autplay Chain
+          Show visualizations
         </Button>
       </div>
       <ResultsDetails sessionId={sessionId} />

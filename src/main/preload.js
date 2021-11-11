@@ -48,7 +48,7 @@ const exportChannels = [
   'results-import',
   'results-export',
   'results-export-images',
-  'save-screenshot',
+  'results-save-screenshot',
 ];
 
 // db.ts

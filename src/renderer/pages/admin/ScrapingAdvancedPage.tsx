@@ -55,7 +55,10 @@ export default function AdvancedScrapingPage(): JSX.Element {
           <Button
             onClick={() =>
               history.push(
-                routes.RESULTS_DETAILS.path.replace(':sessionId', sessionId),
+                routes.ADMIN_RESULTS_DETAILS.path.replace(
+                  ':sessionId',
+                  sessionId,
+                ),
               )
             }
           >

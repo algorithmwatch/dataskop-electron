@@ -53,7 +53,7 @@ export default function ProfileVis({
   //   width: parseInt(width),
   //   height: parseInt(height + pt * 2),
   // };
-  //   ipcRenderer.invoke('save-screenshot', undefined, filename);
+  //   ipcRenderer.invoke('results-save-screenshot', undefined, filename);
   // };
 
   if (db.loading) return <Loading />;
