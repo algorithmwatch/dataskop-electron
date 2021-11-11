@@ -149,17 +149,35 @@ const createWindow = async () => {
     }
   });
 
+  /*
+  Before closing the app, check if the scraping process is still active. If yes,
+  then ask for a confirmation. To do so, you have to check the current status
+  in the state of the renderer process. So we have to communicate back and forth.
+  */
+
   mainWindow.on('close', function (e) {
-    const choice = dialog.showMessageBoxSync(this, {
-      type: 'question',
-      buttons: ['Abbrechen', 'Ja, beenden'],
-      title: 'Bestätigen',
-      message:
-        'Willst du DataSkop wirklich beenden? Möglicherweise läuft noch das Scraping.',
-    });
-    if (choice == 0) {
-      e.preventDefault();
+    mainWindow?.webContents.send('close-action');
+    e.preventDefault();
+  });
+
+  ipcMain.handle('close-main-window', (_e, isCurrentlyScraping: boolean) => {
+    if (mainWindow === null) return;
+
+    if (isCurrentlyScraping) {
+      const choice = dialog.showMessageBoxSync(mainWindow, {
+        type: 'question',
+        buttons: ['Ja, beenden', 'Abbrechen'],
+        defaultId: 1,
+        cancelId: 1,
+        title: 'Bestätigen',
+        message:
+          'Willst du DataSkop wirklich beenden? Der Scraping-Vorgang läuft noch.',
+      });
+      if (choice == 1) {
+        return;
+      }
     }
+    mainWindow.destroy();
   });
 
   mainWindow.on('closed', () => {

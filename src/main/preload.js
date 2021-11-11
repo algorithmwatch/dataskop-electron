@@ -13,6 +13,7 @@ const mainChannels = [
   'get-version-number',
   'get-path-user-data',
   'restart_app',
+  'close-main-window',
 ];
 
 // scraping.ts
@@ -61,13 +62,17 @@ const validInvokeChannels = [].concat(
   exportChannels,
   dbChannels,
 );
-const validCallbackChannels = ['scraping-navigation-happened'];
-const validremoveAllChannels = ['update_available', 'update_downloaded'];
+const validOnChannels = ['scraping-navigation-happened', 'close-action'];
+const validremoveAllChannels = [
+  'update_available',
+  'update_downloaded',
+  'close-action',
+];
 
 contextBridge.exposeInMainWorld('electron', {
   ipcRenderer: {
     on(channel, func) {
-      if (validCallbackChannels.includes(channel)) {
+      if (validOnChannels.includes(channel)) {
         // Deliberately strip event as it includes `sender`
         ipcRenderer.on(channel, (event, ...args) => func(...args));
       }
@@ -78,7 +83,7 @@ contextBridge.exposeInMainWorld('electron', {
       }
     },
     removeListener: (channel, ...args) => {
-      if (validCallbackChannels.includes(channel)) {
+      if (validOnChannels.includes(channel)) {
         return ipcRenderer.removeListener(channel, ...args);
       }
     },

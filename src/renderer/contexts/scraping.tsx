@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Campaign, ScrapingConfig } from 'renderer/providers/types';
 import { defaultConfig } from '../providers/youtube/';
 import demoData from '../providers/youtube/static/demo.json';
@@ -271,6 +271,18 @@ function ScrapingProvider({ children }: ScrapingProviderProps) {
   };
 
   const value = { state, dispatch, getEtaUntil };
+
+  // Expose the status of the scraping to the main process to check wheter the
+  // can safely be closed.
+  useEffect(() => {
+    window.electron.ipcRenderer.removeAllListeners('close-action');
+    window.electron.ipcRenderer.on('close-action', () => {
+      window.electron.ipcRenderer.invoke(
+        'close-main-window',
+        state.scrapingProgress.isActive,
+      );
+    });
+  }, [state.scrapingProgress.isActive]);
 
   return (
     <ScrapingStateContext.Provider value={value}>
