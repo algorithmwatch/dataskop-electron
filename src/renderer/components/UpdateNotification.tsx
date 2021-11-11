@@ -8,9 +8,6 @@ export default function UpdateNotification(): JSX.Element {
   const [showRestartButton, setShowRestartButton] = useState(false);
 
   useEffect(() => {
-    // Not available in Test environment.
-    if (window.electron.ipcRenderer == null) return;
-
     window.electron.ipcRenderer.on('update_available', () => {
       window.electron.ipcRenderer.removeAllListeners('update_available');
       setIsUpdateAvailable(true);
