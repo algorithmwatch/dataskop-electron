@@ -9,6 +9,10 @@ describe('App', () => {
     window.electron.ipcRenderer = {};
     window.electron.ipcRenderer.invoke = () => console.log('mock invoke');
     window.electron.ipcRenderer.on = () => console.log('mock on');
+    window.electron.ipcRenderer.removeAllListeners = () =>
+      console.log('mock removeAllListeners');
+    window.electron.ipcRenderer.removeListener = () =>
+      console.log('mock removeListener');
     expect(render(<App />)).toBeTruthy();
   });
 });
