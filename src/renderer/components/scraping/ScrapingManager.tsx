@@ -130,14 +130,13 @@ export default function ScrapingManager({
         );
         if (logoutSteps.length === 1) {
           const logoutStepIndex = scrapingConfig.steps.indexOf(logoutSteps[0]);
-          console.log(scrapingProgress.step, logoutStepIndex);
+
           // the step will increment later on, so it's one off
           if (scrapingProgress.step + 1 < logoutStepIndex) {
-            sendEvent(
-              campaign,
-              `user was logged out in step ${scrapingProgress.step}, the logout step was ${logoutStepIndex}`,
-              {},
-            );
+            sendEvent(campaign, 'user was logged out', {
+              loggedOutIn: scrapingProgress.step,
+              logoutStep: logoutStepIndex,
+            });
 
             await resetScraping();
 

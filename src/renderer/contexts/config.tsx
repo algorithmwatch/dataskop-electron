@@ -77,6 +77,9 @@ function ConfigProvider({ children }: ConfigProviderProps) {
     getVersionNumber();
   }, []);
 
+  // The `message` should be a simple string without any specific information.
+  // This information should go into `data` so the events can easily be grouped
+  // by `message`.
   function sendEvent(campaign: Campaign | null, message: string, data: any) {
     if (trackEvents && platformUrl !== null) {
       postEvent(
