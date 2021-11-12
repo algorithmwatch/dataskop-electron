@@ -161,6 +161,8 @@ const scrapingReducer = (state: State, action: Action): State => {
       return { ...state, isMuted: action.isMuted };
     }
 
+    // Changing this values doesn't work right now. (Guess: The scraping window
+    // needs to get refreshed to make it work.)
     case 'set-fixed-window': {
       return { ...state, fixedWindow: action.fixedWindow };
     }

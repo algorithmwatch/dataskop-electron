@@ -41,11 +41,6 @@ export default function StartPage(): JSX.Element {
         campaign,
       });
 
-      dispatch({
-        type: 'set-fixed-window',
-        fixedWindow: true,
-      });
-
       sendEvent(campaign, 'successfully fetched remote config', {});
     } catch (error) {
       console.error('not able to set sraping config from remote');
