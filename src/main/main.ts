@@ -160,26 +160,6 @@ const createWindow = async () => {
     e.preventDefault();
   });
 
-  ipcMain.handle('close-main-window', (_e, isCurrentlyScraping: boolean) => {
-    if (mainWindow === null) return;
-
-    if (isCurrentlyScraping) {
-      const choice = dialog.showMessageBoxSync(mainWindow, {
-        type: 'question',
-        buttons: ['Ja, beenden', 'Abbrechen'],
-        defaultId: 1,
-        cancelId: 1,
-        title: 'Bestätigen',
-        message:
-          'Willst du DataSkop wirklich beenden? Der Scraping-Vorgang läuft noch.',
-      });
-      if (choice == 1) {
-        return;
-      }
-    }
-    mainWindow.destroy();
-  });
-
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
@@ -228,6 +208,26 @@ const createWindow = async () => {
 /**
  * Controlling main window
  */
+
+ipcMain.handle('close-main-window', (_e, isCurrentlyScraping: boolean) => {
+  if (mainWindow === null) return;
+
+  if (isCurrentlyScraping) {
+    const choice = dialog.showMessageBoxSync(mainWindow, {
+      type: 'question',
+      buttons: ['Ja, beenden', 'Abbrechen'],
+      defaultId: 1,
+      cancelId: 1,
+      title: 'Bestätigen',
+      message:
+        'Willst du DataSkop wirklich beenden? Der Scraping-Vorgang läuft noch.',
+    });
+    if (choice == 1) {
+      return;
+    }
+  }
+  mainWindow.destroy();
+});
 
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
