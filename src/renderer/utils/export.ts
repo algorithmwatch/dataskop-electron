@@ -1,3 +1,8 @@
+/**
+ * A collection of functions for exporting data.
+ *
+ * @module
+ */
 import _ from 'lodash';
 import { ExportToCsv } from '../vendor/export-to-csv';
 import { flatten } from '../vendor/flat';

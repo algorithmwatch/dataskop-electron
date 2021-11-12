@@ -1,3 +1,11 @@
+/**
+ * The app's configuration is crontrolled with various parameters. Most of them
+ * are not to be changed by the user. There are stored within a context so the
+ * configuration can be adapted while the app is running, e.g., by the backend.
+ * However, this is currently not implemented.
+ *
+ * @module
+ */
 import React, { useEffect } from 'react';
 import { Campaign } from 'renderer/providers/types';
 import { postEvent } from 'renderer/utils/networking';
@@ -23,7 +31,7 @@ const ConfigStateContext = React.createContext<
   { state: State; dispatch: Dispatch; sendEvent: any } | undefined
 >(undefined);
 
-function configReducer(state: State, action: Action): State {
+const configReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'set-version': {
       return { ...state, version: action.version };
@@ -41,9 +49,9 @@ function configReducer(state: State, action: Action): State {
       throw new Error(`Unhandled action type: ${action}`);
     }
   }
-}
+};
 
-function ConfigProvider({ children }: ConfigProviderProps) {
+const ConfigProvider = ({ children }: ConfigProviderProps) => {
   const env = JSON.parse(window.electron.procEnv);
 
   const isDebug = env.NODE_ENV === 'development' || env.DEBUG_PROD === 'true';
@@ -52,7 +60,7 @@ function ConfigProvider({ children }: ConfigProviderProps) {
   const trackEvents = !!env.TRACK_EVENTS;
   const seriousProtection = env.SERIOUS_PROTECTION ?? null;
 
-  // initial value gets overriden with `useEffect`
+  // initial values get overriden with `useEffect` when the component gets mounten
   const [state, dispatch] = React.useReducer(configReducer, {
     version: 'loading...',
     isDebug,
@@ -62,9 +70,6 @@ function ConfigProvider({ children }: ConfigProviderProps) {
     trackEvents,
     seriousProtection,
   });
-
-  // NOTE: you *might* need to memoize this value
-  // Learn more in http://kcd.im/optimize-context
 
   useEffect(() => {
     const getVersionNumber = async () => {
@@ -80,7 +85,7 @@ function ConfigProvider({ children }: ConfigProviderProps) {
   // The `message` should be a simple string without any specific information.
   // This information should go into `data` so the events can easily be grouped
   // by `message`.
-  function sendEvent(campaign: Campaign | null, message: string, data: any) {
+  const sendEvent = (campaign: Campaign | null, message: string, data: any) => {
     if (trackEvents && platformUrl !== null) {
       postEvent(
         platformUrl,
@@ -90,7 +95,7 @@ function ConfigProvider({ children }: ConfigProviderProps) {
         data,
       );
     }
-  }
+  };
 
   const value = { state, dispatch, sendEvent };
 
@@ -99,9 +104,9 @@ function ConfigProvider({ children }: ConfigProviderProps) {
       {children}
     </ConfigStateContext.Provider>
   );
-}
+};
 
-function useConfig() {
+const useConfig = () => {
   const context = React.useContext(ConfigStateContext);
 
   if (context === undefined) {
@@ -109,6 +114,6 @@ function useConfig() {
   }
 
   return context;
-}
+};
 
 export { ConfigProvider, useConfig };

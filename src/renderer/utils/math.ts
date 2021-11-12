@@ -1,3 +1,8 @@
+/**
+ * A collection of functions for mathematical computations.
+ *
+ * @module
+ */
 const medianForArray = (arr: number[]): number => {
   const mid = Math.floor(arr.length / 2);
   const nums = [...arr].sort((a, b) => a - b);
@@ -14,9 +19,9 @@ const statsForArray = (arri: number[]) => {
   return { sum, min, max, average, median };
 };
 
-function randomIntFromInterval(min: number, max: number) {
+const randomIntFromInterval = (min: number, max: number) => {
   // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
-}
+};
 
 export { medianForArray, statsForArray, randomIntFromInterval };

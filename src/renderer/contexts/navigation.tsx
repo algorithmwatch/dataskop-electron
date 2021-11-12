@@ -1,3 +1,8 @@
+/**
+ * Controls the pages in the slide-based navigation.
+ *
+ * @module
+ */
 import React from 'react';
 import ytNavigationConfig from '../providers/youtube/navigation';
 
@@ -22,7 +27,7 @@ const NavigationStateContext = React.createContext<
   | undefined
 >(undefined);
 
-function NavigationReducer(state: State, action: Action): State {
+const NavigationReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'set-page-index': {
       return { ...state, pageIndex: action.pageIndex };
@@ -31,10 +36,9 @@ function NavigationReducer(state: State, action: Action): State {
       throw new Error(`Unhandled action type: ${action}`);
     }
   }
-}
+};
 
-function NavigationProvider({ children }: NavigationProviderProps) {
-  // initial value gets overriden with `useEffect`
+const NavigationProvider = ({ children }: NavigationProviderProps) => {
   const [state, dispatch] = React.useReducer(
     NavigationReducer,
     ytNavigationConfig,
@@ -120,9 +124,9 @@ function NavigationProvider({ children }: NavigationProviderProps) {
       {children}
     </NavigationStateContext.Provider>
   );
-}
+};
 
-function useNavigation() {
+const useNavigation = () => {
   const context = React.useContext(NavigationStateContext);
 
   if (context === undefined) {
@@ -130,6 +134,6 @@ function useNavigation() {
   }
 
   return context;
-}
+};
 
 export { NavigationProvider, useNavigation };

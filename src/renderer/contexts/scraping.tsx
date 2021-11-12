@@ -1,3 +1,9 @@
+/**
+ * Control the scraping in the scraping window, based on a JSON-based scraping
+ * configuration (loaded remotely).
+ *
+ * @module
+ */
 import _ from 'lodash';
 import React, { useEffect } from 'react';
 import { Campaign, ScrapingConfig } from 'renderer/providers/types';
@@ -6,7 +12,7 @@ import demoData from '../providers/youtube/static/demo.json';
 
 export type ScrapingProgress = {
   isActive: boolean;
-  value: number; // progres from 0 to 1
+  value: number; // from 0 to 1
   step: number;
 };
 
@@ -114,7 +120,7 @@ const initialState: State = {
   finishedTasks: 0,
 };
 
-function scrapingReducer(state: State, action: Action): State {
+const scrapingReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'set-is-attached': {
       return {
@@ -238,10 +244,9 @@ function scrapingReducer(state: State, action: Action): State {
       throw new Error(`Unhandled action type: ${action}`);
     }
   }
-}
+};
 
-function ScrapingProvider({ children }: ScrapingProviderProps) {
-  // initial value gets overriden with `useEffect`
+const ScrapingProvider = ({ children }: ScrapingProviderProps) => {
   const [state, dispatch] = React.useReducer(scrapingReducer, initialState);
 
   // NOTE: you *might* need to memoize this value
@@ -289,9 +294,9 @@ function ScrapingProvider({ children }: ScrapingProviderProps) {
       {children}
     </ScrapingStateContext.Provider>
   );
-}
+};
 
-function useScraping() {
+const useScraping = () => {
   const context = React.useContext(ScrapingStateContext);
 
   if (context === undefined) {
@@ -299,6 +304,6 @@ function useScraping() {
   }
 
   return context;
-}
+};
 
 export { ScrapingProvider, useScraping };

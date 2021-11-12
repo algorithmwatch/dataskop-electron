@@ -1,3 +1,8 @@
+/**
+ * A collection of functions to communiate with the backend / platform.
+ *
+ * @module
+ */
 import base64 from 'base-64';
 import { ScrapingSession } from 'renderer/db';
 

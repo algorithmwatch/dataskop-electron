@@ -1,3 +1,9 @@
+/**
+ * Hides/shows a modal to display information or notifications.
+ *
+ * @module
+ */
+
 import React from 'react';
 
 type Action = { type: 'set-modal-options'; options: { [key: string]: any } };
@@ -18,7 +24,7 @@ const ModalStateContext = React.createContext<
   | undefined
 >(undefined);
 
-function ModalReducer(state: State, action: Action): State {
+const ModalReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'set-modal-options': {
       const newState = { ...state };
@@ -41,10 +47,9 @@ function ModalReducer(state: State, action: Action): State {
       throw new Error(`Unhandled action type: ${action}`);
     }
   }
-}
+};
 
-function ModalProvider({ children }: ModalProviderProps) {
-  // initial value gets overriden with `useEffect`
+const ModalProvider = ({ children }: ModalProviderProps) => {
   const [state, dispatch] = React.useReducer(ModalReducer, {
     isOpen: false,
     componentName: '',
@@ -62,9 +67,9 @@ function ModalProvider({ children }: ModalProviderProps) {
       {children}
     </ModalStateContext.Provider>
   );
-}
+};
 
-function useModal() {
+const useModal = () => {
   const context = React.useContext(ModalStateContext);
 
   if (context === undefined) {
@@ -72,6 +77,6 @@ function useModal() {
   }
 
   return context;
-}
+};
 
 export { ModalProvider, useModal };
