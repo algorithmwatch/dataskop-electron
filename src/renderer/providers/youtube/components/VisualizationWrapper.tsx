@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useScraping } from '../../../contexts';
-import { getLookups, getScrapingResultsBySession } from '../../../db';
+import { getLookups, getScrapingResultsBySession } from '../../../lib/db';
 import demoData from '../static/demo.json';
 import AutoplayChain from './visualizations/AutoplayChain';
 import MyData from './visualizations/MyData';

@@ -13,25 +13,25 @@ import {
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import ReactJson from 'react-json-view';
-import Button from '../../components/Button';
-import { getStoredScrapingConfigs, modifyScrapingConfig } from '../../db';
-import { ScrapingConfig } from '../../providers/types';
-import { defaultConfig } from '../../providers/youtube';
-import { getValidErrors } from '../../providers/youtube/lib/validation/validate';
+import Button from 'renderer/components/Button';
+import { getLocalCampaigns, modifyLocalCampaigns } from 'renderer/lib/db';
+import { getValidErrors } from 'renderer/lib/validation';
+import { Campaign } from 'renderer/providers/types';
+import { defaultCampaign } from 'renderer/providers/youtube';
 
 export default function ScrapingConfigEditorPage(): JSX.Element {
-  const [rows, setRows] = useState<ScrapingConfig[]>([]);
-  const [editJson, setEditJson] = useState<ScrapingConfig | null>(null);
+  const [rows, setRows] = useState<Campaign[]>([]);
+  const [editJson, setEditJson] = useState<Campaign | null>(null);
   const [error, setError] = useState<any>(null);
 
   const loadData = async () => {
-    setRows(await getStoredScrapingConfigs());
+    setRows(await getLocalCampaigns());
   };
 
   const newConfig = async () => {
     const slug = `youtube-${dayjs().format('YYYY-MM-DD-HH-mm-s')}`;
-    const config = { ...defaultConfig, slug, title: slug };
-    await modifyScrapingConfig(config);
+    const config = { ...defaultCampaign, slug, title: slug };
+    await modifyLocalCampaigns(config);
     loadData();
   };
 
@@ -40,7 +40,7 @@ export default function ScrapingConfigEditorPage(): JSX.Element {
 
     const newError = getValidErrors(e.updated_src);
     if (newError === null) {
-      await modifyScrapingConfig(e.updated_src);
+      await modifyLocalCampaigns(e.updated_src);
       loadData();
       setError(null);
     } else {
@@ -100,14 +100,16 @@ export default function ScrapingConfigEditorPage(): JSX.Element {
                         {row.title}
                       </TableCell>
                       <TableCell align="right">{row.slug}</TableCell>
-                      <TableCell align="right">{row.steps.length}</TableCell>
+                      <TableCell align="right">
+                        {row.config.steps.length}
+                      </TableCell>
                       <TableCell align="right">
                         <Button onClick={() => setEditJson(row)}>Edit</Button>
                       </TableCell>
                       <TableCell align="right">
                         <Button
                           onClick={async () => {
-                            await modifyScrapingConfig(row, true);
+                            await modifyLocalCampaigns(row, true);
                             loadData();
                           }}
                         >

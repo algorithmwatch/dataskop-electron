@@ -151,24 +151,18 @@
           "const": "youtube",
           "type": "string"
         },
-        "slug": {
-          "type": "string"
-        },
         "steps": {
           "items": {
             "$ref": "#/definitions/YtProcedureConfig"
           },
           "type": "array"
         },
-        "title": {
-          "type": "string"
-        },
         "version": {
           "const": 1,
           "type": "number"
         }
       },
-      "required": ["provider", "slug", "steps", "title", "version"],
+      "required": ["provider", "steps", "version"],
       "type": "object"
     }
   }

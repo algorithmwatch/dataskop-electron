@@ -4,7 +4,7 @@
  * @module
  */
 import base64 from 'base-64';
-import { ScrapingSession } from 'renderer/db';
+import { ScrapingSession } from 'renderer/lib/db';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const postJson = (

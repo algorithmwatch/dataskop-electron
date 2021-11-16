@@ -9,16 +9,16 @@ export interface ScrapingConfig {
   version: number;
   // for now: we only support youtube
   provider: string;
-  // a human readable description of the config
-  title: string;
-  // the slug should be unique for a config
-  slug: string;
   // configuration for the scraper
   steps: any[];
 }
 
 export type Campaign = {
   id: number;
+  // a human readable description of the config
   title: string;
+  // the slug should be unique for a config
+  slug: string;
   description: string;
+  config: ScrapingConfig;
 };

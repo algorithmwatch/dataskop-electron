@@ -6,7 +6,7 @@ import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
 import { useScraping } from 'renderer/contexts';
 import { useNavigation } from 'renderer/contexts/';
 import VisualizationWrapper from '../components/VisualizationWrapper';
-import routes from '../routes';
+import routes from '../lib/routes';
 
 export default function MyDataPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();

@@ -10,8 +10,8 @@ import {
   getLookups,
   getScrapingResultsBySession,
   getSessionById,
-} from 'renderer/db';
-import { postDonation } from '../../../utils/networking';
+} from 'renderer/lib/db';
+import { postDonation } from '../../../lib/utils/networking';
 import { redactWatchHistory } from '../lib/utils';
 
 export default function DonationPage2(): JSX.Element {

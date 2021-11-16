@@ -1,8 +1,8 @@
 // only extract data from HTML, used for
 
 import { parseVideoNoJs } from '@algorithmwatch/harke';
-import { addLookups, getLookups } from 'renderer/db';
-import { delay } from 'renderer/utils/time';
+import { addLookups, getLookups } from 'renderer/lib/db';
+import { delay } from 'renderer/lib/utils/time';
 import { submitConfirmForm } from './actions/confirm-cookies';
 
 async function lookupOrScrapeVideos(videoIds: string[]) {

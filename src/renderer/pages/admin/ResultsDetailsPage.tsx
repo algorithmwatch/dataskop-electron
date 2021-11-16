@@ -4,7 +4,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import Button from '../../components/Button';
 import ResultsDetails from '../../components/results/ResultDetails';
 import { useScraping } from '../../contexts';
-import { getLookups, getScrapingResultsBySession } from '../../db';
+import { getLookups, getScrapingResultsBySession } from '../../lib/db';
 import { filterLookupBySession } from '../../providers/youtube/lib/utils';
 import routes from '../../routes';
 

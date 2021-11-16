@@ -10,20 +10,20 @@ import {
 } from '@material-ui/core';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import { ScrapingConfig } from 'renderer/providers/types';
-import { allConfigs } from 'renderer/providers/youtube';
-import { getStoredScrapingConfigs } from '../../db';
+import { Campaign } from 'renderer/providers/types';
+import { allCampaigns } from 'renderer/providers/youtube';
+import { getLocalCampaigns } from '../../lib/db';
 import Button from '../Button';
 
 const LocalScrapingConfigSelect = ({
-  scrapingConfig,
-  setScrapingConfig,
+  campaign,
+  setCampaign,
 }: {
-  scrapingConfig: ScrapingConfig;
-  setScrapingConfig: any;
+  campaign: Campaign | null;
+  setCampaign: any;
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const [configOptions, setOptions] = useState(allConfigs as ScrapingConfig[]);
+  const [options, setOptions] = useState<Campaign[]>(allCampaigns);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -31,23 +31,24 @@ const LocalScrapingConfigSelect = ({
 
   useEffect(() => {
     const loadData = async () => {
-      const stored = await getStoredScrapingConfigs();
-      setOptions((allConfigs as ScrapingConfig[]).concat(stored));
+      const stored = await getLocalCampaigns();
+      setOptions(allCampaigns.concat(stored));
     };
     loadData();
   }, []);
 
-  const uniqueOptions = _.uniqBy(configOptions, 'slug');
+  const uniqueOptions = _.uniqBy(options, 'slug');
 
   // hotfix for some strange behaviour for w/ config options and uniqueness
   const chosenOptionArray = uniqueOptions.filter(
-    (x) => x && x.slug === scrapingConfig.slug,
+    (x) => x && campaign && x.slug === campaign.slug,
   );
 
   let chosenOption = uniqueOptions[0];
   if (chosenOptionArray.length > 0) {
     [chosenOption] = chosenOptionArray;
   }
+
   return (
     <Card className="mt-10">
       <CardContent>
@@ -57,12 +58,10 @@ const LocalScrapingConfigSelect = ({
           <Select
             labelId="scraping-config-select"
             value={chosenOption}
-            onChange={(event) =>
-              setScrapingConfig(JSON.parse(event.target.value as string))
-            }
+            onChange={(event) => setCampaign(event.target.value)}
           >
             {uniqueOptions.map((x) => (
-              <MenuItem key={x.slug} value={JSON.stringify(x)}>
+              <MenuItem key={x.slug} value={x}>
                 {x.title}
               </MenuItem>
             ))}
@@ -80,7 +79,7 @@ const LocalScrapingConfigSelect = ({
       </CardActions>
       <Collapse in={expanded} timeout={1000}>
         <CardContent className="break-words">
-          {JSON.stringify(scrapingConfig)}
+          {JSON.stringify(campaign)}
         </CardContent>
       </Collapse>
     </Card>

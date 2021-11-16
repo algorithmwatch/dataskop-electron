@@ -4,13 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import _ from 'lodash';
 import { useState } from 'react';
 import Button from 'renderer/components/Button';
-import { exportCsv } from 'renderer/utils/export';
+import { exportCsv } from 'renderer/lib/utils/export';
 import { Placement } from 'tippy.js';
 import { Carousel, Slide } from '../../../../components/Carousel';
 import { Options } from '../../../../components/Carousel/types';
 import Explainer from '../../../../components/Explainer';
 import Infobox from '../../../../components/Infobox';
-import { ScrapingResultSaved } from '../../../../db/types';
+import { ScrapingResultSaved } from '../../../../lib/db/types';
 import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
 
 interface NewsTop5DataItem {

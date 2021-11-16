@@ -14,7 +14,7 @@ import {
   VisualizationNewsPage,
   VisualizationProfilePage,
   VisualizationSearchPage,
-} from './pages';
+} from '../pages';
 
 const ytRoutes = {
   DONATION_SUCCESS: { path: '/donation-success', comp: DonationSuccessPage },

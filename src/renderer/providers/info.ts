@@ -1,5 +1,5 @@
+import { delay } from '../lib/utils/time';
 import { youtubeMeta } from '../providers/youtube/lib';
-import { delay } from '../utils/time';
 import { ProviderMetaInformation } from './types';
 
 const providerToMeta: { [key: string]: ProviderMetaInformation } = {

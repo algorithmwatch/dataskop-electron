@@ -14,7 +14,7 @@ import {
   ScrapingProvider,
 } from './contexts';
 import BaseLayout from './layout/Base';
-import ytRoutes from './providers/youtube/routes';
+import ytRoutes from './providers/youtube/lib/routes';
 import routes from './routes';
 
 export default function App() {

@@ -10,8 +10,8 @@ import {
   parseWatchHistory,
 } from '@algorithmwatch/harke';
 import _, { range } from 'lodash';
-import { ScrapingResult } from 'renderer/db/types';
-import { delay } from 'renderer/utils/time';
+import { ScrapingResult } from 'renderer/lib/db/types';
+import { delay } from 'renderer/lib/utils/time';
 import { lookupOrScrapeVideos } from './html-scrapers';
 import {
   GetCurrentHtml,

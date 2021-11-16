@@ -8,7 +8,7 @@ import { Lookup, ScrapingResultSaved, ScrapingSession } from './types';
 type Data = {
   scrapingSessions: ScrapingSession[];
   scrapingResults: ScrapingResultSaved[];
-  scrapingConfigs: ScrapingConfig[];
+  campaigns: Campaign[];
   lookups: Lookup[];
 };
 
@@ -41,7 +41,7 @@ const setUpDb = async () => {
   db.data ||= {
     scrapingSessions: [],
     scrapingResults: [],
-    scrapingConfigs: [],
+    campaigns: [],
     lookups: [],
   };
   return db.data;
@@ -176,21 +176,21 @@ const getScrapingResultsBySession = async (
 
 // scraping config
 
-const modifyScrapingConfig = async (config: ScrapingConfig, remove = false) => {
+const modifyLocalCampaigns = async (campaign: Campaign, remove = false) => {
   await setUpDb();
   if (db === null || db.data === null) throw Error('db is not initialized');
 
   const newData =
-    db.data.scrapingConfigs?.filter((x) => x.slug !== config.slug) || [];
-  if (!remove) newData.unshift(config);
+    db.data.campaigns?.filter((x) => x.slug !== campaign.slug) || [];
+  if (!remove) newData.unshift(campaign);
 
-  db.data.scrapingConfigs = newData;
+  db.data.campaigns = newData;
   return db.write();
 };
 
-const getStoredScrapingConfigs = async () => {
+const getLocalCampaigns = async () => {
   const data = await setUpDb();
-  return data.scrapingConfigs || [];
+  return data.campaigns || [];
 };
 
 // lookup table for e.g. additional background scraping
@@ -340,8 +340,8 @@ export {
   getScrapingResultsBySession,
   addNewSession,
   getStatisticsForSession,
-  modifyScrapingConfig,
-  getStoredScrapingConfigs,
+  modifyLocalCampaigns,
+  getLocalCampaigns,
   setSessionFinishedAt,
   addQuestionnaireToSession,
 };

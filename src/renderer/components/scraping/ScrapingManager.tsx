@@ -1,20 +1,20 @@
 /* eslint-disable no-restricted-syntax */
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { postSimpleBackend } from 'renderer/lib/utils/networking';
+import { delay } from 'renderer/lib/utils/time';
 import { providerToMeta } from 'renderer/providers';
 import { YtScrapingConfig } from 'renderer/providers/youtube';
 import { onlySubmitConsentForm } from 'renderer/providers/youtube/lib/actions/confirm-cookies';
 import { createSingleGenerator } from 'renderer/providers/youtube/lib/procedures/setup';
 import routes from 'renderer/routes';
-import { postSimpleBackend } from 'renderer/utils/networking';
-import { delay } from 'renderer/utils/time';
 import { v4 as uuidv4 } from 'uuid';
 import { useConfig, useModal, useScraping } from '../../contexts';
 import {
   addNewSession,
   addScrapingResult,
   setSessionFinishedAt,
-} from '../../db';
+} from '../../lib/db';
 import {
   extractHtml,
   getCookies,
@@ -48,13 +48,16 @@ export default function ScrapingManager({
       scrapingProgress,
       sessionId,
       isScrapingStarted,
-      scrapingConfig,
       stepGenerator,
       campaign,
       isUserLoggedIn,
     },
     dispatch,
   } = useScraping();
+
+  if (campaign === null) return <div></div>;
+
+  const scrapingConfig = campaign.config;
 
   const { dispatch: dispatchModal } = useModal();
   const history = useHistory();

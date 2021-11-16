@@ -3,7 +3,7 @@
 import * as chrono from 'chrono-node';
 import { mean, rollups, sum } from 'd3-array';
 import { useEffect, useState } from 'react';
-import { Lookup, ScrapingResult } from '../../../../../db/types';
+import { Lookup, ScrapingResult } from '../../../../../lib/db/types';
 
 const parseDate = (str: string, referenceDate: Date) => {
   const germanDate = chrono.de.parseDate(str, referenceDate);

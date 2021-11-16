@@ -1,0 +1,45 @@
+{
+  "$ref": "#/definitions/Campaign",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Campaign": {
+      "additionalProperties": false,
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/ScrapingConfig"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "number"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "required": ["id", "title", "slug", "description", "config"],
+      "type": "object"
+    },
+    "ScrapingConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "steps": {
+          "items": {},
+          "type": "array"
+        },
+        "version": {
+          "type": "number"
+        }
+      },
+      "required": ["version", "provider", "steps"],
+      "type": "object"
+    }
+  }
+}

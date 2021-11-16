@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 import { clearStorage } from 'renderer/components/scraping/ipc';
-import { getScrapingResultsBySession } from 'renderer/db';
-import { delay } from 'renderer/utils/time';
+import { getScrapingResultsBySession } from 'renderer/lib/db';
+import { delay } from 'renderer/lib/utils/time';
 import {
   GetHtmlFunction,
   GetHtmlLazyFunction,

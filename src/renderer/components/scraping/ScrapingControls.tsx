@@ -16,7 +16,7 @@ export default function ScrapingControls({
 }): JSX.Element {
   const {
     state: {
-      scrapingConfig,
+      campaign,
       isUserLoggedIn,
       isScrapingStarted,
       isScrapingPaused,
@@ -30,9 +30,11 @@ export default function ScrapingControls({
   } = useScraping();
 
   const resetScraping = async () => {
-    await goToUrl(providerToMeta[scrapingConfig.provider].loginUrl, {
-      clear: true,
-    });
+    if (campaign) {
+      await goToUrl(providerToMeta[campaign.config.provider].loginUrl, {
+        clear: true,
+      });
+    }
     dispatch({ type: 'reset-scraping' });
   };
 

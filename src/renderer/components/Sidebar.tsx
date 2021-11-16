@@ -4,7 +4,7 @@ import { IconDefinition } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { useState } from 'react';
-import ytRoutes from 'renderer/providers/youtube/routes';
+import ytRoutes from 'renderer/providers/youtube/lib/routes';
 import routes from 'renderer/routes';
 import { useConfig } from '../contexts/config';
 import AdvancedMenu from './AdvancedMenu';

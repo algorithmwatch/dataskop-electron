@@ -8,7 +8,7 @@ import LocalScrapinogConfigSelect from '../../components/scraping/LocalScrapingC
 import RemoteScrapingConfig from '../../components/scraping/RemoteScrapingConfigSelect';
 import ScrapingControls from '../../components/scraping/ScrapingControls';
 import { useScraping } from '../../contexts/scraping';
-import { ScrapingConfig } from '../../providers/types';
+import { Campaign } from '../../providers/types';
 import {
   activateWatchHistory,
   deactivateWatchHistory,
@@ -17,14 +17,14 @@ import routes from '../../routes';
 
 export default function AdvancedScrapingPage(): JSX.Element {
   const {
-    state: { scrapingConfig: curScrapingConfig, sessionId, campaign },
+    state: { sessionId, campaign },
     dispatch,
   } = useScraping();
 
   const history = useHistory();
 
-  const setScrapingConfig = (scrapingConfig: ScrapingConfig) =>
-    dispatch({ type: 'set-scraping-config', scrapingConfig, campaign: null });
+  const setCampaign = (campaign: Campaign) =>
+    dispatch({ type: 'set-campaign', campaign });
 
   // enable and disable scraping window
   useEffect(() => {
@@ -36,13 +36,13 @@ export default function AdvancedScrapingPage(): JSX.Element {
   return (
     <>
       <div className="overflow-y-auto">
-        <div>title: {curScrapingConfig && curScrapingConfig.title}</div>
-        <div>slug: {curScrapingConfig && curScrapingConfig.slug}</div>
+        <div>title: {campaign && campaign.title}</div>
+        <div>slug: {campaign && campaign.slug}</div>
         <div>campaign: {campaign && JSON.stringify(campaign)}</div>
 
         <LocalScrapinogConfigSelect
-          scrapingConfig={curScrapingConfig}
-          setScrapingConfig={setScrapingConfig}
+          campaign={campaign}
+          setCampaign={setCampaign}
         />
         <div className="mt-10">
           <Card>

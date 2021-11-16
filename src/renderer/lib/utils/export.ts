@@ -4,8 +4,8 @@
  * @module
  */
 import _ from 'lodash';
-import { ExportToCsv } from '../vendor/export-to-csv';
-import { flatten } from '../vendor/flat';
+import { ExportToCsv } from '../../vendor/export-to-csv';
+import { flatten } from '../../vendor/flat';
 import dayjs from './dayjs';
 
 const exportCsv = (filename: string, data: any[]) => {

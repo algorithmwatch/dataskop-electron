@@ -7,8 +7,8 @@
  * @module
  */
 import React, { useEffect } from 'react';
+import { postEvent } from 'renderer/lib/utils/networking';
 import { Campaign } from 'renderer/providers/types';
-import { postEvent } from 'renderer/utils/networking';
 
 type Action =
   | { type: 'set-version'; version: string }

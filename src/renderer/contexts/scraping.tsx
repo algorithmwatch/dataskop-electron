@@ -2,12 +2,12 @@
  * Control the scraping in the scraping window, based on a JSON-based scraping
  * configuration (loaded remotely).
  *
+ * Started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
  * @module
  */
 import _ from 'lodash';
 import React, { useEffect } from 'react';
-import { Campaign, ScrapingConfig } from 'renderer/providers/types';
-import { defaultConfig } from '../providers/youtube/';
+import { Campaign } from 'renderer/providers/types';
 import demoData from '../providers/youtube/static/demo.json';
 
 export type ScrapingProgress = {
@@ -26,9 +26,12 @@ export type Bounds = {
 type Action =
   | { type: 'set-is-attached'; isAttached: boolean }
   | {
-      type: 'set-scraping-config';
-      scrapingConfig: ScrapingConfig;
+      type: 'set-campaign';
       campaign: Campaign | null;
+    }
+  | {
+      type: 'set-available-campaigns';
+      availableCampaigns: Campaign[];
     }
   | {
       type: 'set-scraping-progress-bar';
@@ -61,10 +64,9 @@ type Dispatch = (action: Action) => void;
 type State = {
   // if the browser manager is attached
   isAttached: boolean;
-  // the current selected scraping config
-  scrapingConfig: ScrapingConfig;
-  // set to the campaign (in the backend)
+  // set to the current selected campaign (fetch from the backend or a local one)
   campaign: Campaign | null;
+  availableCampaigns: Campaign[];
   sessionId: string | null;
   scrapingProgress: ScrapingProgress;
   isUserLoggedIn: boolean;
@@ -87,7 +89,6 @@ type State = {
 };
 
 type ScrapingProviderProps = { children: React.ReactNode };
-// started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
 
 const ScrapingStateContext = React.createContext<
   { state: State; dispatch: Dispatch; getEtaUntil: any } | undefined
@@ -95,8 +96,8 @@ const ScrapingStateContext = React.createContext<
 
 const initialState: State = {
   isAttached: false,
-  scrapingConfig: defaultConfig,
   campaign: null,
+  availableCampaigns: [],
   sessionId: null,
   scrapingProgress: {
     isActive: false,
@@ -130,11 +131,17 @@ const scrapingReducer = (state: State, action: Action): State => {
       };
     }
 
-    case 'set-scraping-config': {
+    case 'set-campaign': {
       return {
         ...state,
-        scrapingConfig: action.scrapingConfig,
         campaign: action.campaign,
+      };
+    }
+
+    case 'set-available-campaigns': {
+      return {
+        ...state,
+        availableCampaigns: action.availableCampaigns,
       };
     }
 
@@ -206,7 +213,7 @@ const scrapingReducer = (state: State, action: Action): State => {
         scrapingProgress: {
           isActive: false,
           value: 1,
-          step: state.scrapingConfig.steps.length - 1,
+          step: state.campaign ? state.campaign.config.steps.length - 1 : 0,
         },
       };
     }
@@ -250,9 +257,6 @@ const scrapingReducer = (state: State, action: Action): State => {
 
 const ScrapingProvider = ({ children }: ScrapingProviderProps) => {
   const [state, dispatch] = React.useReducer(scrapingReducer, initialState);
-
-  // NOTE: you *might* need to memoize this value
-  // Learn more in http://kcd.im/optimize-context
 
   const getEtaUntil = (checkUntilStep = null) => {
     const { startedAt, finishedTasks } = state;

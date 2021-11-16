@@ -6,7 +6,7 @@ import NewsTop5 from 'renderer/providers/youtube/components/visualizations/NewsT
 import SearchResultsCompare from 'renderer/providers/youtube/components/visualizations/SearchResultsCompare';
 import Button from '../../components/Button';
 import { useConfig } from '../../contexts/config';
-import { getLookups, getScrapingResultsBySession } from '../../db';
+import { getLookups, getScrapingResultsBySession } from '../../lib/db';
 import MyData from '../../providers/youtube/components/visualizations/MyData';
 import Profile from '../../providers/youtube/components/visualizations/profile';
 

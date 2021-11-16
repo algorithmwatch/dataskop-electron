@@ -4,7 +4,7 @@
  * @module
  */
 import React from 'react';
-import ytNavigationConfig from '../providers/youtube/navigation';
+import ytNavigationConfig from '../providers/youtube/lib/navigation';
 
 type Action = { type: 'set-page-index'; pageIndex: number };
 type Dispatch = (action: Action) => void;

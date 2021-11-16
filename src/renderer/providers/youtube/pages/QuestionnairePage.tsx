@@ -9,7 +9,7 @@ import { RouteComponentProps, useHistory } from 'react-router-dom';
 import Button from 'renderer/components/Button';
 import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
 import { useNavigation, useScraping } from 'renderer/contexts';
-import { addQuestionnaireToSession } from 'renderer/db';
+import { addQuestionnaireToSession } from 'renderer/lib/db';
 
 export default function QuestionnairePage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Lookup, ScrapingResultSaved } from 'renderer/db';
+import { Lookup, ScrapingResultSaved } from 'renderer/lib/db';
 
 const filterLookupBySession = (
   results: ScrapingResultSaved[],

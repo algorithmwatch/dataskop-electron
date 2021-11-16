@@ -5,7 +5,7 @@
 import crypto from 'crypto';
 import { BrowserView, BrowserWindow, ipcMain } from 'electron';
 import { range } from 'lodash';
-import { delay } from '../renderer/utils/time';
+import { delay } from '../renderer/lib/utils/time';
 
 let scrapingView: BrowserView | null = null;
 

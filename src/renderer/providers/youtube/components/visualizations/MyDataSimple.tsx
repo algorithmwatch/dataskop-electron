@@ -9,7 +9,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import { useEffect, useMemo, useRef, useState } from 'react';
-// import { ScrapingResult } from '../../db/types';
+// import { ScrapingResult } from '../../lib/db/types';
 import Button from '../../../../components/Button';
 
 const invokeExport = async (data) => {

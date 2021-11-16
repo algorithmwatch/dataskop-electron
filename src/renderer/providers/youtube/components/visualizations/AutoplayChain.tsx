@@ -16,10 +16,10 @@ import _ from 'lodash';
 import debounce from 'lodash/debounce';
 import React, { useMemo, useState } from 'react';
 import Button from 'renderer/components/Button';
-import { exportCsv } from 'renderer/utils/export';
+import { exportCsv } from 'renderer/lib/utils/export';
 import Explainer from '../../../../components/Explainer';
 import Infobox from '../../../../components/Infobox';
-import { ScrapingResultSaved } from '../../../../db/types';
+import { ScrapingResultSaved } from '../../../../lib/db/types';
 import explainerImage from '../../static/images/autoplay-explainer.png';
 import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
 

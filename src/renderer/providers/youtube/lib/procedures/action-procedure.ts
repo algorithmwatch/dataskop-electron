@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import { getScrapingResultsBySession } from 'renderer/db';
+import { getScrapingResultsBySession } from 'renderer/lib/db';
 import {
   ActionProcedureConfig,
   GetHtmlFunction,

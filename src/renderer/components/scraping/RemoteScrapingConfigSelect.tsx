@@ -1,6 +1,6 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { useEffect, useState } from 'react';
-import { getActiveCampaigns } from 'renderer/utils/networking';
+import { getActiveCampaigns } from 'renderer/lib/utils/networking';
 import { useConfig, useScraping } from '../../contexts';
 
 export default function RemoteScrapingConfig() {
@@ -15,11 +15,10 @@ export default function RemoteScrapingConfig() {
 
   const setScrapingConfig = (remoteCampaign: any) => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { scraping_config, id, title, description } = remoteCampaign;
+    const { scraping_config, id, title, description, slug } = remoteCampaign;
     dispatch({
-      type: 'set-scraping-config',
-      scrapingConfig: scraping_config,
-      campaign: { id, title, description },
+      type: 'set-campaign',
+      campaign: { id, title, slug, description, config: scraping_config },
     });
   };
 

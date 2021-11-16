@@ -1,4 +1,4 @@
-import { ProviderMetaInformation } from '../../types';
+import { Campaign, ProviderMetaInformation } from '../../types';
 import {
   ActionProcedureConfig,
   ProfileProcedureConfig,
@@ -94,8 +94,6 @@ const activateWatchHistoryStep: ActionProcedureConfig = {
 const defaultConfig: YtScrapingConfig = {
   provider: 'youtube',
   version: 1,
-  title: 'youtube default: profile, videos, logout',
-  slug: 'yt-default',
   steps: [
     deactivateWatchHistoryStep,
     profileScraperStep,
@@ -108,26 +106,42 @@ const defaultConfig: YtScrapingConfig = {
   ],
 };
 
+const defaultCampaign: Campaign = {
+  id: -1,
+  slug: 'yt-default',
+  title: 'youtube default: profile, videos, logout',
+  description: 'only for development',
+  config: defaultConfig,
+};
+
 const simpleConfig: YtScrapingConfig = {
   ...defaultConfig,
-  title: 'youtube simple: videos',
-  slug: 'yt-simple',
   steps: [simpleVideoExperimentScaper],
+};
+
+const simpleCampaign: Campaign = {
+  ...defaultCampaign,
+  slug: 'yt-simple',
+  title: 'youtube simple: videos',
+  config: simpleConfig,
 };
 
 const searchConfig: YtScrapingConfig = {
   ...defaultConfig,
-  title: 'youtube search: simple video, some queries, log out and again',
-  slug: 'yt-search',
   steps: [simpleVideoExperimentScaper, searchStep, logOutVideoScraperStep],
+};
+
+const searchCampaign: Campaign = {
+  ...defaultCampaign,
+  slug: 'yt-search',
+  title: 'youtube search: simple video, some queries, log out and again',
+  config: searchConfig,
 };
 
 // fast test, all functions only need to run once
 
 const testConfig: YtScrapingConfig = {
   ...defaultConfig,
-  title: 'youtube test: test all involved functions once',
-  slug: 'yt-test',
   steps: [
     deactivateWatchHistoryStep,
     profileScraperStep,
@@ -146,19 +160,32 @@ const testConfig: YtScrapingConfig = {
   ],
 };
 
+const testCampaign: Campaign = {
+  ...defaultCampaign,
+  slug: 'yt-test',
+  title: 'youtube test: test all involved functions once',
+  config: testConfig,
+};
+
 const youtubeMeta: ProviderMetaInformation = {
   startUrl: 'https://www.youtube.com',
   loginUrl: 'https://www.youtube.com/account',
   loginCookie: 'LOGIN_INFO',
 };
 
-const allConfigs = [defaultConfig, simpleConfig, searchConfig, testConfig];
+const allCampaigns = [
+  defaultCampaign,
+  simpleCampaign,
+  searchCampaign,
+  testCampaign,
+];
 
 export {
+  defaultCampaign,
   defaultConfig,
   simpleConfig,
   testConfig,
   searchConfig,
-  allConfigs,
+  allCampaigns,
   youtubeMeta,
 };

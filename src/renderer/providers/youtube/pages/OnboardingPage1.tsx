@@ -5,7 +5,7 @@ import Button from 'renderer/components/Button';
 import ContentWrapper from 'renderer/components/ContentWrapper';
 import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
 import { useConfig, useNavigation, useScraping } from 'renderer/contexts';
-import routes from '../routes';
+import routes from '../lib/routes';
 
 export default function OnboardingPage1(): JSX.Element {
   const [_showLoginWindow, setShowLoginWindow] = useState(false);

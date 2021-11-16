@@ -12,8 +12,8 @@ import {
   getSessions,
   importResultRows,
   importSessionRows,
-} from '../../db';
-import { ScrapingResultSaved } from '../../db/types';
+} from '../../lib/db';
+import { ScrapingResultSaved } from '../../lib/db/types';
 import { getVideos } from '../../providers/youtube/lib/utils';
 
 const invokeExport = async () => {
