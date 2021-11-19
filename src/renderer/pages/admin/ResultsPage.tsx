@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 import { uniq } from 'lodash';
 import { useEffect, useState } from 'react';
+import ConfirmDialog from '../../components/admin/ConfirmDialog';
 import Button from '../../components/Button';
-import ConfirmDialog from '../../components/ConfirmDialog';
 import OverviewTable from '../../components/results/OverviewTable';
 import {
   clearData,

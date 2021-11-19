@@ -4,12 +4,6 @@ const navigationConfig = {
   pageIndex: 0,
   pages: [
     {
-      // Can't import the route's path from global `routes.ts`. Mabe a circular
-      // dependency?
-      path: '/start',
-      sectionKey: null,
-    },
-    {
       path: ytRoutes.INTRODUCTION.path,
       sectionKey: null,
     },
@@ -23,50 +17,51 @@ const navigationConfig = {
     },
     {
       path: ytRoutes.INTERFACE_TUTORIAL.path,
-      sectionKey: ytRoutes.INTERFACE_TUTORIAL,
+      sectionKey: ytRoutes.INTERFACE_TUTORIAL.path,
     },
     {
       path: ytRoutes.SCRAPING_EXPLANATION.path,
-      sectionKey: ytRoutes.SCRAPING_EXPLANATION,
+      sectionKey: ytRoutes.SCRAPING_EXPLANATION.path,
     },
     {
       path: ytRoutes.VISUALIZATION_PROFILE.path,
-      sectionKey: ytRoutes.VISUALIZATION_PROFILE,
+      sectionKey: ytRoutes.VISUALIZATION_PROFILE.path,
     },
     {
       path: ytRoutes.RESEARCH_INFO.path,
-      sectionKey: ytRoutes.RESEARCH_INFO,
+      sectionKey: ytRoutes.RESEARCH_INFO.path,
     },
     {
       path: ytRoutes.VISUALIZATION_AUTOPLAYCHAIN.path,
-      sectionKey: ytRoutes.VISUALIZATION_AUTOPLAYCHAIN,
+      sectionKey: ytRoutes.VISUALIZATION_AUTOPLAYCHAIN.path,
     },
     {
       path: ytRoutes.VISUALIZATION_NEWS.path,
-      sectionKey: ytRoutes.VISUALIZATION_NEWS,
+      sectionKey: ytRoutes.VISUALIZATION_NEWS.path,
     },
     {
       path: ytRoutes.VISUALIZATION_SEARCH.path,
-      sectionKey: ytRoutes.VISUALIZATION_SEARCH,
+      sectionKey: ytRoutes.VISUALIZATION_SEARCH.path,
     },
     {
       path: ytRoutes.MY_DATA.path,
-      sectionKey: ytRoutes.MY_DATA,
+      sectionKey: ytRoutes.MY_DATA.path,
     },
     {
       path: ytRoutes.QUESTIONNAIRE.path,
-      sectionKey: ytRoutes.QUESTIONNAIRE,
+      sectionKey: ytRoutes.QUESTIONNAIRE.path,
     },
     {
       path: ytRoutes.DONATION1.path,
-      sectionKey: ytRoutes.DONATION1,
+      sectionKey: ytRoutes.DONATION1.path,
     },
     {
       path: ytRoutes.DONATION2.path,
+      sectionKey: null,
     },
     {
       path: ytRoutes.DONATION_SUCCESS.path,
-      sectionKey: ytRoutes.DONATION_SUCCESS,
+      sectionKey: ytRoutes.DONATION_SUCCESS.path,
     },
   ],
   sections: {

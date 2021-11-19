@@ -4,13 +4,15 @@
  * @module
  */
 import React from 'react';
-import ytNavigationConfig from '../providers/youtube/lib/navigation';
+import ytNavConfig from 'renderer/providers/youtube/lib/navigation';
 
-type Action = { type: 'set-page-index'; pageIndex: number };
+type Action =
+  | { type: 'set-page-index'; pageIndex: number }
+  | { type: 'set-navigation-by-provider'; provider: string };
 type Dispatch = (action: Action) => void;
 type State = {
   pageIndex: number;
-  pages: any[];
+  pages: Array<{ path: string; sectionKey: null | string }>;
   sections: { [key: string]: { label: string } };
 };
 type NavigationProviderProps = { children: React.ReactNode };
@@ -27,10 +29,35 @@ const NavigationStateContext = React.createContext<
   | undefined
 >(undefined);
 
+const initialNavigationState: State = {
+  pageIndex: 0,
+  pages: [
+    {
+      path: '/start',
+      sectionKey: null,
+    },
+    {
+      path: '/select_campaign',
+      sectionKey: null,
+    },
+  ],
+  sections: {},
+};
+
 const NavigationReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'set-page-index': {
       return { ...state, pageIndex: action.pageIndex };
+    }
+    case 'set-navigation-by-provider': {
+      if (action.provider === 'youtube') {
+        return {
+          pageIndex: 1,
+          pages: initialNavigationState.pages.concat(ytNavConfig.pages),
+          sections: ytNavConfig.sections,
+        };
+      }
+      throw new Error(`Provider not yet implemented`);
     }
     default: {
       throw new Error(`Unhandled action type: ${action}`);
@@ -41,7 +68,7 @@ const NavigationReducer = (state: State, action: Action): State => {
 const NavigationProvider = ({ children }: NavigationProviderProps) => {
   const [state, dispatch] = React.useReducer(
     NavigationReducer,
-    ytNavigationConfig,
+    initialNavigationState,
   );
 
   const getNextPage = (propName?: string) => {

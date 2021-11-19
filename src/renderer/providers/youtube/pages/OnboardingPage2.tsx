@@ -10,11 +10,12 @@ import whatsHappening from '../static/images/start/img_was_passiert.jpg';
 export default function OnboardingPage2(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const {
-    state: { scrapingConfig, isScrapingStarted, isScrapingFinished },
+    state: { campaign, isScrapingStarted, isScrapingFinished },
     dispatch,
   } = useScraping();
   const resetScraping = async () => {
-    await goToUrl(providerToMeta[scrapingConfig.provider].loginUrl, {
+    if (campaign === null) return;
+    await goToUrl(providerToMeta[campaign.config.provider].loginUrl, {
       clear: true,
     });
     dispatch({ type: 'reset-scraping' });

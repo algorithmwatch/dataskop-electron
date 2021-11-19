@@ -13,7 +13,7 @@ export default function ResearchInfoPage(): JSX.Element {
   const {
     state: {
       demoMode,
-      scrapingConfig,
+      campaign,
       scrapingProgress: { step },
     },
   } = useScraping();
@@ -48,7 +48,10 @@ export default function ResearchInfoPage(): JSX.Element {
   ];
 
   useEffect(() => {
-    const stepIndex = scrapingConfig.steps.findIndex((s) => s.type === 'video');
+    if (campaign === null) return;
+    const stepIndex = campaign.config.steps.findIndex(
+      (s) => s.type === 'video',
+    );
     if (demoMode || step > stepIndex) {
       setNextButtonIsDisabled(false);
     }

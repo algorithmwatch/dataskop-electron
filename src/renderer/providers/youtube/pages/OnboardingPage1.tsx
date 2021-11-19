@@ -58,7 +58,7 @@ export default function OnboardingPage1(): JSX.Element {
                 onClick={() => {
                   setShowLoginWindow(true);
                   dispatch({ type: 'set-is-attached', isAttached: true });
-                  sendEvent(campaign, 'clicked start scraping', {});
+                  sendEvent(campaign, 'clicked start scraping');
                 }}
               >
                 Anmelden
@@ -77,7 +77,7 @@ export default function OnboardingPage1(): JSX.Element {
               <Button
                 onClick={() => {
                   dispatch({ type: 'set-demo-mode', demoMode: true });
-                  sendEvent(campaign, 'clicked use demo data', {});
+                  sendEvent(campaign, 'clicked use demo data');
                   hist.push(routes.ONBOARDING_2.path);
                 }}
               >

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { getActiveCampaigns } from 'renderer/lib/utils/networking';
 import { useConfig, useScraping } from '../../contexts';
 
-export default function RemoteScrapingConfig() {
+export default function RemoteCampaignConfig() {
   const {
     state: { platformUrl, seriousProtection },
   } = useConfig();
@@ -23,8 +23,10 @@ export default function RemoteScrapingConfig() {
   };
 
   const fetchCams = async () => {
+    console.log('x', platformUrl);
     if (platformUrl == null) return;
     const options = await getActiveCampaigns(platformUrl, seriousProtection);
+    console.log(options);
     setCamOptions(options);
   };
 

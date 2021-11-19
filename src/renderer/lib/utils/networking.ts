@@ -5,6 +5,7 @@
  */
 import base64 from 'base-64';
 import { ScrapingSession } from 'renderer/lib/db';
+import { Campaign } from 'renderer/providers/types';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const postJson = (
@@ -46,7 +47,7 @@ const postSimpleBackend = async (
 const getActiveCampaigns = async (
   platformUrl: string,
   seriousProtection: string | null,
-) => {
+): Promise<Campaign[]> => {
   const url = `${platformUrl}/api/campaigns/`;
 
   const activeCampaigns = await (
@@ -56,6 +57,12 @@ const getActiveCampaigns = async (
       },
     })
   ).json();
+
+  activeCampaigns.forEach((x) => {
+    x.config = x.scraping_config;
+    delete x.scraping_config;
+  });
+
   return activeCampaigns;
 };
 

@@ -1,26 +1,56 @@
-import { faAngleRight } from '@fortawesome/pro-solid-svg-icons';
-import { RouteComponentProps } from 'react-router-dom';
-import FooterNav, { FooterNavItem } from '../components/FooterNav';
-import { useConfig } from '../contexts';
+/**
+ * Select a campaign configuration.
+ *
+ * @module
+ */
+import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
+import { useEffect, useState } from 'react';
+import { RouteComponentProps } from 'react-router';
+import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
+import { useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
-import bmbflogo from '../static/images/logos/bmbf-logo.png';
 
 export default function SelectCampaignPage(): JSX.Element {
   const {
-    state: { platformUrl, seriousProtection },
-    sendEvent,
-  } = useConfig();
+    state: { availableCampaigns },
+    dispatch,
+  } = useScraping();
 
-  const { getNextPage } = useNavigation();
+  const {
+    getNextPage,
+    getPreviousPage,
+    dispatch: navDispath,
+  } = useNavigation();
 
+  const [chosenIndex, setChosenIndex] = useState(0);
 
+  useEffect(() => {
+    if (!availableCampaigns.length) return;
+
+    const campaign = availableCampaigns[chosenIndex];
+    dispatch({
+      type: 'set-campaign',
+      campaign,
+    });
+
+    navDispath({
+      type: 'set-navigation-by-provider',
+      provider: campaign.config.provider,
+    });
+  }, [chosenIndex]);
 
   const footerNavItems: FooterNavItem[] = [
     {
+      label: 'Zurück',
+      theme: 'link',
+      startIcon: faAngleLeft,
+      clickHandler(history: RouteComponentProps['history']) {
+        history.push(getPreviousPage('path'));
+      },
+    },
+    {
       label: 'Weiter',
-      // size: 'large',
       endIcon: faAngleRight,
-      classNames: 'mx-auto',
       clickHandler(history: RouteComponentProps['history']) {
         history.push(getNextPage('path'));
       },
@@ -30,10 +60,24 @@ export default function SelectCampaignPage(): JSX.Element {
   return (
     <>
       <div className="mx-auto flex flex-col h-full">
-          <div className="text-center">
-            <div className="font-bold">Gefördert durch:</div>
-            <img src={bmbflogo} alt="" className="block w-52 mx-auto -mt-1" />
-          </div>
+        <div className="hl-4xl mb-6 text-center">Wähle aus</div>
+        <div className="text-center">
+          {availableCampaigns.map((x, i) => {
+            const border =
+              i === chosenIndex
+                ? 'border-solid border-4 border-yellow-700'
+                : 'border-solid border-4 border-yellow-300';
+            return (
+              <div
+                key={i}
+                className={`${border} p-5 mt-5 cursor-pointer`}
+                onClick={() => setChosenIndex(i)}
+              >
+                <div className="hl-xl">{x.title}</div>
+                <div>{x.description}</div>
+              </div>
+            );
+          })}
         </div>
       </div>
       <FooterNav items={footerNavItems} />

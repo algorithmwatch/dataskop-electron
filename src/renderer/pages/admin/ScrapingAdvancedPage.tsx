@@ -2,10 +2,10 @@
 import { Card } from '@material-ui/core';
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import LocalCampaignSelect from '../../components/admin/LocalCampaignSelect';
+import RemoteCampaignSelect from '../../components/admin/RemoteCampaignSelect';
 import Button from '../../components/Button';
 import { makeGetHtml } from '../../components/scraping/ipc';
-import LocalScrapinogConfigSelect from '../../components/scraping/LocalScrapingConfigSelect';
-import RemoteScrapingConfig from '../../components/scraping/RemoteScrapingConfigSelect';
 import ScrapingControls from '../../components/scraping/ScrapingControls';
 import { useScraping } from '../../contexts/scraping';
 import { Campaign } from '../../providers/types';
@@ -40,13 +40,10 @@ export default function AdvancedScrapingPage(): JSX.Element {
         <div>slug: {campaign && campaign.slug}</div>
         <div>campaign: {campaign && JSON.stringify(campaign)}</div>
 
-        <LocalScrapinogConfigSelect
-          campaign={campaign}
-          setCampaign={setCampaign}
-        />
+        <LocalCampaignSelect campaign={campaign} setCampaign={setCampaign} />
         <div className="mt-10">
           <Card>
-            <RemoteScrapingConfig />
+            <RemoteCampaignSelect />
           </Card>
         </div>
 

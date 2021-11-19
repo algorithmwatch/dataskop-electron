@@ -1,9 +1,13 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
+// Read dotenv directly because the main process is not using webpack in development.
+// To use the .ENV in dev, we need to load the config here.
+// TODO: delete the dotenv-reading from webpack?
+require('dotenv').config();
+
 // expose logging to renderer
 const log = require('electron-log');
 const path = require('path/posix');
-const { removeAllListeners } = require('process');
 window.log = log.functions;
 
 // export main functions to renderer

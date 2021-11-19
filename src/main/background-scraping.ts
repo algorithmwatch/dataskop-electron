@@ -21,6 +21,7 @@ export default function registerBackgroundScrapingHandlers() {
       webPreferences: {
         session: session.fromPartition('background-scraping'),
         backgroundThrottling: false,
+        sandbox: false,
       },
     });
     return backgroundScrapingWindow.loadURL('https://youtube.com');

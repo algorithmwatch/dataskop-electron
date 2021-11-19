@@ -1,3 +1,8 @@
+/**
+ * Start screen and fetch campaign configuration from the platform.
+ *
+ * @module
+ */
 import { faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import { useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -20,32 +25,30 @@ export default function StartPage(): JSX.Element {
   } = useConfig();
 
   const { getNextPage } = useNavigation();
-
   const { dispatch } = useScraping();
 
   const setActiveCampaign = async () => {
     if (platformUrl == null) return;
 
     try {
-      const cams = await getActiveCampaigns(platformUrl, seriousProtection);
-      const remoteCampaign = cams[0];
+      const campaigns = await getActiveCampaigns(
+        platformUrl,
+        seriousProtection,
+      );
 
-      if (remoteCampaign == null) return;
-
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { scraping_config, id, title, description } = remoteCampaign;
-      const campaign = { id, title, description };
+      // only use campaigns that have a valid provider configuration
       dispatch({
-        type: 'set-scraping-config',
-        scrapingConfig: scraping_config,
-        campaign,
+        type: 'set-available-campaigns',
+        availableCampaigns: campaigns.filter(
+          (x) => x.config && x.config.provider,
+        ),
       });
 
-      sendEvent(campaign, 'successfully fetched remote config', {});
+      sendEvent(null, 'successfully fetched remote config');
     } catch (error) {
       console.error('not able to set sraping config from remote');
       console.log(error);
-      sendEvent(null, 'failed to fetch remote config', {});
+      sendEvent(null, 'failed to fetch remote config');
     }
   };
 

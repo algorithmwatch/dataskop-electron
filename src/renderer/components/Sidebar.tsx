@@ -7,7 +7,7 @@ import { useState } from 'react';
 import ytRoutes from 'renderer/providers/youtube/lib/routes';
 import routes from 'renderer/routes';
 import { useConfig } from '../contexts/config';
-import AdvancedMenu from './AdvancedMenu';
+import AdvancedMenu from './admin/AdvancedMenu';
 
 export default function Sidebar({
   menuItems = [],

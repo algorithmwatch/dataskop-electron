@@ -4,6 +4,7 @@ import AdvancedScrapingPage from './pages/admin/ScrapingAdvancedPage';
 import ScrapingConfigEditorPage from './pages/admin/ScrapingConfigEditorPage';
 import SettingsPage from './pages/admin/SettingsPage';
 import VisualizationAdvancedPage from './pages/admin/VisualizationAdvancedPage';
+import SelectCampaignPage from './pages/SelectCampaignPage';
 import StartPage from './pages/StartPage';
 
 const routes = {
@@ -32,6 +33,10 @@ const routes = {
   START: {
     path: '/start',
     comp: StartPage,
+  },
+  SELECT_CAMPAIGN: {
+    path: '/select_campaign',
+    comp: SelectCampaignPage,
   },
 };
 

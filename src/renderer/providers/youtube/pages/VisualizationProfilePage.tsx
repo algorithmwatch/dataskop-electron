@@ -13,13 +13,14 @@ export default function VisualizationProfilePage(): JSX.Element {
   const {
     state: {
       scrapingProgress: { step },
-      scrapingConfig,
+      campaign,
       demoMode,
     },
   } = useScraping();
 
   useEffect(() => {
-    const stepIndex = scrapingConfig.steps.findIndex(
+    if (campaign === null) return;
+    const stepIndex = campaign.config.steps.findIndex(
       (s) => s.type === 'profile',
     );
     if (demoMode || step > stepIndex) {

@@ -85,7 +85,11 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
   // The `message` should be a simple string without any specific information.
   // This information should go into `data` so the events can easily be grouped
   // by `message`.
-  const sendEvent = (campaign: Campaign | null, message: string, data: any) => {
+  const sendEvent = (
+    campaign: Campaign | null,
+    message: string,
+    data: any = {},
+  ) => {
     if (trackEvents && platformUrl !== null) {
       postEvent(
         platformUrl,

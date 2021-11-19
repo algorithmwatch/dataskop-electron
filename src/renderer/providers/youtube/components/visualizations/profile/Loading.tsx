@@ -4,12 +4,12 @@
 import { faSpinnerThird } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
-import { useScraping } from '../../../../../contexts';
+import { useScraping } from 'renderer/contexts';
 
 export default function ScrapingProgressBar() {
   const {
     state: {
-      scrapingConfig,
+      campaign,
       visibleWindow,
       scrapingProgress: { isActive, value, step },
       finishedTasks,
@@ -47,7 +47,7 @@ export default function ScrapingProgressBar() {
     video: 'Empfehlungsexperimente…',
     search: 'Suchexperiment…',
   };
-  const currentType = scrapingConfig.steps[step].type;
+  const currentType = campaign?.config.steps[step].type;
   const description = typeDescriptionMap[currentType];
 
   return (
