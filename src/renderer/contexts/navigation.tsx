@@ -4,13 +4,13 @@
  * @module
  */
 import React from 'react';
-import ytNavConfig from 'renderer/providers/youtube/lib/navigation';
+import { providerInfo } from 'renderer/providers';
 
 type Action =
   | { type: 'set-page-index'; pageIndex: number }
-  | { type: 'set-navigation-by-provider'; provider: string };
+  | { type: 'set-navigation-by-provider'; provider: string; navSlug: string };
 type Dispatch = (action: Action) => void;
-type State = {
+export type NavigationState = {
   pageIndex: number;
   pages: Array<{ path: string; sectionKey: null | string }>;
   sections: { [key: string]: { label: string } };
@@ -19,7 +19,7 @@ type NavigationProviderProps = { children: React.ReactNode };
 
 const NavigationStateContext = React.createContext<
   | {
-      state: State;
+      state: NavigationState;
       dispatch: Dispatch;
       getNextPage: any;
       getPreviousPage: any;
@@ -29,7 +29,7 @@ const NavigationStateContext = React.createContext<
   | undefined
 >(undefined);
 
-const initialNavigationState: State = {
+const initialNavigationState: NavigationState = {
   pageIndex: 0,
   pages: [
     {
@@ -44,20 +44,23 @@ const initialNavigationState: State = {
   sections: {},
 };
 
-const NavigationReducer = (state: State, action: Action): State => {
+const NavigationReducer = (
+  state: NavigationState,
+  action: Action,
+): NavigationState => {
   switch (action.type) {
     case 'set-page-index': {
       return { ...state, pageIndex: action.pageIndex };
     }
     case 'set-navigation-by-provider': {
-      if (action.provider === 'youtube') {
-        return {
-          pageIndex: 1,
-          pages: initialNavigationState.pages.concat(ytNavConfig.pages),
-          sections: ytNavConfig.sections,
-        };
-      }
-      throw new Error(`Provider not yet implemented`);
+      const navConfig =
+        providerInfo[action.provider].navigation[action.navSlug];
+
+      return {
+        pageIndex: 1,
+        pages: initialNavigationState.pages.concat(navConfig.pages),
+        sections: navConfig.sections,
+      };
     }
     default: {
       throw new Error(`Unhandled action type: ${action}`);

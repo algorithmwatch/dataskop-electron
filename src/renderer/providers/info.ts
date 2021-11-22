@@ -1,8 +1,8 @@
 import { delay } from '../lib/utils/time';
 import { youtubeMeta } from '../providers/youtube/lib';
-import { ProviderMetaInformation } from './types';
+import { ProviderInformation } from './types';
 
-const providerToMeta: { [key: string]: ProviderMetaInformation } = {
+const providerInfo: { [key: string]: ProviderInformation } = {
   youtube: youtubeMeta,
 };
 
@@ -11,4 +11,4 @@ const defaultDelay = 500;
 // can be made more adaptable later on
 const currentDelay = () => delay(defaultDelay);
 
-export { providerToMeta, currentDelay };
+export { providerInfo, currentDelay };

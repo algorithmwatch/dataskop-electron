@@ -4,7 +4,7 @@ import ContentWrapper from 'renderer/components/ContentWrapper';
 import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
 import { goToUrl } from 'renderer/components/scraping/ipc';
 import { useNavigation, useScraping } from 'renderer/contexts';
-import { providerToMeta } from '../../';
+import { providerInfo } from '../../';
 import whatsHappening from '../static/images/start/img_was_passiert.jpg';
 
 export default function OnboardingPage2(): JSX.Element {
@@ -15,7 +15,7 @@ export default function OnboardingPage2(): JSX.Element {
   } = useScraping();
   const resetScraping = async () => {
     if (campaign === null) return;
-    await goToUrl(providerToMeta[campaign.config.provider].loginUrl, {
+    await goToUrl(providerInfo[campaign.config.provider].loginUrl, {
       clear: true,
     });
     dispatch({ type: 'reset-scraping' });

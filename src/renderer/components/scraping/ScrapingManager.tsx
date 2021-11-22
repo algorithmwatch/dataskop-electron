@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { postSimpleBackend } from 'renderer/lib/utils/networking';
 import { delay } from 'renderer/lib/utils/time';
-import { providerToMeta } from 'renderer/providers';
+import { providerInfo } from 'renderer/providers';
 import { YtScrapingConfig } from 'renderer/providers/youtube';
 import { onlySubmitConsentForm } from 'renderer/providers/youtube/lib/actions/confirm-cookies';
 import { createSingleGenerator } from 'renderer/providers/youtube/lib/procedures/setup';
@@ -66,15 +66,14 @@ export default function ScrapingManager({
     const cookies = await getCookies();
     // complexity is currently not needed, maybe later?
     const isLoggedIn = cookies.some(
-      (x: any) =>
-        x.name === providerToMeta[scrapingConfig.provider].loginCookie,
+      (x: any) => x.name === providerInfo[scrapingConfig.provider].loginCookie,
     );
     dispatch({ type: 'set-user-logged-in', isUserLoggedIn: isLoggedIn });
     return isLoggedIn;
   };
 
   const goToStart = () => {
-    return goToUrl(providerToMeta[scrapingConfig.provider].loginUrl);
+    return goToUrl(providerInfo[scrapingConfig.provider].loginUrl);
   };
 
   const getHtmlLazy = async (
@@ -117,7 +116,7 @@ export default function ScrapingManager({
 
   const resetScraping = async () => {
     dispatch({ type: 'reset-scraping' });
-    await goToUrl(providerToMeta[scrapingConfig.provider].loginUrl, {
+    await goToUrl(providerInfo[scrapingConfig.provider].loginUrl, {
       clear: true,
     });
     return window.electron.ipcRenderer.invoke('scraping-remove-view');

@@ -27,11 +27,11 @@ export default function App() {
             <Router>
               <BaseLayout>
                 <Switch>
-                  {/* YouTube sections */}
+                  {/* YouTube routes */}
                   {Object.values(ytRoutes).map(({ path, comp }) => (
                     <Route path={path} component={comp} key={path} />
                   ))}
-                  {/* Global sections */}
+                  {/* Global routes */}
                   {Object.values(routes).map(({ path, comp }) => (
                     <Route path={path} component={comp} key={path} />
                   ))}

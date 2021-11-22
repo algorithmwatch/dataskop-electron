@@ -28,6 +28,9 @@ export default function SelectCampaignPage(): JSX.Element {
     if (!availableCampaigns.length) return;
 
     const campaign = availableCampaigns[chosenIndex];
+
+    if (!campaign) return;
+
     dispatch({
       type: 'set-campaign',
       campaign,
@@ -36,6 +39,7 @@ export default function SelectCampaignPage(): JSX.Element {
     navDispath({
       type: 'set-navigation-by-provider',
       provider: campaign.config.provider,
+      navSlug: campaign.config.navigation,
     });
   }, [chosenIndex]);
 

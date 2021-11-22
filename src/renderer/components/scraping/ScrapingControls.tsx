@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import { providerToMeta } from 'renderer/providers';
+import { providerInfo } from 'renderer/providers';
 import { useScraping } from '../../contexts/scraping';
 import Button from '../Button';
 import { goToUrl } from './ipc';
@@ -31,7 +31,7 @@ export default function ScrapingControls({
 
   const resetScraping = async () => {
     if (campaign) {
-      await goToUrl(providerToMeta[campaign.config.provider].loginUrl, {
+      await goToUrl(providerInfo[campaign.config.provider].loginUrl, {
         clear: true,
       });
     }

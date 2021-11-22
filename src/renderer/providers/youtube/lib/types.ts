@@ -79,4 +79,5 @@ export interface YtScrapingConfig extends ScrapingConfig {
   version: 1;
   provider: 'youtube';
   steps: YtProcedureConfig[];
+  navigation: 'yt-default' | 'yt-education-demo';
 }

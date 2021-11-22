@@ -1,4 +1,5 @@
-import { Campaign, ProviderMetaInformation } from '../../types';
+import { Campaign, ProviderInformation } from '../../types';
+import { ytNavigation } from './navigation';
 import {
   ActionProcedureConfig,
   ProfileProcedureConfig,
@@ -93,6 +94,7 @@ const activateWatchHistoryStep: ActionProcedureConfig = {
 
 const defaultConfig: YtScrapingConfig = {
   provider: 'youtube',
+  navigation: 'yt-default',
   version: 1,
   steps: [
     deactivateWatchHistoryStep,
@@ -167,10 +169,11 @@ const testCampaign: Campaign = {
   config: testConfig,
 };
 
-const youtubeMeta: ProviderMetaInformation = {
+const youtubeMeta: ProviderInformation = {
   startUrl: 'https://www.youtube.com',
   loginUrl: 'https://www.youtube.com/account',
   loginCookie: 'LOGIN_INFO',
+  navigation: ytNavigation,
 };
 
 const allCampaigns = [

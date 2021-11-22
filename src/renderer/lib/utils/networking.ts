@@ -61,6 +61,10 @@ const getActiveCampaigns = async (
   activeCampaigns.forEach((x) => {
     x.config = x.scraping_config;
     delete x.scraping_config;
+
+    // hotfix for migration
+    if (x.config === null) return;
+    x.config.navigation ||= 'yt-default';
   });
 
   return activeCampaigns;
