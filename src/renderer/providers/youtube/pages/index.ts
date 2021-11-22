@@ -9,6 +9,7 @@ import OnboardingPage2 from './OnboardingPage2';
 import QuestionnairePage from './QuestionnairePage';
 import ResearchInfoPage from './ResearchInfoPage';
 import ScrapingExplanationPage from './ScrapingExplanationPage';
+import SelectDemoPage from './SelectDemoPage';
 import VisualizationAutoplayChainPage from './VisualizationAutoplayChainPage';
 import VisualizationNewsPage from './VisualizationNewsPage';
 import VisualizationProfilePage from './VisualizationProfilePage';
@@ -30,4 +31,5 @@ export {
   VisualizationNewsPage,
   VisualizationProfilePage,
   VisualizationSearchPage,
+  SelectDemoPage,
 };

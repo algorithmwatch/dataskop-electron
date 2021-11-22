@@ -6,6 +6,7 @@
 import { faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import { useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { localActiveCampaings } from 'renderer/providers';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import { useConfig, useScraping } from '../contexts';
 import { useNavigation } from '../contexts/navigation';
@@ -31,10 +32,9 @@ export default function StartPage(): JSX.Element {
     if (platformUrl == null) return;
 
     try {
-      const campaigns = await getActiveCampaigns(
-        platformUrl,
-        seriousProtection,
-      );
+      const campaigns = (
+        await getActiveCampaigns(platformUrl, seriousProtection)
+      ).concat(localActiveCampaings);
 
       // only use campaigns that have a valid provider configuration
       dispatch({

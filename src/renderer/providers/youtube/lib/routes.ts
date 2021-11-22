@@ -10,6 +10,7 @@ import {
   QuestionnairePage,
   ResearchInfoPage,
   ScrapingExplanationPage,
+  SelectDemoPage,
   VisualizationAutoplayChainPage,
   VisualizationNewsPage,
   VisualizationProfilePage,
@@ -50,6 +51,7 @@ const ytRoutes = {
   ONBOARDING_2: { path: '/onboarding2', comp: OnboardingPage2 },
   ONBOARDING_1: { path: '/onboarding1', comp: OnboardingPage1 },
   INTRODUCTION: { path: '/intro', comp: IntroductionPage },
+  SELECT_DEMO: { path: '/select-demo', comp: SelectDemoPage },
 };
 
 export default ytRoutes;

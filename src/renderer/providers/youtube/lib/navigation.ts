@@ -85,20 +85,8 @@ const ytEduDemoNav = {
   pageIndex: 0,
   pages: [
     {
-      path: ytRoutes.INTRODUCTION.path,
+      path: ytRoutes.SELECT_DEMO.path,
       sectionKey: null,
-    },
-    {
-      path: ytRoutes.ONBOARDING_1.path,
-      sectionKey: null,
-    },
-    {
-      path: ytRoutes.ONBOARDING_2.path,
-      sectionKey: null,
-    },
-    {
-      path: ytRoutes.INTERFACE_TUTORIAL.path,
-      sectionKey: ytRoutes.INTERFACE_TUTORIAL.path,
     },
     {
       path: ytRoutes.SCRAPING_EXPLANATION.path,
@@ -107,10 +95,6 @@ const ytEduDemoNav = {
     {
       path: ytRoutes.VISUALIZATION_PROFILE.path,
       sectionKey: ytRoutes.VISUALIZATION_PROFILE.path,
-    },
-    {
-      path: ytRoutes.RESEARCH_INFO.path,
-      sectionKey: ytRoutes.RESEARCH_INFO.path,
     },
     {
       path: ytRoutes.VISUALIZATION_AUTOPLAYCHAIN.path,
@@ -164,7 +148,7 @@ const ytEduDemoNav = {
 
 const ytNavigation = {
   'yt-default': ytDefaultNav,
-  'yt-edu-demo': ytEduDemoNav,
+  'yt-education-demo': ytEduDemoNav,
 };
 
 export { ytNavigation };

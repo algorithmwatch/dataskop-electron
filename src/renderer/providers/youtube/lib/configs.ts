@@ -1,5 +1,4 @@
-import { Campaign, ProviderInformation } from '../../types';
-import { ytNavigation } from './navigation';
+import { Campaign } from '../../types';
 import {
   ActionProcedureConfig,
   ProfileProcedureConfig,
@@ -169,11 +168,17 @@ const testCampaign: Campaign = {
   config: testConfig,
 };
 
-const youtubeMeta: ProviderInformation = {
-  startUrl: 'https://www.youtube.com',
-  loginUrl: 'https://www.youtube.com/account',
-  loginCookie: 'LOGIN_INFO',
-  navigation: ytNavigation,
+const demoConfig: YtScrapingConfig = {
+  ...defaultConfig,
+  navigation: 'yt-education-demo',
+};
+
+const educationDemoCampaign: Campaign = {
+  id: -1,
+  slug: 'yt-edu-demo',
+  title: 'YouTube Education Demo',
+  description: 'Eine Beschreibung der Anwendung',
+  config: demoConfig,
 };
 
 const allCampaigns = [
@@ -181,6 +186,7 @@ const allCampaigns = [
   simpleCampaign,
   searchCampaign,
   testCampaign,
+  educationDemoCampaign,
 ];
 
 export {
@@ -190,5 +196,5 @@ export {
   testConfig,
   searchConfig,
   allCampaigns,
-  youtubeMeta,
+  educationDemoCampaign,
 };
