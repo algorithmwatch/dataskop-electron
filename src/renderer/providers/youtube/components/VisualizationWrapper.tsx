@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useScraping } from '../../../contexts';
 import { getLookups, getScrapingResultsBySession } from '../../../lib/db';
-import demoData from '../static/demo.json';
 import AutoplayChain from './visualizations/AutoplayChain';
 import MyData from './visualizations/MyData';
 import NewsTop5 from './visualizations/NewsTop5';
@@ -12,13 +11,13 @@ export default function VisualizationWrapper({ name }: { name: string }) {
   const [data, setData] = useState<any>(null);
 
   const {
-    state: { sessionId, scrapingProgress, demoMode },
+    state: { sessionId, scrapingProgress, demoMode, demoData },
   } = useScraping();
 
   useEffect(() => {
     const loadData = async () => {
-      if (demoMode) {
-        setData(demoData);
+      if (demoData) {
+        setData(demoData.data);
       } else if (sessionId) {
         const results = await getScrapingResultsBySession(sessionId);
         const lookups = await getLookups();
@@ -26,7 +25,13 @@ export default function VisualizationWrapper({ name }: { name: string }) {
       }
     };
     loadData();
-  }, [demoMode, sessionId, scrapingProgress.value, scrapingProgress.step]);
+  }, [
+    demoMode,
+    demoData,
+    sessionId,
+    scrapingProgress.value,
+    scrapingProgress.step,
+  ]);
 
   if ((!demoMode && !sessionId) || data === null) return null;
 

@@ -7,8 +7,7 @@
  */
 import _ from 'lodash';
 import React, { useEffect } from 'react';
-import { Campaign } from 'renderer/providers/types';
-import demoData from '../providers/youtube/static/demo.json';
+import { Campaign, DemoData } from 'renderer/providers/types';
 
 export type ScrapingProgress = {
   isActive: boolean;
@@ -55,7 +54,7 @@ type Action =
     }
   | { type: 'set-log-html'; logHtml: boolean }
   | { type: 'set-disable-input'; disableInput: boolean }
-  | { type: 'set-demo-mode'; demoMode: boolean }
+  | { type: 'set-demo-mode'; demoMode: boolean; demoData: DemoData | null }
   | {
       type: 'increment-finished';
     };
@@ -84,6 +83,7 @@ type State = {
   logHtml: boolean;
   disableInput: boolean;
   demoMode: boolean;
+  demoData: DemoData | null;
   startedAt: number | null;
   finishedTasks: number;
 };
@@ -117,6 +117,7 @@ const initialState: State = {
   logHtml: false,
   disableInput: false,
   demoMode: false,
+  demoData: null,
   startedAt: null,
   finishedTasks: 0,
 };
@@ -242,7 +243,7 @@ const scrapingReducer = (state: State, action: Action): State => {
     }
 
     case 'set-demo-mode': {
-      return { ...state, demoMode: action.demoMode };
+      return { ...state, demoMode: action.demoMode, demoData: action.demoData };
     }
 
     case 'increment-finished': {
@@ -258,21 +259,27 @@ const scrapingReducer = (state: State, action: Action): State => {
 const ScrapingProvider = ({ children }: ScrapingProviderProps) => {
   const [state, dispatch] = React.useReducer(scrapingReducer, initialState);
 
+  /**
+   * A quick and dirty way to compute an ETA based on the demo data.
+   */
   const getEtaUntil = (checkUntilStep = null) => {
-    const { startedAt, finishedTasks } = state;
+    const { startedAt, finishedTasks, demoData } = state;
+
+    if (demoData === null) return null;
     if (startedAt === null) return null;
 
-    const untilIndex = checkUntilStep || demoData.results.length - 1;
+    const untilIndex = checkUntilStep || demoData.data.results.length - 1;
 
     const finishedFixed =
-      finishedTasks - 1 < demoData.results.length
+      finishedTasks - 1 < demoData.data.results.length
         ? finishedTasks - 1
-        : demoData.results.length - 1;
+        : demoData.data.results.length - 1;
 
-    const demoStartedAt = demoData.results[0].scrapedAt - 10000; // ~ 10 seconds
-    const demoTime = demoData.results[finishedFixed].scrapedAt;
+    const demoStartedAt = demoData.data.results[0].scrapedAt - 10000; // ~ 10 seconds
+    const demoTime = demoData.data.results[finishedFixed].scrapedAt;
     const demoDuration = demoTime - demoStartedAt;
-    const demoRemaining = demoData.results[untilIndex].scrapedAt - demoTime;
+    const demoRemaining =
+      demoData.data.results[untilIndex].scrapedAt - demoTime;
 
     const ourTime = Date.now() - startedAt;
 

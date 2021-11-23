@@ -1,4 +1,5 @@
 import { Campaign } from '../../types';
+import ytDefaultDemoData from '../static/yt-default-demo.json';
 import {
   ActionProcedureConfig,
   ProfileProcedureConfig,
@@ -105,6 +106,7 @@ const defaultConfig: YtScrapingConfig = {
     logOutVideoScraperStep,
     searchStep,
   ],
+  demoData: [{ title: 'YouTube Default Demo', data: ytDefaultDemoData }],
 };
 
 const defaultCampaign: Campaign = {
@@ -171,6 +173,12 @@ const testCampaign: Campaign = {
 const demoConfig: YtScrapingConfig = {
   ...defaultConfig,
   navigation: 'yt-education-demo',
+  demoData: [
+    { title: 'Persona 1', data: ytDefaultDemoData },
+    { title: 'Persona 2', data: ytDefaultDemoData },
+    { title: 'Persona 3', data: ytDefaultDemoData },
+    { title: 'Persona 4', data: ytDefaultDemoData },
+  ],
 };
 
 const educationDemoCampaign: Campaign = {

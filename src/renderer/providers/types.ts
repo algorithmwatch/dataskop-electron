@@ -7,6 +7,12 @@ export type ProviderInformation = {
   navigation: { [key: string]: NavigationState };
 };
 
+export type DemoData = {
+  title: string;
+  // for the future: this can also be an url so the data may get fetched remotely
+  data: any;
+};
+
 export interface ScrapingConfig {
   // enforce versioning of schema / type
   version: number;
@@ -16,6 +22,8 @@ export interface ScrapingConfig {
   steps: any[];
   // set to a builtin navigation config
   navigation: string;
+  // for the demo mode
+  demoData: DemoData[];
 }
 
 export type Campaign = {

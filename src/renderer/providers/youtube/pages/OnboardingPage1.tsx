@@ -38,7 +38,10 @@ export default function OnboardingPage1(): JSX.Element {
     }
   }, [isUserLoggedIn]);
 
-  useEffect(() => dispatch({ type: 'set-demo-mode', demoMode: false }), []);
+  useEffect(
+    () => dispatch({ type: 'set-demo-mode', demoMode: false, demoData: null }),
+    [],
+  );
 
   return (
     <>
@@ -76,7 +79,12 @@ export default function OnboardingPage1(): JSX.Element {
             <div className="mt-4">
               <Button
                 onClick={() => {
-                  dispatch({ type: 'set-demo-mode', demoMode: true });
+                  if (campaign === null) return;
+                  dispatch({
+                    type: 'set-demo-mode',
+                    demoMode: true,
+                    demoData: campaign.config.demoData[0],
+                  });
                   sendEvent(campaign, 'clicked use demo data');
                   hist.push(routes.ONBOARDING_2.path);
                 }}

@@ -27,7 +27,10 @@ export default function SelectDemoPage(): JSX.Element {
     },
   ];
 
-  useEffect(() => dispatch({ type: 'set-demo-mode', demoMode: false }), []);
+  useEffect(
+    () => dispatch({ type: 'set-demo-mode', demoMode: false, demoData: null }),
+    [],
+  );
 
   return (
     <>
@@ -41,50 +44,26 @@ export default function SelectDemoPage(): JSX.Element {
               am Ende noch einmal, ob du nicht doch Daten spenden könntest, um
               unsere Untersuchung zu unterstützen.
             </p>
-            <div className="mt-4">
-              <Button
-                onClick={() => {
-                  dispatch({ type: 'set-demo-mode', demoMode: true });
-                  sendEvent(campaign, 'clicked use demo data');
-                  hist.push(getNextPage('path'));
-                }}
-              >
-                Persona 1
-              </Button>
-            </div>
-            <div className="mt-4">
-              <Button
-                onClick={() => {
-                  dispatch({ type: 'set-demo-mode', demoMode: true });
-                  sendEvent(campaign, 'clicked use demo data');
-                  hist.push(getNextPage('path'));
-                }}
-              >
-                Persona 2
-              </Button>
-            </div>
-            <div className="mt-4">
-              <Button
-                onClick={() => {
-                  dispatch({ type: 'set-demo-mode', demoMode: true });
-                  sendEvent(campaign, 'clicked use demo data');
-                  hist.push(getNextPage('path'));
-                }}
-              >
-                Persona 3
-              </Button>
-            </div>
-            <div className="mt-4">
-              <Button
-                onClick={() => {
-                  dispatch({ type: 'set-demo-mode', demoMode: true });
-                  sendEvent(campaign, 'clicked use demo data');
-                  hist.push(getNextPage('path'));
-                }}
-              >
-                Persona 4
-              </Button>
-            </div>
+
+            {campaign?.config.demoData.map((demoData) => {
+              return (
+                <div className="mt-4" key={demoData.title}>
+                  <Button
+                    onClick={() => {
+                      dispatch({
+                        type: 'set-demo-mode',
+                        demoMode: true,
+                        demoData,
+                      });
+                      sendEvent(campaign, 'clicked use demo data');
+                      hist.push(getNextPage('path'));
+                    }}
+                  >
+                    {demoData.title}
+                  </Button>
+                </div>
+              );
+            })}
           </div>
         </div>
       </ContentWrapper>
