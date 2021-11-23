@@ -112,37 +112,16 @@ const ytEduDemoNav = {
       path: ytRoutes.MY_DATA.path,
       sectionKey: ytRoutes.MY_DATA.path,
     },
-    {
-      path: ytRoutes.QUESTIONNAIRE.path,
-      sectionKey: ytRoutes.QUESTIONNAIRE.path,
-    },
-    {
-      path: ytRoutes.DONATION1.path,
-      sectionKey: ytRoutes.DONATION1.path,
-    },
-    {
-      path: ytRoutes.DONATION2.path,
-      sectionKey: null,
-    },
-    {
-      path: ytRoutes.DONATION_SUCCESS.path,
-      sectionKey: ytRoutes.DONATION_SUCCESS.path,
-    },
   ],
   sections: {
-    [ytRoutes.INTERFACE_TUTORIAL.path]: { label: 'Die Benutzeroberfläche' },
     [ytRoutes.SCRAPING_EXPLANATION.path]: {
       label: 'Wie funktioniert Scraping?',
     },
     [ytRoutes.VISUALIZATION_PROFILE.path]: { label: 'Mein YouTube-Profil' },
-    [ytRoutes.RESEARCH_INFO.path]: { label: 'Was wir untersuchen' },
     [ytRoutes.VISUALIZATION_AUTOPLAYCHAIN.path]: { label: 'AutoPlay Viz' },
     [ytRoutes.VISUALIZATION_NEWS.path]: { label: 'News Viz' },
     [ytRoutes.VISUALIZATION_SEARCH.path]: { label: 'Search Viz' },
     [ytRoutes.MY_DATA.path]: { label: 'Meine Daten' },
-    [ytRoutes.QUESTIONNAIRE.path]: { label: 'Umfrage' },
-    [ytRoutes.DONATION1.path]: { label: 'Die Datenspende' },
-    [ytRoutes.DONATION_SUCCESS.path]: { label: 'Ende' },
   },
 };
 

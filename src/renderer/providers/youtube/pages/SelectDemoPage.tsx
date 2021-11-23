@@ -49,7 +49,40 @@ export default function SelectDemoPage(): JSX.Element {
                   hist.push(getNextPage('path'));
                 }}
               >
-                Demo starten
+                Persona 1
+              </Button>
+            </div>
+            <div className="mt-4">
+              <Button
+                onClick={() => {
+                  dispatch({ type: 'set-demo-mode', demoMode: true });
+                  sendEvent(campaign, 'clicked use demo data');
+                  hist.push(getNextPage('path'));
+                }}
+              >
+                Persona 2
+              </Button>
+            </div>
+            <div className="mt-4">
+              <Button
+                onClick={() => {
+                  dispatch({ type: 'set-demo-mode', demoMode: true });
+                  sendEvent(campaign, 'clicked use demo data');
+                  hist.push(getNextPage('path'));
+                }}
+              >
+                Persona 3
+              </Button>
+            </div>
+            <div className="mt-4">
+              <Button
+                onClick={() => {
+                  dispatch({ type: 'set-demo-mode', demoMode: true });
+                  sendEvent(campaign, 'clicked use demo data');
+                  hist.push(getNextPage('path'));
+                }}
+              >
+                Persona 4
               </Button>
             </div>
           </div>
