@@ -35,6 +35,10 @@ You may add the following (replace the token) to aforementioned `~/.npmrc`:
 //npm.fontawesome.com/:_authToken=thetoken
 ```
 
+#### Setup Git LFS
+
+Setup [Git LFS](https://git-lfs.github.com/) to store large, mostly binary files (e.g. images), outside of git.
+
 ### Installation
 
 First, install Node v16+. Then, clone the repo via git and install dependencies:

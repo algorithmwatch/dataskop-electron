@@ -19,8 +19,12 @@ jobs:
         os: [ubuntu-latest]
 
     steps:
-      - name: Checkout git repo
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      - name: Checkout LFS objects
+        run: git lfs checkout
 
       - name: Install Node and NPM
         uses: actions/setup-node@v2
