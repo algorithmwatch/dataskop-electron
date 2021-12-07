@@ -4,11 +4,11 @@ import { faIdCard } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRef, useState } from 'react';
 import Button from 'renderer/components/Button';
-import { exportCsv } from 'renderer/lib/utils/export';
 import ContentWrapper from '../../../../../components/ContentWrapper';
 import Explainer from '../../../../../components/Explainer';
 import Infobox from '../../../../../components/Infobox';
 import { Lookup, ScrapingResult } from '../../../../../lib/db/types';
+import { exportWatchHistoryCsv } from '../../../lib/export';
 import Beeswarm from './Beeswarm';
 import Loading from './Loading';
 import { useData } from './useData';
@@ -163,7 +163,7 @@ export default function ProfileVis({
         <div className="mt-7 text-center">
           <Button
             theme={'link'}
-            onClick={() => exportCsv('watch-history', db.history)}
+            onClick={() => exportWatchHistoryCsv(db.history)}
           >
             CSV exportieren
           </Button>

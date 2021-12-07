@@ -1,6 +1,7 @@
 // only extract data from HTML, used for
 
 import { parseVideoNoJs } from '@algorithmwatch/harke';
+import _ from 'lodash';
 import { addLookups, clearLookups, getLookups } from 'renderer/lib/db';
 import dayjs from 'renderer/lib/utils/dayjs';
 import { delay } from 'renderer/lib/utils/time';
@@ -43,7 +44,7 @@ async function lookupOrScrapeVideos(videoIds: string[]) {
   await delay(3000);
 
   // only fetch new videos that are not already stored
-  const toFetch = videoIds.filter((x) => !readyIds.has(x));
+  const toFetch = _.uniq(videoIds.filter((x) => !readyIds.has(x)));
 
   const fetched = await window.electron.ipcRenderer.invoke(
     'scraping-background-videos',

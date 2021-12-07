@@ -228,10 +228,11 @@ const clearData = async () => {
   if (db === null) throw Error('db is not initialized');
 
   if (db.data === null) return;
+  // keep campaign data
   db.data = {
     scrapingSessions: [],
     scrapingResults: [],
-    scrapingConfigs: db.data.scrapingConfigs,
+    campaigns: db.data.campaigns,
     lookups: [],
   };
   await db.write();
