@@ -9,7 +9,9 @@ async function lookupOrScrapeVideos(videoIds: string[]) {
   const data = await getLookups();
 
   const readyIds = new Set(
-    data.filter(({ info }) => info != null).map(({ info: { id } }) => id),
+    data
+      .filter(({ info }) => info != null)
+      .map(({ info: { videoId } }) => videoId),
   );
 
   const getHtml = async () => {
