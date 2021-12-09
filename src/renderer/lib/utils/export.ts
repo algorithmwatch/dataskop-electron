@@ -12,38 +12,20 @@ import dayjs from './dayjs';
 const exportCsv = ({
   filename,
   data,
-  dropColumns = [],
-  newColumns = [],
+  headers,
   renameColumns = {},
   transformColumns = _.identity,
   enumerateRows = false,
 }: {
   filename: string;
   data: any[];
-  dropColumns?: string[];
-  newColumns?: string[];
+  headers: string[];
   renameColumns?: { [key: string]: string };
   transformColumns?: (arg0: any) => any;
   enumerateRows?: boolean;
 }) => {
   // `__` is Django's way of handling nested objects
   const flatData = data.map((x) => flatten(x, { delimiter: '__' }));
-
-  // 1) get all possible keys form all objects
-  // 2) remove columns
-  const oldHeaders = _(flatData.map((x) => Object.keys(x)).flat())
-    .uniq()
-    .pull(...dropColumns)
-    .concat(...newColumns)
-    .value();
-
-  if (enumerateRows) oldHeaders.unshift('index');
-
-  const headers = _(oldHeaders)
-    .map((x) => {
-      return _.get(renameColumns, x, x);
-    })
-    .value();
 
   // remove, rename and transform columns
   const cleanedData = _(flatData)
@@ -55,7 +37,6 @@ const exportCsv = ({
     .map(transformColumns)
     .map((x) => renameKeys(x, renameColumns))
     .map((x) => {
-      // _.omit will get removed in lodash v5
       return _(x).pick(headers).value();
     })
     // remove empty objects
