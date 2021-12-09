@@ -16,10 +16,10 @@ import _ from 'lodash';
 import debounce from 'lodash/debounce';
 import React, { useMemo, useState } from 'react';
 import Button from 'renderer/components/Button';
-import { exportCsv } from 'renderer/lib/utils/export';
 import Explainer from '../../../../components/Explainer';
 import Infobox from '../../../../components/Infobox';
 import { ScrapingResultSaved } from '../../../../lib/db/types';
+import { exportAutoplaychainCsv } from '../../lib/export';
 import explainerImage from '../../static/images/autoplay-explainer.png';
 import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
 
@@ -404,7 +404,7 @@ export default function AutoplayChain({
             <div className="mt-7 text-center">
               <Button
                 theme={'link'}
-                onClick={() => exportCsv('autoplay', groups)}
+                onClick={() => exportAutoplaychainCsv(groups)}
               >
                 CSV exportieren
               </Button>

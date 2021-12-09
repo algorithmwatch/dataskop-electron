@@ -9,6 +9,8 @@ const translateCategories = (cat: string) => {
   return cat;
 };
 
+const onlineSince = (x) => dayjs().diff(dayjs(x), 'day');
+
 const exportWatchHistoryCsv = async (data) => {
   const videoIds = data.map(({ id }) => id);
   const allLookups = await lookupOrScrapeVideos(videoIds);
@@ -19,7 +21,7 @@ const exportWatchHistoryCsv = async (data) => {
     const rawDate = lookups.filter((l) => l.info.videoId === x.id)[0].info
       .publishedAt;
 
-    x['Online seit (Tage)'] = dayjs().diff(dayjs(rawDate), 'day');
+    x['Online seit (Tage)'] = onlineSince(rawDate);
     x.category = translateCategories(x.category);
   });
 
@@ -61,4 +63,53 @@ const exportWatchHistoryCsv = async (data) => {
   });
 };
 
-export { exportWatchHistoryCsv };
+const exportAutoplaychainCsv = (data) => {
+  const transformedData = data.map((x, i) => {
+    const seed = {
+      Nr: i + 1,
+      Titel_seed: x[0].fields.title,
+      Kanalname_seed: x[0].fields.channel.name,
+      Aufrufe_seed: x[0].fields.viewCount,
+      Kategorie_seed: translateCategories(x[0].fields.category),
+      'Online seit_seed (Tage)': onlineSince(x[0].fields.uploadDate),
+      'Videolänge_seed (Sek.)': x[0].fields.duration / 10000,
+    };
+
+    const rows = x.slice(1).map((r, i) => {
+      const follow = {
+        Empfehlung: i + 1,
+        Titel: r.fields.title,
+        Kanalname: r.fields.channel.name,
+        Aufrufe: r.fields.viewCount,
+        Kategorie: translateCategories(r.fields.category),
+        'Online seit (Tage)': onlineSince(r.fields.uploadDate),
+        'Videolänge (Sek.)': r.fields.duration / 10000,
+      };
+      return { ...follow, ...seed };
+    });
+    return rows;
+  });
+
+  exportCsv({
+    filename: 'autoplay',
+    data: transformedData.flat(),
+    headers: [
+      'Nr',
+      'Titel_seed',
+      'Kanalname_seed',
+      'Kategorie_seed',
+      'Aufrufe_seed',
+      'Online seit_seed (Tage)',
+      'Videolänge_seed (Sek.)',
+      'Empfehlung',
+      'Titel',
+      'Kanalname',
+      'Kategorie',
+      'Aufrufe',
+      'Online seit (Tage)',
+      'Videolänge (Sek.)',
+    ],
+  });
+};
+
+export { exportWatchHistoryCsv, exportAutoplaychainCsv };
