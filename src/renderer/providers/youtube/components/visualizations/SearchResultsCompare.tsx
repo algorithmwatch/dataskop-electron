@@ -4,13 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import _ from 'lodash';
 import { useState } from 'react';
 import Button from 'renderer/components/Button';
-import { exportCsv } from 'renderer/lib/utils/export';
 import { Placement } from 'tippy.js';
 import { Carousel, Slide } from '../../../../components/Carousel';
 import { Options } from '../../../../components/Carousel/types';
 import Explainer from '../../../../components/Explainer';
 import Infobox from '../../../../components/Infobox';
 import { ScrapingResultSaved } from '../../../../lib/db/types';
+import { exportSearchCsv } from '../../lib/export';
 import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
 
 interface SearchResultsCompareDataItem {
@@ -199,7 +199,7 @@ export default function SearchResultsCompare({
           ))}
       </Carousel>
       <div className="mt-7 mx-auto">
-        <Button theme={'link'} onClick={() => exportCsv('search', queryGroups)}>
+        <Button theme={'link'} onClick={() => exportSearchCsv(queryGroups)}>
           CSV exportieren
         </Button>
       </div>

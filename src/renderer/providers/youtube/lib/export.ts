@@ -1,3 +1,8 @@
+/**
+ * A collection of functions to transform scraped data into useful data formats
+ * for CSV exports. This was initially implemented for the YT education mode.
+ * @module
+ */
 import { categories } from '@algorithmwatch/harke/src/constants';
 import _ from 'lodash';
 import dayjs from 'renderer/lib/utils/dayjs';
@@ -199,4 +204,73 @@ const exportNewsCsv = async (data) => {
   });
 };
 
-export { exportWatchHistoryCsv, exportAutoplaychainCsv, exportNewsCsv };
+// copy & pasted from `exportNewsCsv`
+const exportSearchCsv = async (data) => {
+  // limit to 10 recommendations
+  const MAX_RECOMMENDATION = 10;
+
+  const toLookup: string[] = [];
+
+  data.forEach((d) => {
+    d.signedInVideos
+      .slice(0, MAX_RECOMMENDATION)
+      .concat(d.signedOutVideos.slice(0, MAX_RECOMMENDATION))
+      .forEach((x) => {
+        toLookup.push(x.id);
+      });
+  });
+
+  const allLookups = await lookupOrScrapeVideos(toLookup);
+
+  const videoIdToLookup: any = {};
+
+  allLookups.forEach((x) => {
+    videoIdToLookup[x.info.videoId] = x.info;
+  });
+
+  const transformedData = data
+    .map((x, i) => {
+      const seed = {
+        Suchanfrage: x.query,
+      };
+
+      const rowsIn = x.signedInVideos
+        .slice(0, MAX_RECOMMENDATION)
+        .map((r, i) => {
+          return {
+            Empfehlung_in: i + 1,
+            ...getRecoInformation(videoIdToLookup, r, '_in'),
+          };
+        });
+
+      const rowsOut = x.signedOutVideos
+        .slice(0, MAX_RECOMMENDATION)
+        .map((r, i) => {
+          return {
+            Empfehlung_out: i + 1,
+            ...getRecoInformation(videoIdToLookup, r, '_out'),
+          };
+        });
+
+      return _.zipWith(
+        Array.from({ length: MAX_RECOMMENDATION }, () => seed),
+        rowsIn,
+        rowsOut,
+        (a: any, b: any, c: any) => ({ ...a, ...b, ...c }),
+      );
+    })
+    .flat();
+
+  exportCsv({
+    filename: 'search',
+    data: transformedData,
+    headers: Object.keys(transformedData[0]),
+  });
+};
+
+export {
+  exportWatchHistoryCsv,
+  exportAutoplaychainCsv,
+  exportNewsCsv,
+  exportSearchCsv,
+};
