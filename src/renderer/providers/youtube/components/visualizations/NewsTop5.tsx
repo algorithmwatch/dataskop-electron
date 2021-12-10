@@ -4,13 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import _ from 'lodash';
 import { useState } from 'react';
 import Button from 'renderer/components/Button';
-import { exportCsv } from 'renderer/lib/utils/export';
 import { Placement } from 'tippy.js';
 import { Carousel, Slide } from '../../../../components/Carousel';
 import { Options } from '../../../../components/Carousel/types';
 import Explainer from '../../../../components/Explainer';
 import Infobox from '../../../../components/Infobox';
 import { ScrapingResultSaved } from '../../../../lib/db/types';
+import { exportNewsCsv } from '../../lib/export';
 import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
 
 interface NewsTop5DataItem {
@@ -18,6 +18,7 @@ interface NewsTop5DataItem {
     id: string;
     title: string;
     channel: Channel;
+    fields: any;
   };
   signedInVideos: RecommendedVideo[];
   signedOutVideos: RecommendedVideo[];
@@ -120,6 +121,8 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
         id: x[0]?.fields.id,
         title: x[0]?.fields.title,
         channel: x[0]?.fields.channel,
+        // This is important for the CSV export
+        fields: x[0]?.fields,
       },
       signedInVideos: x[0]?.fields.recommendedVideos,
       signedOutVideos: x[1]?.fields.recommendedVideos,
@@ -220,7 +223,7 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
           ))}
       </Carousel>
       <div className="mt-7 mx-auto">
-        <Button theme={'link'} onClick={() => exportCsv('news', transformed)}>
+        <Button theme={'link'} onClick={() => exportNewsCsv(transformed)}>
           CSV exportieren
         </Button>
       </div>

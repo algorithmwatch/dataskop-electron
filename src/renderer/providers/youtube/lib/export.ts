@@ -1,6 +1,8 @@
 import { categories } from '@algorithmwatch/harke/src/constants';
+import _ from 'lodash';
 import dayjs from 'renderer/lib/utils/dayjs';
 import { exportCsv } from 'renderer/lib/utils/export';
+import { renameKeys } from 'renderer/vendor/lodash-contrib';
 import { lookupOrScrapeVideos } from './html-scrapers';
 
 const translateCategories = (cat: string) => {
@@ -10,6 +12,26 @@ const translateCategories = (cat: string) => {
 };
 
 const onlineSince = (x) => dayjs().diff(dayjs(x), 'day');
+
+const getBaseInformation = (item, suffix: string | null = null) => {
+  const result = {
+    Titel: item.fields.title,
+    Kanalname: item.fields.channel.name,
+    Aufrufe: item.fields.viewCount,
+    Kategorie: translateCategories(item.fields.category),
+    Online_seit_Tage: onlineSince(item.fields.uploadDate),
+    Videolaenge_Sek: item.fields.duration / 10000,
+  };
+
+  if (suffix) {
+    const keys = Object.keys(result);
+    return renameKeys(
+      result,
+      Object.fromEntries(keys.map((x) => [x, x + suffix])),
+    );
+  }
+  return result;
+};
 
 const exportWatchHistoryCsv = async (data) => {
   const videoIds = data.map(({ id }) => id);
@@ -21,7 +43,7 @@ const exportWatchHistoryCsv = async (data) => {
     const rawDate = lookups.filter((l) => l.info.videoId === x.id)[0].info
       .publishedAt;
 
-    x['Online seit (Tage)'] = onlineSince(rawDate);
+    x['Online_seit_Tage'] = onlineSince(rawDate);
     x.category = translateCategories(x.category);
   });
 
@@ -32,22 +54,22 @@ const exportWatchHistoryCsv = async (data) => {
     headers: [
       'Nr',
       'Titel',
-      'Videolänge (Sek.)',
+      'Videolaenge_Sek',
       'Kanalname',
       'Wiedergabezeit_Prozent',
-      'Wiedergabezeit_Absolut (Sek.)',
+      'Wiedergabezeit_Absolut_Sek',
       'Aufrufe',
       'Kategorie',
-      'Online seit (Tage)',
+      'Online_seit_Tage',
       'Wochentag',
     ],
     renameColumns: {
       index: 'Nr',
       title: 'Titel',
-      duration: 'Videolänge (Sek.)',
+      duration: 'Videolaenge_Sek',
       channelName: 'Kanalname',
       percWatched: 'Wiedergabezeit_Prozent',
-      watchTime: 'Wiedergabezeit_Absolut (Sek.)',
+      watchTime: 'Wiedergabezeit_Absolut_Sek',
       category: 'Kategorie',
       viewCount: 'Aufrufe',
     },
@@ -64,52 +86,117 @@ const exportWatchHistoryCsv = async (data) => {
 };
 
 const exportAutoplaychainCsv = (data) => {
-  const transformedData = data.map((x, i) => {
-    const seed = {
-      Nr: i + 1,
-      Titel_seed: x[0].fields.title,
-      Kanalname_seed: x[0].fields.channel.name,
-      Aufrufe_seed: x[0].fields.viewCount,
-      Kategorie_seed: translateCategories(x[0].fields.category),
-      'Online seit_seed (Tage)': onlineSince(x[0].fields.uploadDate),
-      'Videolänge_seed (Sek.)': x[0].fields.duration / 10000,
-    };
-
-    const rows = x.slice(1).map((r, i) => {
-      const follow = {
-        Empfehlung: i + 1,
-        Titel: r.fields.title,
-        Kanalname: r.fields.channel.name,
-        Aufrufe: r.fields.viewCount,
-        Kategorie: translateCategories(r.fields.category),
-        'Online seit (Tage)': onlineSince(r.fields.uploadDate),
-        'Videolänge (Sek.)': r.fields.duration / 10000,
+  const transformedData = data
+    .map((x, i) => {
+      const seed = {
+        Nr: i + 1,
+        ...getBaseInformation(x[0], '_seed'),
       };
-      return { ...follow, ...seed };
-    });
-    return rows;
-  });
+
+      const rows = x.slice(1).map((r, i) => {
+        const follow = {
+          Empfehlung: i + 1,
+          ...getBaseInformation(r),
+        };
+        return { ...follow, ...seed };
+      });
+      return rows;
+    })
+    .flat();
 
   exportCsv({
     filename: 'autoplay',
-    data: transformedData.flat(),
-    headers: [
-      'Nr',
-      'Titel_seed',
-      'Kanalname_seed',
-      'Kategorie_seed',
-      'Aufrufe_seed',
-      'Online seit_seed (Tage)',
-      'Videolänge_seed (Sek.)',
-      'Empfehlung',
-      'Titel',
-      'Kanalname',
-      'Kategorie',
-      'Aufrufe',
-      'Online seit (Tage)',
-      'Videolänge (Sek.)',
-    ],
+    data: transformedData,
+    headers: Object.keys(transformedData[0]),
   });
 };
 
-export { exportWatchHistoryCsv, exportAutoplaychainCsv };
+const getRecoInformation = (
+  videoIdToLookup,
+  item,
+  suffix: string | null = null,
+) => {
+  const result = {
+    Titel: item.title,
+    Kanalname: item.channelName,
+    Aufrufe: item.viewCount,
+    Videolaenge_Sek: item.duration / 10000,
+    Kategorie: translateCategories(videoIdToLookup[item.id].category),
+    Online_seit_Tage: onlineSince(videoIdToLookup[item.id].publishedAt),
+  };
+
+  if (suffix) {
+    const keys = Object.keys(result);
+    return renameKeys(
+      result,
+      Object.fromEntries(keys.map((x) => [x, x + suffix])),
+    );
+  }
+  return result;
+};
+
+const exportNewsCsv = async (data) => {
+  // limit to 10 recommendations
+  const MAX_RECOMMENDATION = 10;
+
+  const toLookup: string[] = [];
+
+  data.forEach((d) => {
+    d.signedInVideos
+      .slice(0, MAX_RECOMMENDATION)
+      .concat(d.signedOutVideos.slice(0, MAX_RECOMMENDATION))
+      .forEach((x) => {
+        toLookup.push(x.id);
+      });
+  });
+
+  const allLookups = await lookupOrScrapeVideos(toLookup);
+
+  const videoIdToLookup: any = {};
+
+  allLookups.forEach((x) => {
+    videoIdToLookup[x.info.videoId] = x.info;
+  });
+
+  const transformedData = data
+    .map((x, i) => {
+      const seed = {
+        Nr: i + 1,
+        ...getBaseInformation(x.video, '_seed'),
+      };
+
+      const rowsIn = x.signedInVideos
+        .slice(0, MAX_RECOMMENDATION)
+        .map((r, i) => {
+          return {
+            Empfehlung_in: i + 1,
+            ...getRecoInformation(videoIdToLookup, r, '_in'),
+          };
+        });
+
+      const rowsOut = x.signedOutVideos
+        .slice(0, MAX_RECOMMENDATION)
+        .map((r, i) => {
+          return {
+            Empfehlung_out: i + 1,
+            ...getRecoInformation(videoIdToLookup, r, '_out'),
+          };
+        });
+
+      return _.zipWith(
+        Array.from({ length: MAX_RECOMMENDATION }, () => seed),
+        rowsIn,
+        rowsOut,
+        (a: any, b: any, c: any) => ({ ...a, ...b, ...c }),
+      );
+    })
+    .flat();
+
+  exportCsv({
+    filename: 'news',
+    data: transformedData,
+    headers: Object.keys(transformedData[0]),
+  });
+};
+
+export { exportWatchHistoryCsv, exportAutoplaychainCsv, exportNewsCsv };
