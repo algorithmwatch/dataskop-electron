@@ -277,7 +277,7 @@
     "formik": "^2.2.9",
     "history": "^5.1.0",
     "lodash": "^4.17.21",
-    "lowdb": "^2.1.0",
+    "lowdb": "^3.0.0",
     "p-limit": "3",
     "p-queue": "^7.1.0",
     "perfect-arrows": "^0.3.7",
