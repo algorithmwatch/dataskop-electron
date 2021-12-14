@@ -404,6 +404,7 @@ export default function AutoplayChain({
             <div className="mt-7 text-center">
               <Button
                 theme={'link'}
+                size={'small'}
                 onClick={() => exportAutoplaychainCsv(groups)}
               >
                 CSV exportieren

@@ -199,7 +199,11 @@ export default function SearchResultsCompare({
           ))}
       </Carousel>
       <div className="mt-7 mx-auto">
-        <Button theme={'link'} onClick={() => exportSearchCsv(queryGroups)}>
+        <Button
+          theme={'link'}
+          size={'small'}
+          onClick={() => exportSearchCsv(queryGroups)}
+        >
           CSV exportieren
         </Button>
       </div>

@@ -163,6 +163,7 @@ export default function ProfileVis({
         <div className="mt-7 text-center">
           <Button
             theme={'link'}
+            size={'small'}
             onClick={() => exportWatchHistoryCsv(db.history)}
           >
             CSV exportieren

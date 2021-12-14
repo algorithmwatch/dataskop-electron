@@ -223,7 +223,11 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
           ))}
       </Carousel>
       <div className="mt-7 mx-auto">
-        <Button theme={'link'} onClick={() => exportNewsCsv(transformed)}>
+        <Button
+          theme={'link'}
+          size={'small'}
+          onClick={() => exportNewsCsv(transformed)}
+        >
           CSV exportieren
         </Button>
       </div>
