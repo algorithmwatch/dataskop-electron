@@ -22,9 +22,11 @@ jobs:
           lfs: true
 
       - name: Checkout LFS objects
+        shell: bash
         run: git lfs checkout
 
       - name: Set current version (in tag)
+        shell: bash
         run: echo "GITHUB_TAG_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - name: Install Node and NPM
@@ -33,6 +35,7 @@ jobs:
           node-version: 16
 
       - name: Setup NPM auth token for font awesome pro & github packages
+        shell: bash
         run: >
           echo "//npm.fontawesome.com/:_authToken=${{ secrets.FONT_AWESOME_TOKEN }}" >> .npmrc &&
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_PACKAGES_TOKEN }}" >> .npmrc
@@ -43,6 +46,7 @@ jobs:
       # further below, we set ENV values for renderer + main
       # (maybe this can be fixed to always use this .env files)
       - name: Setup dotenv files (for renderer)
+        shell: bash
         run: >
           echo $GITHUB_TAG_VERSION &&
           if [[ $GITHUB_TAG_VERSION == *"beta"* ]]; then
@@ -53,6 +57,7 @@ jobs:
           if [[ $GITHUB_TAG_VERSION == *"beta"* ]]; then echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env; else echo "SENTRY_DSN=" >> .env; fi
 
       - name: Publish releases
+        shell: bash
         env:
           # macOS code signing
           APPLE_ID: ${{ secrets.APPLE_ID }}
