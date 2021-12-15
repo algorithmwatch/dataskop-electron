@@ -14,7 +14,7 @@ We have a helper script so run the following commands.
 New pre-release of new minor version, such as `v0.1.0-12`
 
 ```bash
-yarn run version:preminor
+npm run version:preminor
 ```
 
 ### Production Release
@@ -22,7 +22,7 @@ yarn run version:preminor
 To release a new patch for a production version:
 
 ```bash
-yarn run version:patch
+npm run version:patch
 ```
 
 ## Deployment via GitHub Actions (CI)
