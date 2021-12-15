@@ -1,6 +1,7 @@
 name: Publish release
 
-# Build on Linux for Linux + Windows, and on macOS for macOS in order to keep precious macOS-usage down (10x more expensive).
+# Build on Linux for Linux, and on macOS for macOS in order to keep precious macOS-usage down (10x more expensive).
+# Initially Windows was built on Linux, but Wine caused a lot of problems at some point.
 
 on:
   workflow_dispatch:
@@ -13,22 +14,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
-      # install wine the recommended way https://wiki.winehq.org/Ubuntu
-      - name: Setup wine
-        if: runner.os == 'Linux'
-        run: >
-          sudo dpkg --add-architecture i386 &&
-          sudo apt-get update &&
-          sudo apt-get install libselinux1-dev:i386 libmount-dev libgstreamer-gl1.0-0:i386 libgstreamer-plugins-base1.0-0:i386 libglib2.0-0:i386 libfaudio0:i386 libwine:i386 wine32
-        # wget -nc https://dl.winehq.org/wine-builds/winehq.key &&
-        # sudo apt-key add winehq.key &&
-        # sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main' &&
-        # sudo apt-get update &&
-        # sudo apt-get install libglib2.0-0 libfaudio0 libgstreamer-plugins-base1.0-dev libgstreamer-gl1.0-0 libodbc1 wine-stable-i386 wine-stable winehq-stable
-
       - uses: actions/checkout@v2
         with:
           lfs: true
@@ -58,10 +46,11 @@ jobs:
         run: >
           echo $GITHUB_TAG_VERSION &&
           if [[ $GITHUB_TAG_VERSION == *"beta"* ]]; then
-          echo "PLATFORM_URL=${{ secrets.BETA_PLATFORM_URL }}" >> .env; else
-          echo "PLATFORM_URL=${{ secrets.PLATFORM_URL }}" >> .env; fi &&
+          echo "PLATFORM_URL=${{ secrets.BETA_PLATFORM_URL }}" >> .env; else echo "PLATFORM_URL=${{ secrets.PLATFORM_URL }}" >> .env; fi &&
           echo "SERIOUS_PROTECTION=${{ secrets.SERIOUS_PROTECTION }}" >> .env &&
-          echo "TRACK_EVENTS=${{ secrets.TRACK_EVENTS }}" >> .env
+          echo "TRACK_EVENTS=${{ secrets.TRACK_EVENTS }}" >> .env &&
+          echo "UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }}" >> .env &&
+          if [[ $GITHUB_TAG_VERSION == *"beta"* ]]; then echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env; else echo "SENTRY_DSN=" >> .env; fi
 
       - name: Publish releases
         env:
@@ -81,11 +70,9 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: >
-          if [ "$RUNNER_OS" == "Linux" ]; then TARGET="--linux --win"; else TARGET="--mac"; fi &&
-          if [[ $GITHUB_TAG_VERSION == *"beta"* ]]; then SENTRY_DSN="${{ secrets.SENTRY_DSN }}"; else SENTRY_DSN=""; fi &&
           npm run postinstall &&
-          npm run cross-env SENTRY_DSN=$SENTRY_DSN UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }} npm run build &&
-          npm exec electron-builder -- --publish always $TARGET
+          npm run build &&
+          npm exec electron-builder -- --publish always
 
       # Only notification for macOS since this runner takes usually the longest.
       - uses: "marvinpinto/action-keybase-notifications@latest"
