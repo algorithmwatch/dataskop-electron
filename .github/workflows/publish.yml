@@ -22,7 +22,7 @@ jobs:
         run: >
           sudo dpkg --add-architecture i386 &&
           sudo apt-get update &&
-          sudo apt-get install libwine wine32
+          sudo apt-get install libwine:i386 libwine wine32
         # wget -nc https://dl.winehq.org/wine-builds/winehq.key &&
         # sudo apt-key add winehq.key &&
         # sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main' &&
