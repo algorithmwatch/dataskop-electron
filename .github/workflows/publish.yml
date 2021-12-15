@@ -16,12 +16,16 @@ jobs:
         os: [ubuntu-20.04, macos-latest]
 
     steps:
+      # install wine the recommended way https://wiki.winehq.org/Ubuntu
       - name: Setup wine
         if: runner.os == 'Linux'
         run: >
           sudo dpkg --add-architecture i386 &&
+          wget -nc https://dl.winehq.org/wine-builds/winehq.key &&
+          sudo apt-key add winehq.key &&
+          sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main' &&
           sudo apt-get update &&
-          sudo apt-get install wine64
+          sudo apt-get install --install-recommends winehq-stable
 
       - uses: actions/checkout@v2
         with:
