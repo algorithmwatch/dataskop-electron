@@ -1,7 +1,7 @@
 {
   "name": "dataskop-electron",
   "productName": "DataSkop",
-  "version": "0.2.0-beta.10",
+  "version": "0.2.0-beta.11",
   "description": "DataSkop Electron App: The Personal Data Dashboard (PeDD) of DataSkop",
   "main": "./dist/main/main.js",
   "author": {
