@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-20.04, macos-latest]
 
     steps:
       - name: Setup wine
@@ -21,7 +21,7 @@ jobs:
         run: >
           sudo dpkg --add-architecture i386 &&
           sudo apt-get update &&
-          sudo apt-get install --install-recommends wine32
+          sudo apt-get install wine64
 
       - uses: actions/checkout@v2
         with:
