@@ -14,8 +14,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        # os: [macos-latest]
-        # os: [ubuntu-latest]
 
     steps:
       - name: Setup wine
@@ -23,7 +21,7 @@ jobs:
         run: >
           sudo dpkg --add-architecture i386 &&
           sudo apt-get update &&
-          sudo apt-get install wine64
+          sudo apt-get install wine64 wine32
 
       - uses: actions/checkout@v2
         with:
