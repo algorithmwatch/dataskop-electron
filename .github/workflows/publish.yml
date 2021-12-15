@@ -22,7 +22,7 @@ jobs:
         run: >
           sudo dpkg --add-architecture i386 &&
           sudo apt-get update &&
-          sudo apt-get install libgstreamer-gl1.0-0:i386 libgstreamer-plugins-base1.0-0:i386 libglib2.0-0:i386 libfaudio0:i386 libwine:i386 wine32
+          sudo apt-get install libselinux1-udeb:i386 libmount-dev:386 libgstreamer-gl1.0-0:i386 libgstreamer-plugins-base1.0-0:i386 libglib2.0-0:i386 libfaudio0:i386 libwine:i386 wine32
         # wget -nc https://dl.winehq.org/wine-builds/winehq.key &&
         # sudo apt-key add winehq.key &&
         # sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main' &&
