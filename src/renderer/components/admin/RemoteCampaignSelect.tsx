@@ -23,16 +23,14 @@ export default function RemoteCampaignConfig() {
   };
 
   const fetchCams = async () => {
-    console.log('x', platformUrl);
     if (platformUrl == null) return;
     const options = await getActiveCampaigns(platformUrl, seriousProtection);
-    console.log(options);
     setCamOptions(options);
   };
 
   useEffect(() => {
     fetchCams();
-  }, []);
+  }, [platformUrl, seriousProtection]);
 
   const handleChange = (event: any) => {
     setChosenCam(event.target.value);

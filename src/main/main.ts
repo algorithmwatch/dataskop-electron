@@ -33,6 +33,9 @@ import MenuBuilder from './menu';
 import registerScrapingHandlers from './scraping';
 import { resolveHtmlPath } from './util';
 
+// read .env files for development
+require('dotenv').config();
+
 const DEBUG =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
@@ -281,4 +284,17 @@ ipcMain.handle('get-version-number', () => {
 
 ipcMain.handle('get-path-user-data', () => {
   return app.getPath('userData');
+});
+
+ipcMain.handle('get-env', () => {
+  // Expose configs done via .env to the renderer. The keys have to references as
+  // follows, don't try to optimize the code.
+  return {
+    NODE_ENV: process.env.NODE_ENV,
+    DEBUG_PROD: process.env.DEBUG_PROD,
+    PLATFORM_URL: process.env.PLATFORM_URL,
+    SIMPLE_BACKEND: process.env.SIMPLE_BACKEND,
+    TRACK_EVENTS: process.env.TRACK_EVENTS,
+    SERIOUS_PROTECTION: process.env.SERIOUS_PROTECTION,
+  };
 });

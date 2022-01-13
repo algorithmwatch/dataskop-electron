@@ -6,12 +6,22 @@
  *
  * @module
  */
+import * as Sentry from '@sentry/electron';
 import React, { useEffect } from 'react';
 import { postEvent } from 'renderer/lib/utils/networking';
 import { Campaign } from 'renderer/providers/types';
 
 type Action =
-  | { type: 'set-version'; version: string }
+  | {
+      type: 'set-config';
+      version: string;
+      isDebug: boolean;
+      showAdvancedMenu: boolean;
+      simpleBackendUrl: string;
+      platformUrl: string;
+      trackEvents: boolean;
+      seriousProtection: string;
+    }
   | { type: 'show-advanced-menu' }
   | { type: 'set-debug'; isDebug: boolean };
 type Dispatch = (action: Action) => void;
@@ -33,8 +43,17 @@ const ConfigStateContext = React.createContext<
 
 const configReducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case 'set-version': {
-      return { ...state, version: action.version };
+    case 'set-config': {
+      return {
+        ...state,
+        version: action.version,
+        isDebug: action.isDebug,
+        simpleBackendUrl: action.simpleBackendUrl,
+        platformUrl: action.platformUrl,
+        trackEvents: action.trackEvents,
+        seriousProtection: action.seriousProtection,
+        showAdvancedMenu: action.showAdvancedMenu,
+      };
     }
 
     case 'set-debug': {
@@ -52,23 +71,15 @@ const configReducer = (state: State, action: Action): State => {
 };
 
 const ConfigProvider = ({ children }: ConfigProviderProps) => {
-  const env = JSON.parse(window.electron.procEnv);
-
-  const isDebug = env.NODE_ENV === 'development' || env.DEBUG_PROD === 'true';
-  const simpleBackendUrl = env.SIMPLE_BACKEND ?? null;
-  const platformUrl = env.PLATFORM_URL ?? null;
-  const trackEvents = !!env.TRACK_EVENTS;
-  const seriousProtection = env.SERIOUS_PROTECTION ?? null;
-
   // initial values get overriden with `useEffect` when the component gets mounten
   const [state, dispatch] = React.useReducer(configReducer, {
     version: 'loading...',
-    isDebug,
-    showAdvancedMenu: isDebug,
-    simpleBackendUrl,
-    platformUrl,
-    trackEvents,
-    seriousProtection,
+    isDebug: false,
+    showAdvancedMenu: false,
+    simpleBackendUrl: null,
+    platformUrl: null,
+    trackEvents: false,
+    seriousProtection: null,
   });
 
   useEffect(() => {
@@ -77,7 +88,33 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
       const version = await window.electron.ipcRenderer.invoke(
         'get-version-number',
       );
-      dispatch({ type: 'set-version', version });
+
+      const env = await window.electron.ipcRenderer.invoke('get-env');
+
+      const isDebug =
+        env.NODE_ENV === 'development' || env.DEBUG_PROD === 'true';
+      const simpleBackendUrl = env.SIMPLE_BACKEND ?? null;
+      const platformUrl = env.PLATFORM_URL ?? null;
+      const trackEvents = !!env.TRACK_EVENTS;
+      const seriousProtection = env.SERIOUS_PROTECTION ?? null;
+      const showAdvancedMenu = isDebug;
+
+      if (env.SENTRY_DSN) {
+        Sentry.init({
+          dsn: env.SENTRY_DSN,
+        });
+      }
+
+      dispatch({
+        type: 'set-config',
+        isDebug,
+        version,
+        simpleBackendUrl,
+        platformUrl,
+        trackEvents,
+        seriousProtection,
+        showAdvancedMenu,
+      });
     };
     getVersionNumber();
   }, []);
@@ -90,10 +127,10 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
     message: string,
     data: any = {},
   ) => {
-    if (trackEvents && platformUrl !== null) {
+    if (state.trackEvents && state.platformUrl !== null) {
       postEvent(
-        platformUrl,
-        seriousProtection,
+        state.platformUrl,
+        state.seriousProtection,
         campaign === null ? -1 : campaign.id,
         message,
         data,

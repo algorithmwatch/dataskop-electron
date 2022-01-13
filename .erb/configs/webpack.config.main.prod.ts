@@ -68,7 +68,7 @@ export default merge(baseConfig, {
       DEBUG_PROD: false,
       START_MINIMIZED: false,
     }),
-    // read .env files
+    // read .env files for production
     new Dotenv(),
   ],
 

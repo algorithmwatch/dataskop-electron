@@ -41,7 +41,7 @@ export default function SelectCampaignPage(): JSX.Element {
       provider: campaign.config.provider,
       navSlug: campaign.config.navigation,
     });
-  }, [chosenIndex]);
+  }, [chosenIndex, availableCampaigns]);
 
   const footerNavItems: FooterNavItem[] = [
     {

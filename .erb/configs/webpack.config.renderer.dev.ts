@@ -1,7 +1,6 @@
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import chalk from 'chalk';
 import { execSync, spawn } from 'child_process';
-import Dotenv from 'dotenv-webpack';
 import fs from 'fs';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
@@ -134,9 +133,6 @@ export default merge(baseConfig, {
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development',
     }),
-
-    // read .env files
-    new Dotenv(),
 
     new webpack.LoaderOptionsPlugin({
       debug: true,

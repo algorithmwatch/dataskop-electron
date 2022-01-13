@@ -54,7 +54,7 @@ export default function StartPage(): JSX.Element {
 
   useEffect(() => {
     setActiveCampaign();
-  }, []);
+  }, [platformUrl, seriousProtection]);
 
   const footerNavItems: FooterNavItem[] = [
     {
