@@ -91,6 +91,11 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
 
       const env = await window.electron.ipcRenderer.invoke('get-env');
 
+      if (!env) {
+        console.log('could not get ENV from main');
+        return;
+      }
+
       const isDebug =
         env.NODE_ENV === 'development' || env.DEBUG_PROD === 'true';
       const simpleBackendUrl = env.SIMPLE_BACKEND ?? null;
