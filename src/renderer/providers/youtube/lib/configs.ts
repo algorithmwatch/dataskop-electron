@@ -184,8 +184,8 @@ const demoConfig: YtScrapingConfig = {
 const educationDemoCampaign: Campaign = {
   id: -1,
   slug: 'yt-edu-demo',
-  title: 'YouTube Education Demo',
-  description: 'Eine Beschreibung der Anwendung',
+  title: 'YouTube Demo für den Bildungsbereich',
+  description: 'Wir arbeiten gerade noch dieser Version.',
   config: demoConfig,
 };
 
