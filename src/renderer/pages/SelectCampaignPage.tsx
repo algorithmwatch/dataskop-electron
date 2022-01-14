@@ -64,7 +64,9 @@ export default function SelectCampaignPage(): JSX.Element {
   return (
     <>
       <div className="mx-auto flex flex-col h-full">
-        <div className="hl-4xl mb-6 text-center">Wähle aus</div>
+        <div className="hl-4xl mb-6 text-center">
+          Wähle eine Untersuchung aus
+        </div>
         <div className="text-center">
           {availableCampaigns.map((x, i) => {
             const border =
