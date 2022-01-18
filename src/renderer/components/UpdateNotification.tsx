@@ -47,7 +47,7 @@ export default function UpdateNotification(): JSX.Element {
                 </div>
                 <Button
                   onClick={() =>
-                    window.electron.ipcRenderer.send('restart_app')
+                    window.electron.ipcRenderer.invoke('restart_app')
                   }
                 >
                   Neustarten
