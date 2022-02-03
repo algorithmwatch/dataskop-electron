@@ -120,7 +120,7 @@
       "\\.(ts|tsx|js|jsx)$": "ts-jest"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!(@algorithmwatch/harke|lowdb|steno|p-queue|p-timeout|d3-array|internmap|d3-force|d3-quadtree|d3-dispatch|d3-timer|d3-selection))"
+      "node_modules/(?!(lowdb|steno|p-queue|p-timeout|d3-array|internmap|d3-force|d3-quadtree|d3-dispatch|d3-timer|d3-selection))"
     ],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
@@ -225,7 +225,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@algorithmwatch/harke": "^0.3.0",
+    "@algorithmwatch/harke": "^0.4.5",
     "@fortawesome/fontawesome-pro": "^5.15.3",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",

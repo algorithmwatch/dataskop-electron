@@ -3,7 +3,7 @@
  * for CSV exports. This was initially implemented for the YT education mode.
  * @module
  */
-import { categories } from '@algorithmwatch/harke/src/constants';
+import { constants } from '@algorithmwatch/harke';
 import _ from 'lodash';
 import dayjs from 'renderer/lib/utils/dayjs';
 import { exportCsv } from 'renderer/lib/utils/export';
@@ -11,7 +11,7 @@ import { renameKeys } from 'renderer/vendor/lodash-contrib';
 import { lookupOrScrapeVideos } from './html-scrapers';
 
 const translateCategories = (cat: string) => {
-  const newCat = categories.filter((x) => x.en === cat);
+  const newCat = constants.categories.filter((x) => x.en === cat);
   if (newCat.length === 1) return newCat[0].de;
   return cat;
 };

@@ -15,7 +15,7 @@ const configuration: webpack.Configuration = {
     rules: [
       {
         test: /\.[jt]sx?$/,
-        exclude: /node_modules\/(?!(parse-yt|@algorithmwatch\/*)\/).*/,
+        exclude: /node_modules/,
         use: {
           loader: 'ts-loader',
           // add to make compilation of @aw/harke work
