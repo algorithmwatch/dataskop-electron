@@ -237,7 +237,7 @@
     "@glidejs/glide": "^3.5.2",
     "@headlessui/react": "^1.4.2",
     "@material-ui/core": "^4.12.3",
-    "@observablehq/plot": "^0.1.0",
+    "@observablehq/plot": "^0.4.1",
     "@sentry/electron": "^2.5.4",
     "@tippyjs/react": "^4.2.6",
     "ajv": "^8.8.2",
