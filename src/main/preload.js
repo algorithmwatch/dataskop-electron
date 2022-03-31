@@ -3,7 +3,6 @@ const { contextBridge, ipcRenderer } = require('electron');
 // expose logging to renderer
 const log = require('electron-log');
 const path = require('path/posix');
-window.log = log.functions;
 
 // export main functions to renderer
 // main.ts
@@ -70,6 +69,7 @@ const validremoveAllChannels = [
 ];
 
 contextBridge.exposeInMainWorld('electron', {
+  log: log.functions,
   ipcRenderer: {
     on(channel, func) {
       if (validOnChannels.includes(channel)) {

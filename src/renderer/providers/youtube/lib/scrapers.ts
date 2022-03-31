@@ -111,7 +111,7 @@ const trySeveralTimes = async (
   // eslint-disable-next-line no-empty-pattern
   for (const i of range(numTries)) {
     try {
-      if (enableLogging) window.log.info(`fetch ${url}, try: ${i}`);
+      if (enableLogging) window.electron.log.info(`fetch ${url}, try: ${i}`);
       const getCurrentHtml = await getHtml(url);
       // wait after loading since the rendering is still happening
       await delay(timeout);
@@ -127,14 +127,14 @@ const trySeveralTimes = async (
 
       lastRes = result;
     } catch (e) {
-      if (enableLogging) window.log.error(JSON.stringify(e));
+      if (enableLogging) window.electron.log.error(JSON.stringify(e));
       console.error(e);
       allErros.push(e);
     }
   }
   if (!lastRes.success) {
     if (enableLogging)
-      window.log.error(
+      window.electron.log.error(
         `Too many failed tries to extract html: ${JSON.stringify(allErros)}`,
       );
 
@@ -208,7 +208,8 @@ const scrapeVideo = async (
     parseVideoPage,
     // at least 10 videos, still pass if timeout is reached
     (x, timeFrac) => {
-      if (enableLogging) window.log.info('not done yet', JSON.stringify(x));
+      if (enableLogging)
+        window.electron.log.info('not done yet', JSON.stringify(x));
       return x.fields.recommendedVideos.length > 10;
     },
     enableLogging,
@@ -290,7 +291,7 @@ async function* scrapeSeedVideosAndFollow(
   let step = initialStep;
 
   for (const { id, creator } of seedVideos) {
-    if (enableLogging) window.log.info(`do seed video: ${id}`);
+    if (enableLogging) window.electron.log.info(`do seed video: ${id}`);
     const followChainId = `${id}-${Date.now()}`;
     const dataFromSeed = await scrapeVideo(id, getHtml, comments);
     step += 1;
@@ -301,7 +302,7 @@ async function* scrapeSeedVideosAndFollow(
     dataFromSeed.fields.seedCreator = creator;
 
     if (enableLogging)
-      window.log.info(
+      window.electron.log.info(
         `got the following number of seed videos: ${dataFromSeed.fields.recommendedVideos.length}`,
       );
     // do not follow if there are no recommended videos
@@ -311,11 +312,11 @@ async function* scrapeSeedVideosAndFollow(
 
       // since we skip over some data, we may have reached the end already
       if (step >= maxSteps) {
-        window.log.info('reached early end');
+        window.electron.log.info('reached early end');
         return [1, dataFromSeed];
       }
 
-      window.log.info('skipping over following videos');
+      window.electron.log.info('skipping over following videos');
       // we have to continue because we should not try to get the following videos.
       // thus we yield here already
       yield [step / maxSteps, dataFromSeed];
