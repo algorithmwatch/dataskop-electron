@@ -7,23 +7,23 @@
 import { app, ipcMain } from 'electron';
 import fs from 'fs';
 import path from 'path';
-// const { JSONFile } = require('lowdb');
 
 export default async function registerDbHandlers() {
-  // const { JSONFile } = await import('lowdb');
-  // const { JSONFile } = lowdb;
-
   const userFolder = app.getPath('userData');
   const file = path.join(userFolder, 'db.json');
-  // const adapter = new JSONFile<any>(file);
 
-  // ipcMain.handle('db-read', adapter.read);
-  // ipcMain.handle('db-write', adapter.write);
   ipcMain.handle('db-write', (_e, data) => {
     return fs.writeFileSync(file, JSON.stringify(data), 'utf-8');
   });
+
   ipcMain.handle('db-read', () => {
-    return JSON.parse(fs.readFileSync(file, 'utf-8'));
+    try {
+      return JSON.parse(fs.readFileSync(file, 'utf-8'));
+    } catch (e) {
+      if ((e as NodeJS.ErrnoException).code === 'ENOENT') {
+        return null;
+      }
+      throw e;
+    }
   });
-  // ipcMain.handle('db-write', adapter.write);
 }
