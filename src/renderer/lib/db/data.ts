@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { Low } from 'lowdb';
 import PQueue from 'p-queue';
-import { Campaign, ScrapingConfig } from '../providers/types';
+import { Campaign, ScrapingConfig } from '../../providers/types';
 import { statsForArray } from '../utils/math';
 import { Lookup, ScrapingResultSaved, ScrapingSession } from './types';
 

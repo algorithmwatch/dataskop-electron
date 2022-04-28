@@ -1,5 +1,5 @@
 import { ParserResult } from '@algorithmwatch/harke';
-import { Campaign, ScrapingConfig } from '../providers/types';
+import { Campaign, ScrapingConfig } from '../../providers/types';
 
 // re-defining the slug of `ParserResult` from `harke-parser` because the slug is not changable
 interface ScrapingResult extends Omit<ParserResult, 'slug'> {
