@@ -24,9 +24,29 @@
       "required": ["id", "title", "slug", "description", "config"],
       "type": "object"
     },
+    "DemoData": {
+      "additionalProperties": false,
+      "properties": {
+        "data": {},
+        "title": {
+          "type": "string"
+        }
+      },
+      "required": ["title", "data"],
+      "type": "object"
+    },
     "ScrapingConfig": {
       "additionalProperties": false,
       "properties": {
+        "demoData": {
+          "items": {
+            "$ref": "#/definitions/DemoData"
+          },
+          "type": "array"
+        },
+        "navigation": {
+          "type": "string"
+        },
         "provider": {
           "type": "string"
         },
@@ -38,7 +58,7 @@
           "type": "number"
         }
       },
-      "required": ["version", "provider", "steps"],
+      "required": ["version", "provider", "steps", "navigation", "demoData"],
       "type": "object"
     }
   }

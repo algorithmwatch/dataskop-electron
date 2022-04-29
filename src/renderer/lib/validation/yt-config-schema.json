@@ -17,6 +17,17 @@
       "required": ["type", "slug"],
       "type": "object"
     },
+    "DemoData": {
+      "additionalProperties": false,
+      "properties": {
+        "data": {},
+        "title": {
+          "type": "string"
+        }
+      },
+      "required": ["title", "data"],
+      "type": "object"
+    },
     "ProfileProcedureConfig": {
       "additionalProperties": false,
       "properties": {
@@ -147,6 +158,16 @@
     "YtScrapingConfig": {
       "additionalProperties": false,
       "properties": {
+        "demoData": {
+          "items": {
+            "$ref": "#/definitions/DemoData"
+          },
+          "type": "array"
+        },
+        "navigation": {
+          "enum": ["yt-default", "yt-education-demo"],
+          "type": "string"
+        },
         "provider": {
           "const": "youtube",
           "type": "string"
@@ -162,7 +183,7 @@
           "type": "number"
         }
       },
-      "required": ["provider", "steps", "version"],
+      "required": ["demoData", "navigation", "provider", "steps", "version"],
       "type": "object"
     }
   }
