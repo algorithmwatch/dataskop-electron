@@ -80,11 +80,8 @@ jobs:
           npm run build &&
           npm exec electron-builder -- --publish always
 
-      # Only notification for macOS since this runner takes usually the longest.
-      - uses: "marvinpinto/action-keybase-notifications@latest"
-        if: runner.os == 'macOS'
-        with:
-          job_status: ${{ job.status }}
-          opensentinel_token: ${{ secrets.OSL_TOKEN }}
-          on_success: "always"
-          on_failure: "never"
+      - name: Notify Keybase channel
+        shell: bash
+        run: >
+          curl -X POST ${{ secrets.KEYBASE_WEBHOOK }} -H 'Content-Type: application/json'
+          -d '{"msg": "The new version ${{ github.ref_name }} for ${{ runner.os }} has been released. 🎉"}'

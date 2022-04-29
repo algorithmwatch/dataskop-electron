@@ -70,9 +70,6 @@ Guides:
 - https://codycallahan.com/blog/deploying-electron-with-github-actions-macos
 - https://www.electron.build/code-signing
 
-### Keybase Notification
+### Keybase notification
 
-Send a notification message on succesful deployment to a keybase chat.
-
-- https://www.opensentinel.com/docs/integrations/keybase
-- https://github.com/marvinpinto/action-keybase-notifications
+Send a notification for successful releases to a Keybase channel via the Keybase webhookbot.
