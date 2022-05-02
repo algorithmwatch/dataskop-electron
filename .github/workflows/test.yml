@@ -38,7 +38,13 @@ jobs:
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_PACKAGES_TOKEN }}" >> ~/.npmrc
 
       - name: Install dependencies
-        run: npm ci --ignore-scripts
+        continue-on-error: true
+        run: npm ci --ignore-scripts --verbose
+
+      # hotfix: retry installation
+      - name: Install dependencies
+        continue-on-error: true
+        run: npm ci --ignore-scripts --verbose
 
       - name: Build package and run tests
         env:
@@ -46,3 +52,11 @@ jobs:
         run: |
           npm run build
           npm test
+
+      # if any previous step has failed, get the npm logs
+      - name: Archive npm failure logs
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: npm-logs
+          path: ~/.npm/_logs
