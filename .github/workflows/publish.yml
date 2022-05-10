@@ -38,7 +38,10 @@ jobs:
       - name: Setup NPM auth token for font awesome pro & github packages
         shell: bash
         run: >
-          echo "//npm.fontawesome.com/:_authToken=${{ secrets.FONT_AWESOME_TOKEN }}" > ~/.npmrc &&
+          echo "registry=https://registry.npmjs.org/" > ~/.npmrc &&
+          echo "@algorithmwatch:registry=https://npm.pkg.github.com/" >> ~/.npmrc &&
+          echo "@fortawesome:registry=https://npm.fontawesome.com/" >> ~/.npmrc &&
+          echo "//npm.fontawesome.com/:_authToken=${{ secrets.FONT_AWESOME_TOKEN }}" >> ~/.npmrc &&
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_PACKAGES_TOKEN }}" >> ~/.npmrc
 
       - name: Install dependencies
