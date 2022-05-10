@@ -35,4 +35,5 @@ export type Campaign = {
   slug: string;
   description: string;
   config: ScrapingConfig;
+  featured: boolean;
 };

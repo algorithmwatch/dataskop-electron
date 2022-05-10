@@ -7,8 +7,7 @@ import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
 import { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
-import { useScraping } from '../contexts';
-import { useNavigation } from '../contexts/navigation';
+import { useNavigation, useScraping } from '../contexts';
 
 export default function SelectCampaignPage(): JSX.Element {
   const {
@@ -29,8 +28,6 @@ export default function SelectCampaignPage(): JSX.Element {
 
     const campaign = availableCampaigns[chosenIndex];
 
-    if (!campaign) return;
-
     dispatch({
       type: 'set-campaign',
       campaign,
@@ -40,6 +37,7 @@ export default function SelectCampaignPage(): JSX.Element {
       type: 'set-navigation-by-provider',
       provider: campaign.config.provider,
       navSlug: campaign.config.navigation,
+      skipCampaignSelection: false,
     });
   }, [chosenIndex, availableCampaigns]);
 

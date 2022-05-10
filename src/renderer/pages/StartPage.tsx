@@ -4,12 +4,11 @@
  * @module
  */
 import { faAngleRight } from '@fortawesome/pro-solid-svg-icons';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { localActiveCampaings } from 'renderer/providers';
 import FooterNav, { FooterNavItem } from '../components/FooterNav';
-import { useConfig, useScraping } from '../contexts';
-import { useNavigation } from '../contexts/navigation';
+import { useConfig, useNavigation, useScraping } from '../contexts';
 import { getActiveCampaigns } from '../lib/utils/networking';
 import awlogo from '../static/images/logos/aw-logo.png';
 import bmbflogo from '../static/images/logos/bmbf-logo.png';
@@ -24,9 +23,10 @@ export default function StartPage(): JSX.Element {
     state: { platformUrl, seriousProtection },
     sendEvent,
   } = useConfig();
-
-  const { getNextPage } = useNavigation();
+  const { getNextPage, dispatch: navDispath } = useNavigation();
   const { dispatch } = useScraping();
+
+  const [disableNextBtn, setDisableNextBtn] = useState(true);
 
   const setActiveCampaign = async () => {
     if (platformUrl == null) return;
@@ -36,15 +36,35 @@ export default function StartPage(): JSX.Element {
         await getActiveCampaigns(platformUrl, seriousProtection)
       ).concat(localActiveCampaings);
 
+      const availableCampaigns = campaigns.filter(
+        (x) => x.config && x.config.provider,
+      );
+
       // only use campaigns that have a valid provider configuration
       dispatch({
         type: 'set-available-campaigns',
-        availableCampaigns: campaigns.filter(
-          (x) => x.config && x.config.provider,
-        ),
+        availableCampaigns,
       });
 
+      // if a featured campaign exists, skip over the campaign selection page
+      const featuredCampaigns = availableCampaigns.filter((x) => x.featured);
+      if (featuredCampaigns.length > 0) {
+        dispatch({
+          type: 'set-campaign',
+          campaign: featuredCampaigns[0],
+        });
+
+        navDispath({
+          type: 'set-navigation-by-provider',
+          provider: featuredCampaigns[0].config.provider,
+          navSlug: featuredCampaigns[0].config.navigation,
+          skipCampaignSelection: true,
+        });
+      }
+
       sendEvent(null, 'successfully fetched remote config');
+
+      setTimeout(() => setDisableNextBtn(false), 100);
     } catch (error) {
       console.error('not able to set sraping config from remote');
       console.log(error);
@@ -59,6 +79,7 @@ export default function StartPage(): JSX.Element {
   const footerNavItems: FooterNavItem[] = [
     {
       label: 'Weiter',
+      disabled: disableNextBtn,
       // size: 'large',
       endIcon: faAngleRight,
       classNames: 'mx-auto',

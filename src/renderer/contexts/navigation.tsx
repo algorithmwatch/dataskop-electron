@@ -8,7 +8,12 @@ import { providerInfo } from 'renderer/providers';
 
 type Action =
   | { type: 'set-page-index'; pageIndex: number }
-  | { type: 'set-navigation-by-provider'; provider: string; navSlug: string };
+  | {
+      type: 'set-navigation-by-provider';
+      provider: string;
+      navSlug: string;
+      skipCampaignSelection: boolean;
+    };
 type Dispatch = (action: Action) => void;
 export type NavigationState = {
   pageIndex: number;
@@ -56,9 +61,15 @@ const NavigationReducer = (
       const navConfig =
         providerInfo[action.provider].navigation[action.navSlug];
 
+      let basePages = initialNavigationState.pages;
+
+      if (action.skipCampaignSelection) {
+        basePages = basePages.filter((x) => x.path !== '/select_campaign');
+      }
+
       return {
-        pageIndex: 1,
-        pages: initialNavigationState.pages.concat(navConfig.pages),
+        pageIndex: state.pageIndex,
+        pages: basePages.concat(navConfig.pages),
         sections: navConfig.sections,
       };
     }

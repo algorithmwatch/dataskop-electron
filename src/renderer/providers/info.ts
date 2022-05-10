@@ -1,6 +1,5 @@
 import { delay } from '../lib/utils/time';
-import { ProviderInformation } from './types';
-import { educationDemoCampaign as ytEduCampaign } from './youtube';
+import { Campaign, ProviderInformation } from './types';
 import { ytNavigation } from './youtube/lib/navigation';
 
 const youtubeMeta: ProviderInformation = {
@@ -14,7 +13,8 @@ const providerInfo: { [key: string]: ProviderInformation } = {
   youtube: youtubeMeta,
 };
 
-const localActiveCampaings = [ytEduCampaign];
+// To make some campaign always available, add them here.
+const localActiveCampaings: Campaign[] = [];
 
 const defaultDelay = 500;
 
