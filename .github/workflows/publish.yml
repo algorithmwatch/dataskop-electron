@@ -88,3 +88,10 @@ jobs:
         run: >
           curl -X POST ${{ secrets.KEYBASE_WEBHOOK }} -H 'Content-Type: application/json'
           -d '{"msg": "The new version ${{ github.ref_name }} for ${{ runner.os }} has been released. 🎉"}'
+
+      - name: Archive npm logs
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: npm-logs-publish
+          path: ~/.npm/_logs
