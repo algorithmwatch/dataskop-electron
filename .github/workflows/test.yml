@@ -35,20 +35,11 @@ jobs:
       - name: Setup NPM auth token for font awesome pro & github packages
         shell: bash
         run: >
-          echo "registry=https://registry.npmjs.org/" > ~/.npmrc &&
-          echo "@algorithmwatch:registry=https://npm.pkg.github.com/" >> ~/.npmrc &&
-          echo "@fortawesome:registry=https://npm.fontawesome.com/" >> ~/.npmrc &&
           echo "//npm.fontawesome.com/:_authToken=${{ secrets.FONT_AWESOME_TOKEN }}" >> ~/.npmrc &&
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_PACKAGES_TOKEN }}" >> ~/.npmrc
 
       - name: Install dependencies
-        continue-on-error: true
-        run: npm ci --ignore-scripts --verbose
-
-      # hotfix: retry installation
-      - name: Install dependencies
-        continue-on-error: true
-        run: npm ci --ignore-scripts --verbose
+        run: cat ~/.npmrc && npm ci --ignore-scripts --verbose
 
       - name: Build package and run tests
         env:
@@ -57,8 +48,7 @@ jobs:
           npm run build
           npm test
 
-      # if any previous step has failed, get the npm logs
-      - name: Archive npm failure logs
+      - name: Archive npm logs
         uses: actions/upload-artifact@v2
         if: failure()
         with:
