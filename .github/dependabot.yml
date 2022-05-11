@@ -34,3 +34,5 @@ updates:
         # There seem to be larger changes, maybe work on it later.
       - dependency-name: "*react-router*"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "@fortawesome*"
+        update-types: ["version-update:semver-major"]
