@@ -94,6 +94,10 @@ export default function Sidebar({
                   },
                   { label: 'results', to: routes.ADMIN_RESULTS.path },
                   { label: 'settings', to: routes.ADMIN_SETTINGS.path },
+                  {
+                    label: 'yt questionnaire',
+                    to: ytRoutes.QUESTIONNAIRE.path,
+                  },
                   { label: 'yt donation', to: ytRoutes.DONATION1.path },
                 ]}
               />

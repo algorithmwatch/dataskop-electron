@@ -1,10 +1,18 @@
-// @ts-nocheck
+/**
+ * A page with a basic questionnaire. The form was initially built with formik
+ * but ported to react-form-hook. If this component gets ever used again, ensure
+ * that it works. The limit for the checkboxes needs to get implemented.
+ *
+ * @module
+ */
 
+// @ts-nocheck
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable jsx-a11y/label-has-associated-control */
+import { constants } from '@algorithmwatch/harke';
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
-import { Field, Form, Formik, useField, useFormikContext } from 'formik';
 import React from 'react';
+import { useForm } from 'react-hook-form';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import Button from 'renderer/components/Button';
 import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
@@ -13,6 +21,13 @@ import { addQuestionnaireToSession } from 'renderer/lib/db';
 
 export default function QuestionnairePage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
 
   const hist = useHistory();
 
@@ -38,23 +53,6 @@ export default function QuestionnairePage(): JSX.Element {
     },
   ];
 
-  const categories = [
-    'Film & Animation',
-    'Autos & Fahrzeuge',
-    'Musik, Tiere, Sport',
-    'Reisen & Events',
-    'Gaming',
-    'Menschen & Blogs',
-    'Comedy',
-    'Unterhaltung',
-    'Nachrichten & Politik',
-    'Praktische Tipps & Styling',
-    'Bildung',
-    'Wissenschaft & Technik',
-    'Soziales',
-    'Engagement',
-  ];
-
   const usage = {
     vpn: 'Ich nutze YouTube über ein VPN.',
     shared: 'Ich teile meinen YouTube Account mit mind. einer weiteren Person.',
@@ -74,26 +72,6 @@ export default function QuestionnairePage(): JSX.Element {
     hist.push(getNextPage('path'));
   };
 
-  const LimitCheckbox = (props) => {
-    const { values, touched, setFieldValue } = useFormikContext();
-    const valuesField = values[props.name];
-    const touchField = touched[props.name];
-    const [field, meta] = useField(props);
-
-    React.useEffect(() => {
-      if (touchField && valuesField?.length > 3) {
-        setFieldValue(props.name, valuesField.slice(0, 3));
-      }
-    }, [valuesField, setFieldValue, touchField, props.name]);
-
-    return (
-      <>
-        <input {...props} {...field} />
-        {!!meta.touched && !!meta.error && <div>{meta.error}</div>}
-      </>
-    );
-  };
-
   return (
     <>
       <div className="mx-auto max-w-4xl flex flex-col justify-center w-full">
@@ -106,116 +84,100 @@ export default function QuestionnairePage(): JSX.Element {
           </p>
         </div>
         <div className="">
-          <Formik initialValues={{}} onSubmit={onSubmit}>
-            <Form>
-              <div className="divide-y divide-yellow-600 divide-dashed">
-                <div className="p-3">
-                  <label className="font-medium">
-                    <Field
-                      type="checkbox"
-                      name="contact"
-                      className="mr-2 semibold"
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="divide-y divide-yellow-600 divide-dashed">
+              <div className="p-3">
+                <div>
+                  <input type="checkbox" id="contactCheck" name="contact" />
+                  <label className="font-medium pl-3" for="contactCheck">
+                    Ja, mich dürfen die beteiligten Forscher*innen oder
+                    Journalist*innen mit Nachfragen kontaktieren.
+                  </label>
+                </div>
+              </div>
+              <div className="p-3">
+                <label htmlFor="sex" className="w-28 inline-block font-medium">
+                  Geschlecht
+                </label>
+                <div role="group" aria-labelledby="sex" className="ml-3 inline">
+                  <label className="mr-3">
+                    <input
+                      type="radio"
+                      name="sex"
+                      value="Frau"
+                      className="mr-2"
                     />
-                    <span>
-                      Ja, mich dürfen die beteiligten Forscher*innen oder
-                      Journalist*innen mit Nachfragen kontaktieren.
-                    </span>
+                    Frau
+                  </label>
+                  <label className="mr-3">
+                    <input
+                      type="radio"
+                      name="sex"
+                      value="Mann"
+                      className="mr-2"
+                    />
+                    Mann
+                  </label>
+                  <label className="">
+                    <input
+                      type="radio"
+                      name="sex"
+                      value="Divers"
+                      className="mr-2"
+                    />
+                    Divers
                   </label>
                 </div>
-                <div className="p-3">
-                  <label
-                    htmlFor="sex"
-                    className="w-28 inline-block font-medium"
-                  >
-                    Geschlecht
-                  </label>
-                  <div
-                    role="group"
-                    aria-labelledby="sex"
-                    className="ml-3 inline"
-                  >
-                    <label className="mr-3">
-                      <Field
-                        type="radio"
-                        name="sex"
-                        value="Frau"
-                        className="mr-2"
-                      />
-                      Frau
-                    </label>
-                    <label className="mr-3">
-                      <Field
-                        type="radio"
-                        name="sex"
-                        value="Mann"
-                        className="mr-2"
-                      />
-                      Mann
-                    </label>
-                    <label className="">
-                      <Field
-                        type="radio"
-                        name="sex"
-                        value="Divers"
-                        className="mr-2"
-                      />
-                      Divers
-                    </label>
-                  </div>
-                </div>
-                <div className="p-3">
-                  <label
-                    htmlFor="age"
-                    className="w-28 inline-block font-medium"
-                  >
-                    Alter
-                  </label>
-                  <Field
-                    type="number"
-                    name="age"
-                    // pattern="[1-9][1-9]"
-                    maxLength="2"
-                    min="18"
-                    max="99"
-                    step="1"
-                    className="ml-2 p-1 w-20 text-center border rounded "
-                  />
-                  <span className="text-xs ml-2">
-                    (du musst mind. 18 Jahre alt sein)
-                  </span>
-                </div>
-                <div className="p-3">
-                  <label
-                    htmlFor="zip"
-                    className="w-28 inline-block font-medium"
-                  >
-                    Wohnort
-                  </label>
-                  <Field
-                    type="text"
-                    min="0"
-                    max="99"
-                    step="1"
-                    name="zip"
-                    maxLength="2"
-                    placeholder="PLZ"
-                    className="ml-2 p-1 w-20 text-center border rounded  appearance-none hover:appearance-none focus:appearance-none"
-                  />
-                  <span className="text-xs ml-2">(ersten zwei Stellen)</span>
-                </div>
-                <div className="p-3">
-                  <label htmlFor="categories" className="font-medium">
-                    Nach Gefühl: Welche drei Kategorien schaust du am meisten
-                    auf YouTube?
-                  </label>
-                  <div
-                    role="group"
-                    aria-labelledby="categories"
-                    className="grid grid-cols-2 mt-2"
-                  >
-                    {categories.map((c) => (
+              </div>
+              <div className="p-3">
+                <label htmlFor="age" className="w-28 inline-block font-medium">
+                  Alter
+                </label>
+                <input
+                  type="number"
+                  name="age"
+                  maxLength="2"
+                  min="18"
+                  max="99"
+                  step="1"
+                  className="ml-2 p-1 w-20 text-center border rounded "
+                />
+                <span className="text-xs ml-2">
+                  (du musst mind. 18 Jahre alt sein)
+                </span>
+              </div>
+              <div className="p-3">
+                <label htmlFor="zip" className="w-28 inline-block font-medium">
+                  Wohnort
+                </label>
+                <input
+                  type="text"
+                  min="0"
+                  max="99"
+                  step="1"
+                  name="zip"
+                  maxLength="2"
+                  placeholder="PLZ"
+                  className="ml-2 p-1 w-20 text-center border rounded  appearance-none hover:appearance-none focus:appearance-none"
+                />
+                <span className="text-xs ml-2">(ersten zwei Stellen)</span>
+              </div>
+              {/* FIXME: More than 3 categories can be selected */}
+              <div className="p-3">
+                <label htmlFor="categories" className="font-medium">
+                  Nach Gefühl: Welche drei Kategorien schaust du am meisten auf
+                  YouTube?
+                </label>
+                <div
+                  role="group"
+                  aria-labelledby="categories"
+                  className="grid grid-cols-2 mt-2"
+                >
+                  {constants.categories
+                    .map(({ de }) => de)
+                    .map((c) => (
                       <label key={c}>
-                        <LimitCheckbox
+                        <input
                           type="checkbox"
                           name="categories"
                           value={c}
@@ -224,34 +186,33 @@ export default function QuestionnairePage(): JSX.Element {
                         {c}
                       </label>
                     ))}
-                  </div>
-                </div>
-                <div className="p-3">
-                  <label htmlFor="using" className="font-medium">
-                    Bitte zutreffendes ankreuzen
-                  </label>
-                  <div role="group" aria-labelledby="using" className="mt-2">
-                    {Object.entries(usage).map(([value, label]) => (
-                      <label key={value} className="block">
-                        <Field
-                          type="checkbox"
-                          name="using"
-                          value={value}
-                          className="mr-2"
-                        />
-                        {label}
-                      </label>
-                    ))}
-                  </div>
                 </div>
               </div>
-              <div className="mt-3">
-                <Button size="small" theme="blue" type="submit">
-                  Speichern & weiter
-                </Button>
+              <div className="p-3">
+                <label htmlFor="using" className="font-medium">
+                  Bitte zutreffendes ankreuzen
+                </label>
+                <div role="group" aria-labelledby="using" className="mt-2">
+                  {Object.entries(usage).map(([value, label]) => (
+                    <label key={value} className="block">
+                      <input
+                        type="checkbox"
+                        name="using"
+                        value={value}
+                        className="mr-2"
+                      />
+                      {label}
+                    </label>
+                  ))}
+                </div>
               </div>
-            </Form>
-          </Formik>
+            </div>
+            <div className="mt-3">
+              <Button size="small" theme="blue" type="submit">
+                Speichern & weiter
+              </Button>
+            </div>
+          </form>
         </div>
       </div>
       <FooterNav items={footerNavItems} />
