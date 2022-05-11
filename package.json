@@ -227,7 +227,7 @@
   },
   "dependencies": {
     "@algorithmwatch/harke": "^0.4.5",
-    "@fortawesome/fontawesome-pro": "^5.15.3",
+    "@fortawesome/fontawesome-pro": "^5.15.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/pro-duotone-svg-icons": "^5.15.3",
