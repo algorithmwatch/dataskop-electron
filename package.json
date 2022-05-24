@@ -9,7 +9,7 @@
     "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir src",
     "lint": "cross-env NODE_ENV=development eslint . --cache --ext .js,.jsx,.ts,.tsx",
     "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never",
-    "package_windows": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never --win",
+    "package-windows": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never --win",
     "postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts",
     "start": "ts-node ./.erb/scripts/check-port-in-use.js && npm run start:renderer",
     "start:main": "cross-env NODE_ENV=development electron -r ts-node/register/transpile-only  ./src/main/main.ts",
@@ -23,7 +23,8 @@
     "version:prepatch": "cd release/app && npm version prepatch --no-git-tag-version --preid beta && cd ../.. && npm version prepatch --no-git-tag-version --preid beta",
     "version:minor": "cd release/app && npm version minor --no-git-tag-version && cd ../.. && npm version minor --no-git-tag-version",
     "version:patch": "cd release/app && npm version patch --no-git-tag-version && cd ../.. && npm version patch --no-git-tag-version",
-    "postversion": "./scripts/postversion.sh $npm_package_version"
+    "postversion": "./scripts/postversion.sh $npm_package_version",
+    "delete-old-releases": "ts-node ./scripts/delete_old_releases.ts"
   },
   "build": {
     "productName": "DataSkop",
@@ -79,7 +80,7 @@
     "generateUpdatesFilesForAllChannels": true,
     "publish": {
       "provider": "s3",
-      "region": "DE",
+      "region": "de",
       "endpoint": "https://s3.de.cloud.ovh.net",
       "bucket": "dataskop"
     }
