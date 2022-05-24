@@ -7,6 +7,7 @@ import { constants } from '@algorithmwatch/harke';
 import _ from 'lodash';
 import dayjs from 'renderer/lib/utils/dayjs';
 import { exportCsv } from 'renderer/lib/utils/export';
+import { fixDuplicatedString } from 'renderer/lib/utils/strings';
 import { renameKeys } from 'renderer/vendor/lodash-contrib';
 import { lookupOrScrapeVideos } from './html-scrapers';
 
@@ -50,6 +51,9 @@ const exportWatchHistoryCsv = async (data) => {
 
     x['Online_seit_Tage'] = onlineSince(rawDate);
     x.category = translateCategories(x.category);
+
+    // hotfix: remove duplicated channel name (scraped from watch history)
+    x['channelName'] = fixDuplicatedString(x['channelName']);
   });
 
   exportCsv({
