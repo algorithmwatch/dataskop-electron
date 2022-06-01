@@ -1,4 +1,4 @@
-# Publishing Releases
+# Publishing releases
 
 We are using <https://www.electron.build/> to publish releases via Github Actions.
 
@@ -47,7 +47,7 @@ To make this work:
 
 <https://www.electron.build/configuration/publish#s3options>
 
-### GitHub
+#### Alternative: GitHub releases
 
 Using GitHub's releases feature, adapt the outer `package.json`.
 
@@ -59,17 +59,24 @@ Using GitHub's releases feature, adapt the outer `package.json`.
   }
 ```
 
-### macOS
-
-NB: zip as build target is required to make auto-update work: https://github.com/electron-userland/electron-builder/issues/2199
+### macOS certificate
 
 In addition to make auto update work, you need to get developer certificates from Apple, and set appropriate ENV varibales in GitHub actions.
+
+NB: zip as build target is required to make auto-update work: https://github.com/electron-userland/electron-builder/issues/2199
 
 Guides:
 
 - https://codycallahan.com/blog/deploying-electron-with-github-actions-macos
 - https://www.electron.build/code-signing
 
+### Windows certificate
+
+1. Get a Windows Code Signing Certificate
+2. Export the cert with private key and password
+3. Encode cert as base64 (<https://www.electron.build/code-signing.html#travis-appveyor-and-other-ci-servers>) and set it as `WIN_CSC_LINK`.
+4. Set the password in `WIN_CSC_KEY_PASSWORD`.
+
 ### Keybase notification
 
-Send a notification for successful releases to a Keybase channel via the Keybase webhookbot.
+Send a notification for successful releases to a Keybase channel via the Keybase webhookbot. Set `KEYBASE_WEBHOOK` for this.
