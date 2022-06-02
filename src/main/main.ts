@@ -26,11 +26,11 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import 'regenerator-runtime/runtime';
-import registerBackgroundScrapingHandlers from './background-scraping';
 import registerDbHandlers from './db';
-import registerExportHandlers from './export';
 import MenuBuilder from './menu';
-import registerScrapingHandlers from './scraping';
+import registerBackgroundScrapingHandlers from './providers/youtube/background-scraping';
+import registerExportHandlers from './providers/youtube/export';
+import registerScrapingHandlers from './providers/youtube/scraping';
 import { resolveHtmlPath } from './util';
 
 // read .env files for development

@@ -1,14 +1,12 @@
 /**
- * controlling the scraping window
+ * Scraping in the background without executing JavaScript.
  */
 
+import { getVideoUrl } from '@algorithmwatch/harke';
 import crypto from 'crypto';
 import { BrowserWindow, ipcMain, session } from 'electron';
 import fetch from 'electron-fetch';
 import pLimit from 'p-limit';
-// import { getVideoUrl } from 'renderer/providers/youtube/utils';
-
-const getVideoUrl = (id: string) => `https://www.youtube.com/watch?v=${id}`;
 
 let backgroundScrapingWindow: null | BrowserWindow = null;
 

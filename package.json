@@ -229,7 +229,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@algorithmwatch/harke": "^0.4.5",
+    "@algorithmwatch/harke": "^0.4.6",
     "@fortawesome/fontawesome-pro": "^5.15.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",

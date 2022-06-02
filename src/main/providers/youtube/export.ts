@@ -1,32 +1,9 @@
+import { getThumbnails } from '@algorithmwatch/harke';
 import { BrowserWindow, dialog, ipcMain } from 'electron';
 import fetch from 'electron-fetch';
 import fs from 'fs';
 import pLimit from 'p-limit';
 import path from 'path';
-// import { getThumbnails } from '../renderer/utils/providers/youtube/utils';
-
-const getThumbnails = (id: string) => {
-  /**
-   * Returns all thumbnails to given YT video it.
-    https://yt-thumb.canbeuseful.com/en
-   */
-
-  // the first image is the `default` image.
-  const small = [1, 2, 3].map(
-    (x) => `https://img.youtube.com/vi/${id}/${x}.jpg`,
-  );
-
-  small.unshift(`https://img.youtube.com/vi/${id}/default.jpg`);
-
-  const defaultImage = {
-    mq: `https://img.youtube.com/vi/${id}/mqdefault.jpg`,
-    hq: `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
-    sd: `https://img.youtube.com/vi/${id}/sddefault.jpg`,
-    maxRes: `https://img.youtube.com/vi/${id}/maxresdefault.jpg`,
-  };
-
-  return { small, default: defaultImage };
-};
 
 async function downloadYtImage(ytId, folder) {
   const url = getThumbnails(ytId).default.maxRes;

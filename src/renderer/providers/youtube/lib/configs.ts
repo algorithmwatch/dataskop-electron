@@ -115,6 +115,7 @@ const defaultCampaign: Campaign = {
   title: 'youtube default: profile, videos, logout',
   description: 'only for development',
   config: defaultConfig,
+  featured: true,
 };
 
 const simpleConfig: YtScrapingConfig = {
@@ -187,6 +188,7 @@ const educationDemoCampaign: Campaign = {
   title: 'YouTube Demo für den Bildungsbereich',
   description: 'Wir arbeiten gerade noch dieser Version.',
   config: demoConfig,
+  featured: true,
 };
 
 const allCampaigns = [

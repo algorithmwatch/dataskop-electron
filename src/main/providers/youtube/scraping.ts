@@ -5,7 +5,7 @@
 import crypto from 'crypto';
 import { BrowserView, BrowserWindow, ipcMain } from 'electron';
 import { range } from 'lodash';
-import { delay } from '../renderer/lib/utils/time';
+import { delay } from '../../../renderer/lib/utils/time';
 
 let scrapingView: BrowserView | null = null;
 
@@ -77,7 +77,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       // 1) Using the Electron default one will fail.
       // 2) Choosing the user agent of the bundled chrome version will also fail.
       // It seems that Google knows that this is a modified version of the chrome (fingerprinting?)
-      // 3) So we set to some recent Firefox user agents. This used to work from mid 2021 to Jan. 2022. 
+      // 3) So we set to some recent Firefox user agents. This used to work from mid 2021 to Jan. 2022.
       // 4) Now we use a recent Vivaldi user agent.
 
       // Background:

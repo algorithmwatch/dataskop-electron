@@ -18,6 +18,7 @@ const makeGetHtml = (logHtml: boolean): GetHtmlFunction => {
   const getHtml = async (url: string): Promise<GetCurrentHtml> => {
     await goToUrl(url);
     if (logHtml) {
+      // FIXME: This branch is not working due to new sandboxing.
       const userFolder = await window.electron.ipcRenderer.invoke(
         'get-path-user-data',
       );
