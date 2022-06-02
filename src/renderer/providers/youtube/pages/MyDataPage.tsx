@@ -14,6 +14,9 @@ export default function MyDataPage(): JSX.Element {
     state: { demoMode },
   } = useScraping();
 
+  // FIXME: all donations are disabled right now
+  const noMoreDonations = true;
+
   const footerNavItems: FooterNavItem[] = [
     {
       label: 'Zurück',
@@ -26,14 +29,17 @@ export default function MyDataPage(): JSX.Element {
     {
       label: 'Weiter',
       endIcon: faAngleRight,
-      disabled: demoMode,
-      tippyOptions: demoMode
-        ? {
-            content: 'Die Demo ist hier zu Ende',
-            theme: 'process-info',
-            placement: 'left',
-          }
-        : undefined,
+      disabled: demoMode || noMoreDonations,
+      tippyOptions:
+        demoMode || noMoreDonations
+          ? {
+              content: !demoMode
+                ? 'Es können aktuell keine Daten mehr gespendet werden.'
+                : 'Die Demo ist hier zu Ende',
+              theme: 'process-info',
+              placement: 'left',
+            }
+          : undefined,
       clickHandler(history: RouteComponentProps['history']) {
         history.push(getNextPage('path'));
       },
