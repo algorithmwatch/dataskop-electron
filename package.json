@@ -24,7 +24,8 @@
     "version:minor": "cd release/app && npm version minor --no-git-tag-version && cd ../.. && npm version minor --no-git-tag-version",
     "version:patch": "cd release/app && npm version patch --no-git-tag-version && cd ../.. && npm version patch --no-git-tag-version",
     "postversion": "./scripts/postversion.sh $npm_package_version",
-    "delete-old-releases": "ts-node ./scripts/delete_old_releases.ts"
+    "delete-old-releases": "ts-node ./scripts/delete_old_releases.ts",
+    "audit": "./scripts/npm_audit.sh"
   },
   "build": {
     "productName": "DataSkop",
