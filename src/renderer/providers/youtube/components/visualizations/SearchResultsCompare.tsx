@@ -113,6 +113,8 @@ export default function SearchResultsCompare({
     .value();
 
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
+  const [waitExport, setWaitExport] = useState(false);
+
   const carouselOptions: Options = {
     // focusAt: 'center',
     // gap: 40,
@@ -200,11 +202,18 @@ export default function SearchResultsCompare({
       </Carousel>
       <div className="mt-7 mx-auto">
         <Button
+          disabled={waitExport}
           theme={'link'}
           size={'small'}
-          onClick={() => exportSearchCsv(queryGroups)}
+          onClick={async () => {
+            setWaitExport(true);
+            await exportSearchCsv(queryGroups);
+            setWaitExport(false);
+          }}
         >
-          CSV exportieren
+          {waitExport
+            ? 'Einen Moment bitte, der Export wird vorbereitet'
+            : 'CSV exportieren'}
         </Button>
       </div>
     </>

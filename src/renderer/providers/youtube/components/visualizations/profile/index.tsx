@@ -37,6 +37,7 @@ export default function ProfileVis({
   lookups: Array<Lookup>;
 }) {
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
+  const [waitExport, setWaitExport] = useState(false);
   const db = useData(data, lookups);
   const visRef = useRef();
 
@@ -162,11 +163,18 @@ export default function ProfileVis({
         </div> */}
         <div className="mt-7 text-center">
           <Button
+            disabled={waitExport}
             theme={'link'}
             size={'small'}
-            onClick={() => exportWatchHistoryCsv(db.history)}
+            onClick={async () => {
+              setWaitExport(true);
+              await exportWatchHistoryCsv(db.history);
+              setWaitExport(false);
+            }}
           >
-            CSV exportieren
+            {waitExport
+              ? 'Einen Moment bitte, der Export wird vorbereitet'
+              : 'CSV exportieren'}
           </Button>
         </div>
       </div>
