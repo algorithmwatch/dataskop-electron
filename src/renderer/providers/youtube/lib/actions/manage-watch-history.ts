@@ -3,9 +3,9 @@
 import cheerio from 'cheerio';
 import _ from 'lodash';
 import { clickElement, elementExists } from 'renderer/components/scraping/ipc';
+import { GetHtmlFunction } from 'renderer/providers/types';
 import { getUniquePath } from 'renderer/vendor/cheerio-unique-selector';
 import { currentDelay } from '../../..';
-import { GetHtmlFunction } from '../types';
 
 const changeWatchHistoryUrl = 'https://www.youtube.com/feed/history';
 

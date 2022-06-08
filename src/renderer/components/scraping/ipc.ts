@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { GetCurrentHtml, GetHtmlFunction } from 'renderer/providers/youtube';
+import { GetCurrentHtml, GetHtmlFunction } from 'renderer/providers/types';
 
 // commands to communicate with the browser window in the main screen
 

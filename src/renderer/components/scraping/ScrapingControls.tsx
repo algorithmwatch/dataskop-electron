@@ -1,13 +1,13 @@
+/**
+ * Control buttons for the scraping, mostly used for debugging.
+ *
+ * @module
+ */
 /* eslint-disable no-restricted-syntax */
+import { useScraping } from 'renderer/contexts/scraping';
 import { providerInfo } from 'renderer/providers';
-import { useScraping } from '../../contexts/scraping';
 import Button from '../Button';
 import { goToUrl } from './ipc';
-
-// the actual scraping window
-
-// I tried hard to make the interactivity changeable but to no avail.
-// You have to set from the component's initialization whether a scraping view is interactive.
 
 export default function ScrapingControls({
   hideControls = false,

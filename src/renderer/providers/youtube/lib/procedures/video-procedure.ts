@@ -2,9 +2,8 @@
 import { clearStorage } from 'renderer/components/scraping/ipc';
 import { getScrapingResultsBySession } from 'renderer/lib/db';
 import { delay } from 'renderer/lib/utils/time';
+import { GetHtmlFunction, GetHtmlLazyFunction } from 'renderer/providers/types';
 import {
-  GetHtmlFunction,
-  GetHtmlLazyFunction,
   SeedScraper,
   SeedVideo,
   SeedVideoRepeat,

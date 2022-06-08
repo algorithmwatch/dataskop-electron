@@ -1,15 +1,18 @@
+/**
+ * Manage the whole scraping process: login to account, steping to steps of the
+ * scraping process, store data etc.
+ *
+ * @module
+ */
 /* eslint-disable no-restricted-syntax */
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useConfig, useModal, useScraping } from 'renderer/contexts';
 import { postSimpleBackend } from 'renderer/lib/utils/networking';
 import { delay } from 'renderer/lib/utils/time';
 import { providerInfo } from 'renderer/providers';
-import { YtScrapingConfig } from 'renderer/providers/youtube';
-import { onlySubmitConsentForm } from 'renderer/providers/youtube/lib/actions/confirm-cookies';
-import { createSingleGenerator } from 'renderer/providers/youtube/lib/procedures/setup';
 import routes from 'renderer/routes';
 import { v4 as uuidv4 } from 'uuid';
-import { useConfig, useModal, useScraping } from '../../contexts';
 import {
   addNewSession,
   addScrapingResult,
@@ -23,12 +26,7 @@ import {
   scrollDown,
   setNavigationCallback,
 } from './ipc';
-import ScrapingBrowser from './ScrapingWindow';
-
-// the actual scraping window
-
-// I tried hard to make the interactivity changeable but to no avail.
-// You have to set from the component's initialization whether a scraping view is interactive.
+import ScrapingWindow from './ScrapingWindow';
 
 export default function ScrapingManager({
   disableInput = false,
@@ -55,25 +53,23 @@ export default function ScrapingManager({
     dispatch,
   } = useScraping();
 
-  if (campaign === null) return <div></div>;
-
-  const scrapingConfig = campaign.config;
-
   const { dispatch: dispatchModal } = useModal();
   const history = useHistory();
 
+  if (campaign === null) return <div></div>;
+  const provider = providerInfo[campaign.config.provider];
+
   const checkForLogIn = async () => {
     const cookies = await getCookies();
-    // complexity is currently not needed, maybe later?
     const isLoggedIn = cookies.some(
-      (x: any) => x.name === providerInfo[scrapingConfig.provider].loginCookie,
+      (x: any) => x.name === provider.loginCookie,
     );
     dispatch({ type: 'set-user-logged-in', isUserLoggedIn: isLoggedIn });
     return isLoggedIn;
   };
 
   const goToStart = () => {
-    return goToUrl(providerInfo[scrapingConfig.provider].loginUrl);
+    return goToUrl(provider.loginUrl);
   };
 
   const getHtmlLazy = async (
@@ -89,10 +85,8 @@ export default function ScrapingManager({
     let stopScrolling = false;
     // scroll some large value down
     // to simulate proper scrolling, wait between each time scrolling
-    // eslint-disable-next-line no-empty-pattern
     for (const {} of [...Array(scrollBottom)]) {
       if (stopScrolling) break;
-      // eslint-disable-next-line no-empty-pattern
       for (const {} of [...Array(5)]) {
         await scrollDown();
         await delay(10);
@@ -116,7 +110,7 @@ export default function ScrapingManager({
 
   const resetScraping = async () => {
     dispatch({ type: 'reset-scraping' });
-    await goToUrl(providerInfo[scrapingConfig.provider].loginUrl, {
+    await goToUrl(provider.loginUrl, {
       clear: true,
     });
     return window.electron.ipcRenderer.invoke('scraping-remove-view');
@@ -127,11 +121,11 @@ export default function ScrapingManager({
   useEffect(() => {
     const checkIfLoggedOut = async () => {
       if (!isUserLoggedIn && isScrapingStarted) {
-        const logoutSteps = scrapingConfig.steps.filter(
+        const logoutSteps = campaign.config.steps.filter(
           (x) => 'doLogout' in x && x.doLogout,
         );
         if (logoutSteps.length === 1) {
-          const logoutStepIndex = scrapingConfig.steps.indexOf(logoutSteps[0]);
+          const logoutStepIndex = campaign.config.steps.indexOf(logoutSteps[0]);
 
           // the step will increment later on, so it's one off
           if (scrapingProgress.step + 1 < logoutStepIndex) {
@@ -160,33 +154,22 @@ export default function ScrapingManager({
 
   const checkLoginCb = async () => {
     const loggedIn = await checkForLogIn();
-
-    const url = await window.electron.ipcRenderer.invoke('scraping-get-url');
-
-    if (
-      !loggedIn &&
-      url !== null &&
-      url.startsWith('https://consent.youtube.com') &&
-      url.includes('account')
-    ) {
-      onlySubmitConsentForm((await extractHtml()).html);
-    }
-
     if (loggedIn) dispatch({ type: 'set-disable-input', disableInput: true });
+    else provider.confirmCookie();
   };
 
   // start scraping when `isScrapingStarted` was set to true
   useEffect(() => {
     const startScraping = async () => {
       if (isDebug) {
-        console.log(scrapingConfig);
+        console.log(campaign.config);
       }
 
       // create a uuid every time you hit start scraping
       const sId = uuidv4();
 
-      const gen = createSingleGenerator(
-        scrapingConfig as YtScrapingConfig,
+      const gen = provider.createScrapingGenerator(
+        campaign.config,
         makeGetHtml(logHtml),
         getHtmlLazy,
         sId,
@@ -199,11 +182,10 @@ export default function ScrapingManager({
         sessionId: sId,
       });
 
-      await addNewSession(sId, scrapingConfig, campaign);
+      await addNewSession(sId, campaign.config, campaign);
     };
 
     if (isScrapingStarted) startScraping();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isScrapingStarted]);
 
   // gets triggered when e.g. the progress bar is updated (via `frac`)
@@ -253,7 +235,6 @@ export default function ScrapingManager({
       }
     };
     runScraperOnce();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrapingProgress.value, sessionId, isScrapingPaused]);
 
   // initialize & cleanup
@@ -280,8 +261,11 @@ export default function ScrapingManager({
   useEffect(() => {
     // initScraper();
     return cleanUpScraper;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // I tried hard to make the interactivity changeable but to no avail.
+  // You have to set from the component's initialization whether a scraping view
+  // is interactive.
 
   // hotfix to force the scraping browser to reload
   const [forceReload, setForceReload] = useState(0);
@@ -293,8 +277,7 @@ export default function ScrapingManager({
       setForceReload(forceReload + 1);
     };
     reloadScrapingView();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [disableInput]);
 
-  return <ScrapingBrowser forceReload={forceReload} />;
+  return <ScrapingWindow forceReload={forceReload} />;
 }

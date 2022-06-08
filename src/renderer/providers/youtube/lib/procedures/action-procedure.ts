@@ -1,10 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 import { getScrapingResultsBySession } from 'renderer/lib/db';
-import {
-  ActionProcedureConfig,
-  GetHtmlFunction,
-  GetHtmlLazyFunction,
-} from '..';
+import { GetHtmlFunction, GetHtmlLazyFunction } from 'renderer/providers/types';
+import { ActionProcedureConfig } from '..';
 import {
   activateWatchHistory,
   deactivateWatchHistory,

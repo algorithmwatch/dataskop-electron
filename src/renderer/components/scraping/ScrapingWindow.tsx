@@ -1,12 +1,16 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable react-hooks/exhaustive-deps */
+/**
+ * The actual window (tab) where the scraping is happening.
+ *
+ * @module
+ */
+// /* eslint-disable jsx-a11y/no-static-element-interactions */
+// /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { faTimes } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { pick, round } from 'lodash';
 import { useEffect } from 'react';
 import { Rnd } from 'react-rnd';
-import { Bounds, useScraping } from '../../contexts';
+import { Bounds, useScraping } from 'renderer/contexts';
 
 export default function ScrapingWindow({
   forceReload = 0,

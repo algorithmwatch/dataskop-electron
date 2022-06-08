@@ -12,14 +12,9 @@ import {
 import _, { range } from 'lodash';
 import { ScrapingResult } from 'renderer/lib/db/types';
 import { delay } from 'renderer/lib/utils/time';
+import { GetCurrentHtml, GetHtmlFunction } from 'renderer/providers/types';
 import { lookupOrScrapeVideos } from './html-scrapers';
-import {
-  GetCurrentHtml,
-  GetHtmlFunction,
-  ProfileScraper,
-  SeedScraper,
-  SeedVideo,
-} from './types';
+import { ProfileScraper, SeedScraper, SeedVideo } from './types';
 
 // play list of special lists
 const LIST_ID_POPULAR = 'PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-';

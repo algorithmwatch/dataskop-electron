@@ -1,13 +1,28 @@
 /* eslint-disable no-restricted-syntax */
 import cheerio from 'cheerio';
-import { submitFormScraping } from 'renderer/components/scraping/ipc';
+import {
+  extractHtml,
+  submitFormScraping,
+} from 'renderer/components/scraping/ipc';
+import { GetHtmlFunction } from 'renderer/providers/types';
 import { currentDelay } from '../../..';
 import { getUniquePath } from '../../../../vendor/cheerio-unique-selector';
-import { GetHtmlFunction } from '../types';
 
 const rootUrl = 'https://www.youtube.com/';
 
-const onlySubmitConsentForm = async (html) => {
+const confirmCockieForm = async () => {
+  const url = await window.electron.ipcRenderer.invoke('scraping-get-url');
+
+  if (
+    url !== null &&
+    url.startsWith('https://consent.youtube.com') &&
+    url.includes('account')
+  ) {
+    onlySubmitConsentForm((await extractHtml()).html);
+  }
+};
+
+const onlySubmitConsentForm = async (html: string) => {
   const $hmtl = cheerio.load(html);
 
   const forms = $hmtl('form')
@@ -57,4 +72,4 @@ const submitConfirmForm = async (
   return [null, null];
 };
 
-export { submitConfirmForm, onlySubmitConsentForm };
+export { confirmCockieForm, submitConfirmForm };

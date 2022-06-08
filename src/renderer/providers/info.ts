@@ -1,16 +1,9 @@
 import { delay } from '../lib/utils/time';
 import { Campaign, ProviderInformation } from './types';
-import { ytNavigation } from './youtube/lib/navigation';
-
-const youtubeMeta: ProviderInformation = {
-  startUrl: 'https://www.youtube.com',
-  loginUrl: 'https://www.youtube.com/account',
-  loginCookie: 'LOGIN_INFO',
-  navigation: ytNavigation,
-};
+import { youtubeInfo } from './youtube';
 
 const providerInfo: { [key: string]: ProviderInformation } = {
-  youtube: youtubeMeta,
+  youtube: youtubeInfo,
 };
 
 // To make some campaign always available, add them here.

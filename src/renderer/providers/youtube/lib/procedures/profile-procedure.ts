@@ -1,9 +1,6 @@
 /* eslint-disable no-restricted-syntax */
-import {
-  GetHtmlFunction,
-  GetHtmlLazyFunction,
-  ProfileProcedureConfig,
-} from '..';
+import { GetHtmlFunction, GetHtmlLazyFunction } from 'renderer/providers/types';
+import { ProfileProcedureConfig } from '..';
 import { profileScraperSlugToFun } from '../scrapers';
 
 async function* profileProcedure(

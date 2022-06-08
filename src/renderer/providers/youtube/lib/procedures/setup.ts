@@ -1,9 +1,6 @@
 /* eslint-disable no-restricted-syntax */
-import {
-  GetHtmlFunction,
-  GetHtmlLazyFunction,
-  YtScrapingConfig,
-} from '../types';
+import { GetHtmlFunction, GetHtmlLazyFunction } from 'renderer/providers/types';
+import { YtScrapingConfig } from '../types';
 import { actionProcedure } from './action-procedure';
 import { profileProcedure } from './profile-procedure';
 import { searchProcedure } from './search-procedure';
@@ -72,7 +69,7 @@ const createProcedureGenMakers = (
   return result;
 };
 
-const createSingleGenerator = (
+const createScrapingGenerator = (
   scrapingConfig: YtScrapingConfig,
   getHtml: GetHtmlFunction,
   getHtmlLazy: GetHtmlLazyFunction,
@@ -110,4 +107,4 @@ const createSingleGenerator = (
   return gen();
 };
 
-export { createSingleGenerator };
+export { createScrapingGenerator };

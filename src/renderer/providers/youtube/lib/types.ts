@@ -1,16 +1,5 @@
 import { ScrapingConfig } from '../../types';
 
-export type GetCurrentHtml = () => Promise<{ html: string; hash: string }>;
-
-export type GetHtmlFunction = (url: string) => Promise<GetCurrentHtml>;
-
-export type GetHtmlLazyFunction = (
-  url: string,
-  scrollBottom: number,
-  loadingDone: (html: string) => boolean,
-  loadingAbort: (html: string) => boolean,
-) => Promise<string>;
-
 export type SeedCreator = {
   maxVideos: number;
   slug: string;

@@ -1,9 +1,6 @@
 /* eslint-disable no-restricted-syntax */
-import {
-  GetHtmlFunction,
-  GetHtmlLazyFunction,
-  SearchProcedureConfig,
-} from '..';
+import { GetHtmlFunction, GetHtmlLazyFunction } from 'renderer/providers/types';
+import { SearchProcedureConfig } from '..';
 import { scrapeVideoSearch } from '../scrapers';
 
 async function* searchProcedure(

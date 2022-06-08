@@ -1,10 +1,29 @@
 import { NavigationState } from 'renderer/contexts';
 
+export type GetCurrentHtml = () => Promise<{ html: string; hash: string }>;
+
+export type GetHtmlFunction = (url: string) => Promise<GetCurrentHtml>;
+
+export type GetHtmlLazyFunction = (
+  url: string,
+  scrollBottom: number,
+  loadingDone: (html: string) => boolean,
+  loadingAbort: (html: string) => boolean,
+) => Promise<string>;
+
 export type ProviderInformation = {
   startUrl: string;
   loginUrl: string;
   loginCookie: string;
   navigation: { [key: string]: NavigationState };
+  confirmCookie: () => void;
+  createScrapingGenerator: (
+    scrapingConfig: any,
+    getHtml: GetHtmlFunction,
+    getHtmlLazy: GetHtmlLazyFunction,
+    sessionId: string,
+    enableLogging: boolean,
+  ) => any;
 };
 
 export type DemoData = {
