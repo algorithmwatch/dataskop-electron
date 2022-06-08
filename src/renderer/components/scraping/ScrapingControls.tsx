@@ -4,7 +4,7 @@
  * @module
  */
 /* eslint-disable no-restricted-syntax */
-import { useScraping } from 'renderer/contexts/scraping';
+import { useScraping } from 'renderer/contexts';
 import { providerInfo } from 'renderer/providers';
 import Button from '../Button';
 import { goToUrl } from './ipc';

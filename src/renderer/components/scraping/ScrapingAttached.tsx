@@ -3,7 +3,7 @@
  *
  * @module
  */
-import { useScraping } from 'renderer/contexts/scraping';
+import { useScraping } from 'renderer/contexts';
 import ScrapingManager from './ScrapingManager';
 
 export default function ScapingAttached() {
