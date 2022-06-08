@@ -6,6 +6,7 @@ import SettingsPage from './pages/admin/SettingsPage';
 import VisualizationAdvancedPage from './pages/admin/VisualizationAdvancedPage';
 import SelectCampaignPage from './pages/SelectCampaignPage';
 import StartPage from './pages/StartPage';
+import { providerRoutes } from './providers';
 
 const routes = {
   ADMIN_SCRAPING_ADVANCED: {
@@ -40,4 +41,7 @@ const routes = {
   },
 };
 
+const allRoutes = Object.values(routes).concat(providerRoutes);
+
+export { allRoutes };
 export default routes;

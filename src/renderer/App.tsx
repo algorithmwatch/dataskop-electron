@@ -14,8 +14,7 @@ import {
   ScrapingProvider,
 } from './contexts';
 import BaseLayout from './layout/Base';
-import ytRoutes from './providers/youtube/lib/routes';
-import routes from './routes';
+import routes, { allRoutes } from './routes';
 
 export default function App() {
   return (
@@ -27,15 +26,11 @@ export default function App() {
             <Router>
               <BaseLayout>
                 <Switch>
-                  {/* YouTube routes */}
-                  {Object.values(ytRoutes).map(({ path, comp }) => (
+                  {/* All routes */}
+                  {allRoutes.map(({ path, comp }) => (
                     <Route path={path} component={comp} key={path} />
                   ))}
-                  {/* Global routes */}
-                  {Object.values(routes).map(({ path, comp }) => (
-                    <Route path={path} component={comp} key={path} />
-                  ))}
-                  {/* Start route */}
+                  {/* Redirect initial route to start route */}
                   <Route path="/">
                     <Redirect to={routes.START.path} />
                   </Route>
