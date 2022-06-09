@@ -10,7 +10,7 @@
 @layer base {
   body {
     @apply bg-yellow-100 dark:bg-blue-900 overflow-hidden text-yellow-1500;
-    background-image: url("static/images/bg.png");
+    background-image: url('static/images/bg.png');
     background-size: 90%;
   }
 }
@@ -23,119 +23,91 @@
 
 /* rubik-regular - latin */
 @font-face {
-  font-family: "Rubik";
+  font-family: 'Rubik';
   font-style: normal;
   font-weight: 400;
-  src: local(""), url("static/fonts/rubik-v14-latin/rubik-v14-latin-regular.woff2") format("woff2"),
-    /* Chrome 26+, Opera 23+, Firefox 39+ */ url("static/fonts/rubik-v14-latin/rubik-v14-latin-regular.woff")
-      format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  src: local(''),
+    url('static/fonts/rubik-v14-latin/rubik-v14-latin-regular.woff2')
+      format('woff2');
 }
 /* rubik-500 - latin */
 @font-face {
-  font-family: "Rubik";
+  font-family: 'Rubik';
   font-style: normal;
   font-weight: 500;
-  src: local(""), url("static/fonts/rubik-v14-latin/rubik-v14-latin-500.woff2") format("woff2"),
-    /* Chrome 26+, Opera 23+, Firefox 39+ */ url("static/fonts/rubik-v14-latin/rubik-v14-latin-500.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  src: local(''),
+    url('static/fonts/rubik-v14-latin/rubik-v14-latin-500.woff2')
+      format('woff2');
 }
 /* rubik-700 - latin */
 @font-face {
-  font-family: "Rubik";
+  font-family: 'Rubik';
   font-style: normal;
   font-weight: 700;
-  src: local(""), url("static/fonts/rubik-v14-latin/rubik-v14-latin-700.woff2") format("woff2"),
-    /* Chrome 26+, Opera 23+, Firefox 39+ */ url("static/fonts/rubik-v14-latin/rubik-v14-latin-700.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  src: local(''),
+    url('static/fonts/rubik-v14-latin/rubik-v14-latin-700.woff2')
+      format('woff2');
 }
 
 /* TippyJS  */
 
-@import "tippy.js/dist/tippy.css";
+@import 'tippy.js/dist/tippy.css';
 
 /* Theme process info */
-.tippy-box[data-theme~="process-info"] {
+.tippy-box[data-theme~='process-info'] {
   @apply text-yellow-100 bg-yellow-1500 rounded-none p-0.5;
 }
-.tippy-box[data-theme~="process-info"][data-placement^="top"] > .tippy-arrow:before {
-  border-top-color: theme("colors.yellow.1500");
+.tippy-box[data-theme~='process-info'][data-placement^='top']
+  > .tippy-arrow:before {
+  border-top-color: theme('colors.yellow.1500');
 }
-.tippy-box[data-theme~="process-info"][data-placement^="bottom"] > .tippy-arrow:before {
-  border-bottom-color: theme("colors.yellow.1500");
+.tippy-box[data-theme~='process-info'][data-placement^='bottom']
+  > .tippy-arrow:before {
+  border-bottom-color: theme('colors.yellow.1500');
 }
-.tippy-box[data-theme~="process-info"][data-placement^="left"] > .tippy-arrow:before {
-  border-left-color: theme("colors.yellow.1500");
+.tippy-box[data-theme~='process-info'][data-placement^='left']
+  > .tippy-arrow:before {
+  border-left-color: theme('colors.yellow.1500');
 }
-.tippy-box[data-theme~="process-info"][data-placement^="right"] > .tippy-arrow:before {
-  border-right-color: theme("colors.yellow.1500");
+.tippy-box[data-theme~='process-info'][data-placement^='right']
+  > .tippy-arrow:before {
+  border-right-color: theme('colors.yellow.1500');
 }
-.tippy-box[data-theme~="process-info"] > .tippy-backdrop {
+.tippy-box[data-theme~='process-info'] > .tippy-backdrop {
   @apply bg-yellow-1500;
 }
 
-.tippy-box[data-theme~="process-info-current"] {
+.tippy-box[data-theme~='process-info-current'] {
   @apply text-yellow-1500 bg-yellow-600 rounded-none p-0.5;
 }
-.tippy-box[data-theme~="process-info-current"][data-placement^="top"] > .tippy-arrow:before {
-  border-top-color: theme("colors.yellow.600");
+.tippy-box[data-theme~='process-info-current'][data-placement^='top']
+  > .tippy-arrow:before {
+  border-top-color: theme('colors.yellow.600');
 }
-.tippy-box[data-theme~="process-info-current"][data-placement^="bottom"] > .tippy-arrow:before {
-  border-bottom-color: theme("colors.yellow.600");
+.tippy-box[data-theme~='process-info-current'][data-placement^='bottom']
+  > .tippy-arrow:before {
+  border-bottom-color: theme('colors.yellow.600');
 }
-.tippy-box[data-theme~="process-info-current"][data-placement^="left"] > .tippy-arrow:before {
-  border-left-color: theme("colors.yellow.600");
+.tippy-box[data-theme~='process-info-current'][data-placement^='left']
+  > .tippy-arrow:before {
+  border-left-color: theme('colors.yellow.600');
 }
-.tippy-box[data-theme~="process-info-current"][data-placement^="right"] > .tippy-arrow:before {
-  border-right-color: theme("colors.yellow.600");
+.tippy-box[data-theme~='process-info-current'][data-placement^='right']
+  > .tippy-arrow:before {
+  border-right-color: theme('colors.yellow.600');
 }
-.tippy-box[data-theme~="process-info-current"] > .tippy-backdrop {
+.tippy-box[data-theme~='process-info-current'] > .tippy-backdrop {
   @apply bg-yellow-1500;
 }
 
 /* GlideJS */
 
-@import "@glidejs/glide/dist/css/glide.core.min.css";
-/* .glide__bullets {
-  position: absolute;
-  z-index: 2;
-  bottom: 2em;
-  left: 50%;
-  display: inline-flex;
-  list-style: none;
-  transform: translateX(-50%);
-}
-
-.glide__bullet {
-  background-color: rgba(255, 255, 255, 0.5);
-  width: 9px;
-  height: 9px;
-  padding: 0;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  transition: all 300ms ease-in-out;
-  cursor: pointer;
-  line-height: 0;
-  box-shadow: 0 0.25em 0.5em 0 rgba(0, 0, 0, 0.1);
-  margin: 0 0.25em;
-}
-.glide__bullet:focus {
-  outline: none;
-}
-.glide__bullet:hover,
-.glide__bullet:focus {
-  border: 2px solid white;
-  background-color: rgba(255, 255, 255, 0.5);
-}
-.glide__bullet--active {
-  background-color: white;
-} */
+@import '@glidejs/glide/dist/css/glide.core.min.css';
 
 .glide--swipeable {
   cursor: grab;
-  cursor: -moz-grab;
-  cursor: -webkit-grab;
 }
 
 .glide--dragging {
   cursor: grabbing;
-  cursor: -moz-grabbing;
-  cursor: -webkit-grabbing;
 }
