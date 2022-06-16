@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { GetCurrentHtml, GetHtmlFunction } from 'renderer/providers/types';
 
 // commands to communicate with the browser window in the main screen
@@ -17,24 +16,8 @@ const clearStorage = () =>
 const makeGetHtml = (logHtml: boolean): GetHtmlFunction => {
   const getHtml = async (url: string): Promise<GetCurrentHtml> => {
     await goToUrl(url);
-    if (logHtml) {
-      // FIXME: This branch is not working due to new sandboxing.
-      const userFolder = await window.electron.ipcRenderer.invoke(
-        'get-path-user-data',
-      );
-      // on macOS: ~/Library/Application Support/Electron/html
-      return async () => {
-        const { html, hash } = await extractHtml();
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        !fs.existsSync(`${userFolder}/html`) &&
-          fs.mkdirSync(`${userFolder}/html`);
-
-        const fn = `${url.replace(/[^a-z0-9]/gi, '')}.html`;
-        fs.writeFileSync(`${userFolder}/html/${fn}`, html);
-
-        return { html, hash };
-      };
-    }
+    if (logHtml)
+      return () => window.electron.ipcRenderer.invoke('scraping-log-html', url);
     return extractHtml;
   };
   return getHtml;

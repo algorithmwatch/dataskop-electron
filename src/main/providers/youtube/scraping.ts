@@ -3,9 +3,11 @@
  */
 
 import crypto from 'crypto';
-import { BrowserView, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserView, BrowserWindow, ipcMain } from 'electron';
+import fs from 'fs';
 import { range } from 'lodash';
-import { delay } from '../../../renderer/lib/utils/time';
+import { stripNonAscii } from '../../../renderer/lib/utils/strings';
+import { delay, getNowString } from '../../../renderer/lib/utils/time';
 
 let scrapingView: BrowserView | null = null;
 
@@ -184,14 +186,16 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     },
   );
 
-  ipcMain.handle('scraping-get-current-html', async () => {
+  const _getCurrentHtml = async () => {
     const html = await scrapingView?.webContents.executeJavaScript(
       'document.documentElement.outerHTML',
     );
     const hash = crypto.createHash('md5').update(html).digest('hex');
 
     return { html, hash };
-  });
+  };
+
+  ipcMain.handle('scraping-get-current-html', _getCurrentHtml);
 
   ipcMain.handle('scraping-scroll-down', async () => {
     await scrapingView?.webContents.executeJavaScript(
@@ -233,5 +237,18 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     return scrapingView?.webContents.executeJavaScript(
       `document.querySelector("${selector}") !== null`,
     );
+  });
+
+  ipcMain.handle('scraping-log-html', async (_event, url) => {
+    const { html, hash } = await _getCurrentHtml();
+
+    // macOS: ~/Library/Application\ Support/Electron/html
+    const userFolder = app.getPath('userData');
+
+    !fs.existsSync(`${userFolder}/html`) && fs.mkdirSync(`${userFolder}/html`);
+
+    const fn = `${getNowString()}-${stripNonAscii(url)}-${hash}.html`;
+    fs.writeFileSync(`${userFolder}/html/${fn}`, html);
+    return { html, hash };
   });
 }

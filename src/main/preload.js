@@ -10,7 +10,6 @@ const mainChannels = [
   'check-beta-update',
   'get-version-number',
   'get-env',
-  'get-path-user-data',
   'restart_app',
   'close-main-window',
 ];
@@ -31,6 +30,7 @@ const scrapingChannels = [
   'scraping-click-element',
   'scraping-submit-form',
   'scraping-element-exists',
+  'scraping-log-html',
 ];
 
 // background-scraping.ts

@@ -20,7 +20,7 @@ import {
   powerSaveBlocker,
   screen,
   session,
-  shell,
+  shell
 } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
@@ -282,9 +282,6 @@ ipcMain.handle('get-version-number', () => {
   return app.getVersion();
 });
 
-ipcMain.handle('get-path-user-data', () => {
-  return app.getPath('userData');
-});
 
 ipcMain.handle('get-env', () => {
   // Expose configs done via .env to the renderer. The keys have to references as

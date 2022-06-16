@@ -4,6 +4,7 @@
  * configuration can be adapted while the app is running, e.g., by the backend.
  * However, this is currently not implemented.
  *
+ * Started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
  * @module
  */
 import * as Sentry from '@sentry/electron';
@@ -35,7 +36,6 @@ type State = {
   seriousProtection: string | null;
 };
 type ConfigProviderProps = { children: React.ReactNode };
-// started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
 
 const ConfigStateContext = React.createContext<
   { state: State; dispatch: Dispatch; sendEvent: any } | undefined

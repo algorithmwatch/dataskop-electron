@@ -20,4 +20,6 @@ const fixDuplicatedString = (x: string): string => {
   else return x;
 };
 
-export { splitByWhitespace, fixDuplicatedString };
+const stripNonAscii = (x: string) => x.replace(/[^a-z0-9]/gi, '');
+
+export { splitByWhitespace, fixDuplicatedString, stripNonAscii };
