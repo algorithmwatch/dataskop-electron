@@ -30,7 +30,7 @@ async function lookupOrScrapeVideos(videoIds: string[]) {
   const toFetch = _.uniq(videoIds.filter((x) => !readyIds.has(x)));
 
   const fetched = await window.electron.ipcRenderer.invoke(
-    'scraping-background-videos',
+    'youtube-scraping-background-videos',
     toFetch,
   );
 

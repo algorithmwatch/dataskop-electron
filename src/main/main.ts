@@ -20,17 +20,18 @@ import {
   powerSaveBlocker,
   screen,
   session,
-  shell
+  shell,
 } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import 'regenerator-runtime/runtime';
+import registerBackgroundScrapingHandlers from './background-scraping';
 import registerDbHandlers from './db';
+import registerExportHandlers from './export';
 import MenuBuilder from './menu';
-import registerBackgroundScrapingHandlers from './providers/youtube/background-scraping';
-import registerExportHandlers from './providers/youtube/export';
-import registerScrapingHandlers from './providers/youtube/scraping';
+import registerYoutubeHanderls from './providers/youtube';
+import registerScrapingHandlers from './scraping';
 import { resolveHtmlPath } from './util';
 
 // read .env files for development
@@ -206,6 +207,8 @@ const createWindow = async () => {
   // window not needed
   registerBackgroundScrapingHandlers();
   registerDbHandlers();
+
+  registerYoutubeHanderls(mainWindow);
 };
 
 /**
@@ -281,7 +284,6 @@ ipcMain.handle('check-beta-update', () => {
 ipcMain.handle('get-version-number', () => {
   return app.getVersion();
 });
-
 
 ipcMain.handle('get-env', () => {
   // Expose configs done via .env to the renderer. The keys have to references as

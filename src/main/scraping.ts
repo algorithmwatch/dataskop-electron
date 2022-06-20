@@ -6,8 +6,8 @@ import crypto from 'crypto';
 import { app, BrowserView, BrowserWindow, ipcMain } from 'electron';
 import fs from 'fs';
 import { range } from 'lodash';
-import { stripNonAscii } from '../../../renderer/lib/utils/strings';
-import { delay, getNowString } from '../../../renderer/lib/utils/time';
+import { stripNonAscii } from '../renderer/lib/utils/strings';
+import { delay, getNowString } from '../renderer/lib/utils/time';
 
 let scrapingView: BrowserView | null = null;
 

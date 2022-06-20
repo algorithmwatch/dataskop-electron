@@ -34,7 +34,7 @@ const invokeImageExport = async (data: ScrapingResultSaved[]) => {
     })
     .flat();
   window.electron.ipcRenderer.invoke(
-    'results-export-images',
+    'youtube-results-export-images',
     uniq(ytIds),
     filename,
   );

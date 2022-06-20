@@ -39,19 +39,22 @@ const backgroundScrapingChannels = [
   'scraping-background-get-current-html',
   'scraping-background-submit-form',
   'scraping-background-close',
-  'scraping-background-videos',
 ];
 
 // export.ts
 const exportChannels = [
   'results-import',
   'results-export',
-  'results-export-images',
   'results-save-screenshot',
 ];
 
 // db.ts
 const dbChannels = ['db-read', 'db-write'];
+
+const youtubeChannels = [
+  'youtube-results-export-images',
+  'youtube-scraping-background-videos',
+];
 
 // whitelist certain channels for certain action
 const validInvokeChannels = [].concat(
@@ -60,6 +63,7 @@ const validInvokeChannels = [].concat(
   backgroundScrapingChannels,
   exportChannels,
   dbChannels,
+  youtubeChannels,
 );
 const validOnChannels = ['scraping-navigation-happened', 'close-action'];
 const validremoveAllChannels = [

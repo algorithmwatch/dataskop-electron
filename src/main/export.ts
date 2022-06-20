@@ -1,19 +1,5 @@
-import { getThumbnails } from '@algorithmwatch/harke';
 import { BrowserWindow, dialog, ipcMain } from 'electron';
-import fetch from 'electron-fetch';
 import fs from 'fs';
-import pLimit from 'p-limit';
-import path from 'path';
-
-async function downloadYtImage(ytId, folder) {
-  const url = getThumbnails(ytId).default.maxRes;
-
-  const res = await fetch(url);
-  if (res == null) throw Error();
-  const p = path.join(folder, `${ytId}.jpg`);
-  const dest = fs.createWriteStream(p);
-  res.body.pipe(dest);
-}
 
 export default function registerExportHandlers(mainWindow: BrowserWindow) {
   ipcMain.handle('results-import', async (event) => {
@@ -37,24 +23,6 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
     if (canceled || !filePath) return;
     fs.writeFileSync(filePath, data);
   });
-
-  ipcMain.handle(
-    'results-export-images',
-    async (_event, ytIds: string[], filename) => {
-      if (mainWindow === null) return;
-      const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
-        defaultPath: filename,
-      });
-      if (canceled || !filePath) return;
-
-      if (!fs.existsSync(filePath)) fs.mkdirSync(filePath);
-
-      const limit = pLimit(10);
-      console.log(ytIds);
-      const input = ytIds.map((x) => limit(() => downloadYtImage(x, filePath)));
-      await Promise.all(input);
-    },
-  );
 
   ipcMain.handle('results-save-screenshot', async (_event, rect, filename) => {
     if (mainWindow === null) return;
