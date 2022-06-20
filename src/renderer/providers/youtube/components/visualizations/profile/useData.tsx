@@ -3,7 +3,7 @@
 import * as chrono from 'chrono-node';
 import { mean, rollups, sum } from 'd3-array';
 import { useEffect, useState } from 'react';
-import { Lookup, ScrapingResult } from '../../../../../lib/db/types';
+import { LookupMap, ScrapingResult } from '../../../../../lib/db/types';
 
 const parseDate = (str: string, referenceDate: Date) => {
   const germanDate = chrono.de.parseDate(str, referenceDate);
@@ -12,7 +12,7 @@ const parseDate = (str: string, referenceDate: Date) => {
   return chrono.en.parseDate(str, referenceDate);
 };
 
-export const useData = (raw: Array<ScrapingResult>, lookups: Array<Lookup>) => {
+export const useData = (raw: Array<ScrapingResult>, lookups: LookupMap) => {
   const [data, setData] = useState({ loading: true });
 
   // console.log(raw, lookups);
@@ -32,7 +32,7 @@ export const useData = (raw: Array<ScrapingResult>, lookups: Array<Lookup>) => {
         const history = slugHistory.map((d) => {
           const date = parseDate(d.watchedAt, referenceDate);
           const watchTime = parseInt((d.duration * d.percWatched) / 100 / 1000);
-          const detail = lookups.find((l) => l.info.videoId === d.id)?.info;
+          const detail = lookups[d.id]?.data;
           return { ...d, date, watchTime, ...detail };
         });
         const days = history.length

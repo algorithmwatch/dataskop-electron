@@ -2,31 +2,14 @@
 
 import { parseVideoNoJs } from '@algorithmwatch/harke';
 import _ from 'lodash';
-import { addLookups, clearLookups, getLookups } from 'renderer/lib/db';
-import dayjs from 'renderer/lib/utils/dayjs';
+import { addLookups, getLookups } from 'renderer/lib/db';
 import { delay } from 'renderer/lib/utils/time';
 import { submitConfirmForm } from './actions/confirm-cookies';
 
-const KEEP_LOOKUPS_MAX_DAYS = 7;
-
 async function lookupOrScrapeVideos(videoIds: string[]) {
-  let data = await getLookups();
+  let items = await getLookups({ deleteOld: true, ids: videoIds });
 
-  // If the first entry (the oldest one) is older than the max value,
-  // clear all lookups and get fresh data.
-  if (
-    data.length > 0 &&
-    dayjs().diff(dayjs(data[0].scrapedAt), 'day') > KEEP_LOOKUPS_MAX_DAYS
-  ) {
-    await clearLookups();
-    data = [];
-  }
-
-  const readyIds = new Set(
-    data
-      .filter(({ info }) => info != null)
-      .map(({ info: { videoId } }) => videoId),
-  );
+  const readyIds = new Set(Object.keys(items));
 
   const getHtml = async () => {
     await window.electron.ipcRenderer.invoke('scraping-background-init');
@@ -51,17 +34,24 @@ async function lookupOrScrapeVideos(videoIds: string[]) {
     toFetch,
   );
 
-  const parsed = fetched.map((x) => ({
-    scrapedAt: Date.now(),
-    info: { ...parseVideoNoJs(x.html), videoId: x.videoId },
-  }));
+  const parsed = Object.assign(
+    {},
+    ...fetched.map((x: { videoId: any; html: string }) => ({
+      [x.videoId]: {
+        data: {
+          ...parseVideoNoJs(x.html),
+          createdAt: Date.now(),
+          provider: 'youtube',
+        },
+      },
+    })),
+  );
 
-  // const fetched = await scrapeVideoMeta(toFetch);
   await addLookups(parsed);
 
   await window.electron.ipcRenderer.invoke('scraping-background-close');
 
-  return getLookups();
+  return getLookups({ deleteOld: false, ids: videoIds });
 }
 
 export { lookupOrScrapeVideos };

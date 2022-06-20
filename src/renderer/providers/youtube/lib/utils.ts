@@ -1,37 +1,37 @@
 import _ from 'lodash';
-import { Lookup, ScrapingResultSaved } from 'renderer/lib/db';
+import { LookupMap, ScrapingResultSaved } from 'renderer/lib/db';
 
 const filterLookupBySession = (
   results: ScrapingResultSaved[],
-  lookups: Lookup[],
+  lookups: LookupMap,
 ) => {
-  const videoIds = new Set();
+  const videoIds: string[] = [];
 
   results.forEach((x) => {
     if ('slug' in x && x.slug === 'yt-user-watch-history') {
-      x.fields.videos.forEach(({ id }: { id: any }) => videoIds.add(id));
+      x.fields.videos.forEach(({ id }: { id: any }) => videoIds.push(id));
     }
   });
-  return lookups.filter((x) => videoIds.has(x.info.videoId));
+  return _.pick(lookups, videoIds);
 };
 
 const redactWatchHistory = (
   results: ScrapingResultSaved[],
-  lookups: Lookup[],
+  lookups: LookupMap,
 ) => {
   // - private videos are not in lookups (cause they have no meta infos)
   // - videos that are not unlisted are public
   // - safe the amount of videos before redaction + number of unlisted videos
+
   const publicVideos = new Set(
-    lookups
-      .filter((x) => !x.info.unlisted)
-      .map(({ info: { videoId } }) => videoId),
+    _.filter(
+      lookups,
+      (x) => x.provider == 'youtube' && !x.data.unlisted,
+    ).keys(),
   );
 
   const unlistedVideos = new Set(
-    lookups
-      .filter((x) => x.info.unlisted)
-      .map(({ info: { videoId } }) => videoId),
+    _.filter(lookups, (x) => x.provider == 'youtube' && x.data.unlisted).keys(),
   );
 
   results.forEach((x) => {

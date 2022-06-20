@@ -11,7 +11,6 @@ import routes from '../../routes';
 export default function ResultsDetailsPage() {
   const { sessionId }: { sessionId: string } = useParams();
   const history = useHistory();
-
   const { dispatch } = useScraping();
 
   const invokeExport = async () => {

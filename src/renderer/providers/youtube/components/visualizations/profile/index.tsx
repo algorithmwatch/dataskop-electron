@@ -7,7 +7,7 @@ import Button from 'renderer/components/Button';
 import ContentWrapper from '../../../../../components/ContentWrapper';
 import Explainer from '../../../../../components/Explainer';
 import Infobox from '../../../../../components/Infobox';
-import { Lookup, ScrapingResult } from '../../../../../lib/db/types';
+import { LookupMap, ScrapingResult } from '../../../../../lib/db/types';
 import { exportWatchHistoryCsv } from '../../../lib/export';
 import Beeswarm from './Beeswarm';
 import Loading from './Loading';
@@ -34,7 +34,7 @@ export default function ProfileVis({
   lookups,
 }: {
   data: Array<ScrapingResult>;
-  lookups: Array<Lookup>;
+  lookups: LookupMap;
 }) {
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
   const [waitExport, setWaitExport] = useState(false);

@@ -41,13 +41,10 @@ const getBaseInformation = (item, suffix: string | null = null) => {
 
 const exportWatchHistoryCsv = async (data) => {
   const videoIds = data.map(({ id }) => id);
-  const allLookups = await lookupOrScrapeVideos(videoIds);
-
-  const lookups = allLookups.filter((x) => videoIds.includes(x.info.videoId));
+  const lookups = await lookupOrScrapeVideos(videoIds);
 
   data.forEach((x) => {
-    const rawDate = lookups.filter((l) => l.info.videoId === x.id)[0].info
-      .publishedAt;
+    const rawDate = lookups[x.id].data.publishedAt;
 
     x['Online_seit_Tage'] = onlineSince(rawDate);
     x.category = translateCategories(x.category);
@@ -120,18 +117,14 @@ const exportAutoplaychainCsv = (data) => {
   });
 };
 
-const getRecoInformation = (
-  videoIdToLookup,
-  item,
-  suffix: string | null = null,
-) => {
+const getRecoInformation = (lookups, item, suffix: string | null = null) => {
   const result = {
     Titel: item.title,
     Kanalname: item.channelName,
     Aufrufe: item.viewCount,
     Videolaenge_Sek: item.duration / 10000,
-    Kategorie: translateCategories(videoIdToLookup[item.id].category),
-    Online_seit_Tage: onlineSince(videoIdToLookup[item.id].publishedAt),
+    Kategorie: translateCategories(lookups[item.id].data.category),
+    Online_seit_Tage: onlineSince(lookups[item.id].data.publishedAt),
   };
 
   if (suffix) {
@@ -159,13 +152,7 @@ const exportNewsCsv = async (data) => {
       });
   });
 
-  const allLookups = await lookupOrScrapeVideos(toLookup);
-
-  const videoIdToLookup: any = {};
-
-  allLookups.forEach((x) => {
-    videoIdToLookup[x.info.videoId] = x.info;
-  });
+  const lookups = await lookupOrScrapeVideos(toLookup);
 
   const transformedData = data
     .map((x, i) => {
@@ -179,7 +166,7 @@ const exportNewsCsv = async (data) => {
         .map((r, i) => {
           return {
             Empfehlung_in: i + 1,
-            ...getRecoInformation(videoIdToLookup, r, '_in'),
+            ...getRecoInformation(lookups, r, '_in'),
           };
         });
 
@@ -188,7 +175,7 @@ const exportNewsCsv = async (data) => {
         .map((r, i) => {
           return {
             Empfehlung_out: i + 1,
-            ...getRecoInformation(videoIdToLookup, r, '_out'),
+            ...getRecoInformation(lookups, r, '_out'),
           };
         });
 
@@ -224,13 +211,7 @@ const exportSearchCsv = async (data) => {
       });
   });
 
-  const allLookups = await lookupOrScrapeVideos(toLookup);
-
-  const videoIdToLookup: any = {};
-
-  allLookups.forEach((x) => {
-    videoIdToLookup[x.info.videoId] = x.info;
-  });
+  const lookups = await lookupOrScrapeVideos(toLookup);
 
   const transformedData = data
     .map((x, i) => {
@@ -243,7 +224,7 @@ const exportSearchCsv = async (data) => {
         .map((r, i) => {
           return {
             Empfehlung_in: i + 1,
-            ...getRecoInformation(videoIdToLookup, r, '_in'),
+            ...getRecoInformation(lookups, r, '_in'),
           };
         });
 
@@ -252,7 +233,7 @@ const exportSearchCsv = async (data) => {
         .map((r, i) => {
           return {
             Empfehlung_out: i + 1,
-            ...getRecoInformation(videoIdToLookup, r, '_out'),
+            ...getRecoInformation(lookups, r, '_out'),
           };
         });
 

@@ -17,7 +17,19 @@ export default function VisualizationWrapper({ name }: { name: string }) {
   useEffect(() => {
     const loadData = async () => {
       if (demoData) {
-        setData(demoData.data);
+        // migrate outdated lookup format
+        if (
+          'lookups' in demoData.data &&
+          Array.isArray(demoData.data.lookups)
+        ) {
+          const transformed = Object.assign(
+            {},
+            ...demoData.data.lookups.map((x) => ({
+              [x.info.videoId]: { data: x.info },
+            })),
+          );
+          setData({ results: demoData.data.results, lookups: transformed });
+        } else setData(demoData.data);
       } else if (sessionId) {
         const results = await getScrapingResultsBySession(sessionId);
         const lookups = await getLookups();
