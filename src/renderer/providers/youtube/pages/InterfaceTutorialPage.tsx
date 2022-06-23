@@ -3,9 +3,11 @@ import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
-import { PerfectArrow } from 'renderer/components/PerfectArrow';
 import { useNavigation, useScraping } from 'renderer/contexts';
+import FooterNav, {
+  FooterNavItem,
+} from 'renderer/providers/youtube/components/FooterNav';
+import { PerfectArrow } from 'renderer/providers/youtube/components/PerfectArrow';
 
 export default function InterfaceTutorialPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();

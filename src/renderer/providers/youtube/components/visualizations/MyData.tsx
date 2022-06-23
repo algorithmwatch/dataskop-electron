@@ -12,8 +12,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import React, { useMemo } from 'react';
 import { FixedSizeList as List } from 'react-window';
-import Button from '../../../../components/Button';
 import useDimensions from '../../../../components/hooks/useDimensions';
+import Button from '../Button';
 
 const invokeExport = async (data: any) => {
   const filename = `dataskop-${dayjs().format('YYYY-MM-DD-HH-mm-s')}.json`;

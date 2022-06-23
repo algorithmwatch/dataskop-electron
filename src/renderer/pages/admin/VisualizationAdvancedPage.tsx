@@ -4,9 +4,9 @@ import { useHistory, useParams } from 'react-router-dom';
 import AutoplayChain from 'renderer/providers/youtube/components/visualizations/AutoplayChain';
 import NewsTop5 from 'renderer/providers/youtube/components/visualizations/NewsTop5';
 import SearchResultsCompare from 'renderer/providers/youtube/components/visualizations/SearchResultsCompare';
-import Button from '../../components/Button';
 import { useConfig } from '../../contexts/config';
 import { getLookups, getScrapingResultsBySession } from '../../lib/db';
+import Button from '../../providers/youtube/components/Button';
 import MyData from '../../providers/youtube/components/visualizations/MyData';
 import Profile from '../../providers/youtube/components/visualizations/profile';
 

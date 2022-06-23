@@ -2,8 +2,7 @@ import dayjs from 'dayjs';
 import { uniq } from 'lodash';
 import { useEffect, useState } from 'react';
 import ConfirmDialog from '../../components/admin/ConfirmDialog';
-import Button from '../../components/Button';
-import OverviewTable from '../../components/results/OverviewTable';
+import OverviewTable from '../../components/admin/results/OverviewTable';
 import {
   clearData,
   clearLookups,
@@ -14,6 +13,7 @@ import {
   importSessionRows,
 } from '../../lib/db';
 import { ScrapingResultSaved } from '../../lib/db/types';
+import Button from '../../providers/youtube/components/Button';
 import { getVideos } from '../../providers/youtube/lib/utils';
 
 const invokeExport = async () => {

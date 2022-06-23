@@ -7,9 +7,11 @@ import { faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { localActiveCampaings } from 'renderer/providers';
-import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import { useConfig, useNavigation, useScraping } from '../contexts';
 import { getActiveCampaigns } from '../lib/utils/networking';
+import FooterNav, {
+  FooterNavItem,
+} from '../providers/youtube/components/FooterNav';
 import awlogo from '../static/images/logos/aw-logo.png';
 import bmbflogo from '../static/images/logos/bmbf-logo.png';
 import dslogo from '../static/images/logos/dslogo.svg';

@@ -1,7 +1,7 @@
 import ReactModal from 'react-modal';
-import { useModal } from '../contexts/modal';
-import ModalContentComponents from '../providers/youtube/components/modal/ModalContentComponents';
+import { useModal } from 'renderer/contexts';
 import Button from './Button';
+import ModalContentComponents from './modal/ModalContentComponents';
 
 // https://github.com/reactjs/react-modal/issues/632#issuecomment-378755186
 if (process.env.NODE_ENV !== 'test') ReactModal.setAppElement('#root');

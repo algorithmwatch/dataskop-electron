@@ -1,8 +1,10 @@
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import { RouteComponentProps } from 'react-router-dom';
-import ContentWrapper from 'renderer/components/ContentWrapper';
-import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
 import { useNavigation } from 'renderer/contexts/navigation';
+import ContentWrapper from 'renderer/providers/youtube/components/ContentWrapper';
+import FooterNav, {
+  FooterNavItem,
+} from 'renderer/providers/youtube/components/FooterNav';
 import visual from '../static/images/start/visual.svg';
 
 export default function IntroductionPage(): JSX.Element {

@@ -1,7 +1,7 @@
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import { RouteComponentProps } from 'react-router-dom';
-import FooterNav, { FooterNavItem } from '../../../components/FooterNav';
 import { useNavigation } from '../../../contexts/navigation';
+import FooterNav, { FooterNavItem } from '../components/FooterNav';
 import VisualizationWrapper from '../components/VisualizationWrapper';
 
 export default function VisualizationSearchPage() {

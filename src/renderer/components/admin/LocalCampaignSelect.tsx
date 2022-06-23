@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react';
 import { Campaign } from 'renderer/providers/types';
 import { allCampaigns } from 'renderer/providers/youtube';
 import { getLocalCampaigns } from '../../lib/db';
-import Button from '../Button';
+import Button from '../../providers/youtube/components/Button';
 
 const LocalScrapingConfigSelect = ({
   campaign,

@@ -4,7 +4,7 @@ import {
   getSessions,
   getStatisticsForSession,
   ScrapingSession,
-} from '../../lib/db';
+} from '../../../lib/db';
 import DetailsTable from './DetailsTable';
 import Stats from './Stats';
 

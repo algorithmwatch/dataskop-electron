@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import { useEffect, useMemo, useRef, useState } from 'react';
 // import { ScrapingResult } from '../../lib/db/types';
-import Button from '../../../../components/Button';
+import Button from '../Button';
 
 const invokeExport = async (data) => {
   const filename = `dataskop-${dayjs().format('YYYY-MM-DD-HH-mm-s')}.json`;

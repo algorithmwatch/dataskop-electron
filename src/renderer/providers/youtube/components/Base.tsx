@@ -9,13 +9,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { ReactNode, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import logo from 'renderer/static/images/logos/dslogo.svg';
+import {
+  useConfig,
+  useModal,
+  useNavigation,
+  useScraping,
+} from '../../../contexts';
+import routes from '../../../routes';
 import Modal from '../components/Modal';
 import ProcessIndicator from '../components/ProcessIndicator';
 import ScrapingProgressBar from '../components/ScrapingProgressBar';
 import Sidebar from '../components/Sidebar';
-import { useConfig, useModal, useNavigation, useScraping } from '../contexts';
-import routes from '../routes';
-import logo from '../static/images/logos/dslogo.svg';
 
 export default function Base({
   children,

@@ -6,8 +6,10 @@
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
 import { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
-import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
 import { useNavigation, useScraping } from '../contexts';
+import FooterNav, {
+  FooterNavItem,
+} from '../providers/youtube/components/FooterNav';
 
 export default function SelectCampaignPage(): JSX.Element {
   const {

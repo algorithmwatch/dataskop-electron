@@ -3,7 +3,9 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import { RouteComponentProps } from 'react-router-dom';
-import FooterNav, { FooterNavItem } from '../../../components/FooterNav';
+import FooterNav, {
+  FooterNavItem,
+} from 'renderer/providers/youtube/components/FooterNav';
 import { useModal } from '../../../contexts';
 import { useNavigation } from '../../../contexts/navigation';
 

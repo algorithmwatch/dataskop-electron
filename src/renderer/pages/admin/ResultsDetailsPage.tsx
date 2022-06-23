@@ -1,10 +1,10 @@
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import Button from '../../components/Button';
-import ResultsDetails from '../../components/results/ResultDetails';
+import ResultsDetails from '../../components/admin/results/ResultDetails';
 import { useScraping } from '../../contexts';
 import { getLookups, getScrapingResultsBySession } from '../../lib/db';
+import Button from '../../providers/youtube/components/Button';
 import { filterLookupBySession } from '../../providers/youtube/lib/utils';
 import routes from '../../routes';
 

@@ -1,7 +1,7 @@
 import { faCheckCircle } from '@fortawesome/pro-duotone-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ContactContainer from 'renderer/components/ContactContaier';
-import ContentWrapper from 'renderer/components/ContentWrapper';
+import ContactContainer from 'renderer/providers/youtube/components/ContactContaier';
+import ContentWrapper from 'renderer/providers/youtube/components/ContentWrapper';
 
 export default function DonationSuccessPage(): JSX.Element {
   // const { getPreviousPage } = useNavigation();

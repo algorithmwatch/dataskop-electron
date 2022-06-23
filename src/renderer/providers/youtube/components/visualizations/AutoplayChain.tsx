@@ -15,12 +15,12 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import debounce from 'lodash/debounce';
 import React, { useMemo, useState } from 'react';
-import Button from 'renderer/components/Button';
-import Explainer from '../../../../components/Explainer';
-import Infobox from '../../../../components/Infobox';
+import Button from 'renderer/providers/youtube/components/Button';
 import { ScrapingResultSaved } from '../../../../lib/db/types';
 import { exportAutoplaychainCsv } from '../../lib/export';
 import explainerImage from '../../static/images/autoplay-explainer.png';
+import Explainer from '../Explainer';
+import Infobox from '../Infobox';
 import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
 
 const SeedVideoMenu = React.memo(function SeedVideoMenu({

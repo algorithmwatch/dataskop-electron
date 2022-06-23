@@ -1,10 +1,12 @@
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import ContactContainer from 'renderer/components/ContactContaier';
-import ContentWrapper from 'renderer/components/ContentWrapper';
-import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
 import { useScraping } from 'renderer/contexts';
 import { useNavigation } from 'renderer/contexts/';
+import ContactContainer from 'renderer/providers/youtube/components/ContactContaier';
+import ContentWrapper from 'renderer/providers/youtube/components/ContentWrapper';
+import FooterNav, {
+  FooterNavItem,
+} from 'renderer/providers/youtube/components/FooterNav';
 import VisualizationWrapper from '../components/VisualizationWrapper';
 import routes from '../lib/routes';
 

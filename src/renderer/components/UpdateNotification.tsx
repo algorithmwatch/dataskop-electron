@@ -1,7 +1,7 @@
 import { faSpinnerThird } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
-import Button from './Button';
+import Button from '../providers/youtube/components/Button';
 
 export default function UpdateNotification(): JSX.Element {
   const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);

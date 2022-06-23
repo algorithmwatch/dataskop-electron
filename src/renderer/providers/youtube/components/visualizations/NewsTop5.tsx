@@ -3,14 +3,14 @@ import { faNewspaper } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import _ from 'lodash';
 import { useState } from 'react';
-import Button from 'renderer/components/Button';
+import Button from 'renderer/providers/youtube/components/Button';
 import { Placement } from 'tippy.js';
-import { Carousel, Slide } from '../../../../components/Carousel';
-import { Options } from '../../../../components/Carousel/types';
-import Explainer from '../../../../components/Explainer';
-import Infobox from '../../../../components/Infobox';
 import { ScrapingResultSaved } from '../../../../lib/db/types';
 import { exportNewsCsv } from '../../lib/export';
+import { Carousel, Slide } from '../Carousel';
+import { Options } from '../Carousel/types';
+import Explainer from '../Explainer';
+import Infobox from '../Infobox';
 import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
 
 interface NewsTop5DataItem {

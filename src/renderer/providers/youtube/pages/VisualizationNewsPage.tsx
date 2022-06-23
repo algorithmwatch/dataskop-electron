@@ -1,7 +1,9 @@
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import { RouteComponentProps } from 'react-router-dom';
-import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
 import { useNavigation } from 'renderer/contexts/navigation';
+import FooterNav, {
+  FooterNavItem,
+} from 'renderer/providers/youtube/components/FooterNav';
 import VisualizationWrapper from '../components/VisualizationWrapper';
 
 export default function VisualizationNewsPage() {

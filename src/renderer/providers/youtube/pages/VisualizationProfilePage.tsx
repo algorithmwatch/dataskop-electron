@@ -1,9 +1,11 @@
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
 import { useScraping } from 'renderer/contexts';
 import { useNavigation } from 'renderer/contexts/navigation';
+import FooterNav, {
+  FooterNavItem,
+} from 'renderer/providers/youtube/components/FooterNav';
 import VisualizationWrapper from '../components/VisualizationWrapper';
 
 export default function VisualizationProfilePage(): JSX.Element {

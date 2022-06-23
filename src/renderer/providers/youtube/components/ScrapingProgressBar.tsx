@@ -2,7 +2,7 @@
 import { faSpinnerThird } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
-import { useScraping } from '../contexts';
+import { useScraping } from 'renderer/contexts';
 
 export default function ScrapingProgressBar() {
   const {

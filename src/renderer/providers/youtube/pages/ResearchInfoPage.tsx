@@ -1,10 +1,12 @@
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import ContentWrapper from 'renderer/components/ContentWrapper';
-import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
 import { useScraping } from 'renderer/contexts';
 import { useNavigation } from 'renderer/contexts/navigation';
+import ContentWrapper from 'renderer/providers/youtube/components/ContentWrapper';
+import FooterNav, {
+  FooterNavItem,
+} from 'renderer/providers/youtube/components/FooterNav';
 import visual from '../static/images/research-info/visual.svg';
 
 export default function ResearchInfoPage(): JSX.Element {

@@ -3,12 +3,12 @@
 import { faIdCard } from '@fortawesome/pro-light-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRef, useState } from 'react';
-import Button from 'renderer/components/Button';
-import ContentWrapper from '../../../../../components/ContentWrapper';
-import Explainer from '../../../../../components/Explainer';
-import Infobox from '../../../../../components/Infobox';
 import { LookupMap, ScrapingResult } from '../../../../../lib/db/types';
 import { exportWatchHistoryCsv } from '../../../lib/export';
+import Button from '../../Button';
+import ContentWrapper from '../../ContentWrapper';
+import Explainer from '../../Explainer';
+import Infobox from '../../Infobox';
 import Beeswarm from './Beeswarm';
 import Loading from './Loading';
 import { useData } from './useData';

@@ -1,10 +1,12 @@
 import { faAngleLeft } from '@fortawesome/pro-solid-svg-icons';
 import { useEffect } from 'react';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
-import Button from 'renderer/components/Button';
-import ContentWrapper from 'renderer/components/ContentWrapper';
-import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
 import { useConfig, useNavigation, useScraping } from 'renderer/contexts';
+import Button from 'renderer/providers/youtube/components/Button';
+import ContentWrapper from 'renderer/providers/youtube/components/ContentWrapper';
+import FooterNav, {
+  FooterNavItem,
+} from 'renderer/providers/youtube/components/FooterNav';
 
 export default function SelectDemoPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();

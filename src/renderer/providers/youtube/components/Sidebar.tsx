@@ -4,10 +4,10 @@ import { IconDefinition } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { useState } from 'react';
+import AdvancedMenu from 'renderer/components/admin/AdvancedMenu';
+import { useConfig } from 'renderer/contexts';
 import ytRoutes from 'renderer/providers/youtube/lib/routes';
 import routes from 'renderer/routes';
-import { useConfig } from '../contexts/config';
-import AdvancedMenu from './admin/AdvancedMenu';
 
 export default function Sidebar({
   menuItems = [],

@@ -13,7 +13,7 @@ import {
   NavigationProvider,
   ScrapingProvider,
 } from './contexts';
-import BaseLayout from './layout/Base';
+import BaseLayout from './providers/youtube/components/Base';
 import routes, { allRoutes } from './routes';
 
 export default function App() {

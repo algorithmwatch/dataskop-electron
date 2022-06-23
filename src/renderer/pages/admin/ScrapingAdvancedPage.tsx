@@ -4,11 +4,11 @@ import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import LocalCampaignSelect from '../../components/admin/LocalCampaignSelect';
 import RemoteCampaignSelect from '../../components/admin/RemoteCampaignSelect';
-import Button from '../../components/Button';
 import { makeGetHtml } from '../../components/scraping/ipc';
 import ScrapingControls from '../../components/scraping/ScrapingControls';
 import { useScraping } from '../../contexts/scraping';
 import { Campaign } from '../../providers/types';
+import Button from '../../providers/youtube/components/Button';
 import {
   activateWatchHistory,
   deactivateWatchHistory,

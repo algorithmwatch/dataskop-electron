@@ -6,7 +6,7 @@
 /* eslint-disable no-restricted-syntax */
 import { useScraping } from 'renderer/contexts';
 import { providerInfo } from 'renderer/providers';
-import Button from '../Button';
+import Button from '../../providers/youtube/components/Button';
 import { goToUrl } from './ipc';
 
 export default function ScrapingControls({

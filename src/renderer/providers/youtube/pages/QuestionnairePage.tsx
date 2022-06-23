@@ -11,13 +11,14 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { constants } from '@algorithmwatch/harke';
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
-import Button from 'renderer/components/Button';
-import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
 import { useNavigation, useScraping } from 'renderer/contexts';
 import { addQuestionnaireToSession } from 'renderer/lib/db';
+import Button from 'renderer/providers/youtube/components/Button';
+import FooterNav, {
+  FooterNavItem,
+} from 'renderer/providers/youtube/components/FooterNav';
 
 export default function QuestionnairePage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();

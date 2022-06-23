@@ -3,14 +3,16 @@ import { faAngleLeft } from '@fortawesome/pro-regular-svg-icons';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
-import Button from 'renderer/components/Button';
-import FooterNav, { FooterNavItem } from 'renderer/components/FooterNav';
 import { useConfig, useNavigation, useScraping } from 'renderer/contexts';
 import {
   getLookups,
   getScrapingResultsBySession,
   getSessionById,
 } from 'renderer/lib/db';
+import Button from 'renderer/providers/youtube/components/Button';
+import FooterNav, {
+  FooterNavItem,
+} from 'renderer/providers/youtube/components/FooterNav';
 import { postDonation } from '../../../lib/utils/networking';
 import { redactWatchHistory } from '../lib/utils';
 
