@@ -56,7 +56,7 @@ const getSeedVideosRepeat = async (
  */
 async function* videosProcedure(
   getHtml: GetHtmlFunction,
-  getHtmlLazy: GetHtmlLazyFunction,
+  _getHtmlLazy: GetHtmlLazyFunction,
   sessionId: string,
   config: VideoProcedureConfig,
   scrapingConfig: YtScrapingConfig,

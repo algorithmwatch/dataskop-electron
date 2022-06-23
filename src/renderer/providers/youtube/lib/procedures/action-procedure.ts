@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 import { getScrapingResultsBySession } from 'renderer/lib/db';
 import { GetHtmlFunction, GetHtmlLazyFunction } from 'renderer/providers/types';
-import { ActionProcedureConfig } from '..';
+import { ActionProcedureConfig, YtScrapingConfig } from '..';
 import {
   activateWatchHistory,
   deactivateWatchHistory,
@@ -13,6 +13,8 @@ async function* actionProcedure(
   _getHtmlLazy: GetHtmlLazyFunction,
   sessionId: string,
   config: ActionProcedureConfig,
+  _scrapingConfig: YtScrapingConfig,
+  _enableLogging: boolean,
 ) {
   const { slug } = config;
 

@@ -8,6 +8,7 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useConfig, useModal, useScraping } from 'renderer/contexts';
+import { createScrapingGenerator } from 'renderer/lib/scraping';
 import { postSimpleBackend } from 'renderer/lib/utils/networking';
 import { delay } from 'renderer/lib/utils/time';
 import { providerInfo } from 'renderer/providers';
@@ -168,8 +169,9 @@ export default function ScrapingManager({
       // create a uuid every time you hit start scraping
       const sId = uuidv4();
 
-      const gen = provider.createScrapingGenerator(
+      const gen = createScrapingGenerator(
         campaign.config,
+        provider.deserializeConfigMapping,
         makeGetHtml(logHtml),
         getHtmlLazy,
         sId,

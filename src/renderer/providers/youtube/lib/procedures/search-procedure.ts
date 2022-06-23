@@ -1,13 +1,15 @@
 /* eslint-disable no-restricted-syntax */
 import { GetHtmlFunction, GetHtmlLazyFunction } from 'renderer/providers/types';
-import { SearchProcedureConfig } from '..';
+import { SearchProcedureConfig, YtScrapingConfig } from '..';
 import { scrapeVideoSearch } from '../scrapers';
 
 async function* searchProcedure(
   getHtml: GetHtmlFunction,
-  getHtmlLazy: GetHtmlLazyFunction,
-  sessionId: string,
+  _getHtmlLazy: GetHtmlLazyFunction,
+  _sessionId: string,
   config: SearchProcedureConfig,
+  _scrapingConfig: YtScrapingConfig,
+  _enableLogging: boolean,
 ) {
   const { queries } = config;
   for (const [i, q] of queries.entries()) {

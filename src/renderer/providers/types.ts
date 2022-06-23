@@ -17,13 +17,7 @@ export type ProviderInformation = {
   loginCookie: string;
   navigation: { [key: string]: NavigationState };
   confirmCookie: () => void;
-  createScrapingGenerator: (
-    scrapingConfig: any,
-    getHtml: GetHtmlFunction,
-    getHtmlLazy: GetHtmlLazyFunction,
-    sessionId: string,
-    enableLogging: boolean,
-  ) => any;
+  deserializeConfigMapping: any;
 };
 
 export type DemoData = {

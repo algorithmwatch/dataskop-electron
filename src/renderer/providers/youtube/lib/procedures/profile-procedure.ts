@@ -1,13 +1,15 @@
 /* eslint-disable no-restricted-syntax */
 import { GetHtmlFunction, GetHtmlLazyFunction } from 'renderer/providers/types';
-import { ProfileProcedureConfig } from '..';
+import { ProfileProcedureConfig, YtScrapingConfig } from '..';
 import { profileScraperSlugToFun } from '../scrapers';
 
 async function* profileProcedure(
   getHtml: GetHtmlFunction,
-  getHtmlLazy: GetHtmlLazyFunction,
-  sessiondId: string,
+  _getHtmlLazy: GetHtmlLazyFunction,
+  _sessionId: string,
   config: ProfileProcedureConfig,
+  _scrapingConfig: YtScrapingConfig,
+  _enableLogging: boolean,
 ) {
   const { profileScrapers } = config;
 
