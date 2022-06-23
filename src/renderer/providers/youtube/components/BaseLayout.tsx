@@ -17,10 +17,10 @@ import {
   useScraping,
 } from '../../../contexts';
 import routes from '../../../routes';
-import Modal from '../components/Modal';
-import ProcessIndicator from '../components/ProcessIndicator';
-import ScrapingProgressBar from '../components/ScrapingProgressBar';
-import Sidebar from '../components/Sidebar';
+import Modal from './Modal';
+import ProcessIndicator from './ProcessIndicator';
+import ScrapingProgressBar from './ScrapingProgressBar';
+import Sidebar from './Sidebar';
 
 export default function Base({
   children,

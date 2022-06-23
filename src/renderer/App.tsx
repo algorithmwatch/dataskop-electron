@@ -5,6 +5,7 @@ import {
   Switch,
 } from 'react-router-dom';
 import './App.global.css';
+import BaseLayoutSwitch from './components/BaseLayoutSwitch';
 import ScrapingAttached from './components/scraping/ScrapingAttached';
 import UpdateNotification from './components/UpdateNotification';
 import {
@@ -13,7 +14,6 @@ import {
   NavigationProvider,
   ScrapingProvider,
 } from './contexts';
-import BaseLayout from './providers/youtube/components/Base';
 import routes, { allRoutes } from './routes';
 
 export default function App() {
@@ -24,7 +24,7 @@ export default function App() {
           <ScrapingProvider>
             <UpdateNotification />
             <Router>
-              <BaseLayout>
+              <BaseLayoutSwitch>
                 <Switch>
                   {/* All routes */}
                   {allRoutes.map(({ path, comp }) => (
@@ -35,7 +35,7 @@ export default function App() {
                     <Redirect to={routes.START.path} />
                   </Route>
                 </Switch>
-              </BaseLayout>
+              </BaseLayoutSwitch>
             </Router>
             {/* has to come here _after_ the pages in the router */}
             <ScrapingAttached />
