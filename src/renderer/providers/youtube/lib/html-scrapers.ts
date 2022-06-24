@@ -6,11 +6,21 @@ import { addLookups, getLookups } from 'renderer/lib/db';
 import { delay } from 'renderer/lib/utils/time';
 import { submitConfirmForm } from './actions/confirm-cookies';
 
-async function lookupOrScrapeVideos(videoIds: string[]) {
+async function lookupOrScrapeVideos(
+  videoIds: string[],
+  enableLogging: boolean = false,
+) {
   let items = await getLookups({ deleteOld: true, ids: videoIds });
 
   const readyIds = new Set(Object.keys(items));
 
+  if (enableLogging) {
+    window.electron.log.info(
+      `lookupOrScrapeVideos: about to scrape ${
+        videoIds.length - readyIds.size
+      } of ${videoIds.length} videos`,
+    );
+  }
   const getHtml = async () => {
     await window.electron.ipcRenderer.invoke('scraping-background-init');
     return () =>
@@ -29,7 +39,7 @@ async function lookupOrScrapeVideos(videoIds: string[]) {
   // only fetch new videos that are not already stored
   const toFetch = _.uniq(videoIds.filter((x) => !readyIds.has(x)));
 
-  const fetched = await window.electron.ipcRenderer.invoke(
+  const fetched: any[] = await window.electron.ipcRenderer.invoke(
     'youtube-scraping-background-videos',
     toFetch,
   );
@@ -48,6 +58,12 @@ async function lookupOrScrapeVideos(videoIds: string[]) {
   );
 
   await addLookups(parsed);
+
+  if (enableLogging) {
+    window.electron.log.info(
+      `lookupOrScrapeVideos: adding ${fetched.length} new videos to lookup`,
+    );
+  }
 
   await window.electron.ipcRenderer.invoke('scraping-background-close');
 

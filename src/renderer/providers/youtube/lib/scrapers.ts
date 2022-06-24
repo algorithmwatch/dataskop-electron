@@ -50,6 +50,7 @@ const scrapeNationalNewsTopStories = async (
 
 const scrapeLikedVideos = async (
   getHtml: GetHtmlFunction,
+  _enableLogging: boolean,
 ): Promise<ScrapingResult> => {
   const result = await scrapePlaylist(LIST_ID_LIKED_VIDEOS, getHtml);
   result.slug += '-liked-videos';
@@ -81,6 +82,7 @@ const scrapeVideo = async (
 
 const scrapeWatchedVideos = async (
   getHtml: GetHtmlFunction,
+  enableLogging: boolean,
 ): Promise<ScrapingResult> => {
   const url = 'https://www.youtube.com/feed/history';
   const results = await trySeveralTimes(
@@ -99,10 +101,19 @@ const scrapeWatchedVideos = async (
     console.log(results);
   }
 
+  if (enableLogging) {
+    window.electron.log.info(
+      `scrapeWatchedVideos: scraping finished successfully: ${results.success}. We got ${results.fields.videos?.length} watched videos`,
+    );
+  }
+
   // - we need to figure out if a video is private / unlisted
   // - we need to scrape all those videos here because otherwise we need to set
   //   the consent cookie again
-  await lookupOrScrapeVideos(_.uniq(results.fields.videos.map(({ id }) => id)));
+  await lookupOrScrapeVideos(
+    _.uniq(results.fields.videos.map(({ id }) => id)),
+    enableLogging,
+  );
 
   await delay(5000);
 
@@ -111,6 +122,7 @@ const scrapeWatchedVideos = async (
 
 const scrapeSearchHistory = async (
   getHtml: GetHtmlFunction,
+  _enableLogging: boolean,
 ): Promise<ScrapingResult> => {
   const url = 'https://myactivity.google.com/activitycontrols/youtube';
   return trySeveralTimes(getHtml, url, parseSearchHistory);
@@ -127,6 +139,7 @@ const scrapeSearchHistory = async (
 
 const scrapeSubscriptions = async (
   getHtml: GetHtmlFunction,
+  _enableLogging: boolean,
 ): Promise<ScrapingResult> => {
   const url = 'https://www.youtube.com/feed/channels';
   return trySeveralTimes(getHtml, url, parseSubscribedChannels);
@@ -282,7 +295,10 @@ async function* scrapeSeedVideos(
 }
 
 export const profileScraperSlugToFun: {
-  [key in ProfileScraper]: (arg0: GetHtmlFunction) => Promise<ScrapingResult>;
+  [key in ProfileScraper]: (
+    arg0: GetHtmlFunction,
+    enableLogging: boolean,
+  ) => Promise<ScrapingResult>;
 } = {
   'yt-user-watch-history': scrapeWatchedVideos,
   'yt-playlist-page-liked-videos': scrapeLikedVideos,
