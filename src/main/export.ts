@@ -1,5 +1,29 @@
-import { BrowserWindow, dialog, ipcMain } from 'electron';
+import archiver from 'archiver';
+import { app, BrowserWindow, dialog, ipcMain } from 'electron';
+import log from 'electron-log';
 import fs from 'fs';
+import { readdir, stat } from 'fs/promises';
+import path from 'path';
+import { getNowString } from '../renderer/lib/utils/time';
+import { getDbLocation } from './db';
+
+const getLogDir = () => {
+  return path.dirname(log.default.transports.file.getFile().path);
+};
+
+const getHtmlLogDir = () => {
+  return app.getPath('userData') + '/html';
+};
+
+const dirSize = async (directory: string) => {
+  const files = await readdir(directory);
+  const stats = files.map((file) => stat(path.join(directory, file)));
+
+  return (await Promise.all(stats)).reduce(
+    (accumulator, { size }) => accumulator + size,
+    0,
+  );
+};
 
 export default function registerExportHandlers(mainWindow: BrowserWindow) {
   ipcMain.handle('results-import', async (event) => {
@@ -32,5 +56,61 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
     });
     if (canceled || !filePath) return;
     fs.writeFileSync(filePath, nativeImage.toPNG());
+  });
+
+  ipcMain.handle('export-debug-archive', async () => {
+    const filename = `dataskop-debug-${getNowString()}.zip`;
+
+    if (mainWindow === null) return;
+    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+      defaultPath: filename,
+    });
+    if (canceled || !filePath) return;
+
+    const makeArchive = () =>
+      new Promise<void>((resolve, reject) => {
+        const output = fs.createWriteStream(filePath);
+        const archive = archiver('zip', {
+          zlib: { level: 6 },
+        });
+
+        output.on('close', function () {
+          console.log('Done creating the zip file for the export.');
+          resolve();
+        });
+
+        archive.on('warning', function (err) {
+          if (err.code === 'ENOENT') {
+            // log warning
+          } else {
+            // throw error
+            reject(err);
+          }
+        });
+
+        archive.on('error', function (err) {
+          reject(err);
+        });
+
+        archive.pipe(output);
+        archive.directory(getLogDir(), 'logs');
+        archive.file(getDbLocation(), { name: 'db.json' });
+
+        const htmlLogDir = getHtmlLogDir();
+        if (fs.existsSync(htmlLogDir)) archive.directory(htmlLogDir, 'html');
+
+        archive.finalize();
+      });
+    return makeArchive();
+  });
+
+  ipcMain.handle('export-debug-size', async () => {
+    return Promise.all([getHtmlLogDir(), getLogDir()].map(dirSize));
+  });
+
+  ipcMain.handle('export-debug-clean', async () => {
+    return [getHtmlLogDir(), getLogDir()].map((dir) =>
+      fs.readdirSync(dir).forEach((f) => fs.rmSync(`${dir}/${f}`)),
+    );
   });
 }

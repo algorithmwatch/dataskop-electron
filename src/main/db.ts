@@ -8,9 +8,14 @@ import { app, ipcMain } from 'electron';
 import fs from 'fs';
 import path from 'path';
 
-export default async function registerDbHandlers() {
+export const getDbLocation = () => {
   const userFolder = app.getPath('userData');
   const file = path.join(userFolder, 'db.json');
+  return file;
+};
+
+export default async function registerDbHandlers() {
+  const file = getDbLocation();
 
   ipcMain.handle('db-write', (_e, data) => {
     return fs.writeFileSync(file, JSON.stringify(data), 'utf-8');
