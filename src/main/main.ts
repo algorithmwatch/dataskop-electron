@@ -10,7 +10,7 @@
  */
 
 // Do not (!) change the import to: `import Sentry from '@sentry/electron'`
-import * as Sentry from '@sentry/electron';
+import * as Sentry from '@sentry/electron/main';
 import 'core-js/stable';
 import {
   app,

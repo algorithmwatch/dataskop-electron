@@ -7,7 +7,7 @@
  * Started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
  * @module
  */
-import * as Sentry from '@sentry/electron';
+import * as Sentry from '@sentry/electron/renderer';
 import React, { useEffect } from 'react';
 import { postEvent } from 'renderer/lib/utils/networking';
 import { Campaign } from 'renderer/providers/types';
