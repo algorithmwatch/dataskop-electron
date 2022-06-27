@@ -56,7 +56,9 @@ jobs:
           echo "SERIOUS_PROTECTION=${{ secrets.SERIOUS_PROTECTION }}" >> .env &&
           echo "TRACK_EVENTS=${{ secrets.TRACK_EVENTS }}" >> .env &&
           echo "UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }}" >> .env &&
-          if [[ $GITHUB_TAG_VERSION == *"beta"* ]]; then echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env; else echo "SENTRY_DSN=" >> .env; fi
+          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
+        # If you only want to enable sentry for beta releases, adapt the line above.
+        # if [[ $GITHUB_TAG_VERSION == *"beta"* ]]; then echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env; else echo "SENTRY_DSN=" >> .env; fi
 
       - name: Publish releases
         shell: bash
