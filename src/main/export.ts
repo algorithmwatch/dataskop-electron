@@ -1,5 +1,5 @@
 import archiver from 'archiver';
-import { app, BrowserWindow, dialog, ipcMain } from 'electron';
+import { app, BrowserWindow, dialog } from 'electron';
 import log from 'electron-log';
 import fs from 'fs';
 import { readdir, stat } from 'fs/promises';
@@ -26,7 +26,7 @@ const dirSize = async (directory: string) => {
 };
 
 export default function registerExportHandlers(mainWindow: BrowserWindow) {
-  ipcMain.handle('results-import', async (event) => {
+  addMainHandler('results-import', async (event) => {
     const { canceled, filePaths } = await dialog.showOpenDialog({
       properties: ['openFile', 'multiSelections'],
       filters: [{ name: 'JSON', extensions: ['json'] }],
@@ -39,7 +39,7 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
     });
   });
 
-  ipcMain.handle('results-export', async (_event, data, filename) => {
+  addMainHandler('results-export', async (_event, data, filename) => {
     if (mainWindow === null) return;
     const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
       defaultPath: filename,
@@ -48,7 +48,7 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
     fs.writeFileSync(filePath, data);
   });
 
-  ipcMain.handle('results-save-screenshot', async (_event, rect, filename) => {
+  addMainHandler('results-save-screenshot', async (_event, rect, filename) => {
     if (mainWindow === null) return;
     const nativeImage = await mainWindow.webContents.capturePage(rect);
     const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
@@ -58,7 +58,7 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
     fs.writeFileSync(filePath, nativeImage.toPNG());
   });
 
-  ipcMain.handle('export-debug-archive', async () => {
+  addMainHandler('export-debug-archive', async () => {
     const filename = `dataskop-debug-${getNowString()}.zip`;
 
     if (mainWindow === null) return;
@@ -104,11 +104,11 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
     return makeArchive();
   });
 
-  ipcMain.handle('export-debug-size', async () => {
+  addMainHandler('export-debug-size', async () => {
     return Promise.all([getHtmlLogDir(), getLogDir()].map(dirSize));
   });
 
-  ipcMain.handle('export-debug-clean', async () => {
+  addMainHandler('export-debug-clean', async () => {
     return [getHtmlLogDir(), getLogDir()].map((dir) =>
       fs.readdirSync(dir).forEach((f) => fs.rmSync(`${dir}/${f}`)),
     );

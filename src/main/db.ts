@@ -4,9 +4,10 @@
   doesnot support it. This should get changed when it's possible.
  */
 
-import { app, ipcMain } from 'electron';
+import { app } from 'electron';
 import fs from 'fs';
 import path from 'path';
+import { addMainHandler } from './util';
 
 export const getDbLocation = () => {
   const userFolder = app.getPath('userData');
@@ -17,11 +18,11 @@ export const getDbLocation = () => {
 export default async function registerDbHandlers() {
   const file = getDbLocation();
 
-  ipcMain.handle('db-write', (_e, data) => {
+  addMainHandler('db-write', (_e, data) => {
     return fs.writeFileSync(file, JSON.stringify(data), 'utf-8');
   });
 
-  ipcMain.handle('db-read', () => {
+  addMainHandler('db-read', () => {
     try {
       return JSON.parse(fs.readFileSync(file, 'utf-8'));
     } catch (e) {

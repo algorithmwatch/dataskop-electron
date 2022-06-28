@@ -84,6 +84,8 @@ const installExtensions = async () => {
 };
 
 const createWindow = async () => {
+  log.debug('called createWindow', mainWindow == null);
+
   if (DEBUG) {
     await installExtensions();
   }
@@ -216,6 +218,7 @@ const createWindow = async () => {
  */
 
 ipcMain.handle('close-main-window', (_e, isCurrentlyScraping: boolean) => {
+  log.debug('called handle close-main-window', mainWindow == null);
   if (mainWindow === null) return;
 
   if (isCurrentlyScraping) {
@@ -246,6 +249,8 @@ app.on('window-all-closed', () => {
 app.whenReady().then(createWindow).catch(console.log);
 
 app.on('activate', () => {
+  log.debug('called activate', mainWindow == null);
+
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) createWindow();

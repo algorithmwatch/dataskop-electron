@@ -3,15 +3,16 @@
  */
 
 import { getThumbnails, getVideoUrl } from '@algorithmwatch/harke';
-import { BrowserWindow, dialog, ipcMain, session } from 'electron';
+import { BrowserWindow, dialog, session } from 'electron';
 import fetch from 'electron-fetch';
 import pLimit from 'p-limit';
 import path from 'path';
 
 import fs from 'fs';
+import { addMainHandler } from '../util';
 
 export default function registerYoutubeHandlers(mainWindow: BrowserWindow) {
-  ipcMain.handle('youtube-scraping-background-videos', (_event, videoIds) => {
+  addMainHandler('youtube-scraping-background-videos', (_event, videoIds) => {
     async function scrapeMetaInformation(videoId: string) {
       const url = getVideoUrl(videoId);
       const ses = session.fromPartition('background-scraping');
@@ -26,7 +27,7 @@ export default function registerYoutubeHandlers(mainWindow: BrowserWindow) {
     return Promise.all(output);
   });
 
-  ipcMain.handle(
+  addMainHandler(
     'youtube-results-export-images',
     async (_event, ytIds: string[], filename) => {
       async function downloadYtImage(ytId, folder) {

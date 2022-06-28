@@ -3,26 +3,47 @@
  */
 
 import crypto from 'crypto';
-import { app, BrowserView, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserView, BrowserWindow } from 'electron';
 import fs from 'fs';
 import { range } from 'lodash';
 import { stripNonAscii } from '../renderer/lib/utils/strings';
 import { delay, getNowString } from '../renderer/lib/utils/time';
 
+import log from 'electron-log';
+import { addMainHandler } from './util';
+
 let scrapingView: BrowserView | null = null;
 
 export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
+  log.debug('called registerScrapingHandlers', mainWindow == null);
+
   // register several handlers for the scraping view
 
-  ipcMain.handle(
+  addMainHandler(
     'scraping-init-view',
     (_event, { muted = true, allowInput = true }) => {
-      if (scrapingView !== null) {
-        mainWindow?.removeBrowserView(scrapingView);
+      log.debug(
+        'called scraping-init-view',
+        scrapingView == null,
+        mainWindow == null,
+      );
 
-        // .destroy() does indeed exists and is nesseary to fully remove the view.
-        // Not calling it will result in errors with event handlers.
-        scrapingView?.webContents.destroy();
+      if (scrapingView !== null) {
+        try {
+          mainWindow?.removeBrowserView(scrapingView);
+        } catch (error) {
+          log.error('Could not remove the scraping view from the main window');
+          log.error(error);
+        }
+
+        try {
+          // .destroy() does indeed exists and is nesseary to fully remove the view.
+          // Not calling it will result in errors with event handlers.
+          scrapingView?.webContents.destroy();
+        } catch (error) {
+          log.error('Could not destroy the scraping view');
+          log.error(error);
+        }
       }
 
       const newView = new BrowserView({
@@ -61,12 +82,12 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     },
   );
 
-  ipcMain.handle('scraping-clear-storage', () => {
+  addMainHandler('scraping-clear-storage', () => {
     const view = scrapingView;
     return view?.webContents.session.clearStorageData();
   });
 
-  ipcMain.handle(
+  addMainHandler(
     'scraping-load-url',
     async (_event, url: string, { withHtml = false, clear = false }) => {
       const view = scrapingView;
@@ -115,10 +136,8 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
             userAgent,
           });
         } catch (error) {
-          console.log(
-            'strange error with await + loadUrl, trying to overcome it',
-          );
-          console.log(error);
+          log.log('strange error with await + loadUrl, trying to overcome it');
+          log.log(error);
           await delay(2000);
         }
 
@@ -136,7 +155,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
               "const awThePlayer = document.querySelector('.html5-video-player'); if(awThePlayer != null) awThePlayer.click();",
             );
           } catch (e) {
-            console.log(e);
+            log.log(e);
           }
 
           if (withHtml) {
@@ -148,8 +167,8 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
           return null;
         } catch (error) {
-          console.log('strange error, retry...');
-          console.log(error);
+          log.log('strange error, retry...');
+          log.log(error);
           delay(1000 * i);
         }
       }
@@ -160,14 +179,14 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     },
   );
 
-  ipcMain.handle('scraping-get-cookies', async () => {
+  addMainHandler('scraping-get-cookies', async () => {
     const cookies = await scrapingView?.webContents.session.cookies.get({});
     return cookies;
   });
 
-  ipcMain.handle('scraping-get-url', () => scrapingView?.webContents.getURL());
+  addMainHandler('scraping-get-url', () => scrapingView?.webContents.getURL());
 
-  ipcMain.handle(
+  addMainHandler(
     'scraping-navigation-cb',
     async (event, cbSlug, remove = false) => {
       const view = scrapingView;
@@ -195,51 +214,65 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     return { html, hash };
   };
 
-  ipcMain.handle('scraping-get-current-html', _getCurrentHtml);
+  addMainHandler('scraping-get-current-html', _getCurrentHtml);
 
-  ipcMain.handle('scraping-scroll-down', async () => {
+  addMainHandler('scraping-scroll-down', async () => {
     await scrapingView?.webContents.executeJavaScript(
       'window.scrollBy(0, 100);',
     );
   });
 
-  ipcMain.handle('scraping-set-muted', async (_event, muted: boolean) => {
+  addMainHandler('scraping-set-muted', async (_event, muted: boolean) => {
     await scrapingView?.webContents.setAudioMuted(muted);
   });
 
-  ipcMain.handle('scraping-remove-view', async () => {
-    if (scrapingView === null) return;
-    mainWindow?.removeBrowserView(scrapingView);
+  addMainHandler('scraping-remove-view', async () => {
+    console;
 
-    // .destroy() does indeed exists and is nesseary to fully remove the view.
-    // Not calling it will result in errors with event handlers.
-    scrapingView?.webContents.destroy();
+    if (scrapingView === null) return;
+
+    try {
+      mainWindow?.removeBrowserView(scrapingView);
+    } catch (error) {
+      log.error('Could not remove the scraping view from the main window');
+      log.error(error);
+    }
+
+    try {
+      // .destroy() does indeed exists and is nesseary to fully remove the view.
+      // Not calling it will result in errors with event handlers.
+      scrapingView?.webContents.destroy();
+    } catch (error) {
+      log.error('Could not destroy the scraping view');
+      log.error(error);
+    }
+
     scrapingView = null;
   });
 
-  ipcMain.handle('scraping-set-bounds', async (_event, bounds) => {
+  addMainHandler('scraping-set-bounds', async (_event, bounds) => {
     scrapingView?.setBounds(bounds);
   });
 
-  ipcMain.handle('scraping-click-element', async (_event, selector) => {
+  addMainHandler('scraping-click-element', async (_event, selector) => {
     await scrapingView?.webContents.executeJavaScript(
       `document.querySelector("${selector}").click()`,
     );
   });
 
-  ipcMain.handle('scraping-submit-form', async (_event, selector) => {
+  addMainHandler('scraping-submit-form', async (_event, selector) => {
     await scrapingView?.webContents.executeJavaScript(
       `document.querySelector("${selector}").submit()`,
     );
   });
 
-  ipcMain.handle('scraping-element-exists', async (_event, selector) => {
+  addMainHandler('scraping-element-exists', async (_event, selector) => {
     return scrapingView?.webContents.executeJavaScript(
       `document.querySelector("${selector}") !== null`,
     );
   });
 
-  ipcMain.handle('scraping-log-html', async (_event, url) => {
+  addMainHandler('scraping-log-html', async (_event, url) => {
     const { html, hash } = await _getCurrentHtml();
 
     // macOS: ~/Library/Application\ Support/Electron/html

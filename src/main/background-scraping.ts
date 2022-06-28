@@ -3,12 +3,13 @@
  */
 
 import crypto from 'crypto';
-import { BrowserWindow, ipcMain, session } from 'electron';
+import { BrowserWindow, session } from 'electron';
+import { addMainHandler } from './util';
 
 let backgroundScrapingWindow: null | BrowserWindow = null;
 
 export default function registerBackgroundScrapingHandlers() {
-  ipcMain.handle('scraping-background-init', (_event) => {
+  addMainHandler('scraping-background-init', (_event) => {
     backgroundScrapingWindow = new BrowserWindow({
       show: false,
       width: 1280,
@@ -22,7 +23,7 @@ export default function registerBackgroundScrapingHandlers() {
     return backgroundScrapingWindow.loadURL('https://google.com');
   });
 
-  ipcMain.handle('scraping-background-get-current-html', async () => {
+  addMainHandler('scraping-background-get-current-html', async () => {
     const html = await backgroundScrapingWindow?.webContents.executeJavaScript(
       'document.documentElement.outerHTML',
     );
@@ -31,7 +32,7 @@ export default function registerBackgroundScrapingHandlers() {
     return { html, hash };
   });
 
-  ipcMain.handle(
+  addMainHandler(
     'scraping-background-submit-form',
     async (_event, selector) => {
       await backgroundScrapingWindow?.webContents.executeJavaScript(
@@ -40,7 +41,7 @@ export default function registerBackgroundScrapingHandlers() {
     },
   );
 
-  ipcMain.handle('scraping-background-close', async (_event) => {
+  addMainHandler('scraping-background-close', async (_event) => {
     return backgroundScrapingWindow?.close();
   });
 }
