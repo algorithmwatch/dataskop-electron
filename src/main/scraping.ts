@@ -21,11 +21,14 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
   addMainHandler(
     'scraping-init-view',
-    (_event, { muted = true, allowInput = true }) => {
+    (_event, { muted = true, allowInput = true, persist = false }) => {
       log.debug(
         'called scraping-init-view',
         scrapingView == null,
         mainWindow == null,
+        muted,
+        allowInput,
+        persist,
       );
 
       if (scrapingView !== null) {
@@ -46,9 +49,11 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         }
       }
 
+      // Don't do string interpolation for partition.
+      const partition = persist ? 'persist:scraping' : 'scraping';
       const newView = new BrowserView({
         webPreferences: {
-          partition: 'scraping',
+          partition,
           backgroundThrottling: false,
         },
       });

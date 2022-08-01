@@ -15,6 +15,7 @@ export type ProviderInformation = {
   startUrl: string;
   loginUrl: string;
   loginCookie: string;
+  persistScrapingBrowser: boolean;
   navigation: { [key: string]: NavigationState };
   confirmCookie: () => void;
   deserializeConfigMapping: any;

@@ -34,9 +34,9 @@ export default function StartPage(): JSX.Element {
     if (platformUrl == null) return;
 
     try {
-      const campaigns = (
-        await getActiveCampaigns(platformUrl, seriousProtection)
-      ).concat(localActiveCampaings);
+      const campaigns = localActiveCampaings.concat(
+        await getActiveCampaigns(platformUrl, seriousProtection),
+      );
 
       const availableCampaigns = campaigns.filter(
         (x) => x.config && x.config.provider,

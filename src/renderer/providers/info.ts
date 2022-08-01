@@ -1,14 +1,17 @@
 import { delay } from '../lib/utils/time';
+import { tiktokInfo } from './tiktok';
+import { defaultCampaign } from './tiktok/lib';
 import { Campaign, ProviderInformation } from './types';
 import { youtubeInfo } from './youtube';
 import ytRoutes from './youtube/lib/routes';
 
 const providerInfo: { [key: string]: ProviderInformation } = {
   youtube: youtubeInfo,
+  tiktok: tiktokInfo,
 };
 
 // To make some campaign always available, add them here.
-const localActiveCampaings: Campaign[] = [];
+const localActiveCampaings: Campaign[] = [defaultCampaign];
 
 const defaultDelay = 500;
 

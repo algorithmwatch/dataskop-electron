@@ -245,6 +245,7 @@ export default function ScrapingManager({
     await window.electron.ipcRenderer.invoke('scraping-init-view', {
       muted: isMuted,
       allowInput: !disableInput,
+      persist: provider.persistScrapingBrowser,
     });
     await goToStart();
 
