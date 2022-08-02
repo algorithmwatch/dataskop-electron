@@ -39,7 +39,7 @@ export default function SettingsPage(): JSX.Element {
           variant="contained"
           color="primary"
           onClick={() =>
-            window.electron.ipcRenderer.invoke('check-beta-update')
+            window.electron.ipcRenderer.invoke('update-check-beta')
           }
         >
           Check beta update

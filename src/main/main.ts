@@ -188,7 +188,7 @@ const createWindow = async () => {
   //   }
   // });
 
-  ipcMain.on('restart_app', () => {
+  ipcMain.on('update-restart-app', () => {
     autoUpdater.quitAndInstall();
   });
 
@@ -266,18 +266,18 @@ app.on('activate', () => {
  */
 
 autoUpdater.on('update-available', () => {
-  mainWindow?.webContents.send('update_available');
+  mainWindow?.webContents.send('update-available');
 });
 
 autoUpdater.on('update-downloaded', () => {
-  mainWindow?.webContents.send('update_downloaded');
+  mainWindow?.webContents.send('update-downloaded');
 });
 
 autoUpdater.on('error', async (_event, error) => {
-  mainWindow?.webContents.send('update_error', error);
+  mainWindow?.webContents.send('update-error', error);
 });
 
-ipcMain.handle('check-beta-update', () => {
+ipcMain.handle('update-check-beta', () => {
   autoUpdater.channel = 'beta';
   return autoUpdater.checkForUpdatesAndNotify();
 });

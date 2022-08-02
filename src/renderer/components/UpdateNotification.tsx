@@ -8,17 +8,17 @@ export default function UpdateNotification(): JSX.Element {
   const [showRestartButton, setShowRestartButton] = useState(false);
 
   useEffect(() => {
-    window.electron.ipcRenderer.on('update_available', () => {
-      window.electron.ipcRenderer.removeAllListeners('update_available');
+    window.electron.ipcRenderer.on('update-available', () => {
+      window.electron.ipcRenderer.removeAllListeners('update-available');
       setIsUpdateAvailable(true);
     });
-    window.electron.ipcRenderer.on('update_downloaded', () => {
-      window.electron.ipcRenderer.removeAllListeners('update_downloaded');
+    window.electron.ipcRenderer.on('update-downloaded', () => {
+      window.electron.ipcRenderer.removeAllListeners('update-downloaded');
       setShowRestartButton(true);
     });
 
     window.electron.ipcRenderer.on(
-      'update_error',
+      'update-error',
       (_event: any, error: Error) => {
         console.error(`error ${JSON.stringify(error)}`);
       },
@@ -47,7 +47,7 @@ export default function UpdateNotification(): JSX.Element {
                 </div>
                 <Button
                   onClick={() =>
-                    window.electron.ipcRenderer.invoke('restart_app')
+                    window.electron.ipcRenderer.invoke('update-restart-app')
                   }
                 >
                   Neustarten

@@ -7,11 +7,14 @@ const path = require('path/posix');
 // export main functions to renderer
 // main.ts
 const mainChannels = [
-  'check-beta-update',
   'get-version-number',
   'get-env',
-  'restart_app',
   'close-main-window',
+  'update-check-beta',
+  'update-restart-app',
+  'update-available',
+  'update-downloaded',
+  'update-error',
 ];
 
 // scraping.ts
@@ -70,8 +73,8 @@ const validInvokeChannels = [].concat(
 );
 const validOnChannels = ['scraping-navigation-happened', 'close-action'];
 const validremoveAllChannels = [
-  'update_available',
-  'update_downloaded',
+  'update-available',
+  'update-downloaded',
   'close-action',
 ];
 
