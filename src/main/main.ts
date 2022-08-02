@@ -188,7 +188,8 @@ const createWindow = async () => {
   //   }
   // });
 
-  ipcMain.on('update-restart-app', () => {
+  ipcMain.handle('update-restart-app', () => {
+    log.debug('called handle update-restart-app');
     autoUpdater.quitAndInstall();
   });
 
