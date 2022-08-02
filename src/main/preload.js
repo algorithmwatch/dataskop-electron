@@ -12,9 +12,6 @@ const mainChannels = [
   'close-main-window',
   'update-check-beta',
   'update-restart-app',
-  'update-available',
-  'update-downloaded',
-  'update-error',
 ];
 
 // scraping.ts
@@ -71,7 +68,13 @@ const validInvokeChannels = [].concat(
   dbChannels,
   youtubeChannels,
 );
-const validOnChannels = ['scraping-navigation-happened', 'close-action'];
+const validOnChannels = [
+  'scraping-navigation-happened',
+  'close-action',
+  'update-available',
+  'update-downloaded',
+  'update-error',
+];
 const validremoveAllChannels = [
   'update-available',
   'update-downloaded',
@@ -85,22 +88,39 @@ contextBridge.exposeInMainWorld('electron', {
       if (validOnChannels.includes(channel)) {
         // Deliberately strip event as it includes `sender`
         ipcRenderer.on(channel, (event, ...args) => func(...args));
+      } else {
+        log.warn(
+          'The channel is not included in the list of valid options: ',
+          channel,
+        );
       }
     },
     invoke: (channel, ...args) => {
       if (validInvokeChannels.includes(channel)) {
         return ipcRenderer.invoke(channel, ...args);
       }
+      log.warn(
+        'The channel is not included in the list of valid options: ',
+        channel,
+      );
     },
     removeListener: (channel, ...args) => {
       if (validOnChannels.includes(channel)) {
         return ipcRenderer.removeListener(channel, ...args);
       }
+      log.warn(
+        'The channel is not included in the list of valid options: ',
+        channel,
+      );
     },
     removeAllListeners: (channel, ...args) => {
       if (validremoveAllChannels.includes(channel)) {
         return ipcRenderer.removeAllListeners(channel, ...args);
       }
+      log.warn(
+        'The channel is not included in the list of valid options: ',
+        channel,
+      );
     },
   },
 });
