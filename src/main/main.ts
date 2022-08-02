@@ -188,11 +188,6 @@ const createWindow = async () => {
   //   }
   // });
 
-  ipcMain.handle('update-restart-app', () => {
-    log.debug('called handle update-restart-app');
-    autoUpdater.quitAndInstall();
-  });
-
   // not sure if timeout is actually required
   setTimeout(() => {
     // Remove this if your app does not use auto updates
@@ -262,9 +257,7 @@ app.on('activate', () => {
 //   closeDb();
 // });
 
-/**
- * Notify UI about new Updates
- */
+// send update-related events to renderer
 
 autoUpdater.on('update-available', () => {
   mainWindow?.webContents.send('update-available');
@@ -278,14 +271,19 @@ autoUpdater.on('error', async (_event, error) => {
   mainWindow?.webContents.send('update-error', error);
 });
 
+// handle update-related events from renderer
+
 ipcMain.handle('update-check-beta', () => {
   autoUpdater.channel = 'beta';
   return autoUpdater.checkForUpdatesAndNotify();
 });
 
-/**
- * comunicate with renderer
- */
+ipcMain.handle('update-restart-app', () => {
+  log.debug('called handle update-restart-app');
+  autoUpdater.quitAndInstall();
+});
+
+// expose certain information to the renderer
 
 ipcMain.handle('get-version-number', () => {
   return app.getVersion();
