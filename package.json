@@ -39,6 +39,10 @@
     ],
     "afterSign": ".erb/scripts/Notarize.js",
     "mac": {
+      "target": {
+        "target": "default",
+        "arch": "universal"
+      },
       "type": "distribution",
       "hardenedRuntime": true,
       "entitlements": "assets/entitlements.mac.plist",
