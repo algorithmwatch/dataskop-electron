@@ -25,6 +25,7 @@ export default function ProviderLoginSuccessPage(): JSX.Element {
     {
       label: 'Zurück',
       startIcon: faAngleLeft,
+      disabled: true,
       theme: 'link',
       clickHandler(history: RouteComponentProps['history']) {
         dispatch({ type: 'set-visible-window', visibleWindow: false });
@@ -41,6 +42,14 @@ export default function ProviderLoginSuccessPage(): JSX.Element {
       // hist.push(getNextPage('path'));
     }
   }, [isUserLoggedIn]);
+
+  useEffect(() => {
+    // if (isUserLoggedIn && !isScrapingStarted) {
+
+    // start scraping
+    dispatch({ type: 'set-scraping-started', isScrapingStarted: true });
+    // }
+  }, []);
 
   return (
     <>

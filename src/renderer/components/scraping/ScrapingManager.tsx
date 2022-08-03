@@ -155,8 +155,11 @@ export default function ScrapingManager({
 
   const checkLoginCb = async () => {
     const loggedIn = await checkForLogIn();
-    if (loggedIn) dispatch({ type: 'set-disable-input', disableInput: true });
-    else provider.confirmCookie();
+
+    if (loggedIn && provider.disbaleInputAfterLogin)
+      dispatch({ type: 'set-disable-input', disableInput: true });
+
+    if (!loggedIn) provider.confirmCookie();
   };
 
   // start scraping when `isScrapingStarted` was set to true

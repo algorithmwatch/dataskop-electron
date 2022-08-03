@@ -37,7 +37,9 @@ export default function ProviderLoginPage(): JSX.Element {
   useEffect(() => {
     if (isUserLoggedIn) {
       // hide login window
-      dispatch({ type: 'set-visible-window', visibleWindow: false });
+
+      // dispatch({ type: 'set-visible-window', visibleWindow: false });
+
       // go to next page
       hist.push(getNextPage('path'));
     }
@@ -59,6 +61,14 @@ export default function ProviderLoginPage(): JSX.Element {
                 Anmelden
               </Button>
             </div>
+            <Button
+              onClick={() => {
+                window.electron.ipcRenderer.invoke('scraping-clear-storage');
+                // dispatch({ type: 'reset-scraping' });
+              }}
+            >
+              Reset storage
+            </Button>
           </div>
           <div>
             <div className="hl-xl mb-4">Daten importieren</div>

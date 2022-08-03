@@ -3,13 +3,14 @@
  */
 
 import crypto from 'crypto';
-import { app, BrowserView, BrowserWindow } from 'electron';
+import { app, BrowserView, BrowserWindow, session } from 'electron';
 import fs from 'fs';
 import { range } from 'lodash';
 import { stripNonAscii } from '../renderer/lib/utils/strings';
 import { delay, getNowString } from '../renderer/lib/utils/time';
 
 import log from 'electron-log';
+import path from 'path';
 import { addMainHandler } from './util';
 
 let scrapingView: BrowserView | null = null;
@@ -83,13 +84,52 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         });
       }
 
+      // Download items to user data directory
+      newView.webContents.session.on(
+        'will-download',
+        (event, item, webContents) => {
+          // Set the save path, making Electron not to prompt a save dialog.
+
+          const filePath = path.join(
+            app.getPath('userData'),
+            'downloads',
+            item.getFilename(),
+          );
+
+          item.setSavePath(filePath);
+
+          newView.webContents.send('scraping-download-started');
+
+          item.on('updated', (event, state) => {
+            if (state === 'interrupted') {
+              console.log('Download is interrupted but can be resumed');
+            } else if (state === 'progressing') {
+              if (item.isPaused()) {
+                console.log('Download is paused');
+              } else {
+                console.log(`Received bytes: ${item.getReceivedBytes()}`);
+              }
+            }
+          });
+          item.once('done', (event, state) => {
+            if (state === 'completed') {
+              console.log('Download successfully');
+            } else {
+              console.log(`Download failed: ${state}`);
+            }
+            newView.webContents.send('scraping-download-done', state);
+          });
+        },
+      );
+
       scrapingView = newView;
     },
   );
 
-  addMainHandler('scraping-clear-storage', () => {
-    const view = scrapingView;
-    return view?.webContents.session.clearStorageData();
+  addMainHandler('scraping-clear-storage', async () => {
+    log.info('clearing storage for scraping view');
+    await session.fromPartition('scraping').clearStorageData();
+    return session.fromPartition('persist:scraping').clearStorageData();
   });
 
   addMainHandler(
@@ -141,9 +181,9 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
             userAgent,
           });
         } catch (error) {
-          log.log('strange error with await + loadUrl, trying to overcome it');
-          log.log(error);
+          log.log('There is an error with `.loadError`, retry...', error);
           await delay(2000);
+          continue;
         }
 
         try {
@@ -154,13 +194,16 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
             true,
           );
 
-          // pause videos right after rendering, import to not alter the HTML for the hash check
-          try {
-            await view?.webContents.executeJavaScript(
-              "const awThePlayer = document.querySelector('.html5-video-player'); if(awThePlayer != null) awThePlayer.click();",
-            );
-          } catch (e) {
-            log.log(e);
+          if (url.includes('youtube')) {
+            // YT specific code
+            // pause videos right after rendering, import to not alter the HTML for the hash check
+            try {
+              await view?.webContents.executeJavaScript(
+                "const awThePlayer = document.querySelector('.html5-video-player'); if(awThePlayer != null) awThePlayer.click();",
+              );
+            } catch (e) {
+              log.log(e);
+            }
           }
 
           if (withHtml) {

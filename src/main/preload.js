@@ -70,6 +70,8 @@ const validInvokeChannels = [].concat(
 );
 const validOnChannels = [
   'scraping-navigation-happened',
+  'scraping-download-started',
+  'scraping-download-done',
   'close-action',
   'update-available',
   'update-downloaded',
