@@ -1,5 +1,10 @@
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import App from './App';
 
-const eleRoot = document.getElementById('root');
-if (eleRoot !== null) render(<App />, eleRoot);
+const container = document.getElementById('root');
+
+// container is unavailable for testing
+if (container !== null) {
+  const root = createRoot(container!);
+  root.render(<App />);
+}
