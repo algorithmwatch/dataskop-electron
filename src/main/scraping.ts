@@ -4,13 +4,13 @@
 
 import crypto from 'crypto';
 import { app, BrowserView, BrowserWindow, session } from 'electron';
+import log from 'electron-log';
 import fs from 'fs';
 import { range } from 'lodash';
+import path from 'path';
 import { stripNonAscii } from '../renderer/lib/utils/strings';
 import { delay, getNowString } from '../renderer/lib/utils/time';
-
-import log from 'electron-log';
-import path from 'path';
+import { postLoadUrlYoutube } from './providers/youtube';
 import { addMainHandler } from './util';
 
 let scrapingView: BrowserView | null = null;
@@ -137,8 +137,12 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     async (_event, url: string, { withHtml = false, clear = false }) => {
       const view = scrapingView;
 
+      if (view == null) {
+        throw new Error('scraping-load-url was called while the view is null');
+      }
+
       if (clear) {
-        view?.webContents.session.clearStorageData();
+        view.webContents.session.clearStorageData();
       }
 
       // Choosing a correct user agent is important to make the login with Google.
@@ -177,7 +181,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       for (const i of range(5)) {
         // await loadUrl(..) causes somethimes strange errors.
         try {
-          await view?.webContents.loadURL(url, {
+          await view.webContents.loadURL(url, {
             userAgent,
           });
         } catch (error) {
@@ -189,25 +193,17 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         try {
           // wait until the browser is idle, wait at most 10 seconds
           // see: https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback
-          await view?.webContents.executeJavaScript(
+          await view.webContents.executeJavaScript(
             `new Promise(function(resolve, reject) { requestIdleCallback(() => resolve(true), { timeout: 10000 }) });`,
             true,
           );
 
           if (url.includes('youtube')) {
-            // YT specific code
-            // pause videos right after rendering, import to not alter the HTML for the hash check
-            try {
-              await view?.webContents.executeJavaScript(
-                "const awThePlayer = document.querySelector('.html5-video-player'); if(awThePlayer != null) awThePlayer.click();",
-              );
-            } catch (e) {
-              log.log(e);
-            }
+            await postLoadUrlYoutube(view);
           }
 
           if (withHtml) {
-            const html = await view?.webContents.executeJavaScript(
+            const html = await view.webContents.executeJavaScript(
               'document.documentElement.outerHTML',
             );
             return html;

@@ -1,14 +1,14 @@
 /**
- * Scraping in the background without executing JavaScript.
+ * Youtube specific code for main.
  */
 
 import { getThumbnails, getVideoUrl } from '@algorithmwatch/harke';
 import { BrowserWindow, dialog, session } from 'electron';
 import fetch from 'electron-fetch';
+import log from 'electron-log';
+import fs from 'fs';
 import pLimit from 'p-limit';
 import path from 'path';
-
-import fs from 'fs';
 import { addMainHandler } from '../util';
 
 export default function registerYoutubeHandlers(mainWindow: BrowserWindow) {
@@ -55,3 +55,14 @@ export default function registerYoutubeHandlers(mainWindow: BrowserWindow) {
     },
   );
 }
+
+export const postLoadUrlYoutube = async (view) => {
+  // pause videos right after rendering, import to not alter the HTML for the hash check
+  try {
+    await view.webContents.executeJavaScript(
+      "const awThePlayer = document.querySelector('.html5-video-player'); if(awThePlayer != null) awThePlayer.click();",
+    );
+  } catch (e) {
+    log.log(e);
+  }
+};
