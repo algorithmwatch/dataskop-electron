@@ -4,6 +4,10 @@ const ytDefaultNav = {
   pageIndex: 0,
   pages: [
     {
+      path: ytRoutes.START.path,
+      sectionKey: null,
+    },
+    {
       path: ytRoutes.INTRODUCTION.path,
       sectionKey: null,
     },

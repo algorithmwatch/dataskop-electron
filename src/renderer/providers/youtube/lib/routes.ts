@@ -16,6 +16,7 @@ import {
   VisualizationProfilePage,
   VisualizationSearchPage,
 } from '../pages';
+import StartPage from '../pages/StartPage';
 
 const ytRoutes = {
   DONATION_SUCCESS: { path: '/yt/donation-success', comp: DonationSuccessPage },
@@ -52,6 +53,7 @@ const ytRoutes = {
   ONBOARDING_1: { path: '/yt/onboarding1', comp: OnboardingPage1 },
   INTRODUCTION: { path: '/yt/intro', comp: IntroductionPage },
   SELECT_DEMO: { path: '/yt/select-demo', comp: SelectDemoPage },
+  START: { path: '/yt/start', comp: StartPage },
 };
 
 export default ytRoutes;

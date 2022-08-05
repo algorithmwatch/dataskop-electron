@@ -1,21 +1,19 @@
 /**
- * TODO: For TikTok
+ * Start screen for YouTube.
  *
  * @module
  */
 import { faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import { RouteComponentProps } from 'react-router-dom';
-import { useNavigation } from '../contexts';
-import FooterNav, {
-  FooterNavItem,
-} from '../providers/youtube/components/FooterNav';
-import awlogo from '../static/images/logos/aw-logo.png';
-import bmbflogo from '../static/images/logos/bmbf-logo.png';
-import dslogo from '../static/images/logos/dslogo.svg';
-import enslogo from '../static/images/logos/ens-logo.png';
-import fhplogo from '../static/images/logos/fhp-logo.png';
-import mplogo from '../static/images/logos/mp-logo.png';
-import uplogo from '../static/images/logos/up-logo.png';
+import { useNavigation } from '../../../contexts';
+import awlogo from '../../../static/images/logos/aw-logo.png';
+import bmbflogo from '../../../static/images/logos/bmbf-logo.png';
+import dslogo from '../../../static/images/logos/dslogo.svg';
+import enslogo from '../../../static/images/logos/ens-logo.png';
+import fhplogo from '../../../static/images/logos/fhp-logo.png';
+import mplogo from '../../../static/images/logos/mp-logo.png';
+import uplogo from '../../../static/images/logos/up-logo.png';
+import FooterNav, { FooterNavItem } from '../components/FooterNav';
 
 export default function StartPage(): JSX.Element {
   const { getNextPage } = useNavigation();
@@ -27,7 +25,6 @@ export default function StartPage(): JSX.Element {
       endIcon: faAngleRight,
       classNames: 'mx-auto',
       clickHandler(history: RouteComponentProps['history']) {
-        console.log(getNextPage('path'));
         history.push(getNextPage('path'));
       },
     },
@@ -41,9 +38,7 @@ export default function StartPage(): JSX.Element {
         </div>
         <div className="bg-yellow-100">
           <div className="text-center">
-            <div className="font-bold mb-3">
-              TIK TOK TIK TOK TIK TOK TODO: Partner:
-            </div>
+            <div className="font-bold mb-3">Partner:</div>
             <div className="flex flex-wrap items-center justify-center mb-5 max-w-xl">
               <img
                 src={awlogo}

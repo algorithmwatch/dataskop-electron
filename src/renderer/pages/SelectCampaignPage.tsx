@@ -1,12 +1,16 @@
 /**
- * Select a campaign configuration.
+ * Load config from server and optionally select a campaign configuration.
  *
+ * TODO: The base layout is also applied to this page. Should we use it? Or just
+ * override it?
  * @module
  */
-import { faAngleLeft, faAngleRight } from '@fortawesome/pro-regular-svg-icons';
+import { faAngleRight } from '@fortawesome/pro-regular-svg-icons';
 import { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
-import { useNavigation, useScraping } from '../contexts';
+import { getActiveCampaigns } from 'renderer/lib/utils/networking';
+import { localActiveCampaings, providerInfo } from 'renderer/providers';
+import { useConfig, useNavigation, useScraping } from '../contexts';
 import FooterNav, {
   FooterNavItem,
 } from '../providers/youtube/components/FooterNav';
@@ -18,45 +22,85 @@ export default function SelectCampaignPage(): JSX.Element {
   } = useScraping();
 
   const {
-    getNextPage,
-    getPreviousPage,
-    dispatch: navDispath,
-  } = useNavigation();
+    state: { platformUrl, seriousProtection },
+    sendEvent,
+  } = useConfig();
+
+  const { dispatch: navDispath } = useNavigation();
 
   const [chosenIndex, setChosenIndex] = useState(0);
 
+  const setActiveCampaign = async () => {
+    if (platformUrl == null) return;
+
+    try {
+      const campaigns = localActiveCampaings.concat(
+        await getActiveCampaigns(platformUrl, seriousProtection),
+      );
+
+      const availableCampaigns = campaigns.filter(
+        (x) => x.config && x.config.provider,
+      );
+
+      // only use campaigns that have a valid provider configuration
+      dispatch({
+        type: 'set-available-campaigns',
+        availableCampaigns,
+      });
+
+      // if a featured campaign exists, skip over the campaign selection page
+      const featuredCampaigns = availableCampaigns.filter((x) => x.featured);
+      if (featuredCampaigns.length > 0) {
+        dispatch({
+          type: 'set-campaign',
+          campaign: featuredCampaigns[0],
+        });
+
+        navDispath({
+          type: 'set-navigation-by-provider',
+          provider: featuredCampaigns[0].config.provider,
+          navSlug: featuredCampaigns[0].config.navigation,
+        });
+      }
+
+      sendEvent(null, 'successfully fetched remote config');
+    } catch (error) {
+      console.error('not able to set sraping config from remote');
+      console.log(error);
+      sendEvent(null, 'failed to fetch remote config');
+    }
+  };
+
   useEffect(() => {
-    if (!availableCampaigns.length) return;
-
-    const campaign = availableCampaigns[chosenIndex];
-
-    dispatch({
-      type: 'set-campaign',
-      campaign,
-    });
-
-    navDispath({
-      type: 'set-navigation-by-provider',
-      provider: campaign.config.provider,
-      navSlug: campaign.config.navigation,
-      skipCampaignSelection: false,
-    });
-  }, [chosenIndex, availableCampaigns]);
+    setActiveCampaign();
+  }, [platformUrl, seriousProtection]);
 
   const footerNavItems: FooterNavItem[] = [
-    {
-      label: 'Zurück',
-      theme: 'link',
-      startIcon: faAngleLeft,
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getPreviousPage('path'));
-      },
-    },
     {
       label: 'Weiter',
       endIcon: faAngleRight,
       clickHandler(history: RouteComponentProps['history']) {
-        history.push(getNextPage('path'));
+        const campaign = availableCampaigns[chosenIndex];
+
+        // Important to push first new state and *then* dispatching the new campaigns.
+        // The base layout is updated when the campaign changes and this causes
+        // a re-render of this page.
+        history.push(
+          providerInfo[campaign.config.provider].navigation[
+            campaign.config.navigation
+          ].pages[0].path,
+        );
+
+        dispatch({
+          type: 'set-campaign',
+          campaign,
+        });
+
+        navDispath({
+          type: 'set-navigation-by-provider',
+          provider: campaign.config.provider,
+          navSlug: campaign.config.navigation,
+        });
       },
     },
   ];

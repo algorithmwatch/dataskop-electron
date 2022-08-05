@@ -12,7 +12,6 @@ type Action =
       type: 'set-navigation-by-provider';
       provider: string;
       navSlug: string;
-      skipCampaignSelection: boolean;
     };
 type Dispatch = (action: Action) => void;
 export type NavigationState = {
@@ -38,10 +37,6 @@ const initialNavigationState: NavigationState = {
   pageIndex: 0,
   pages: [
     {
-      path: '/start',
-      sectionKey: null,
-    },
-    {
       path: '/select_campaign',
       sectionKey: null,
     },
@@ -63,12 +58,11 @@ const NavigationReducer = (
 
       let basePages = initialNavigationState.pages;
 
-      if (action.skipCampaignSelection) {
-        basePages = basePages.filter((x) => x.path !== '/select_campaign');
-      }
+      console.log(basePages);
+      console.log(navConfig.pages);
 
       return {
-        pageIndex: state.pageIndex,
+        pageIndex: initialNavigationState.pages.length,
         pages: basePages.concat(navConfig.pages),
         sections: navConfig.sections,
       };

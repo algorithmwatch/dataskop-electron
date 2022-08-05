@@ -30,9 +30,9 @@ export default function App() {
                   {allRoutes.map(({ path, comp }) => (
                     <Route path={path} component={comp} key={path} />
                   ))}
-                  {/* Redirect initial route to start route */}
+                  {/* Redirect initial route */}
                   <Route path="/">
-                    <Redirect to={routes.START.path} />
+                    <Redirect to={routes.SELECT_CAMPAIGN.path} />
                   </Route>
                 </Switch>
               </BaseLayoutSwitch>

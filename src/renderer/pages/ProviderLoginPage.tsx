@@ -25,6 +25,7 @@ export default function ProviderLoginPage(): JSX.Element {
   const footerNavItems: FooterNavItem[] = [
     {
       label: 'Zurück',
+      disabled: true,
       startIcon: faAngleLeft,
       theme: 'link',
       clickHandler(history: RouteComponentProps['history']) {

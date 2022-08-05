@@ -4,6 +4,10 @@ const ttDefault = {
   pageIndex: 0,
   pages: [
     {
+      path: routes.START.path,
+      sectionKey: null,
+    },
+    {
       path: routes.PROVIDER_LOGIN.path,
       sectionKey: null,
     },
