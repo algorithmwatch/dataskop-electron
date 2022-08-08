@@ -8,6 +8,7 @@ import log from 'electron-log';
 import fs from 'fs';
 import { range } from 'lodash';
 import path from 'path';
+import unzipper from 'unzipper';
 import { stripNonAscii } from '../renderer/lib/utils/strings';
 import { delay, getNowString } from '../renderer/lib/utils/time';
 import { postLoadUrlYoutube } from './providers/youtube';
@@ -98,26 +99,62 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
           item.setSavePath(filePath);
 
-          newView.webContents.send('scraping-download-started');
+          mainWindow.webContents.send('scraping-download-started');
 
           item.on('updated', (event, state) => {
             if (state === 'interrupted') {
-              console.log('Download is interrupted but can be resumed');
+              log.info('Download is interrupted but can be resumed');
             } else if (state === 'progressing') {
               if (item.isPaused()) {
-                console.log('Download is paused');
+                log.info('Download is paused');
               } else {
-                console.log(`Received bytes: ${item.getReceivedBytes()}`);
+                log.info(`Received bytes: ${item.getReceivedBytes()}`);
+                mainWindow.webContents.send(
+                  'scraping-download-progress',
+                  item.getReceivedBytes(),
+                );
               }
             }
           });
-          item.once('done', (event, state) => {
+
+          let filePathExtracted = '';
+
+          item.once('done', async (event, state) => {
             if (state === 'completed') {
-              console.log('Download successfully');
+              log.info('Download successfully');
+
+              if (filePath.endsWith('.zip')) {
+                log.info('Unzipping downloaded file');
+
+                filePathExtracted = filePath.replace(/\.zip$/, '');
+
+                // some delay is needed to prevent a race condition
+                await delay(1000);
+
+                try {
+                  fs.createReadStream(filePath).pipe(
+                    unzipper.Extract({ path: filePathExtracted }),
+                  );
+                } catch (error) {
+                  log.error(error);
+                  mainWindow.webContents.send(
+                    'scraping-download-done',
+                    false,
+                    '',
+                  );
+                }
+                // some delay is needed to prevent a race condition
+                await delay(1000);
+                fs.unlinkSync(filePath);
+              }
             } else {
-              console.log(`Download failed: ${state}`);
+              log.info(`Download failed: ${state}`);
             }
-            newView.webContents.send('scraping-download-done', state);
+            mainWindow.webContents.send(
+              'scraping-download-done',
+              state == 'completed',
+              filePathExtracted,
+            );
           });
         },
       );

@@ -37,9 +37,7 @@ const clickOnDownloadTab = async (getCurrentHtml: GetCurrentHtml) => {
 
   if (downloadDataTab) {
     const path = getUniquePath(downloadDataTab, $html);
-
     window.electron.log.info(path);
-
     await window.electron.ipcRenderer.invoke('scraping-click-element', path);
     return true;
   }
@@ -69,53 +67,64 @@ const clickDownloadButton = async (getCurrentHtml: GetCurrentHtml) => {
   return false;
 };
 
-const getDataExport = async (getHtml: GetHtmlFunction) => {
-  window.electron.log.info('started data export step');
+// https://www.tiktok.com/setting?activeTab=dyd
 
-  // await delay(2000);
+// browser needs to store session data
+// 1. check if logged in
+// 2. check if requested
+// 3. if yes, wait
+// 4. if no, get the data
+
+const getDataExport = async (getHtml: GetHtmlFunction) => {
+  window.electron.log.info('Started data export step');
 
   // the lang paramater is important because we are filtering by text later on
   const getDataUrl = 'https://www.tiktok.com/setting?activeTab=dyd&lang=en';
-
   const getCurrentHtml = await getHtml(getDataUrl);
 
-  const successClick = await clickOnDownloadTab(getCurrentHtml);
-
-  if (!successClick) {
-    window.electron.log.info("failed to find 'Download data' tab");
-    return [false, {}];
+  const successClickTab = await clickOnDownloadTab(getCurrentHtml);
+  if (!successClickTab) {
+    throw new Error("Failed to find 'Download data' tab");
   }
 
   window.electron.log.info('Looking for download button');
-
   const successDownloadClick = await clickDownloadButton(getCurrentHtml);
 
-  if (!successDownloadClick) {
-    // request data
-  } else {
-    let done = false;
+  if (successDownloadClick) {
+    let filePath = null;
+    let lastReceived = new Date().getTime();
 
     window.electron.ipcRenderer.on('scraping-download-started', () =>
-      console.log('started'),
+      window.electron.log.info('Downloading started'),
     );
-    window.electron.ipcRenderer.on('scraping-download-done', () => {
-      done = true;
+
+    window.electron.ipcRenderer.on('scraping-download-progress', (bytes) => {
+      lastReceived = new Date().getTime();
     });
 
+    window.electron.ipcRenderer.on(
+      'scraping-download-done',
+      (success, path) => {
+        window.electron.log.info('Downloading done: ', success, path);
+        if (success) filePath = path;
+        else {
+          throw new Error('Could not download export dump');
+        }
+      },
+    );
+
     while (true) {
-      delay(1000);
-      if (done) return [true, {}];
+      await delay(1000);
+      if (filePath != null) return [true, { filePath }];
+      if (new Date().getTime() - lastReceived > 60 * 1000) {
+        throw new Error('Downloading time exceeded: no updates for 60 seconds');
+      }
     }
     // wait until a download is finished
   }
 
-  // https://www.tiktok.com/setting?activeTab=dyd
-
-  // browser needs to store session data
-  // 1. check if logged in
-  // 2. check if requested
-  // 3. if yes, wait
-  // 4. if no, get the data
+  // Should never get reached.
+  return [false, {}];
 };
 
 async function* actionProcedure(
@@ -129,8 +138,16 @@ async function* actionProcedure(
   const { slug } = config;
 
   if (slug === 'tt-data-export') {
-    const [done, data] = await getDataExport(getHtml);
-    if (done) return [1, { success: true, slug, fields: {}, errors: [] }];
+    try {
+      const [done, data] = await getDataExport(getHtml);
+      if (done)
+        return [1, { success: true, slug, fields: { data }, errors: [] }];
+      else return [1, { success: false, slug, fields: { data }, errors: [] }];
+    } catch (error) {
+      window.electron.log.error('Error with data export step:');
+      window.electron.log.error(error);
+      return [1, { success: false, slug, fields: {}, errors: [error] }];
+    }
   }
 
   return [1, null];
