@@ -24,6 +24,12 @@ const getReadyHtml = async (getCurrentHtml: GetCurrentHtml) => {
   return result.html;
 };
 
+const clickOnElement = (element: cheerio.Cheerio, $html: cheerio.Root) => {
+  const path = getUniquePath(element, $html);
+  window.electron.log.info(path);
+  return window.electron.ipcRenderer.invoke('scraping-click-element', path);
+};
+
 const clickOnDownloadTab = async (getCurrentHtml: GetCurrentHtml) => {
   const html = await getReadyHtml(getCurrentHtml);
   const $html = cheerio.load(html);
@@ -35,13 +41,10 @@ const clickOnDownloadTab = async (getCurrentHtml: GetCurrentHtml) => {
 
   window.electron.log.info(downloadDataTab);
 
-  if (downloadDataTab) {
-    const path = getUniquePath(downloadDataTab, $html);
-    window.electron.log.info(path);
-    await window.electron.ipcRenderer.invoke('scraping-click-element', path);
+  if (downloadDataTab.length) {
+    await clickOnElement(downloadDataTab, $html);
     return true;
   }
-
   return false;
 };
 
@@ -55,16 +58,65 @@ const clickDownloadButton = async (getCurrentHtml: GetCurrentHtml) => {
 
   window.electron.log.info(downloadButton);
 
-  if (downloadButton) {
-    const path = getUniquePath(downloadButton, $html);
-
-    window.electron.log.info(path);
-
-    await window.electron.ipcRenderer.invoke('scraping-click-element', path);
+  if (downloadButton.length) {
+    await clickOnElement(downloadButton, $html);
     return true;
   }
-
   return false;
+};
+
+const isDumpCreationPending = async (getCurrentHtml: GetCurrentHtml) => {
+  const html = await getReadyHtml(getCurrentHtml);
+  const $html = cheerio.load(html);
+
+  const pendingButton = $html(
+    '.dyddownload-container button:contains("Pending")',
+  ).first();
+
+  window.electron.log.info(pendingButton);
+
+  return !!pendingButton.length;
+};
+
+const clickOnJsonFormat = ($html: cheerio.Root) => {
+  const jsonBox = $html('input[name="format"][value="json"]').first();
+  window.electron.log.info(jsonBox);
+  return clickOnElement(jsonBox, $html);
+};
+
+const clickOnRequestData = ($html: cheerio.Root) => {
+  const jsonBox = $html('button:contains("Request data")').first();
+  window.electron.log.info(jsonBox);
+  return clickOnElement(jsonBox, $html);
+};
+
+const requestData = async (getCurrentHtml: GetCurrentHtml) => {
+  const html = await getReadyHtml(getCurrentHtml);
+  const $html = cheerio.load(html);
+
+  const requestDataTab = $html('.dyd-title')
+    .next()
+    .find('span:contains("Request data")')
+    .first();
+
+  window.electron.log.info(requestDataTab);
+
+  const path = getUniquePath(requestDataTab, $html);
+  window.electron.log.info(path);
+  await window.electron.ipcRenderer.invoke('scraping-click-element', path);
+  // Work on new html (because of tab change)
+  await currentDelay();
+  const html2 = await getReadyHtml(getCurrentHtml);
+  const $html2 = cheerio.load(html2);
+  await clickOnJsonFormat($html2);
+  await currentDelay();
+  await clickOnRequestData($html2);
+
+  // check if it's actually working
+  await currentDelay('longer');
+  if (!(await isDumpCreationPending(getCurrentHtml))) {
+    throw new Error('Could not verify whether data request was successfull');
+  }
 };
 
 // https://www.tiktok.com/setting?activeTab=dyd
@@ -98,13 +150,16 @@ const getDataExport = async (getHtml: GetHtmlFunction) => {
       window.electron.log.info('Downloading started'),
     );
 
-    window.electron.ipcRenderer.on('scraping-download-progress', (bytes) => {
-      lastReceived = new Date().getTime();
-    });
+    window.electron.ipcRenderer.on(
+      'scraping-download-progress',
+      (bytes: number) => {
+        lastReceived = new Date().getTime();
+      },
+    );
 
     window.electron.ipcRenderer.on(
       'scraping-download-done',
-      (success, path) => {
+      (success: boolean, path: string) => {
         window.electron.log.info('Downloading done: ', success, path);
         if (success) filePath = path;
         else {
@@ -113,18 +168,31 @@ const getDataExport = async (getHtml: GetHtmlFunction) => {
       },
     );
 
+    // Wait until a download is finished
     while (true) {
-      await delay(1000);
-      if (filePath != null) return [true, { filePath }];
+      await currentDelay();
+      if (filePath != null)
+        return [true, { filePath, status: 'data downloaded' }];
       if (new Date().getTime() - lastReceived > 60 * 1000) {
-        throw new Error('Downloading time exceeded: no updates for 60 seconds');
+        throw new Error(
+          'Downloading time exceeded: no updates for over 60 seconds',
+        );
       }
     }
-    // wait until a download is finished
-  }
+  } else {
+    // Check if we have to wait
+    if (await isDumpCreationPending(getCurrentHtml)) {
+      return [false, { status: 'pending' }];
+    }
 
-  // Should never get reached.
-  return [false, {}];
+    // Request a new dump
+    try {
+      await requestData(getCurrentHtml);
+      return [false, { status: 'data requested' }];
+    } catch (error) {
+      throw new Error('Could not request new export:' + error);
+    }
+  }
 };
 
 async function* actionProcedure(
