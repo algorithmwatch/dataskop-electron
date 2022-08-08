@@ -248,7 +248,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         } catch (error) {
           log.log('strange error, retry...');
           log.log(error);
-          delay(1000 * i);
+          await delay(1000 * i);
         }
       }
 

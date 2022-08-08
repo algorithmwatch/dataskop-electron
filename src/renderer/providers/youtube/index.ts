@@ -8,7 +8,7 @@ const youtubeInfo: ProviderInformation = {
   loginUrl: 'https://www.youtube.com/account',
   loginCookie: 'LOGIN_INFO',
   persistScrapingBrowser: false,
-  disbaleInputAfterLogin: true,
+  disableInputAfterLogin: true,
   navigation: ytNavigation,
   confirmCookie: confirmCockieForm,
   deserializeConfigMapping: deserializeMapping,

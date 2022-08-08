@@ -69,10 +69,6 @@ export default function ScrapingManager({
     return isLoggedIn;
   };
 
-  const goToStart = () => {
-    return goToUrl(provider.loginUrl);
-  };
-
   const getHtmlLazy = async (
     url: string,
     scrollBottom: number,
@@ -156,10 +152,12 @@ export default function ScrapingManager({
   const checkLoginCb = async () => {
     const loggedIn = await checkForLogIn();
 
-    if (loggedIn && provider.disbaleInputAfterLogin)
+    if (loggedIn && provider.disableInputAfterLogin)
       dispatch({ type: 'set-disable-input', disableInput: true });
 
     if (!loggedIn) provider.confirmCookie();
+
+    return loggedIn;
   };
 
   // start scraping when `isScrapingStarted` was set to true
@@ -250,13 +248,15 @@ export default function ScrapingManager({
       allowInput: !disableInput,
       persist: provider.persistScrapingBrowser,
     });
-    await goToStart();
 
     await setNavigationCallback(cbSlugNav);
     window.electron.ipcRenderer.on(cbSlugNav, checkLoginCb);
 
     // manually check if a user is logged in to proceed immediately
-    checkLoginCb();
+    if (await checkLoginCb()) {
+      return;
+    }
+    return goToUrl(provider.loginUrl);
   };
 
   const cleanUpScraper = () => {

@@ -1,4 +1,4 @@
-import routes from 'renderer/routes';
+import routes from '../../../routes';
 
 const ttDefault = {
   pageIndex: 0,

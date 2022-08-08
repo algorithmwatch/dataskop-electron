@@ -7,7 +7,7 @@ const tiktokInfo: ProviderInformation = {
   loginUrl: 'https://www.tiktok.com/login/',
   loginCookie: 'cmpl_token',
   persistScrapingBrowser: true,
-  disbaleInputAfterLogin: false,
+  disableInputAfterLogin: false,
   navigation: ttNavigation,
   confirmCookie: () => void 0,
   deserializeConfigMapping: deserializeMapping,
