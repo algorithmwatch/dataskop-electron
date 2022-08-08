@@ -1,4 +1,5 @@
 /* eslint import/prefer-default-export: off, import/no-mutable-exports: off */
+import dayjs from 'dayjs';
 import { ipcMain } from 'electron';
 import path from 'path';
 import { URL } from 'url';
@@ -26,3 +27,12 @@ export const addMainHandler = (channel: string, fun: any) => {
   ipcMain.removeHandler(channel);
   ipcMain.handle(channel, fun);
 };
+
+// Duplicate from `renderer` to have a clear seperation.
+
+export const stripNonAscii = (x: string) => x.replace(/[^a-z0-9]/gi, '');
+
+export const delay = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
+
+export const getNowString = () => dayjs().format('YYYY-MM-DD-HH-mm-ss');

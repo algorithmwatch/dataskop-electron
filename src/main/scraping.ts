@@ -9,10 +9,8 @@ import fs from 'fs';
 import { range } from 'lodash';
 import path from 'path';
 import unzipper from 'unzipper';
-import { stripNonAscii } from '../renderer/lib/utils/strings';
-import { delay, getNowString } from '../renderer/lib/utils/time';
 import { postLoadUrlYoutube } from './providers/youtube';
-import { addMainHandler } from './util';
+import { addMainHandler, delay, getNowString, stripNonAscii } from './util';
 
 let scrapingView: BrowserView | null = null;
 
