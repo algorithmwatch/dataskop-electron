@@ -32,9 +32,7 @@ export default function Base({
   const { pathname } = useLocation();
   const {
     state: { pageIndex, sections },
-    dispatch: dispatchNavigation,
     getCurrentPage,
-    getPageIndexByPath,
   } = useNavigation();
   const { dispatch: dispatchModal } = useModal();
   const {
@@ -95,16 +93,6 @@ export default function Base({
       },
     },
   ];
-
-  // read config for current route
-  useEffect(() => {
-    const nextPageIndex = getPageIndexByPath(pathname);
-
-    // set page index
-    if (nextPageIndex !== -1) {
-      dispatchNavigation({ type: 'set-page-index', pageIndex: nextPageIndex });
-    }
-  }, [pathname]);
 
   // set dark mode, set process indicator
   useEffect(() => {
