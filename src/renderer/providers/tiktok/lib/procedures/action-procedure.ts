@@ -1,5 +1,5 @@
 import cheerio from 'cheerio';
-import { delay } from 'renderer/lib/utils/time';
+import { currentDelay } from 'renderer/providers';
 import {
   GetCurrentHtml,
   GetHtmlFunction,
@@ -13,7 +13,7 @@ const getReadyHtml = async (getCurrentHtml: GetCurrentHtml) => {
   let result = await getCurrentHtml();
 
   while (i < maxTries) {
-    await delay(2000);
+    await currentDelay();
     const newResult = await getCurrentHtml();
     if (result.hash == newResult.hash) {
       return result.html;

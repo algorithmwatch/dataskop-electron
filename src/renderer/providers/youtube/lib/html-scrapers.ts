@@ -3,7 +3,7 @@
 import { parseVideoNoJs } from '@algorithmwatch/harke';
 import _ from 'lodash';
 import { addLookups, getLookups } from 'renderer/lib/db';
-import { delay } from 'renderer/lib/utils/time';
+import { currentDelay } from 'renderer/providers/info';
 import { submitConfirmForm } from './actions/confirm-cookies';
 
 async function lookupOrScrapeVideos(
@@ -34,7 +34,7 @@ async function lookupOrScrapeVideos(
   );
 
   // important to wait some secconds to set the responding cookie in the session
-  await delay(3000);
+  await currentDelay('longer');
 
   // only fetch new videos that are not already stored
   const toFetch = _.uniq(videoIds.filter((x) => !readyIds.has(x)));

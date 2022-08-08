@@ -11,7 +11,7 @@ import {
 import _ from 'lodash';
 import { ScrapingResult } from 'renderer/lib/db/types';
 import { trySeveralTimes } from 'renderer/lib/scraping';
-import { delay } from 'renderer/lib/utils/time';
+import { currentDelay } from 'renderer/providers/info';
 import { GetHtmlFunction } from 'renderer/providers/types';
 import { lookupOrScrapeVideos } from './html-scrapers';
 import { ProfileScraper, SeedScraper, SeedVideo } from './types';
@@ -115,7 +115,7 @@ const scrapeWatchedVideos = async (
     enableLogging,
   );
 
-  await delay(5000);
+  await currentDelay('longer');
 
   return results;
 };

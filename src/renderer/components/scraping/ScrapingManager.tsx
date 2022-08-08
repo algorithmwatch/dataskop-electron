@@ -11,7 +11,7 @@ import { useConfig, useModal, useScraping } from 'renderer/contexts';
 import { createScrapingGenerator } from 'renderer/lib/scraping';
 import { postSimpleBackend } from 'renderer/lib/utils/networking';
 import { delay } from 'renderer/lib/utils/time';
-import { providerInfo } from 'renderer/providers';
+import { currentDelay, providerInfo } from 'renderer/providers';
 import routes from 'renderer/routes';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -81,7 +81,7 @@ export default function ScrapingManager({
   ): Promise<string> => {
     console.log(url);
     await goToUrl(url);
-    await delay(2000);
+    await currentDelay();
 
     let stopScrolling = false;
     // scroll some large value down

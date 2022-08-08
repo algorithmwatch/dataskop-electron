@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 import { clearStorage } from 'renderer/components/scraping/ipc';
 import { getScrapingResultsBySession } from 'renderer/lib/db';
-import { delay } from 'renderer/lib/utils/time';
+import { currentDelay } from 'renderer/providers/info';
 import { GetHtmlFunction, GetHtmlLazyFunction } from 'renderer/providers/types';
 import {
   SeedScraper,
@@ -78,9 +78,9 @@ async function* videosProcedure(
 
   if (doLogout) {
     await clearStorage();
-    await delay(5000);
+    await currentDelay('longer');
     await submitConfirmForm(getHtml);
-    await delay(5000);
+    await currentDelay('longer');
   }
 
   let step = 0;
