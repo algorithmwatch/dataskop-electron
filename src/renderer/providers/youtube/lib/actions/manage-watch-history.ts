@@ -2,10 +2,20 @@
 /* eslint-disable no-restricted-syntax */
 import cheerio from 'cheerio';
 import _ from 'lodash';
-import { clickElement, elementExists } from 'renderer/components/scraping/ipc';
 import { GetHtmlFunction } from 'renderer/providers/types';
 import { getUniquePath } from 'renderer/vendor/cheerio-unique-selector';
 import { currentDelay } from '../../..';
+
+const clickElement = async (selector: string) => {
+  return window.electron.ipcRenderer.invoke('scraping-click-element', selector);
+};
+
+const elementExists = async (selector: string) => {
+  return window.electron.ipcRenderer.invoke(
+    'scraping-element-exists',
+    selector,
+  );
+};
 
 const changeWatchHistoryUrl = 'https://www.youtube.com/feed/history';
 

@@ -9,7 +9,7 @@
  */
 import * as Sentry from '@sentry/electron/renderer';
 import React, { useEffect } from 'react';
-import { postEvent } from 'renderer/lib/utils/networking';
+import { postEvent } from 'renderer/lib/networking';
 import { Campaign } from 'renderer/providers/types';
 
 type Action =

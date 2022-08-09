@@ -1,6 +1,6 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { useEffect, useState } from 'react';
-import { getActiveCampaigns } from 'renderer/lib/utils/networking';
+import { getActiveCampaigns } from 'renderer/lib/networking';
 import { useConfig, useScraping } from '../../contexts';
 
 export default function RemoteCampaignConfig() {

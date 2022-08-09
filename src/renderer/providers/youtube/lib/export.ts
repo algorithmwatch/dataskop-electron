@@ -5,8 +5,8 @@
  */
 import { constants } from '@algorithmwatch/harke';
 import _ from 'lodash';
-import dayjs from 'renderer/lib/utils/dayjs';
-import { exportCsv } from 'renderer/lib/utils/export';
+import dayjs from 'renderer/lib/dayjs';
+import { exportCsv } from 'renderer/lib/export';
 import { fixDuplicatedString } from 'renderer/lib/utils/strings';
 import { renameKeys } from 'renderer/vendor/lodash-contrib';
 import { lookupOrScrapeVideos } from './html-scrapers';

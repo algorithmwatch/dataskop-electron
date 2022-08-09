@@ -13,7 +13,7 @@ import Button from 'renderer/providers/youtube/components/Button';
 import FooterNav, {
   FooterNavItem,
 } from 'renderer/providers/youtube/components/FooterNav';
-import { postDonation } from '../../../lib/utils/networking';
+import { postDonation } from '../../../lib/networking';
 import { redactWatchHistory } from '../lib/utils';
 
 export default function DonationPage2(): JSX.Element {

@@ -8,7 +8,7 @@
 import { faAngleRight } from '@fortawesome/pro-regular-svg-icons';
 import { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
-import { getActiveCampaigns } from 'renderer/lib/utils/networking';
+import { getActiveCampaigns } from 'renderer/lib/networking';
 import { localActiveCampaings, providerInfo } from 'renderer/providers';
 import { useConfig, useNavigation, useScraping } from '../contexts';
 import FooterNav, {

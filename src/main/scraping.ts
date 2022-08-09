@@ -10,7 +10,7 @@ import { range } from 'lodash';
 import path from 'path';
 import unzipper from 'unzipper';
 import { postLoadUrlYoutube } from './providers/youtube';
-import { addMainHandler, delay, getNowString, stripNonAscii } from './util';
+import { addMainHandler, delay, getNowString, stripNonAscii } from './utils';
 
 let scrapingView: BrowserView | null = null;
 
@@ -193,22 +193,20 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       // https://www.electronjs.org/releases/stable?version=12&page=3#12.0.0
       // https://www.whatismybrowser.com/guides/the-latest-user-agent/
 
-      let userAgent = '';
-
-      if (process.platform === 'darwin') {
-        userAgent =
-          'Mozilla/5.0 (Macintosh; Intel Mac OS X 12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Vivaldi/4.3';
-      }
-
-      if (process.platform === 'win32') {
-        userAgent =
-          'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Vivaldi/4.3';
-      }
-
-      if (process.platform === 'linux') {
-        userAgent =
-          'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Vivaldi/4.3';
-      }
+      let userAgent = 'Mozilla/5.0';
+      if (
+        process.platform == 'darwin' ||
+        process.platform == 'win32' ||
+        process.platform == 'linux'
+      )
+        userAgent = {
+          darwin:
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Vivaldi/4.3',
+          win32:
+            'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Vivaldi/4.3',
+          linux:
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Vivaldi/4.3',
+        }[process.platform];
 
       // try 5 times and then give up
 

@@ -1,9 +1,18 @@
 import { ParserResult } from '@algorithmwatch/harke';
 import { range } from 'lodash';
+import { currentDelay } from 'renderer/providers';
 import { GetCurrentHtml, GetHtmlFunction } from 'renderer/providers/types';
+import { getUniquePath } from 'renderer/vendor/cheerio-unique-selector';
 import { ScrapingResult } from '../db';
 import { delay } from '../utils/time';
 
+/**
+ * Keep trying to parse the HTML and wait if necessary. Not reloading the HTML
+ * in contrast to `parseUntilDone`.
+ *
+ * It was initially developed for YouTube and maybe has to be refactored to be more
+ * provider agnostic.
+ */
 const waitUntilDone = async (
   getCurrentHtml: GetCurrentHtml,
   parseHtml: (html: string) => ParserResult,
@@ -67,7 +76,13 @@ const waitUntilDone = async (
   return prevResult;
 };
 
-const trySeveralTimes = async (
+/**
+ * A utility function to fetch html from a url and parse the resulting html.
+ *
+ * It was initially developed for YouTube and maybe has to be refactored to be more
+ * provider agnostic.
+ */
+const parseUntilDone = async (
   getHtml: GetHtmlFunction,
   url: string,
   parseHtml: (html: string) => ParserResult,
@@ -137,4 +152,31 @@ const trySeveralTimes = async (
   return lastRes;
 };
 
-export { trySeveralTimes };
+/**
+ * Get HTML when it's 'ready'. We assume it's ready when the hash for the HTML
+ * stays the same when we wait for some seconds.
+ */
+const getReadyHtml = async (getCurrentHtml: GetCurrentHtml) => {
+  const maxTries = 5;
+  let i = 0;
+  let result = await getCurrentHtml();
+
+  while (i < maxTries) {
+    await currentDelay();
+    const newResult = await getCurrentHtml();
+    if (result.hash == newResult.hash) {
+      return result.html;
+    }
+    result = newResult;
+  }
+
+  return result.html;
+};
+
+const clickOnElement = (element: cheerio.Cheerio, $html: cheerio.Root) => {
+  const path = getUniquePath(element, $html);
+  window.electron.log.info(path);
+  return window.electron.ipcRenderer.invoke('scraping-click-element', path);
+};
+
+export { parseUntilDone, getReadyHtml, clickOnElement };

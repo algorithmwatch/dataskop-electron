@@ -16,7 +16,7 @@ import _ from 'lodash';
 import { Low } from 'lowdb';
 import PQueue from 'p-queue';
 import { Campaign, ScrapingConfig } from '../../providers/types';
-import dayjs from '../utils/dayjs';
+import dayjs from '../dayjs';
 import { statsForArray } from '../utils/math';
 import { LookupMap, ScrapingResultSaved, ScrapingSession } from './types';
 

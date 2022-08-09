@@ -6,7 +6,7 @@ import { readdir, stat } from 'fs/promises';
 import path from 'path';
 import { getNowString } from '../renderer/lib/utils/time';
 import { getDbLocation } from './db';
-import { addMainHandler } from './util';
+import { addMainHandler } from './utils';
 
 const getLogDir = () => {
   return path.dirname(log.default.transports.file.getFile().path);

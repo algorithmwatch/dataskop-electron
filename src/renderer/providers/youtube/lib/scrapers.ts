@@ -10,7 +10,7 @@ import {
 } from '@algorithmwatch/harke';
 import _ from 'lodash';
 import { ScrapingResult } from 'renderer/lib/db/types';
-import { trySeveralTimes } from 'renderer/lib/scraping';
+import { parseUntilDone } from 'renderer/lib/scraping';
 import { currentDelay } from 'renderer/providers/info';
 import { GetHtmlFunction } from 'renderer/providers/types';
 import { lookupOrScrapeVideos } from './html-scrapers';
@@ -26,7 +26,7 @@ const scrapePlaylist = async (
   getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
   const url = `https://www.youtube.com/playlist?list=${playlistId}`;
-  return trySeveralTimes(getHtml, url, parsePlaylistPage);
+  return parseUntilDone(getHtml, url, parsePlaylistPage);
 };
 
 const scrapePopularVideos = async (
@@ -65,7 +65,7 @@ const scrapeVideo = async (
 ): Promise<ScrapingResult> => {
   // comments are currently not implemented
   const url = `https://www.youtube.com/watch?v=${videoId}`;
-  return trySeveralTimes(
+  return parseUntilDone(
     getHtml,
     url,
     parseVideoPage,
@@ -85,7 +85,7 @@ const scrapeWatchedVideos = async (
   enableLogging: boolean,
 ): Promise<ScrapingResult> => {
   const url = 'https://www.youtube.com/feed/history';
-  const results = await trySeveralTimes(
+  const results = await parseUntilDone(
     getHtml,
     url,
     parseWatchHistory,
@@ -125,7 +125,7 @@ const scrapeSearchHistory = async (
   _enableLogging: boolean,
 ): Promise<ScrapingResult> => {
   const url = 'https://myactivity.google.com/activitycontrols/youtube';
-  return trySeveralTimes(getHtml, url, parseSearchHistory);
+  return parseUntilDone(getHtml, url, parseSearchHistory);
 };
 
 // const scrapeCommentHistory = async (
@@ -142,14 +142,14 @@ const scrapeSubscriptions = async (
   _enableLogging: boolean,
 ): Promise<ScrapingResult> => {
   const url = 'https://www.youtube.com/feed/channels';
-  return trySeveralTimes(getHtml, url, parseSubscribedChannels);
+  return parseUntilDone(getHtml, url, parseSubscribedChannels);
 };
 
 const scrapeVideoSearch = async (getHtml: GetHtmlFunction, query: string) => {
   const url = buildSearchUrl(query);
 
   // hard to parse query from rendered html so pass it to the parser
-  return trySeveralTimes(getHtml, url, (html) =>
+  return parseUntilDone(getHtml, url, (html) =>
     parseSearchResultsVideos(html, query),
   );
 };

@@ -7,7 +7,7 @@
 import { app } from 'electron';
 import fs from 'fs';
 import path from 'path';
-import { addMainHandler } from './util';
+import { addMainHandler } from './utils';
 
 export const getDbLocation = () => {
   const userFolder = app.getPath('userData');

@@ -1,34 +1,11 @@
 import cheerio from 'cheerio';
+import { clickOnElement, getReadyHtml } from 'renderer/lib/scraping';
 import { currentDelay } from 'renderer/providers';
 import {
   GetCurrentHtml,
   GetHtmlFunction,
   GetHtmlLazyFunction,
 } from 'renderer/providers/types';
-import { getUniquePath } from 'renderer/vendor/cheerio-unique-selector';
-
-const getReadyHtml = async (getCurrentHtml: GetCurrentHtml) => {
-  const maxTries = 5;
-  let i = 0;
-  let result = await getCurrentHtml();
-
-  while (i < maxTries) {
-    await currentDelay();
-    const newResult = await getCurrentHtml();
-    if (result.hash == newResult.hash) {
-      return result.html;
-    }
-    result = newResult;
-  }
-
-  return result.html;
-};
-
-const clickOnElement = (element: cheerio.Cheerio, $html: cheerio.Root) => {
-  const path = getUniquePath(element, $html);
-  window.electron.log.info(path);
-  return window.electron.ipcRenderer.invoke('scraping-click-element', path);
-};
 
 const clickOnDownloadTab = async (getCurrentHtml: GetCurrentHtml) => {
   const html = await getReadyHtml(getCurrentHtml);
@@ -101,9 +78,7 @@ const requestData = async (getCurrentHtml: GetCurrentHtml) => {
 
   window.electron.log.info(requestDataTab);
 
-  const path = getUniquePath(requestDataTab, $html);
-  window.electron.log.info(path);
-  await window.electron.ipcRenderer.invoke('scraping-click-element', path);
+  await clickOnElement(requestDataTab, $html);
   // Work on new html (because of tab change)
   await currentDelay();
   const html2 = await getReadyHtml(getCurrentHtml);

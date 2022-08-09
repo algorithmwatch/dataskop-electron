@@ -2,11 +2,11 @@ import { GetCurrentHtml, GetHtmlFunction } from 'renderer/providers/types';
 
 // commands to communicate with the browser window in the main screen
 
-const extractHtml = async () => {
+const extractHtml = () => {
   return window.electron.ipcRenderer.invoke('scraping-get-current-html');
 };
 
-const goToUrl = async (url: string, options = {}): Promise<string> => {
+const goToUrl = (url: string, options = {}): Promise<string> => {
   return window.electron.ipcRenderer.invoke('scraping-load-url', url, options);
 };
 
@@ -23,11 +23,11 @@ const makeGetHtml = (logHtml: boolean): GetHtmlFunction => {
   return getHtml;
 };
 
-const getCookies = async (): Promise<Array<unknown>> => {
+const getCookies = (): Promise<Array<unknown>> => {
   return window.electron.ipcRenderer.invoke('scraping-get-cookies');
 };
 
-const setNavigationCallback = async (cbSlug: string, remove = false) => {
+const setNavigationCallback = (cbSlug: string, remove = false) => {
   return window.electron.ipcRenderer.invoke(
     'scraping-navigation-cb',
     cbSlug,
@@ -35,27 +35,11 @@ const setNavigationCallback = async (cbSlug: string, remove = false) => {
   );
 };
 
-const scrollDown = async () => {
+const scrollDown = () => {
   return window.electron.ipcRenderer.invoke('scraping-scroll-down');
 };
 
-const clickElement = async (selector: string) => {
-  return window.electron.ipcRenderer.invoke('scraping-click-element', selector);
-};
-
-const elementExists = async (selector: string) => {
-  return window.electron.ipcRenderer.invoke(
-    'scraping-element-exists',
-    selector,
-  );
-};
-
-const submitFormScraping = async (selector: string) => {
-  return window.electron.ipcRenderer.invoke('scraping-submit-form', selector);
-};
-
 export {
-  submitFormScraping,
   clearStorage,
   makeGetHtml,
   getCookies,
@@ -63,6 +47,4 @@ export {
   scrollDown,
   extractHtml,
   goToUrl,
-  clickElement,
-  elementExists,
 };

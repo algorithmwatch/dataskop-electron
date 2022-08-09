@@ -1,4 +1,4 @@
-import dayjs from './dayjs';
+import dayjs from '../dayjs';
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 

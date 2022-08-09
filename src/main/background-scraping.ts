@@ -4,7 +4,7 @@
 
 import crypto from 'crypto';
 import { BrowserWindow, session } from 'electron';
-import { addMainHandler } from './util';
+import { addMainHandler } from './utils';
 
 let backgroundScrapingWindow: null | BrowserWindow = null;
 

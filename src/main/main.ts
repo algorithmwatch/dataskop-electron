@@ -32,7 +32,7 @@ import registerExportHandlers from './export';
 import MenuBuilder from './menu';
 import registerYoutubeHanderls from './providers/youtube';
 import registerScrapingHandlers from './scraping';
-import { resolveHtmlPath } from './util';
+import { resolveHtmlPath } from './utils';
 
 // read .env files for development
 require('dotenv').config();

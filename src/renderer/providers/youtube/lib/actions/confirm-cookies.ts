@@ -1,14 +1,15 @@
 /* eslint-disable no-restricted-syntax */
 import cheerio from 'cheerio';
-import {
-  extractHtml,
-  submitFormScraping,
-} from 'renderer/components/scraping/ipc';
+import { extractHtml } from 'renderer/components/scraping/ipc';
 import { GetHtmlFunction } from 'renderer/providers/types';
 import { currentDelay } from '../../..';
 import { getUniquePath } from '../../../../vendor/cheerio-unique-selector';
 
 const rootUrl = 'https://www.youtube.com/';
+
+const submitFormScraping = (selector: string) => {
+  return window.electron.ipcRenderer.invoke('scraping-submit-form', selector);
+};
 
 const confirmCockieForm = async () => {
   const url = await window.electron.ipcRenderer.invoke('scraping-get-url');

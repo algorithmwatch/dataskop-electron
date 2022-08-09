@@ -8,8 +8,8 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useConfig, useModal, useScraping } from 'renderer/contexts';
+import { postSimpleBackend } from 'renderer/lib/networking';
 import { createScrapingGenerator } from 'renderer/lib/scraping';
-import { postSimpleBackend } from 'renderer/lib/utils/networking';
 import { delay } from 'renderer/lib/utils/time';
 import { currentDelay, providerInfo } from 'renderer/providers';
 import routes from 'renderer/routes';
