@@ -18,6 +18,12 @@
     "package-lock.json": true,
     "*.{css,sass,scss}.d.ts": true
   },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "html",
+    "typescriptreact"
+  ],
   // Boilerplate above, DataSkop from here:
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
