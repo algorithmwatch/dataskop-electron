@@ -65,26 +65,15 @@ const configuration: webpack.Configuration = {
         ],
         exclude: /\.module\.s?(c|a)ss$/,
       },
-      //Font Loader
+      // Fonts
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/i,
         type: 'asset/resource',
       },
-      // SVG Font
+      // Images
       {
-        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 100000000000000000000000000,
-            mimetype: 'image/svg+xml',
-          },
-        },
-      },
-      // Common Image Formats
-      {
-        test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
-        use: 'url-loader',
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
       },
     ],
   },
