@@ -109,7 +109,7 @@ export default function Base({
   }, [pageIndex]);
 
   return (
-    <div className="relative flex flex-col h-screen justify-between">
+    <div className="relative flex flex-col h-screen justify-between bg-youtube-bg bg-yellow-100 bg-[length:90%] dark:bg-blue-900 overflow-hidden text-yellow-1500">
       <Modal />
       <header
         className={classNames('flex items-center py-4 px-6 z-20 h-[4.375rem]', {

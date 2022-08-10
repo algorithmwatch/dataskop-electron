@@ -82,6 +82,9 @@ module.exports = {
       zIndex: {
         60: '60',
       },
+      backgroundImage: {
+        'youtube-bg': "url('renderer/providers/youtube/static/images/bg.png')",
+      },
     },
   },
   plugins: [
