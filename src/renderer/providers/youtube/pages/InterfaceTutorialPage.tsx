@@ -59,7 +59,7 @@ export default function InterfaceTutorialPage(): JSX.Element {
             </div>
           </div>
         )}
-        <div className="z-10 absolute top-1/3 left-48 py-6 px-8 text-yellow-1500 border-2 border-dashed border-yellow-700 bg-yellow-200 bg-opacity-30 flex">
+        <div className="z-10 absolute top-1/3 left-48 py-6 px-8 text-yellow-1500 border-2 border-dashed border-yellow-700 bg-yellow-200/30 flex">
           <div className="mr-5 mt-2">
             <FontAwesomeIcon icon={faMousePointer} size="3x" />
           </div>

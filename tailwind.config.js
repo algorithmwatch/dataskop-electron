@@ -4,17 +4,12 @@ const colors = require('tailwindcss/colors');
 // default config at: https://github.com/tailwindlabs/tailwindcss/blob/master/stubs/defaultConfig.stub.js
 
 module.exports = {
-  mode: 'jit',
-  purge: ['./src/**/*.tsx', './src/**/*.ts'],
+  content: ['./src/**/*.tsx', './src/**/*.ts'],
   darkMode: 'class', // or 'media' or 'class'
   theme: {
     extend: {
       colors: {
-        transparent: 'transparent',
         current: 'currentColor',
-        black: colors.black,
-        white: colors.white,
-        gray: colors.coolGray,
         blue: {
           100: '#dde1f3',
           200: '#bbc3e7',
@@ -84,33 +79,10 @@ module.exports = {
           1500: '#1f1a00',
         },
       },
-      borderWidth: {
-        24: '24px',
-      },
-      inset: {
-        '-78': '-19.5rem',
-        '-192': '-48rem',
-      },
-      width: {
-        192: '48rem',
-      },
-      height: {
-        18: '4.375rem',
-        max: 'max-content',
-      },
       zIndex: {
         60: '60',
       },
-      margin: {
-        '-1/2': '-50%',
-      },
-      maxHeight: {
-        '3/4': '75%',
-      },
     },
-  },
-  variants: {
-    extend: {},
   },
   plugins: [
     // heading plugin

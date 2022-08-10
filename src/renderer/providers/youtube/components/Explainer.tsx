@@ -1,6 +1,6 @@
 import {
   faChevronLeft,
-  faChevronRight
+  faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
@@ -20,15 +20,14 @@ export default function Explainer({
   return (
     <div
       className={classNames({
-        'absolute inset-0 z-50 overflow-y-scroll bg-yellow-1400 bg-opacity-50':
-          isOpen,
+        'absolute inset-0 z-50 overflow-y-scroll bg-yellow-1400/50': isOpen,
       })}
     >
       <div
         className={classNames(
-          'w-192 min-h-full inset-y-0 bg-white z-30 transition-all duration-300 ease-in-out flex flex-col justify-between box-content border-r-8',
+          'w-[48rem] min-h-full inset-y-0 bg-white z-30 transition-all duration-300 ease-in-out flex flex-col justify-between box-content border-r-8',
           {
-            '-left-192 absolute': !isOpen,
+            '-left-[48rem] absolute': !isOpen,
             'left-0 relative': isOpen,
             'border-yellow-600': !isToggleHover,
             'border-yellow-800': isToggleHover,

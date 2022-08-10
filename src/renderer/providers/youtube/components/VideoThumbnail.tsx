@@ -65,7 +65,7 @@ export default function VideoThumbnail({
   })();
 
   return (
-    <div className="w-24 h-14 bg-gray-300 overflow-hidden flex place-items-center flex-shrink-0">
+    <div className="w-24 h-14 bg-gray-300 overflow-hidden flex place-items-center shrink-0">
       {tippyOptions ? (
         // eslint-disable-next-line react/jsx-props-no-spreading
         <Tippy {...tippyOptions}>{contentElement}</Tippy>

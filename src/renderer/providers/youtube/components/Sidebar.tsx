@@ -64,7 +64,7 @@ export default function Sidebar({
             </button>
           ))}
 
-          <div className="border border-yellow-900 border-opacity-50 text-sm text-yellow-1300 p-3">
+          <div className="border border-yellow-900/50 text-sm text-yellow-1300 p-3">
             <strong>Hast Du technische Probleme?</strong> Schreibe eine Mail an{' '}
             <a
               href="mailto:support@dataskop.net"
@@ -120,7 +120,7 @@ export default function Sidebar({
         // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
         <div
           tabIndex={-1}
-          className="absolute inset-0 bg-yellow-1400 bg-opacity-50 z-40"
+          className="absolute inset-0 bg-yellow-1400/50 z-40"
           onClick={() => onIsOpenChange(false)}
         />
       )}

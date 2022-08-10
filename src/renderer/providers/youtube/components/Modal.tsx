@@ -33,8 +33,8 @@ function Modal() {
           transform: 'translate(-50%, -50%)',
         },
       }}
-      overlayClassName="z-60 fixed inset-0 bg-yellow-1400 bg-opacity-50 overflow-auto"
-      className="absolute top-1/2 left-1/2 right-auto bottom-auto -mr-1/2 outline-none h-full max-h-3/4 bg-yellow-100 py-8 pl-8 pr-4"
+      overlayClassName="z-60 fixed inset-0 bg-yellow-1400/50 overflow-auto"
+      className="absolute top-1/2 left-1/2 right-auto bottom-auto -mr-[50%] outline-none h-full max-h-[75%] bg-yellow-100 py-8 pl-8 pr-4"
     >
       <div
         className="max-w-prose overflow-y-auto pr-4"
