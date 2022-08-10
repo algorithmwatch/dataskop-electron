@@ -18,20 +18,10 @@ import webpackPaths from './webpack.paths';
 checkNodeEnv('production');
 deleteSourceMaps();
 
-const devtoolsConfig =
-  process.env.DEBUG_PROD === 'true'
-    ? {
-        devtool: 'source-map',
-      }
-    : {};
-
 const configuration: webpack.Configuration = {
-  ...devtoolsConfig,
-
+  devtool: 'source-map',
   mode: 'production',
-
   target: ['web', 'electron-renderer'],
-
   entry: [
     'core-js',
     'regenerator-runtime/runtime',
