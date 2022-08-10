@@ -189,7 +189,7 @@
     "@types/webpack-env": "^1.16.2",
     "@typescript-eslint/eslint-plugin": "^5.23.0",
     "@typescript-eslint/parser": "^5.23.0",
-    "autoprefixer": "^10.2.5",
+    "autoprefixer": "^10.4.8",
     "browserslist-config-erb": "^0.0.3",
     "chalk": "^4.1.2",
     "concurrently": "^6.3.0",
