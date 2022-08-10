@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer } = require('electron');
+import { contextBridge, ipcRenderer } from 'electron';
 
 // expose logging to renderer
 const log = require('electron-log');
@@ -52,7 +52,7 @@ const exportChannels = [
 ];
 
 // db.ts
-const dbChannels = ['db-read', 'db-write'];
+const dbChannels = ['db-read', 'db-write', 'db-get-config', 'db-set-config'];
 
 const youtubeChannels = [
   'youtube-results-export-images',
