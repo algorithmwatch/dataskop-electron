@@ -6,15 +6,13 @@ The aim of the project is to empower individuals to handle their data in an info
 
 ## Installation for Development
 
-This project was kickstarted with [Electron React Boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate/).
-Electron React Boilerplate uses <a href="https://electron.atom.io/">Electron</a>, <a href="https://facebook.github.io/react/">React</a>, [TypeScript](https://www.typescriptlang.org/), <a href="https://github.com/reactjs/react-router">React Router</a>, <a href="https://webpack.github.io/docs/">Webpack</a> and <a href="https://github.com/gaearon/react-hot-loader">React Hot Loader</a> for rapid application development (HMR).
-[Read more about the boilerplate in their official documentation](https://electron-react-boilerplate.js.org/docs/installation).
+This project was kickstarted with [Electron React Boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate/) but heavily modified. [Read more about the boilerplate in their official documentation](https://electron-react-boilerplate.js.org/docs/installation).
 
 ### Prerequisite
 
-#### Setup Github Token
+#### Setup Github token
 
-To install all private packages (location as GitHub Packages):
+To install our privates packages from GitHub, you need to setup an access token.
 
 1. create an auth token with scope to read packages: https://github.com/settings/tokens
 2. and add it to you: `~/.npmrc`: (replace `thetoken` with your token)
@@ -25,7 +23,7 @@ To install all private packages (location as GitHub Packages):
 
 Finally, restart your terminal and proceed.
 
-#### Setup Font Awesome Pro
+#### Setup Font Awesome Pro token
 
 Follow this tutorial: <https://fontawesome.com/how-to-use/on-the-web/setup/using-package-managers#installing-pro>
 
@@ -34,6 +32,10 @@ You may add the following (replace the token) to aforementioned `~/.npmrc`:
 ```bash
 //npm.fontawesome.com/:_authToken=thetoken
 ```
+
+#### Setup .env
+
+Copy the `.env.example` to `.env` and adjust the values to your needs.
 
 #### Setup Git LFS
 
@@ -49,23 +51,18 @@ cd dataskop-electron
 npm i
 ```
 
-We are storing large files in this repositry wit git-lfs.
-So please install git-lfs: https://github.com/git-lfs/git-lfs.
-
 ### Development
 
-We recommend [VS Code](https://code.visualstudio.com/) as text editor.
-VS Code will automatically format the code and manage imports when you save a file.
+We recommend to use [VS Code](https://code.visualstudio.com/) but you are free to choose another text editor.
+VS Code will automatically format and lint the code, and manages imports, has a built-in debugger etc.
 
 ```bash
 npm start
 ```
 
-This starts the renderer process in [**hot-module-replacement**](https://webpack.js.org/guides/hmr-react/) mode and starts a webpack dev server that sends hot updates to the renderer process.
+### Static files
 
-### Static Files
-
-Put static files used insige the app in `src/renderer/static` and not in `resources`.
+Put static files for the renderer process in `src/renderer/static` and not in `resources`.
 The latter is only used for the application icon.
 
 ## Tests
@@ -111,7 +108,7 @@ Using [electron-log](https://www.npmjs.com/package/electron-log) to store logs o
 less ~/Library/Logs/DataSkop/renderer.log
 ```
 
-Optionally using <https://sentry.io>.
+Optionally using <https://sentry.io> to catch bugs in the wild.
 
 ## License
 

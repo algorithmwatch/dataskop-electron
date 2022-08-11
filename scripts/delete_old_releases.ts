@@ -14,7 +14,7 @@ import * as _ from 'lodash';
 import { build } from '../package.json';
 
 const run = async () => {
-  if (!process.env.ACCESS || !process.env.SECRET) {
+  if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
     console.error('set env vars');
     return;
   }
@@ -23,8 +23,8 @@ const run = async () => {
     region: build.publish.region,
     endpoint: build.publish.endpoint,
     credentials: {
-      accessKeyId: process.env.ACCESS,
-      secretAccessKey: process.env.SECRET,
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     },
   });
 
