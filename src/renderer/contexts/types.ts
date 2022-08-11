@@ -1,5 +1,7 @@
 export type NavigationState = {
   pageIndex: number;
-  pages: Array<{ path: string; sectionKey: null | string }>;
+  pages: NavigationStatePage[];
   sections: { [key: string]: { label: string } };
 };
+
+export type NavigationStatePage = { path: string; sectionKey: null | string };

@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import { providerInfo } from 'renderer/providers/info';
-import { NavigationState } from './types';
+import { NavigationState, NavigationStatePage } from './types';
 
 type Action =
   | { type: 'set-page-index'; pageIndex: number }
@@ -18,17 +18,23 @@ type Dispatch = (action: Action) => void;
 
 type NavigationProviderProps = { children: React.ReactNode };
 
-const NavigationStateContext = React.createContext<
+type NavigationFunctionSignature = <Prop extends keyof NavigationStatePage>(
+  propName?: Prop,
+) => NavigationStatePage | NavigationStatePage[Prop];
+
+type NavigationStateContextType =
   | {
       state: NavigationState;
       dispatch: Dispatch;
-      getNextPage: any;
-      getPreviousPage: any;
-      getCurrentPage: any;
-      getPageIndexByPath: any;
+      getNextPage: NavigationFunctionSignature;
+      getPreviousPage: NavigationFunctionSignature;
+      getCurrentPage: NavigationFunctionSignature;
+      getPageIndexByPath: (path: NavigationStatePage['path']) => number;
     }
-  | undefined
->(undefined);
+  | undefined;
+
+const NavigationStateContext =
+  React.createContext<NavigationStateContextType>(undefined);
 
 const initialNavigationState: NavigationState = {
   pageIndex: 0,
@@ -53,7 +59,7 @@ const NavigationReducer = (
       const navConfig =
         providerInfo[action.provider].navigation[action.navSlug];
 
-      let basePages = initialNavigationState.pages;
+      const basePages = initialNavigationState.pages;
 
       return {
         pageIndex: initialNavigationState.pages.length,
@@ -73,7 +79,7 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
     initialNavigationState,
   );
 
-  const getNextPage = (propName?: string) => {
+  const getNextPage: NavigationFunctionSignature = (propName) => {
     const nextIndex = state.pageIndex + 1;
 
     if (!state.pages[nextIndex]) {
@@ -94,7 +100,7 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
     return nextPageObj;
   };
 
-  const getPreviousPage = (propName?: string) => {
+  const getPreviousPage: NavigationFunctionSignature = (propName) => {
     const prevIndex = state.pageIndex - 1;
 
     if (!state.pages[prevIndex]) {
@@ -115,7 +121,7 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
     return prevPageObj;
   };
 
-  const getCurrentPage = (propName?: string) => {
+  const getCurrentPage: NavigationFunctionSignature = (propName) => {
     const currentIndex = state.pageIndex;
 
     if (!state.pages[currentIndex]) {
@@ -136,7 +142,7 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
     return currentPageObj;
   };
 
-  const getPageIndexByPath = (path: string) =>
+  const getPageIndexByPath = (path: NavigationStatePage['path']): number =>
     state.pages.findIndex((page) => page.path === path);
 
   const value = {
