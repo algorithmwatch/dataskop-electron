@@ -18,7 +18,6 @@ type Action =
       version: string;
       isDebug: boolean;
       showAdvancedMenu: boolean;
-      simpleBackendUrl: string;
       platformUrl: string;
       trackEvents: boolean;
       seriousProtection: string;
@@ -32,7 +31,6 @@ type State = {
   version: string;
   isDebug: boolean;
   showAdvancedMenu: boolean;
-  simpleBackendUrl: string | null;
   platformUrl: string | null;
   trackEvents: boolean;
   seriousProtection: string | null;
@@ -82,7 +80,6 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
     version: 'loading...',
     isDebug: false,
     showAdvancedMenu: false,
-    simpleBackendUrl: null,
     platformUrl: null,
     trackEvents: false,
     seriousProtection: null,
@@ -109,7 +106,6 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
 
       const isDebug =
         env.NODE_ENV === 'development' || env.DEBUG_PROD === 'true';
-      const simpleBackendUrl = env.SIMPLE_BACKEND ?? null;
       const platformUrl = env.PLATFORM_URL ?? null;
       const trackEvents = !!env.TRACK_EVENTS;
       const seriousProtection = env.SERIOUS_PROTECTION ?? null;
@@ -125,7 +121,6 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
         type: 'set-config',
         isDebug,
         version,
-        simpleBackendUrl,
         platformUrl,
         trackEvents,
         seriousProtection,

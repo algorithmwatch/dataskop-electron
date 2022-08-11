@@ -23,27 +23,6 @@ const postJson = (
   });
 };
 
-const postSimpleBackend = async (
-  simpleBackendUrl: string,
-  data: any,
-  version: string,
-  sessionId: string,
-) => {
-  try {
-    const res = await postJson(simpleBackendUrl, null, {
-      version,
-      sessionId,
-      slug: data.slug,
-      data: JSON.stringify(data),
-    });
-    const json = await res.json();
-
-    if (!json.success) console.warn('error posting data to simple backend');
-  } catch {
-    console.warn('error posting data to simple backend');
-  }
-};
-
 const getActiveCampaigns = async (
   platformUrl: string,
   seriousProtection: string | null,
@@ -104,4 +83,4 @@ const postDonation = async (
   return res;
 };
 
-export { getActiveCampaigns, postSimpleBackend, postEvent, postDonation };
+export { getActiveCampaigns, postEvent, postDonation };

@@ -288,7 +288,6 @@ ipcMain.handle('get-env', () => {
     NODE_ENV: process.env.NODE_ENV,
     DEBUG_PROD: process.env.DEBUG_PROD,
     PLATFORM_URL: process.env.PLATFORM_URL,
-    SIMPLE_BACKEND: process.env.SIMPLE_BACKEND,
     TRACK_EVENTS: process.env.TRACK_EVENTS,
     SERIOUS_PROTECTION: process.env.SERIOUS_PROTECTION,
   };

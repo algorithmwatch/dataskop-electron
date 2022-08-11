@@ -10,7 +10,6 @@ import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useConfig, useModal, useScraping } from 'renderer/contexts';
 import { currentDelay } from 'renderer/lib/delay';
-import { postSimpleBackend } from 'renderer/lib/networking';
 import { createScrapingGenerator } from 'renderer/lib/scraping';
 import { delay } from 'renderer/lib/utils/time';
 import { providerInfo } from 'renderer/providers/info';
@@ -39,7 +38,7 @@ export default function ScrapingManager({
   campaign: Campaign;
 }): JSX.Element {
   const {
-    state: { version, isDebug, simpleBackendUrl },
+    state: { version, isDebug },
     sendEvent,
   } = useConfig();
 
@@ -215,9 +214,6 @@ export default function ScrapingManager({
           console.info(result);
           sendEvent(campaign, 'scraping error', result);
         }
-
-        if (simpleBackendUrl)
-          postSimpleBackend(simpleBackendUrl, result, version, sessionId);
 
         if (done) {
           // this is the last step of the session. It's important to wait until
