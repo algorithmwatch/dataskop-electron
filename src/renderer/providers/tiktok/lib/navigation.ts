@@ -2,7 +2,7 @@ const ttDefault = {
   pageIndex: 0,
   pages: [
     {
-      path: '/start',
+      path: '/tiktok/start',
       sectionKey: null,
     },
     {

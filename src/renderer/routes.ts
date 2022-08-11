@@ -7,10 +7,10 @@ import VisualizationAdvancedPage from './pages/admin/VisualizationAdvancedPage';
 import ProviderLoginPage from './pages/ProviderLoginPage';
 import ProviderLoginSuccessPage from './pages/ProviderLoginSuccessPage';
 import SelectCampaignPage from './pages/SelectCampaignPage';
-import StartPage from './pages/StartPage';
+import tiktokRoutes from './providers/tiktok/lib/routes';
 import ytRoutes from './providers/youtube/lib/routes';
 
-const providerRoutes = ytRoutes;
+const providerRoutes = ytRoutes.concat(tiktokRoutes);
 
 const routes = [
   {
@@ -34,10 +34,6 @@ const routes = [
   {
     path: '/admin/settings',
     comp: SettingsPage,
-  },
-  {
-    path: '/start',
-    comp: StartPage,
   },
   {
     path: '/select_campaign',

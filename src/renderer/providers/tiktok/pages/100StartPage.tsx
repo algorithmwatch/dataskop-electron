@@ -3,34 +3,32 @@
  *
  * @module
  */
-import { faAngleRight } from '@fortawesome/pro-solid-svg-icons';
-import { RouteComponentProps } from 'react-router-dom';
-import { useNavigation } from '../contexts';
-import FooterNav, {
-  FooterNavItem,
-} from '../providers/youtube/components/FooterNav';
-import awlogo from '../static/images/logos/aw-logo.png';
-import bmbflogo from '../static/images/logos/bmbf-logo.png';
-import dslogo from '../static/images/logos/dslogo.svg';
-import enslogo from '../static/images/logos/ens-logo.png';
-import fhplogo from '../static/images/logos/fhp-logo.png';
-import mplogo from '../static/images/logos/mp-logo.png';
-import uplogo from '../static/images/logos/up-logo.png';
+import { useNavigation } from '../../../contexts';
+// import FooterNav, {
+//   FooterNavItem,
+// } from '../../youtube/components/FooterNav';
+import awlogo from '../../../static/images/logos/aw-logo.png';
+import bmbflogo from '../../../static/images/logos/bmbf-logo.png';
+import dslogo from '../../../static/images/logos/dslogo.svg';
+import enslogo from '../../../static/images/logos/ens-logo.png';
+import fhplogo from '../../../static/images/logos/fhp-logo.png';
+import mplogo from '../../../static/images/logos/mp-logo.png';
+import uplogo from '../../../static/images/logos/up-logo.png';
 
 export default function StartPage(): JSX.Element {
   const { getNextPage } = useNavigation();
 
-  const footerNavItems: FooterNavItem[] = [
-    {
-      label: 'Weiter',
-      // size: 'large',
-      endIcon: faAngleRight,
-      classNames: 'mx-auto',
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getNextPage('path'));
-      },
-    },
-  ];
+  // const footerNavItems: FooterNavItem[] = [
+  //   {
+  //     label: 'Weiter',
+  //     // size: 'large',
+  //     endIcon: faAngleRight,
+  //     classNames: 'mx-auto',
+  //     clickHandler(history: RouteComponentProps['history']) {
+  //       history.push(getNextPage('path'));
+  //     },
+  //   },
+  // ];
 
   return (
     <>
@@ -77,7 +75,7 @@ export default function StartPage(): JSX.Element {
           </div>
         </div>
       </div>
-      <FooterNav items={footerNavItems} />
+      {/* <FooterNav items={footerNavItems} /> */}
     </>
   );
 }
