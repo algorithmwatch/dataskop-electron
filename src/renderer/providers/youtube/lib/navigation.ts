@@ -1,87 +1,87 @@
-import ytRoutes from './routes';
+// import ytRoutes from './routes';
 
 const ytDefaultNav = {
   pageIndex: 0,
   pages: [
     {
-      path: ytRoutes.START.path,
+      path: '/yt/start',
       sectionKey: null,
     },
     {
-      path: ytRoutes.INTRODUCTION.path,
+      path: '/yt/intro',
       sectionKey: null,
     },
     {
-      path: ytRoutes.ONBOARDING_1.path,
+      path: '/yt/onboarding1',
       sectionKey: null,
     },
     {
-      path: ytRoutes.ONBOARDING_2.path,
+      path: '/yt/onboarding2',
       sectionKey: null,
     },
     {
-      path: ytRoutes.INTERFACE_TUTORIAL.path,
-      sectionKey: ytRoutes.INTERFACE_TUTORIAL.path,
+      path: '/yt/interface-tutorial',
+      sectionKey: '/yt/interface-tutorial',
     },
     {
-      path: ytRoutes.SCRAPING_EXPLANATION.path,
-      sectionKey: ytRoutes.SCRAPING_EXPLANATION.path,
+      path: '/yt/scraping-explanation',
+      sectionKey: '/yt/scraping-explanation',
     },
     {
-      path: ytRoutes.VISUALIZATION_PROFILE.path,
-      sectionKey: ytRoutes.VISUALIZATION_PROFILE.path,
+      path: '/yt/visualization/profile',
+      sectionKey: '/yt/visualization/profile',
     },
     {
-      path: ytRoutes.RESEARCH_INFO.path,
-      sectionKey: ytRoutes.RESEARCH_INFO.path,
+      path: '/yt/research-info',
+      sectionKey: '/yt/research-info',
     },
     {
-      path: ytRoutes.VISUALIZATION_AUTOPLAYCHAIN.path,
-      sectionKey: ytRoutes.VISUALIZATION_AUTOPLAYCHAIN.path,
+      path: '/yt/visualization/autoplay-chain',
+      sectionKey: '/yt/visualization/autoplay-chain',
     },
     {
-      path: ytRoutes.VISUALIZATION_NEWS.path,
-      sectionKey: ytRoutes.VISUALIZATION_NEWS.path,
+      path: '/yt/visualization/news',
+      sectionKey: '/yt/visualization/news',
     },
     {
-      path: ytRoutes.VISUALIZATION_SEARCH.path,
-      sectionKey: ytRoutes.VISUALIZATION_SEARCH.path,
+      path: '/yt/visualization/search',
+      sectionKey: '/yt/visualization/search',
     },
     {
-      path: ytRoutes.MY_DATA.path,
-      sectionKey: ytRoutes.MY_DATA.path,
+      path: '/yt/my-data',
+      sectionKey: '/yt/my-data',
     },
     {
-      path: ytRoutes.QUESTIONNAIRE.path,
-      sectionKey: ytRoutes.QUESTIONNAIRE.path,
+      path: '/yt/questionnaire',
+      sectionKey: '/yt/questionnaire',
     },
     {
-      path: ytRoutes.DONATION1.path,
-      sectionKey: ytRoutes.DONATION1.path,
+      path: '/yt/donation1',
+      sectionKey: '/yt/donation1',
     },
     {
-      path: ytRoutes.DONATION2.path,
+      path: '/yt/donation2',
       sectionKey: null,
     },
     {
-      path: ytRoutes.DONATION_SUCCESS.path,
-      sectionKey: ytRoutes.DONATION_SUCCESS.path,
+      path: '/yt/donation-success',
+      sectionKey: '/yt/donation-success',
     },
   ],
   sections: {
-    [ytRoutes.INTERFACE_TUTORIAL.path]: { label: 'Die Benutzeroberfläche' },
-    [ytRoutes.SCRAPING_EXPLANATION.path]: {
+    '/yt/interface-tutorial': { label: 'Die Benutzeroberfläche' },
+    '/yt/scraping-explanation': {
       label: 'Wie funktioniert Scraping?',
     },
-    [ytRoutes.VISUALIZATION_PROFILE.path]: { label: 'Mein YouTube-Profil' },
-    [ytRoutes.RESEARCH_INFO.path]: { label: 'Was wir untersuchen' },
-    [ytRoutes.VISUALIZATION_AUTOPLAYCHAIN.path]: { label: 'AutoPlay Viz' },
-    [ytRoutes.VISUALIZATION_NEWS.path]: { label: 'News Viz' },
-    [ytRoutes.VISUALIZATION_SEARCH.path]: { label: 'Search Viz' },
-    [ytRoutes.MY_DATA.path]: { label: 'Meine Daten' },
-    [ytRoutes.QUESTIONNAIRE.path]: { label: 'Umfrage' },
-    [ytRoutes.DONATION1.path]: { label: 'Die Datenspende' },
-    [ytRoutes.DONATION_SUCCESS.path]: { label: 'Ende' },
+    '/yt/visualization/profile': { label: 'Mein YouTube-Profil' },
+    '/yt/research-info': { label: 'Was wir untersuchen' },
+    '/yt/visualization/autoplay-chain': { label: 'AutoPlay Viz' },
+    '/yt/visualization/news': { label: 'News Viz' },
+    '/yt/visualization/search': { label: 'Search Viz' },
+    '/yt/my-data': { label: 'Meine Daten' },
+    '/yt/questionnaire': { label: 'Umfrage' },
+    '/yt/donation1': { label: 'Die Datenspende' },
+    '/yt/donation-success': { label: 'Ende' },
   },
 };
 
@@ -89,43 +89,43 @@ const ytEduDemoNav = {
   pageIndex: 0,
   pages: [
     {
-      path: ytRoutes.SELECT_DEMO.path,
+      path: '/yt/start',
       sectionKey: null,
     },
     {
-      path: ytRoutes.SCRAPING_EXPLANATION.path,
-      sectionKey: ytRoutes.SCRAPING_EXPLANATION.path,
+      path: '/yt/scraping-explanation',
+      sectionKey: '/yt/scraping-explanation',
     },
     {
-      path: ytRoutes.VISUALIZATION_PROFILE.path,
-      sectionKey: ytRoutes.VISUALIZATION_PROFILE.path,
+      path: '/yt/visualization/profile',
+      sectionKey: '/yt/visualization/profile',
     },
     {
-      path: ytRoutes.VISUALIZATION_AUTOPLAYCHAIN.path,
-      sectionKey: ytRoutes.VISUALIZATION_AUTOPLAYCHAIN.path,
+      path: '/yt/visualization/autoplay-chain',
+      sectionKey: '/yt/visualization/autoplay-chain',
     },
     {
-      path: ytRoutes.VISUALIZATION_NEWS.path,
-      sectionKey: ytRoutes.VISUALIZATION_NEWS.path,
+      path: '/yt/visualization/news',
+      sectionKey: '/yt/visualization/news',
     },
     {
-      path: ytRoutes.VISUALIZATION_SEARCH.path,
-      sectionKey: ytRoutes.VISUALIZATION_SEARCH.path,
+      path: '/yt/visualization/news',
+      sectionKey: '/yt/visualization/news',
     },
     {
-      path: ytRoutes.MY_DATA.path,
-      sectionKey: ytRoutes.MY_DATA.path,
+      path: '/yt/visualization/search',
+      sectionKey: '/yt/visualization/search',
     },
   ],
   sections: {
-    [ytRoutes.SCRAPING_EXPLANATION.path]: {
+    '/yt/scraping-explanation': {
       label: 'Wie funktioniert Scraping?',
     },
-    [ytRoutes.VISUALIZATION_PROFILE.path]: { label: 'Mein YouTube-Profil' },
-    [ytRoutes.VISUALIZATION_AUTOPLAYCHAIN.path]: { label: 'AutoPlay Viz' },
-    [ytRoutes.VISUALIZATION_NEWS.path]: { label: 'News Viz' },
-    [ytRoutes.VISUALIZATION_SEARCH.path]: { label: 'Search Viz' },
-    [ytRoutes.MY_DATA.path]: { label: 'Meine Daten' },
+    '/yt/visualization/profile': { label: 'Mein YouTube-Profil' },
+    '/yt/visualization/autoplay-chain': { label: 'AutoPlay Viz' },
+    '/yt/visualization/news': { label: 'News Viz' },
+    '/yt/visualization/search': { label: 'Search Viz' },
+    '/yt/visualization/my-data': { label: 'Meine Daten' },
   },
 };
 

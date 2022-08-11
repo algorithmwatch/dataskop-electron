@@ -8,9 +8,11 @@ import ScrapingManager from './ScrapingManager';
 
 export default function ScapingAttached() {
   const {
-    state: { isAttached, disableInput },
+    state: { isAttached, disableInput, campaign },
   } = useScraping();
 
-  if (isAttached) return <ScrapingManager disableInput={disableInput} />;
+  // Only render scraping manger when the campaign is set to avoid tedious guard clauses.
+  if (isAttached && campaign)
+    return <ScrapingManager disableInput={disableInput} campaign={campaign} />;
   return null;
 }

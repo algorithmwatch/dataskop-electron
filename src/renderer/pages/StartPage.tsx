@@ -27,7 +27,6 @@ export default function StartPage(): JSX.Element {
       endIcon: faAngleRight,
       classNames: 'mx-auto',
       clickHandler(history: RouteComponentProps['history']) {
-        console.log(getNextPage('path'));
         history.push(getNextPage('path'));
       },
     },

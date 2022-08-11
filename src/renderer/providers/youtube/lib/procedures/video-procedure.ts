@@ -1,7 +1,6 @@
-/* eslint-disable no-restricted-syntax */
 import { clearStorage } from 'renderer/components/scraping/ipc';
 import { getScrapingResultsBySession } from 'renderer/lib/db';
-import { currentDelay } from 'renderer/providers/info';
+import { currentDelay } from 'renderer/lib/delay';
 import { GetHtmlFunction, GetHtmlLazyFunction } from 'renderer/providers/types';
 import {
   SeedScraper,

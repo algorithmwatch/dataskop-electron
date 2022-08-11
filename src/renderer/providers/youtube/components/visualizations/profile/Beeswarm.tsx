@@ -1,6 +1,5 @@
 // @ts-nocheck
 
-/* eslint-disable no-restricted-syntax */
 /* eslint-disable react/no-danger */
 import * as Plot from '@observablehq/plot';
 import { sum } from 'd3-array';
@@ -11,7 +10,7 @@ import {
   forceY as d3forceY,
 } from 'd3-force';
 import { select } from 'd3-selection';
-import React, { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 function beeswarm(
   data,

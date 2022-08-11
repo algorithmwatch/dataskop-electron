@@ -1,10 +1,10 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /**
  * The actual window (tab) where the scraping is happening.
  *
  * @module
  */
-// /* eslint-disable jsx-a11y/no-static-element-interactions */
-// /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { faTimes } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { pick, round } from 'lodash';
@@ -30,8 +30,8 @@ export default function ScrapingWindow({
     dispatch,
   } = useScraping();
 
-  const setBounds = (bounds: Bounds) => {
-    dispatch({ type: 'set-bounds', bounds });
+  const setBounds = (newBounds: Bounds) => {
+    dispatch({ type: 'set-bounds', bounds: newBounds });
   };
 
   useEffect(() => {

@@ -62,7 +62,6 @@ function Row({ row }: { row: any }) {
 
 export default function DetailsTable({ rows }: { rows: any }) {
   rows.forEach((x: any) => (x.scrapedAt = dayjs(x.scrapedAt).format()));
-  console.log(rows[0]);
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">

@@ -4,12 +4,16 @@
  * Initially, we've used [Dexie.js](https://github.com/dfahlander/Dexie.js/) with indexedDB to store data. But we ran into strangle problems that we were unable to fix. The resulting error message:
  * > Failed to execute 'transaction' on 'IDBDatabase': The database connection is closing.InvalidStateError: Failed to execute 'transaction' on 'IDBDatabase': The database connection is closing.
  * Did not give us the option to debug it. We have found a hard-to-reprocude bug with indexedDB: https://github.com/dfahlander/Dexie.js/issues/613
+ * And: the indexedDb may get corrupted on version updates: https://github.com/sindresorhus/electron-store/issues/17#issuecomment-962635119
+ *
  * So we decided to to [lowdb](https://github.com/typicode/lowdb) to store all data in JSON file in the `userData` directory.
  *
  * We use a queue for adding the data because otherwise some results were skipped due to some race conditions.
+ *
  * Things that could be done to improve the data handling:
  * - don't start processing the tasks (in the queue) once there were added. Only process them every 30 seconds (to reduce disk access)
  * - likewise, when reading data from the disk, add a cache (e.g. 10 seconds)
+ * - don't pass the whole JSON object via IPC every time a changes of the DB is needed (This code was added before contextIsolation so initially we had access to node and the file system)
  * @module
  */
 import _ from 'lodash';

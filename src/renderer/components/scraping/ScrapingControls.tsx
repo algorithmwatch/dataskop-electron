@@ -3,9 +3,8 @@
  *
  * @module
  */
-/* eslint-disable no-restricted-syntax */
 import { useScraping } from 'renderer/contexts';
-import { providerInfo } from 'renderer/providers';
+import { providerInfo } from 'renderer/providers/info';
 import Button from '../../providers/youtube/components/Button';
 import { goToUrl } from './ipc';
 

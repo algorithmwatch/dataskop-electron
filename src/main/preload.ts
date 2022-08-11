@@ -1,8 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-
-// expose logging to renderer
-const log = require('electron-log');
-const path = require('path/posix');
+import log from 'electron-log';
 
 // export main functions to renderer
 // main.ts
@@ -60,8 +57,7 @@ const youtubeChannels = [
 ];
 
 // whitelist certain channels for certain action
-const validInvokeChannels = [].concat(
-  mainChannels,
+const validInvokeChannels = mainChannels.concat(
   scrapingChannels,
   backgroundScrapingChannels,
   exportChannels,

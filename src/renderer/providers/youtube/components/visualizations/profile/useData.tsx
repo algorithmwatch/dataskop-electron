@@ -15,8 +15,6 @@ const parseDate = (str: string, referenceDate: Date) => {
 export const useData = (raw: Array<ScrapingResult>, lookups: LookupMap) => {
   const [data, setData] = useState({ loading: true });
 
-  // console.log(raw, lookups);
-
   const slugHistory = raw.find(
     (x) => x.success && x.slug.includes('user-watch-history'),
   )?.fields.videos;

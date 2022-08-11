@@ -30,11 +30,8 @@ const Row = ({ index, style, data }: any) => {
 };
 
 export default function MyData({ data }: any) {
-  console.log(data);
   const [containerRef, containerDimensions] = useDimensions();
   const listRef = React.createRef();
-
-  // console.log(containerDimensions);
 
   const db = useMemo(() => {
     const history = data.results.find(

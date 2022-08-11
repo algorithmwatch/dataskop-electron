@@ -14,7 +14,7 @@ import {
   NavigationProvider,
   ScrapingProvider,
 } from './contexts';
-import routes, { allRoutes } from './routes';
+import { allRoutes } from './routes';
 
 export default function App() {
   return (
@@ -32,7 +32,7 @@ export default function App() {
                   ))}
                   {/* Redirect initial route */}
                   <Route path="/">
-                    <Redirect to={routes.SELECT_CAMPAIGN.path} />
+                    <Redirect to="/select_campaign" />
                   </Route>
                 </Switch>
               </BaseLayoutSwitch>

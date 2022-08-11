@@ -1,6 +1,6 @@
 import cheerio from 'cheerio';
+import { currentDelay } from 'renderer/lib/delay';
 import { clickOnElement, getReadyHtml } from 'renderer/lib/scraping';
-import { currentDelay } from 'renderer/providers';
 import {
   GetCurrentHtml,
   GetHtmlFunction,

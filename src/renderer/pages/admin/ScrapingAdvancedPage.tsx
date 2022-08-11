@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { Card } from '@material-ui/core';
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';

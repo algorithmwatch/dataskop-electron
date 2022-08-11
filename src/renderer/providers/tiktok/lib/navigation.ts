@@ -1,18 +1,16 @@
-import routes from '../../../routes';
-
 const ttDefault = {
   pageIndex: 0,
   pages: [
     {
-      path: routes.START.path,
+      path: '/start',
       sectionKey: null,
     },
     {
-      path: routes.PROVIDER_LOGIN.path,
+      path: '/provider_login',
       sectionKey: null,
     },
     {
-      path: routes.PROVIDER_LOGIN_SUCCESS.path,
+      path: '/provider_login_success',
       sectionKey: null,
     },
   ],

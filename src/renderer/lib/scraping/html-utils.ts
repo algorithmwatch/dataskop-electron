@@ -1,9 +1,9 @@
 import { ParserResult } from '@algorithmwatch/harke';
 import { range } from 'lodash';
-import { currentDelay } from 'renderer/providers';
 import { GetCurrentHtml, GetHtmlFunction } from 'renderer/providers/types';
 import { getUniquePath } from 'renderer/vendor/cheerio-unique-selector';
 import { ScrapingResult } from '../db';
+import { currentDelay } from '../delay';
 import { delay } from '../utils/time';
 
 /**

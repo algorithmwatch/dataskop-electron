@@ -49,7 +49,6 @@ export default function registerYoutubeHandlers(mainWindow: BrowserWindow) {
       if (!fs.existsSync(filePath)) fs.mkdirSync(filePath);
 
       const limit = pLimit(10);
-      console.log(ytIds);
       const input = ytIds.map((x) => limit(() => downloadYtImage(x, filePath)));
       await Promise.all(input);
     },

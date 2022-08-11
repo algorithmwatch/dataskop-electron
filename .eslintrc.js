@@ -11,6 +11,11 @@ module.exports = {
     'import/prefer-default-export': 'off',
     // useful for async scraping / generators
     'no-await-in-loop': 'off',
+    // not helpful
+    'react/react-in-jsx-scope': 'off',
+    'react-hooks/exhaustive-deps': 'off',
+    'no-restricted-syntax': 'off',
+    'no-underscore-dangle': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

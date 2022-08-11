@@ -6,8 +6,6 @@ import classNames from 'classnames';
 import { useState } from 'react';
 import AdvancedMenu from 'renderer/components/admin/AdvancedMenu';
 import { useConfig } from 'renderer/contexts';
-import ytRoutes from 'renderer/providers/youtube/lib/routes';
-import routes from 'renderer/routes';
 
 export default function Sidebar({
   menuItems = [],
@@ -83,22 +81,17 @@ export default function Sidebar({
               <AdvancedMenu
                 onItemClicked={() => onIsOpenChange(false)}
                 menuItems={[
-                  { label: 'start', to: routes.START.path },
+                  { label: 'start', to: '/yt/start' },
                   {
                     label: 'advanced scraping',
-                    to: routes.ADMIN_SCRAPING_ADVANCED.path,
+                    to: '/admin/scraping/advanced',
                   },
                   {
                     label: 'scraping config editor',
-                    to: routes.ADMIN_SCRAPING_CONFIG_EDITOR.path,
+                    to: '/admin/scraping/editor',
                   },
-                  { label: 'results', to: routes.ADMIN_RESULTS.path },
-                  { label: 'settings', to: routes.ADMIN_SETTINGS.path },
-                  {
-                    label: 'yt questionnaire',
-                    to: ytRoutes.QUESTIONNAIRE.path,
-                  },
-                  { label: 'yt donation', to: ytRoutes.DONATION1.path },
+                  { label: 'results', to: '/admin/results' },
+                  { label: 'settings', to: '/admin/settings' },
                 ]}
               />
             </div>

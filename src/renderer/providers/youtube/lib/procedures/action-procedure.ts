@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { getScrapingResultsBySession } from 'renderer/lib/db';
 import { GetHtmlFunction, GetHtmlLazyFunction } from 'renderer/providers/types';
 import { ActionProcedureConfig, YtScrapingConfig } from '..';

@@ -16,7 +16,6 @@ import {
   useNavigation,
   useScraping,
 } from '../../../contexts';
-import routes from '../../../routes';
 import Modal from './Modal';
 import ProcessIndicator from './ProcessIndicator';
 import ScrapingProgressBar from './ScrapingProgressBar';
@@ -113,7 +112,7 @@ export default function Base({
       <Modal />
       <header
         className={classNames('flex items-center py-4 px-6 z-20 h-[4.375rem]', {
-          'opacity-0': pathname === routes.START.path,
+          'opacity-0': pathname === '/yt/start',
         })}
       >
         <div>

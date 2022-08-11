@@ -4,7 +4,8 @@
  * @module
  */
 import React from 'react';
-import { providerInfo } from 'renderer/providers';
+import { providerInfo } from 'renderer/providers/info';
+import { NavigationState } from './types';
 
 type Action =
   | { type: 'set-page-index'; pageIndex: number }
@@ -14,11 +15,7 @@ type Action =
       navSlug: string;
     };
 type Dispatch = (action: Action) => void;
-export type NavigationState = {
-  pageIndex: number;
-  pages: Array<{ path: string; sectionKey: null | string }>;
-  sections: { [key: string]: { label: string } };
-};
+
 type NavigationProviderProps = { children: React.ReactNode };
 
 const NavigationStateContext = React.createContext<
@@ -57,9 +54,6 @@ const NavigationReducer = (
         providerInfo[action.provider].navigation[action.navSlug];
 
       let basePages = initialNavigationState.pages;
-
-      console.log(basePages);
-      console.log(navConfig.pages);
 
       return {
         pageIndex: initialNavigationState.pages.length,

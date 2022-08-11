@@ -64,7 +64,6 @@ export default function QuestionnairePage(): JSX.Element {
 
   const onSubmit = (values) => {
     if (sessionId === null) {
-      console.log('onSubmit', values);
       console.error('session is not set');
     } else {
       addQuestionnaireToSession(sessionId, values);

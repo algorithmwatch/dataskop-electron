@@ -10,54 +10,50 @@ import SelectCampaignPage from './pages/SelectCampaignPage';
 import StartPage from './pages/StartPage';
 import ytRoutes from './providers/youtube/lib/routes';
 
-// Importing the providerRoutes from providers is not working, not clear why.
-// import { providerRoutes } from './providers';
-// console.log(providerRoutes);
+const providerRoutes = ytRoutes;
 
-const hotfixProviderRoutes = [...Object.values(ytRoutes)];
-
-const routes = {
-  ADMIN_SCRAPING_ADVANCED: {
+const routes = [
+  {
     path: '/admin/scraping/advanced',
     comp: AdvancedScrapingPage,
   },
-  ADMIN_SCRAPING_CONFIG_EDITOR: {
+  {
     path: '/admin/scraping/editor',
     comp: ScrapingConfigEditorPage,
   },
-  ADMIN_RESULTS_DETAILS: {
+  {
     path: '/admin/results/:sessionId',
     comp: ResultsDetailsPage,
   },
   // NB: the order of the details page is important!
-  ADMIN_RESULTS: { path: '/admin/results', comp: ResultsPage },
-  ADMIN_VISUALIZATION_ADVANCED: {
+  { path: '/admin/results', comp: ResultsPage },
+  {
     path: '/admin/visualization/advanced/:sessionId',
     comp: VisualizationAdvancedPage,
   },
-  ADMIN_SETTINGS: {
+  {
     path: '/admin/settings',
     comp: SettingsPage,
   },
-  START: {
+  {
     path: '/start',
     comp: StartPage,
   },
-  SELECT_CAMPAIGN: {
+  {
     path: '/select_campaign',
     comp: SelectCampaignPage,
   },
-  PROVIDER_LOGIN: {
+  {
     path: '/provider_login',
     comp: ProviderLoginPage,
   },
-  PROVIDER_LOGIN_SUCCESS: {
+  {
     path: '/provider_login_success',
     comp: ProviderLoginSuccessPage,
   },
-};
+];
 
-const allRoutes = Object.values(routes).concat(hotfixProviderRoutes);
+const allRoutes = routes.concat(providerRoutes);
 
 export { allRoutes };
 export default routes;

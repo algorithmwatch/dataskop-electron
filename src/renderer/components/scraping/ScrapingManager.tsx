@@ -1,18 +1,20 @@
+/* eslint-disable no-empty-pattern */
 /**
  * Manage the whole scraping process: login to account, steping to steps of the
  * scraping process, store data etc.
  *
  * @module
  */
-/* eslint-disable no-restricted-syntax */
+import { range } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useConfig, useModal, useScraping } from 'renderer/contexts';
+import { currentDelay } from 'renderer/lib/delay';
 import { postSimpleBackend } from 'renderer/lib/networking';
 import { createScrapingGenerator } from 'renderer/lib/scraping';
 import { delay } from 'renderer/lib/utils/time';
-import { currentDelay, providerInfo } from 'renderer/providers';
-import routes from 'renderer/routes';
+import { providerInfo } from 'renderer/providers/info';
+import { Campaign } from 'renderer/providers/types';
 import { v4 as uuidv4 } from 'uuid';
 import {
   addNewSession,
@@ -31,8 +33,10 @@ import ScrapingWindow from './ScrapingWindow';
 
 export default function ScrapingManager({
   disableInput = false,
+  campaign,
 }: {
   disableInput?: boolean;
+  campaign: Campaign;
 }): JSX.Element {
   const {
     state: { version, isDebug, simpleBackendUrl },
@@ -48,7 +52,6 @@ export default function ScrapingManager({
       sessionId,
       isScrapingStarted,
       stepGenerator,
-      campaign,
       isUserLoggedIn,
     },
     dispatch,
@@ -57,7 +60,6 @@ export default function ScrapingManager({
   const { dispatch: dispatchModal } = useModal();
   const history = useHistory();
 
-  if (campaign === null) return <div></div>;
   const provider = providerInfo[campaign.config.provider];
 
   const checkForLogIn = async () => {
@@ -75,20 +77,20 @@ export default function ScrapingManager({
     loadingDone: (html: string) => boolean,
     loadingAbort: (html: string) => boolean,
   ): Promise<string> => {
-    console.log(url);
     await goToUrl(url);
     await currentDelay();
 
     let stopScrolling = false;
     // scroll some large value down
     // to simulate proper scrolling, wait between each time scrolling
-    for (const {} of [...Array(scrollBottom)]) {
+    for ({} of range(scrollBottom)) {
       if (stopScrolling) break;
-      for (const {} of [...Array(5)]) {
+      for ({} of range(5)) {
         await scrollDown();
         await delay(10);
       }
 
+      // eslint-disable-next-line no-constant-condition
       while (true) {
         const html = await extractHtml();
         // FIXME: not needed to check this every time, find a better way
@@ -140,7 +142,7 @@ export default function ScrapingManager({
 
             // go to start after some time
             setTimeout(() => {
-              history.push(routes.START.path);
+              history.push('/');
             }, 2000);
           }
         }
@@ -163,9 +165,7 @@ export default function ScrapingManager({
   // start scraping when `isScrapingStarted` was set to true
   useEffect(() => {
     const startScraping = async () => {
-      if (isDebug) {
-        console.log(campaign.config);
-      }
+      console.info('start scraping', campaign.config);
 
       // create a uuid every time you hit start scraping
       const sId = uuidv4();
@@ -242,7 +242,7 @@ export default function ScrapingManager({
 
   // initialize & cleanup
 
-  const initScraper = async () => {
+  const initScraper = async (): Promise<string | null> => {
     await window.electron.ipcRenderer.invoke('scraping-init-view', {
       muted: isMuted,
       allowInput: !disableInput,
@@ -254,7 +254,7 @@ export default function ScrapingManager({
 
     // manually check if a user is logged in to proceed immediately
     if (await checkLoginCb()) {
-      return;
+      return null;
     }
     return goToUrl(provider.loginUrl);
   };

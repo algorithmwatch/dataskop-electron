@@ -1,14 +1,12 @@
 import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { useScraping } from 'renderer/contexts';
-import { useNavigation } from 'renderer/contexts/';
+import { useNavigation, useScraping } from 'renderer/contexts';
 import ContactContainer from 'renderer/providers/youtube/components/ContactContaier';
 import ContentWrapper from 'renderer/providers/youtube/components/ContentWrapper';
 import FooterNav, {
   FooterNavItem,
 } from 'renderer/providers/youtube/components/FooterNav';
 import VisualizationWrapper from '../components/VisualizationWrapper';
-import routes from '../lib/routes';
 
 export default function MyDataPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -59,7 +57,7 @@ export default function MyDataPage(): JSX.Element {
                 Wenn Du Dataskop mit einer Datenspende unterstützen möchtest,
               </span>{' '}
               <Link
-                to={routes.ONBOARDING_1.path}
+                to="/yt/onboarding1"
                 className="underline hover:no-underline text-blue-600"
               >
                 melde Dich bitte mit deinem YouTube-Konto an

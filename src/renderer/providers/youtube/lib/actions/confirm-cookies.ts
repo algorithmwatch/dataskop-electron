@@ -1,26 +1,13 @@
-/* eslint-disable no-restricted-syntax */
 import cheerio from 'cheerio';
 import { extractHtml } from 'renderer/components/scraping/ipc';
+import { currentDelay } from 'renderer/lib/delay';
 import { GetHtmlFunction } from 'renderer/providers/types';
-import { currentDelay } from '../../..';
 import { getUniquePath } from '../../../../vendor/cheerio-unique-selector';
 
 const rootUrl = 'https://www.youtube.com/';
 
 const submitFormScraping = (selector: string) => {
   return window.electron.ipcRenderer.invoke('scraping-submit-form', selector);
-};
-
-const confirmCockieForm = async () => {
-  const url = await window.electron.ipcRenderer.invoke('scraping-get-url');
-
-  if (
-    url !== null &&
-    url.startsWith('https://consent.youtube.com') &&
-    url.includes('account')
-  ) {
-    onlySubmitConsentForm((await extractHtml()).html);
-  }
 };
 
 const onlySubmitConsentForm = async (html: string) => {
@@ -37,6 +24,18 @@ const onlySubmitConsentForm = async (html: string) => {
   } else {
     const selectorPath = getUniquePath($hmtl(theForm[0][0]), $hmtl);
     submitFormScraping(selectorPath);
+  }
+};
+
+const confirmCockieForm = async () => {
+  const url = await window.electron.ipcRenderer.invoke('scraping-get-url');
+
+  if (
+    url !== null &&
+    url.startsWith('https://consent.youtube.com') &&
+    url.includes('account')
+  ) {
+    onlySubmitConsentForm((await extractHtml()).html);
   }
 };
 

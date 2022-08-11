@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import {
   buildSearchUrl,
   parsePlaylistPage,
@@ -10,8 +9,8 @@ import {
 } from '@algorithmwatch/harke';
 import _ from 'lodash';
 import { ScrapingResult } from 'renderer/lib/db/types';
+import { currentDelay } from 'renderer/lib/delay';
 import { parseUntilDone } from 'renderer/lib/scraping';
-import { currentDelay } from 'renderer/providers/info';
 import { GetHtmlFunction } from 'renderer/providers/types';
 import { lookupOrScrapeVideos } from './html-scrapers';
 import { ProfileScraper, SeedScraper, SeedVideo } from './types';
@@ -97,8 +96,10 @@ const scrapeWatchedVideos = async (
   );
 
   if (!results.success) {
-    console.error('there is a problem with scraping the watch history');
-    console.log(results);
+    window.electron.log.error(
+      'there is a problem with scraping the watch history',
+      results,
+    );
   }
 
   if (enableLogging) {

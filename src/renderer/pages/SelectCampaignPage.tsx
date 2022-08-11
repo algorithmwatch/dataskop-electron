@@ -9,7 +9,7 @@ import { faAngleRight } from '@fortawesome/pro-regular-svg-icons';
 import { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { getActiveCampaigns } from 'renderer/lib/networking';
-import { localActiveCampaings, providerInfo } from 'renderer/providers';
+import { localActiveCampaings, providerInfo } from 'renderer/providers/info';
 import { useConfig, useNavigation, useScraping } from '../contexts';
 import FooterNav, {
   FooterNavItem,
@@ -65,8 +65,10 @@ export default function SelectCampaignPage(): JSX.Element {
 
       sendEvent(null, 'successfully fetched remote config');
     } catch (error) {
-      console.error('not able to set sraping config from remote');
-      console.log(error);
+      window.electron.log.error(
+        'not able to set sraping config from remote',
+        error,
+      );
       sendEvent(null, 'failed to fetch remote config');
     }
   };

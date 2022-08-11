@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { GetHtmlFunction, GetHtmlLazyFunction } from 'renderer/providers/types';
 import { SearchProcedureConfig, YtScrapingConfig } from '..';
 import { scrapeVideoSearch } from '../scrapers';

@@ -3,7 +3,7 @@
 import { parseVideoNoJs } from '@algorithmwatch/harke';
 import _ from 'lodash';
 import { addLookups, getLookups } from 'renderer/lib/db';
-import { currentDelay } from 'renderer/providers/info';
+import { currentDelay } from 'renderer/lib/delay';
 import { submitConfirmForm } from './actions/confirm-cookies';
 
 async function lookupOrScrapeVideos(

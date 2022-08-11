@@ -7,7 +7,6 @@ import ContentWrapper from 'renderer/providers/youtube/components/ContentWrapper
 import FooterNav, {
   FooterNavItem,
 } from 'renderer/providers/youtube/components/FooterNav';
-import routes from '../lib/routes';
 
 export default function OnboardingPage1(): JSX.Element {
   const [_showLoginWindow, setShowLoginWindow] = useState(false);
@@ -88,7 +87,7 @@ export default function OnboardingPage1(): JSX.Element {
                     demoData: campaign.config.demoData[0],
                   });
                   sendEvent(campaign, 'clicked use demo data');
-                  hist.push(routes.ONBOARDING_2.path);
+                  hist.push('/yt/onboarding2');
                 }}
               >
                 Demo starten

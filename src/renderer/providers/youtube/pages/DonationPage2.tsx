@@ -42,7 +42,6 @@ export default function DonationPage2(): JSX.Element {
 
   useEffect(() => {
     const theFun = async () => {
-      console.log(sessionId);
       if (sessionId === null) return;
       const newResult = await getScrapingResultsBySession(sessionId);
       setResults(newResult);
