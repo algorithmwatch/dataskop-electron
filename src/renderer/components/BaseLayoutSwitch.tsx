@@ -1,10 +1,14 @@
-import { useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useNavigation, useScraping } from 'renderer/contexts';
 import YoutubeBase from '../providers/youtube/components/BaseLayout';
-import Base from './BaseLayout';
+import BaseLayout from './BaseLayout';
 
-export default function BaseLayoutSwitch({ children }): JSX.Element {
+export default function BaseLayoutSwitch({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element {
   const {
     state: { campaign },
   } = useScraping();
@@ -21,8 +25,8 @@ export default function BaseLayoutSwitch({ children }): JSX.Element {
     }
   }, [pathname]);
 
-  if (campaign?.config.provider == 'youtube')
+  if (campaign?.config.provider === 'youtube')
     return <YoutubeBase>{children}</YoutubeBase>;
 
-  return <Base>{children}</Base>;
+  return <BaseLayout>{children}</BaseLayout>;
 }
