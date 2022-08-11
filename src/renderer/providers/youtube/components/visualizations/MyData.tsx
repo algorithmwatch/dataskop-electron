@@ -11,8 +11,8 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 import React, { useMemo } from 'react';
+import { useMeasure } from 'react-use';
 import { FixedSizeList as List } from 'react-window';
-import useDimensions from '../../../../components/hooks/useDimensions';
 import Button from '../Button';
 
 const invokeExport = async (data: any) => {
@@ -30,7 +30,7 @@ const Row = ({ index, style, data }: any) => {
 };
 
 export default function MyData({ data }: any) {
-  const [containerRef, containerDimensions] = useDimensions();
+  const [containerRef, containerDimensions] = useMeasure();
   const listRef = React.createRef();
 
   const db = useMemo(() => {

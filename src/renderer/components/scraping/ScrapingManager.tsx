@@ -113,7 +113,7 @@ export default function ScrapingManager({
     return window.electron.ipcRenderer.invoke('scraping-remove-view');
   };
 
-  const cbSlugNav = 'scraping-navigation-happened';
+  const CALLBACK_NAV = 'scraping-navigation-happened';
 
   useEffect(() => {
     const checkIfLoggedOut = async () => {
@@ -163,7 +163,7 @@ export default function ScrapingManager({
   // start scraping when `isScrapingStarted` was set to true
   useEffect(() => {
     const startScraping = async () => {
-      console.info('start scraping', campaign.config);
+      window.electron.ipcRenderer.log.info('Start scraping', campaign.config);
 
       // create a uuid every time you hit start scraping
       const sId = uuidv4();
@@ -207,10 +207,10 @@ export default function ScrapingManager({
         });
 
         if (result === null || !result.success) {
-          console.info(
+          window.electron.ipcRenderer.log.info(
             'The scraping result was marked as unsuccessful. However, we continue.',
+            result,
           );
-          console.info(result);
           sendEvent(campaign, 'scraping error', result);
         }
 
@@ -244,8 +244,8 @@ export default function ScrapingManager({
       persist: provider.persistScrapingBrowser,
     });
 
-    await setNavigationCallback(cbSlugNav);
-    window.electron.ipcRenderer.on(cbSlugNav, checkLoginCb);
+    await setNavigationCallback(CALLBACK_NAV);
+    window.electron.ipcRenderer.on(CALLBACK_NAV, checkLoginCb);
 
     // manually check if a user is logged in to proceed immediately
     if (await checkLoginCb()) {
@@ -255,7 +255,7 @@ export default function ScrapingManager({
   };
 
   const cleanUpScraper = () => {
-    window.electron.ipcRenderer.removeListener(cbSlugNav, checkLoginCb);
+    window.electron.ipcRenderer.removeListener(CALLBACK_NAV, checkLoginCb);
     window.electron.ipcRenderer.invoke('scraping-remove-view');
   };
 

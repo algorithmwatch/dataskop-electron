@@ -6,7 +6,7 @@
 import { useScraping } from 'renderer/contexts';
 import ScrapingManager from './ScrapingManager';
 
-export default function ScapingAttached() {
+export default function ScrapingAttached() {
   const {
     state: { isAttached, disableInput, campaign },
   } = useScraping();

@@ -29,7 +29,10 @@ export const useData = (raw: Array<ScrapingResult>, lookups: LookupMap) => {
         const referenceDate = new Date(raw[0].scrapedAt);
         const history = slugHistory.map((d) => {
           const date = parseDate(d.watchedAt, referenceDate);
-          const watchTime = parseInt((d.duration * d.percWatched) / 100 / 1000);
+          const watchTime = parseInt(
+            (d.duration * d.percWatched) / 100 / 1000,
+            10,
+          );
           const detail = lookups[d.id]?.data;
           return { ...d, date, watchTime, ...detail };
         });
@@ -37,6 +40,7 @@ export const useData = (raw: Array<ScrapingResult>, lookups: LookupMap) => {
           ? parseInt(
               (history[0].date - history[history.length - 1].date) /
                 (1000 * 60 * 60 * 24),
+              10,
             )
           : 0;
         const mostWatchedCategoriesTime = rollups(
