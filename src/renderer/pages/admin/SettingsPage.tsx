@@ -2,22 +2,13 @@ import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { humanFileSize } from 'renderer/lib/utils/strings';
 import Button from 'renderer/providers/youtube/components/Button';
-import { useConfig, useScraping } from '../../contexts';
+import { useConfig } from '../../contexts';
 
 export default function SettingsPage(): JSX.Element {
-  const {
-    state: { logHtml },
-    dispatch,
-  } = useScraping();
-
   const {
     state: { platformUrl, userConfig },
     dispatch: dipatchConfig,
   } = useConfig();
-
-  const handleLogHtmlChange = (event: any) => {
-    dispatch({ type: 'set-log-html', logHtml: event.target.checked });
-  };
 
   const [exportOngoing, setExportOngoing] = useState(false);
   const [storage, setStorage] = useState<string>('calculating...');
@@ -99,19 +90,6 @@ export default function SettingsPage(): JSX.Element {
         >
           Check beta update
         </Button>
-      </div>
-      <div className="">
-        {/* <FormControlLabel
-          control={
-            <Checkbox
-              checked={logHtml}
-              onChange={handleLogHtmlChange}
-              name="checkedB"
-              color="primary"
-            />
-          }
-          label="Enable logging"
-        /> */}
       </div>
 
       <hr />

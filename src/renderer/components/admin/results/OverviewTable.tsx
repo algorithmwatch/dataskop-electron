@@ -8,7 +8,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import dayjs from 'dayjs';
 import { useHistory } from 'react-router';
-import routes from '../../../routes';
 
 const useStyles = makeStyles({
   table: {
@@ -38,14 +37,7 @@ export default function OverviewTable({ rows }: { rows: any }) {
             <TableRow
               className="cursor-pointer"
               key={row.sessionId}
-              onClick={() =>
-                history.push(
-                  routes.ADMIN_RESULTS_DETAILS.path.replace(
-                    ':sessionId',
-                    row.sessionId,
-                  ),
-                )
-              }
+              onClick={() => history.push(`/admin/results/${row.sessionId}`)}
             >
               <TableCell component="th" scope="row">
                 {row.sessionId}

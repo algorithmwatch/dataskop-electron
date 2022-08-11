@@ -5,6 +5,7 @@ module.exports = {
     'import/no-extraneous-dependencies': 'off',
     // not working well with TypeScript
     'react/require-default-props': 'off',
+    'react/no-unused-prop-types': 'off',
     // allow console for debugging
     'no-console': 'off',
     // not useful for iterative software development

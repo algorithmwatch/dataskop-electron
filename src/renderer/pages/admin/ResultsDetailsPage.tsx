@@ -6,7 +6,6 @@ import { useScraping } from '../../contexts';
 import { getLookups, getScrapingResultsBySession } from '../../lib/db';
 import Button from '../../providers/youtube/components/Button';
 import { filterLookupBySession } from '../../providers/youtube/lib/utils';
-import routes from '../../routes';
 
 export default function ResultsDetailsPage() {
   const { sessionId }: { sessionId: string } = useParams();
@@ -38,12 +37,7 @@ export default function ResultsDetailsPage() {
 
         <Button
           onClick={() =>
-            history.push(
-              routes.ADMIN_VISUALIZATION_ADVANCED.path.replace(
-                ':sessionId',
-                sessionId,
-              ),
-            )
+            history.push(`/admin/visualization/advanced/${sessionId}`)
           }
         >
           Show visualizations

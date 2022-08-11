@@ -38,7 +38,7 @@ export default function ScrapingManager({
   campaign: Campaign;
 }): JSX.Element {
   const {
-    state: { version, isDebug },
+    state: { userConfig },
     sendEvent,
   } = useConfig();
 
@@ -46,7 +46,6 @@ export default function ScrapingManager({
     state: {
       isScrapingPaused,
       isMuted,
-      logHtml,
       scrapingProgress,
       sessionId,
       isScrapingStarted,
@@ -172,10 +171,10 @@ export default function ScrapingManager({
       const gen = createScrapingGenerator(
         campaign.config,
         provider.deserializeConfigMapping,
-        makeGetHtml(logHtml),
+        makeGetHtml(userConfig.logHtml),
         getHtmlLazy,
         sId,
-        logHtml,
+        userConfig.logHtml,
       );
 
       dispatch({

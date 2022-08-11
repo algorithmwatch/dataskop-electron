@@ -13,9 +13,9 @@ export default function AdvancedMenu({
 
   const history = useHistory();
 
-  function handleClick(event: { currentTarget: any }) {
+  const handleClick = (event: { currentTarget: any }) => {
     setAnchorEl(event.currentTarget);
-  }
+  };
 
   const handleClose = () => {
     setAnchorEl(null);

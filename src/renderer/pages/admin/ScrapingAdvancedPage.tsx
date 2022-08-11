@@ -12,7 +12,6 @@ import {
   activateWatchHistory,
   deactivateWatchHistory,
 } from '../../providers/youtube/lib/actions/manage-watch-history';
-import routes from '../../routes';
 
 export default function AdvancedScrapingPage(): JSX.Element {
   const {
@@ -48,16 +47,7 @@ export default function AdvancedScrapingPage(): JSX.Element {
 
         <ScrapingControls />
         {sessionId !== null && (
-          <Button
-            onClick={() =>
-              history.push(
-                routes.ADMIN_RESULTS_DETAILS.path.replace(
-                  ':sessionId',
-                  sessionId,
-                ),
-              )
-            }
-          >
+          <Button onClick={() => history.push(`/admin/results/${sessionId}`)}>
             go to result
           </Button>
         )}

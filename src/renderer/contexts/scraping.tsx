@@ -52,7 +52,6 @@ type Action =
       sessionId: string | null;
       stepGenerator: AsyncGenerator | null;
     }
-  | { type: 'set-log-html'; logHtml: boolean }
   | { type: 'set-disable-input'; disableInput: boolean }
   | { type: 'set-demo-mode'; demoMode: boolean; demoData: DemoData | null }
   | {
@@ -79,8 +78,6 @@ type State = {
   fixedWindow: boolean;
   visibleWindow: boolean;
   bounds: Bounds;
-  // store scraped HTML in log file (for debugging)
-  logHtml: boolean;
   disableInput: boolean;
   demoMode: boolean;
   demoData: DemoData | null;
@@ -114,7 +111,6 @@ const initialState: State = {
   fixedWindow: false,
   visibleWindow: false,
   bounds: { width: 100, height: 100, x: 100, y: 100 },
-  logHtml: false,
   disableInput: false,
   demoMode: false,
   demoData: null,
@@ -232,10 +228,6 @@ const scrapingReducer = (state: State, action: Action): State => {
         ...initialState,
         ..._.pick(state, ['sessionid', 'campaign', 'isAttached', 'bounds']),
       };
-    }
-
-    case 'set-log-html': {
-      return { ...state, logHtml: action.logHtml };
     }
 
     case 'set-disable-input': {
