@@ -48,11 +48,11 @@ export default async function registerDbHandlers() {
     return dataStore.get('data');
   });
 
-  addMainHandler('db-set-config', (_e, object) => {
+  addMainHandler('db-set-config', (_e: any, object: any) => {
     return configStore.set(object);
   });
 
-  addMainHandler('db-get-config', (_e, key = null) => {
+  addMainHandler('db-get-config', (_e: any, key = null) => {
     if (key == null) return configStore.store;
     return configStore.get(key);
   });

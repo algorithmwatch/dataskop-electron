@@ -107,6 +107,7 @@ const installExtensions = async () => {
 
 const handleTrayClick = (name) => {
   if (mainWindow == null) {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     createWindow();
   } else {
     mainWindow.focus();
@@ -192,7 +193,7 @@ const createWindow = async (monitoring = false) => {
   in the state of the renderer process. So we have to communicate back and forth.
   */
 
-  mainWindow.on('close', function (e) {
+  mainWindow.on('close', (e) => {
     mainWindow?.webContents.send('close-action');
     e.preventDefault();
   });
@@ -212,6 +213,7 @@ const createWindow = async (monitoring = false) => {
 
   // Wait a second until checkin for new update to let the app initialize.
   setTimeout(() => {
+    // eslint-disable-next-line no-new
     new AppUpdater();
   }, 1000);
 
@@ -246,7 +248,7 @@ ipcMain.handle('close-main-window', (_e, isCurrentlyScraping: boolean) => {
       message:
         'Willst du DataSkop wirklich beenden? Der Scraping-Vorgang läuft noch.',
     });
-    if (choice == 1) {
+    if (choice === 1) {
       return;
     }
   }

@@ -21,7 +21,10 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
   addMainHandler(
     'scraping-init-view',
-    (_event, { muted = true, allowInput = true, persist = false }) => {
+    (
+      _eventInit: any,
+      { muted = true, allowInput = true, persist = false }: any,
+    ) => {
       log.debug(
         'called scraping-init-view',
         scrapingView == null,
@@ -86,7 +89,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       // Download items to user data directory
       newView.webContents.session.on(
         'will-download',
-        (event, item, webContents) => {
+        (_eventDownload, item) => {
           // Set the save path, making Electron not to prompt a save dialog.
 
           const filePath = path.join(
@@ -99,7 +102,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
           mainWindow.webContents.send('scraping-download-started');
 
-          item.on('updated', (event, state) => {
+          item.on('updated', (_event, state) => {
             if (state === 'interrupted') {
               log.info('Download is interrupted but can be resumed');
             } else if (state === 'progressing') {
@@ -117,7 +120,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
           let filePathExtracted = '';
 
-          item.once('done', async (event, state) => {
+          item.once('done', async (_event, state) => {
             if (state === 'completed') {
               log.info('Download successfully');
 
@@ -150,7 +153,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
             }
             mainWindow.webContents.send(
               'scraping-download-done',
-              state == 'completed',
+              state === 'completed',
               filePathExtracted,
             );
           });
@@ -169,7 +172,11 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
   addMainHandler(
     'scraping-load-url',
-    async (_event, url: string, { withHtml = false, clear = false }) => {
+    async (
+      _event: any,
+      url: string,
+      { withHtml = false, clear = false }: any,
+    ) => {
       const view = scrapingView;
 
       if (view == null) {
@@ -195,9 +202,9 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
       let userAgent = 'Mozilla/5.0';
       if (
-        process.platform == 'darwin' ||
-        process.platform == 'win32' ||
-        process.platform == 'linux'
+        process.platform === 'darwin' ||
+        process.platform === 'win32' ||
+        process.platform === 'linux'
       )
         userAgent = {
           darwin:
@@ -265,7 +272,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
   addMainHandler(
     'scraping-navigation-cb',
-    async (event, cbSlug, remove = false) => {
+    async (_event: any, cbSlug: string, remove = false) => {
       const view = scrapingView;
 
       // TODO: find a better event?
@@ -282,7 +289,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     },
   );
 
-  const _getCurrentHtml = async () => {
+  const getCurrentHtml = async () => {
     const html = await scrapingView?.webContents.executeJavaScript(
       'document.documentElement.outerHTML',
     );
@@ -291,7 +298,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     return { html, hash };
   };
 
-  addMainHandler('scraping-get-current-html', _getCurrentHtml);
+  addMainHandler('scraping-get-current-html', getCurrentHtml);
 
   addMainHandler('scraping-scroll-down', async () => {
     await scrapingView?.webContents.executeJavaScript(
@@ -299,13 +306,11 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     );
   });
 
-  addMainHandler('scraping-set-muted', async (_event, muted: boolean) => {
+  addMainHandler('scraping-set-muted', async (_event: any, muted: boolean) => {
     await scrapingView?.webContents.setAudioMuted(muted);
   });
 
   addMainHandler('scraping-remove-view', async () => {
-    console;
-
     if (scrapingView === null) return;
 
     try {
@@ -327,38 +332,48 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     scrapingView = null;
   });
 
-  addMainHandler('scraping-set-bounds', async (_event, bounds) => {
-    scrapingView?.setBounds(bounds);
-  });
+  addMainHandler(
+    'scraping-set-bounds',
+    async (_event: any, bounds: Electron.Rectangle) => {
+      scrapingView?.setBounds(bounds);
+    },
+  );
 
-  addMainHandler('scraping-click-element', async (_event, selector) => {
-    await scrapingView?.webContents.executeJavaScript(
-      `document.querySelector("${selector}").click()`,
-    );
-  });
+  addMainHandler(
+    'scraping-click-element',
+    async (_event: any, selector: any) => {
+      await scrapingView?.webContents.executeJavaScript(
+        `document.querySelector("${selector}").click()`,
+      );
+    },
+  );
 
-  addMainHandler('scraping-submit-form', async (_event, selector) => {
+  addMainHandler('scraping-submit-form', async (_event: any, selector: any) => {
     await scrapingView?.webContents.executeJavaScript(
       `document.querySelector("${selector}").submit()`,
     );
   });
 
-  addMainHandler('scraping-element-exists', async (_event, selector) => {
-    return scrapingView?.webContents.executeJavaScript(
-      `document.querySelector("${selector}") !== null`,
-    );
-  });
+  addMainHandler(
+    'scraping-element-exists',
+    async (_event: any, selector: any) => {
+      return scrapingView?.webContents.executeJavaScript(
+        `document.querySelector("${selector}") !== null`,
+      );
+    },
+  );
 
-  addMainHandler('scraping-log-html', async (_event, url) => {
-    const { html, hash } = await _getCurrentHtml();
+  addMainHandler('scraping-log-html', async (_event: any, url: string) => {
+    const { html, hash } = await getCurrentHtml();
 
     // macOS: ~/Library/Application\ Support/Electron/html
     const userFolder = app.getPath('userData');
+    const userFolderHtml = path.join(userFolder, 'html');
 
-    !fs.existsSync(`${userFolder}/html`) && fs.mkdirSync(`${userFolder}/html`);
+    if (!fs.existsSync(userFolderHtml)) fs.mkdirSync(userFolderHtml);
 
     const fn = `${getNowString()}-${stripNonAscii(url)}-${hash}.html`;
-    fs.writeFileSync(`${userFolder}/html/${fn}`, html);
+    fs.writeFileSync(path.join(userFolderHtml, fn), html);
     return { html, hash };
   });
 }

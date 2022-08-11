@@ -9,7 +9,7 @@ import { addMainHandler } from './utils';
 let backgroundScrapingWindow: null | BrowserWindow = null;
 
 export default function registerBackgroundScrapingHandlers() {
-  addMainHandler('scraping-background-init', (_event) => {
+  addMainHandler('scraping-background-init', () => {
     backgroundScrapingWindow = new BrowserWindow({
       show: false,
       width: 1280,
@@ -34,14 +34,14 @@ export default function registerBackgroundScrapingHandlers() {
 
   addMainHandler(
     'scraping-background-submit-form',
-    async (_event, selector) => {
+    async (_event: any, selector: any) => {
       await backgroundScrapingWindow?.webContents.executeJavaScript(
         `document.querySelector("${selector}").submit()`,
       );
     },
   );
 
-  addMainHandler('scraping-background-close', async (_event) => {
+  addMainHandler('scraping-background-close', async () => {
     return backgroundScrapingWindow?.close();
   });
 }

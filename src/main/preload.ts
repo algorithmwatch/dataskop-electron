@@ -83,10 +83,10 @@ const validremoveAllChannels = [
 contextBridge.exposeInMainWorld('electron', {
   log: log.functions,
   ipcRenderer: {
-    on(channel, func) {
+    on(channel: string, func: (arg0: any) => void) {
       if (validOnChannels.includes(channel)) {
         // Deliberately strip event as it includes `sender`
-        ipcRenderer.on(channel, (event, ...args) => func(...args));
+        ipcRenderer.on(channel, (_event, ...args) => func(...args));
       } else {
         log.warn(
           'The channel is not included in the list of valid options: ',
@@ -94,7 +94,7 @@ contextBridge.exposeInMainWorld('electron', {
         );
       }
     },
-    invoke: (channel, ...args) => {
+    invoke: (channel: string, ...args: any) => {
       if (validInvokeChannels.includes(channel)) {
         return ipcRenderer.invoke(channel, ...args);
       }
@@ -102,8 +102,9 @@ contextBridge.exposeInMainWorld('electron', {
         'The channel is not included in the list of valid options: ',
         channel,
       );
+      return null;
     },
-    removeListener: (channel, ...args) => {
+    removeListener: (channel: string, ...args: any) => {
       if (validOnChannels.includes(channel)) {
         return ipcRenderer.removeListener(channel, ...args);
       }
@@ -111,8 +112,9 @@ contextBridge.exposeInMainWorld('electron', {
         'The channel is not included in the list of valid options: ',
         channel,
       );
+      return null;
     },
-    removeAllListeners: (channel, ...args) => {
+    removeAllListeners: (channel: string, ...args: any) => {
       if (validremoveAllChannels.includes(channel)) {
         return ipcRenderer.removeAllListeners(channel, ...args);
       }
@@ -120,6 +122,7 @@ contextBridge.exposeInMainWorld('electron', {
         'The channel is not included in the list of valid options: ',
         channel,
       );
+      return null;
     },
   },
 });

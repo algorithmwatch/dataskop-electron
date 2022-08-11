@@ -26,37 +26,56 @@ const dirSize = async (directory: string) => {
 };
 
 export default function registerExportHandlers(mainWindow: BrowserWindow) {
-  addMainHandler('results-import', async (event) => {
-    const { canceled, filePaths } = await dialog.showOpenDialog({
-      properties: ['openFile', 'multiSelections'],
-      filters: [{ name: 'JSON', extensions: ['json'] }],
-    });
-    if (canceled) return;
+  addMainHandler(
+    'results-import',
+    async (event: {
+      sender: { send: (arg0: string, arg1: string) => void };
+    }) => {
+      const { canceled, filePaths } = await dialog.showOpenDialog({
+        properties: ['openFile', 'multiSelections'],
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+      });
+      if (canceled) return;
 
-    filePaths.forEach(async (x) => {
-      const data = await fs.promises.readFile(x, 'utf8');
-      event.sender.send('results-import-data', data);
-    });
-  });
+      filePaths.forEach(async (x) => {
+        const data = await fs.promises.readFile(x, 'utf8');
+        event.sender.send('results-import-data', data);
+      });
+    },
+  );
 
-  addMainHandler('results-export', async (_event, data, filename) => {
-    if (mainWindow === null) return;
-    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
-      defaultPath: filename,
-    });
-    if (canceled || !filePath) return;
-    fs.writeFileSync(filePath, data);
-  });
+  addMainHandler(
+    'results-export',
+    async (
+      _event: any,
+      data: string | NodeJS.ArrayBufferView,
+      filename: any,
+    ) => {
+      if (mainWindow === null) return;
+      const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+        defaultPath: filename,
+      });
+      if (canceled || !filePath) return;
+      fs.writeFileSync(filePath, data);
+    },
+  );
 
-  addMainHandler('results-save-screenshot', async (_event, rect, filename) => {
-    if (mainWindow === null) return;
-    const nativeImage = await mainWindow.webContents.capturePage(rect);
-    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
-      defaultPath: filename,
-    });
-    if (canceled || !filePath) return;
-    fs.writeFileSync(filePath, nativeImage.toPNG());
-  });
+  addMainHandler(
+    'results-save-screenshot',
+    async (
+      _event: any,
+      rect: Electron.Rectangle | undefined,
+      filename: any,
+    ) => {
+      if (mainWindow === null) return;
+      const nativeImage = await mainWindow.webContents.capturePage(rect);
+      const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+        defaultPath: filename,
+      });
+      if (canceled || !filePath) return;
+      fs.writeFileSync(filePath, nativeImage.toPNG());
+    },
+  );
 
   addMainHandler('export-debug-archive', async () => {
     const filename = `dataskop-debug-${getNowString()}.zip`;
@@ -74,12 +93,12 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
           zlib: { level: 6 },
         });
 
-        output.on('close', function () {
+        output.on('close', () => {
           log.info('Done creating the zip file for the export.');
           resolve();
         });
 
-        archive.on('warning', function (err) {
+        archive.on('warning', (err) => {
           if (err.code === 'ENOENT') {
             // log warning
           } else {
@@ -88,7 +107,7 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
           }
         });
 
-        archive.on('error', function (err) {
+        archive.on('error', (err) => {
           reject(err);
         });
 
@@ -101,7 +120,7 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
 
         archive.finalize();
       });
-    return makeArchive();
+    await makeArchive();
   });
 
   addMainHandler('export-debug-size', async () => {

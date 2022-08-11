@@ -289,7 +289,7 @@ class MenuBuilder {
   }
 }
 
-export const buildMenu = (mainWindow) => {
+export const buildMenu = (mainWindow: BrowserWindow) => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 };
