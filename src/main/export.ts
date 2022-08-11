@@ -5,18 +5,17 @@ import fs from 'fs';
 import { readdir, stat } from 'fs/promises';
 import path from 'path';
 import { getNowString } from '../renderer/lib/utils/time';
-import { getDbLocation } from './db';
+import { dbFolder } from './db';
 import { addMainHandler } from './utils';
 
-const getLogDir = () => {
-  return path.dirname(log.default.transports.file.getFile().path);
-};
-
-const getHtmlLogDir = () => {
-  return app.getPath('userData') + '/html';
-};
+const logDir = path.dirname(log.default.transports.file.getFile().path);
+const htmlDir = path.join(app.getPath('userData'), 'html');
 
 const dirSize = async (directory: string) => {
+  if (!fs.existsSync(directory)) {
+    return 0;
+  }
+
   const files = await readdir(directory);
   const stats = files.map((file) => stat(path.join(directory, file)));
 
@@ -76,7 +75,7 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
         });
 
         output.on('close', function () {
-          console.log('Done creating the zip file for the export.');
+          log.info('Done creating the zip file for the export.');
           resolve();
         });
 
@@ -94,10 +93,10 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
         });
 
         archive.pipe(output);
-        archive.directory(getLogDir(), 'logs');
-        archive.file(getDbLocation(), { name: 'db.json' });
+        archive.directory(logDir, 'logs');
+        archive.directory(dbFolder, 'databases');
 
-        const htmlLogDir = getHtmlLogDir();
+        const htmlLogDir = htmlDir;
         if (fs.existsSync(htmlLogDir)) archive.directory(htmlLogDir, 'html');
 
         archive.finalize();
@@ -106,11 +105,11 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
   });
 
   addMainHandler('export-debug-size', async () => {
-    return Promise.all([getHtmlLogDir(), getLogDir()].map(dirSize));
+    return Promise.all([htmlDir, logDir].map(dirSize));
   });
 
   addMainHandler('export-debug-clean', async () => {
-    return [getHtmlLogDir(), getLogDir()].map((dir) =>
+    return [htmlDir, logDir].map((dir) =>
       fs.readdirSync(dir).forEach((f) => fs.rmSync(`${dir}/${f}`)),
     );
   });

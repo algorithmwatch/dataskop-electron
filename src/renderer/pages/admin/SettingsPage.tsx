@@ -1,7 +1,7 @@
-import { Button, Checkbox, FormControlLabel } from '@material-ui/core';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { humanFileSize } from 'renderer/lib/utils/strings';
+import Button from 'renderer/providers/youtube/components/Button';
 import { useConfig, useScraping } from '../../contexts';
 
 export default function SettingsPage(): JSX.Element {
@@ -11,7 +11,8 @@ export default function SettingsPage(): JSX.Element {
   } = useScraping();
 
   const {
-    state: { platformUrl },
+    state: { platformUrl, userConfig },
+    dispatch: dipatchConfig,
   } = useConfig();
 
   const handleLogHtmlChange = (event: any) => {
@@ -32,12 +33,66 @@ export default function SettingsPage(): JSX.Element {
 
   return (
     <div className="m-10">
-      <h1>Settings</h1>
-      <div>Platform url: {platformUrl}</div>
+      <h1 className="text-5xl">Settings</h1>
+
+      {userConfig && (
+        <div className="grid grid-cols-4 gap-4">
+          <div className="m-5">
+            <div>Start on login: {userConfig.openAtLogin ? 'yes' : 'no'}</div>
+            <Button
+              onClick={() =>
+                dipatchConfig({
+                  type: 'set-user-config',
+                  newValues: {
+                    openAtLogin: !userConfig.openAtLogin,
+                  },
+                })
+              }
+            >
+              Toggle
+            </Button>
+          </div>
+          <div className="m-5">
+            <div>Debug logging: {userConfig.debugLogging ? 'yes' : 'no'}</div>
+            <Button
+              onClick={() =>
+                dipatchConfig({
+                  type: 'set-user-config',
+                  newValues: {
+                    debugLogging: !userConfig.debugLogging,
+                  },
+                })
+              }
+            >
+              Toggle
+            </Button>
+          </div>
+          <div className="m-5">
+            <div>HTML logging: {userConfig.htmlLogging ? 'yes' : 'no'}</div>
+            <Button
+              onClick={() =>
+                dipatchConfig({
+                  type: 'set-user-config',
+                  newValues: {
+                    htmlLogging: !userConfig.htmlLogging,
+                  },
+                })
+              }
+            >
+              Toggle
+            </Button>
+          </div>
+          <div className="m-5">
+            <div>Monitoring: {userConfig.monitoring ? 'yes' : 'no'}</div>
+          </div>
+        </div>
+      )}
+
+      <hr />
+
+      <div className="pt-10">Platform url: {platformUrl}</div>
       <div className="pt-10 pb-10">
         <Button
-          variant="contained"
-          color="primary"
           onClick={() =>
             window.electron.ipcRenderer.invoke('update-check-beta')
           }
@@ -46,7 +101,7 @@ export default function SettingsPage(): JSX.Element {
         </Button>
       </div>
       <div className="">
-        <FormControlLabel
+        {/* <FormControlLabel
           control={
             <Checkbox
               checked={logHtml}
@@ -56,13 +111,14 @@ export default function SettingsPage(): JSX.Element {
             />
           }
           label="Enable logging"
-        />
+        /> */}
       </div>
+
+      <hr />
+
       <div className="pt-10 pb-10">
         <Button
           disabled={exportOngoing}
-          variant="contained"
-          color="primary"
           onClick={async () => {
             setExportOngoing(true);
             await window.electron.ipcRenderer.invoke('export-debug-archive');
@@ -80,8 +136,6 @@ export default function SettingsPage(): JSX.Element {
         DANGER!!!
         <div className="pt-10 pb-10">
           <Button
-            variant="contained"
-            color="primary"
             onClick={() => {
               window.electron.ipcRenderer.invoke('export-debug-clean');
             }}

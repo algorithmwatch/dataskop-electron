@@ -29,9 +29,10 @@ import 'regenerator-runtime/runtime';
 import registerBackgroundScrapingHandlers from './background-scraping';
 import registerDbHandlers from './db';
 import registerExportHandlers from './export';
-import MenuBuilder from './menu';
+import { buildMenu } from './menu';
 import registerYoutubeHanderls from './providers/youtube';
 import registerScrapingHandlers from './scraping';
+import { buildTray } from './tray';
 import { resolveHtmlPath } from './utils';
 
 // read .env files for development
@@ -46,7 +47,9 @@ if (process.env.SENTRY_DSN) {
   });
 }
 
-export default class AppUpdater {
+let mainWindow: BrowserWindow | null = null;
+
+class AppUpdater {
   constructor() {
     log.transports.file.level = DEBUG ? 'debug' : 'info';
 
@@ -59,7 +62,26 @@ export default class AppUpdater {
   }
 }
 
-let mainWindow: BrowserWindow | null = null;
+// send update-related events to renderer
+autoUpdater.on('update-available', () => {
+  mainWindow?.webContents.send('update-available');
+});
+autoUpdater.on('update-downloaded', () => {
+  mainWindow?.webContents.send('update-downloaded');
+});
+autoUpdater.on('error', async (_event, error) => {
+  mainWindow?.webContents.send('update-error', error);
+});
+
+// handle update-related events from renderer
+ipcMain.handle('update-check-beta', () => {
+  autoUpdater.channel = 'beta';
+  return autoUpdater.checkForUpdatesAndNotify();
+});
+ipcMain.handle('update-restart-app', () => {
+  log.debug('called handle update-restart-app');
+  autoUpdater.quitAndInstall();
+});
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -80,10 +102,18 @@ const installExtensions = async () => {
       extensions.map((name) => installer[name]),
       forceDownload,
     )
-    .catch(console.log);
+    .catch(log.error);
 };
 
-const createWindow = async () => {
+const handleTrayClick = (name) => {
+  if (mainWindow == null) {
+    createWindow();
+  } else {
+    mainWindow.focus();
+  }
+};
+
+const createWindow = async (monitoring = false) => {
   log.debug('called createWindow', mainWindow == null);
 
   if (DEBUG) {
@@ -142,7 +172,7 @@ const createWindow = async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
-    if (process.env.START_MINIMIZED) {
+    if (process.env.START_MINIMIZED || monitoring) {
       mainWindow.minimize();
     } else {
       const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -153,7 +183,6 @@ const createWindow = async () => {
         y: Math.floor(height * 0.05),
       });
       mainWindow.show();
-      mainWindow.focus();
     }
   });
 
@@ -172,8 +201,8 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+  buildMenu(mainWindow);
+  buildTray(handleTrayClick, getAssetPath('icon.png'));
 
   // Open urls in the user's browser
   mainWindow.webContents.on('new-window', (event, url) => {
@@ -181,33 +210,21 @@ const createWindow = async () => {
     shell.openExternal(url);
   });
 
-  // The follwing snipet was added before electron-react-boilterplate v4. So it
-  // may be no longer needed and actually causes harm.
-  // // https://stackoverflow.com/a/63174933/4028896
-  // mainWindow.webContents.on('did-frame-finish-load', async () => {
-  //   if (DEBUG) {
-  //     await installExtensions();
-  //   }
-  // });
-
-  // not sure if timeout is actually required
+  // Wait a second until checkin for new update to let the app initialize.
   setTimeout(() => {
-    // Remove this if your app does not use auto updates
-    // eslint-disable-next-line
     new AppUpdater();
   }, 1000);
 
-  // allow scraping to happend in brackground
+  // Allow scraping to happend in brackground
   powerSaveBlocker.start('prevent-app-suspension');
 
-  // register handlers
+  // Register general handlers
   registerScrapingHandlers(mainWindow);
   registerExportHandlers(mainWindow);
-
-  // window not needed
   registerBackgroundScrapingHandlers();
   registerDbHandlers();
 
+  // Register provider specific handlers
   registerYoutubeHanderls(mainWindow);
 };
 
@@ -244,8 +261,12 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.whenReady().then(createWindow).catch(console.log);
+app
+  .whenReady()
+  .then(() => createWindow())
+  .catch(log.error);
 
+// macOS only
 app.on('activate', () => {
   log.debug('called activate', mainWindow == null);
 
@@ -254,46 +275,15 @@ app.on('activate', () => {
   if (mainWindow === null) createWindow();
 });
 
-// app.on('before-quit', (event) => {
-//   // Not 100% sure if this is needed. There have been some issues with
-//   closeDb();
-// });
-
-// send update-related events to renderer
-
-autoUpdater.on('update-available', () => {
-  mainWindow?.webContents.send('update-available');
-});
-
-autoUpdater.on('update-downloaded', () => {
-  mainWindow?.webContents.send('update-downloaded');
-});
-
-autoUpdater.on('error', async (_event, error) => {
-  mainWindow?.webContents.send('update-error', error);
-});
-
-// handle update-related events from renderer
-
-ipcMain.handle('update-check-beta', () => {
-  autoUpdater.channel = 'beta';
-  return autoUpdater.checkForUpdatesAndNotify();
-});
-
-ipcMain.handle('update-restart-app', () => {
-  log.debug('called handle update-restart-app');
-  autoUpdater.quitAndInstall();
-});
-
-// expose certain information to the renderer
+// Expose certain information to the renderer
 
 ipcMain.handle('get-version-number', () => {
   return app.getVersion();
 });
 
 ipcMain.handle('get-env', () => {
-  // Expose configs done via .env to the renderer. The keys have to references as
-  // follows, don't try to optimize the code.
+  // Expose configs done via .env to the renderer. The keys have to explicitly
+  // specified as follows (right now).
   return {
     NODE_ENV: process.env.NODE_ENV,
     DEBUG_PROD: process.env.DEBUG_PROD,

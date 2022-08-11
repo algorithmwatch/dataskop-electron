@@ -11,7 +11,7 @@ interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   submenu?: DarwinMenuItemConstructorOptions[] | Menu;
 }
 
-export default class MenuBuilder {
+class MenuBuilder {
   mainWindow: BrowserWindow;
 
   constructor(mainWindow: BrowserWindow) {
@@ -288,3 +288,8 @@ export default class MenuBuilder {
     return templateDefault;
   }
 }
+
+export const buildMenu = (mainWindow) => {
+  const menuBuilder = new MenuBuilder(mainWindow);
+  menuBuilder.buildMenu();
+};

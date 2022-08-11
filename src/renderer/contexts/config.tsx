@@ -22,9 +22,11 @@ type Action =
       platformUrl: string;
       trackEvents: boolean;
       seriousProtection: string;
+      userConfig: any;
     }
   | { type: 'show-advanced-menu' }
-  | { type: 'set-debug'; isDebug: boolean };
+  | { type: 'set-debug'; isDebug: boolean }
+  | { type: 'set-user-config'; newValues: any };
 type Dispatch = (action: Action) => void;
 type State = {
   version: string;
@@ -34,6 +36,7 @@ type State = {
   platformUrl: string | null;
   trackEvents: boolean;
   seriousProtection: string | null;
+  userConfig: any;
 };
 type ConfigProviderProps = { children: React.ReactNode };
 
@@ -46,13 +49,7 @@ const configReducer = (state: State, action: Action): State => {
     case 'set-config': {
       return {
         ...state,
-        version: action.version,
-        isDebug: action.isDebug,
-        simpleBackendUrl: action.simpleBackendUrl,
-        platformUrl: action.platformUrl,
-        trackEvents: action.trackEvents,
-        seriousProtection: action.seriousProtection,
-        showAdvancedMenu: action.showAdvancedMenu,
+        ...action,
       };
     }
 
@@ -62,6 +59,15 @@ const configReducer = (state: State, action: Action): State => {
 
     case 'show-advanced-menu': {
       return { ...state, showAdvancedMenu: true };
+    }
+
+    case 'set-user-config': {
+      // sync changes back to disk
+      window.electron.ipcRenderer.invoke('db-set-config', action.newValues);
+      return {
+        ...state,
+        userConfig: { ...state.userConfig, ...action.newValues },
+      };
     }
 
     default: {
@@ -80,19 +86,24 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
     platformUrl: null,
     trackEvents: false,
     seriousProtection: null,
+    userConfig: null,
   });
 
   useEffect(() => {
-    const getVersionNumber = async () => {
+    (async () => {
       // in devopment, this returns the electron version instead of the app version.
       const version = await window.electron.ipcRenderer.invoke(
         'get-version-number',
       );
 
+      const userConfig = await window.electron.ipcRenderer.invoke(
+        'db-get-config',
+      );
+
       const env = await window.electron.ipcRenderer.invoke('get-env');
 
       if (!env) {
-        console.log('could not get ENV from main');
+        window.electron.log.error('Could not get ENV from main. Aborting.');
         return;
       }
 
@@ -119,9 +130,9 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
         trackEvents,
         seriousProtection,
         showAdvancedMenu,
+        userConfig,
       });
-    };
-    getVersionNumber();
+    })();
   }, []);
 
   // The `message` should be a simple string without any specific information.

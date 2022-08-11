@@ -5,31 +5,57 @@
  */
 
 import { app } from 'electron';
-import fs from 'fs';
+import Store from 'electron-store';
 import path from 'path';
+import { setOpenAtLogin } from './tray';
 import { addMainHandler } from './utils';
 
-export const getDbLocation = () => {
-  const userFolder = app.getPath('userData');
-  const file = path.join(userFolder, 'db.json');
-  return file;
-};
+const userFolder = app.getPath('userData');
+const dbFolder = path.join(userFolder, 'databases');
+
+const dataStore = new Store({
+  name: 'data',
+  cwd: dbFolder,
+  encryptionKey: 'DaTaSk0p',
+  defaults: { data: null },
+});
+
+const configStore = new Store({
+  name: 'config',
+  cwd: dbFolder,
+  encryptionKey: 'DaTaSk0p',
+  defaults: {
+    openAtLogin: true,
+    monitoring: null,
+    debugLogging: false,
+    htmlLogging: false,
+  },
+});
+
+// run once on init
+setOpenAtLogin(configStore.get('openAtLogin'));
+
+configStore.onDidChange('openAtLogin', (newValue) =>
+  setOpenAtLogin(!!newValue),
+);
 
 export default async function registerDbHandlers() {
-  const file = getDbLocation();
-
-  addMainHandler('db-write', (_e, data) => {
-    return fs.writeFileSync(file, JSON.stringify(data), 'utf-8');
+  addMainHandler('db-write', (_e: any, data: any) => {
+    dataStore.set('data', data);
   });
 
   addMainHandler('db-read', () => {
-    try {
-      return JSON.parse(fs.readFileSync(file, 'utf-8'));
-    } catch (e) {
-      if ((e as NodeJS.ErrnoException).code === 'ENOENT') {
-        return null;
-      }
-      throw e;
-    }
+    return dataStore.get('data');
+  });
+
+  addMainHandler('db-set-config', (_e, object) => {
+    return configStore.set(object);
+  });
+
+  addMainHandler('db-get-config', (_e, key = null) => {
+    if (key == null) return configStore.store;
+    return configStore.get(key);
   });
 }
+
+export { configStore, dbFolder };
