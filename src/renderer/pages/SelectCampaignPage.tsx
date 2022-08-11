@@ -114,7 +114,6 @@ export default function SelectCampaignPage(): JSX.Element {
           ))}
         </div>
       </div>
-      {/* <FooterNav items={footerNavItems} /> */}
     </>
   );
 }
