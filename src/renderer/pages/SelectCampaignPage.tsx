@@ -5,15 +5,11 @@
  * override it?
  * @module
  */
-import { faAngleRight } from '@fortawesome/pro-regular-svg-icons';
-import { useEffect, useState } from 'react';
-import { RouteComponentProps } from 'react-router';
+import { useEffect } from 'react';
+import { useHistory } from 'react-router';
 import { getActiveCampaigns } from 'renderer/lib/networking';
 import { localActiveCampaings, providerInfo } from 'renderer/providers/info';
 import { useConfig, useNavigation, useScraping } from '../contexts';
-import FooterNav, {
-  FooterNavItem,
-} from '../providers/youtube/components/FooterNav';
 
 export default function SelectCampaignPage(): JSX.Element {
   const {
@@ -27,8 +23,7 @@ export default function SelectCampaignPage(): JSX.Element {
   } = useConfig();
 
   const { dispatch: navDispath } = useNavigation();
-
-  const [chosenIndex, setChosenIndex] = useState(0);
+  const history = useHistory();
 
   const setActiveCampaign = async () => {
     if (platformUrl == null) return;
@@ -38,18 +33,18 @@ export default function SelectCampaignPage(): JSX.Element {
         await getActiveCampaigns(platformUrl, seriousProtection),
       );
 
-      const availableCampaigns = campaigns.filter(
+      const filteredCampaigns = campaigns.filter(
         (x) => x.config && x.config.provider,
       );
 
       // only use campaigns that have a valid provider configuration
       dispatch({
         type: 'set-available-campaigns',
-        availableCampaigns,
+        availableCampaigns: filteredCampaigns,
       });
 
       // if a featured campaign exists, skip over the campaign selection page
-      const featuredCampaigns = availableCampaigns.filter((x) => x.featured);
+      const featuredCampaigns = filteredCampaigns.filter((x) => x.featured);
       if (featuredCampaigns.length > 0) {
         dispatch({
           type: 'set-campaign',
@@ -77,62 +72,49 @@ export default function SelectCampaignPage(): JSX.Element {
     setActiveCampaign();
   }, [platformUrl, seriousProtection]);
 
-  const footerNavItems: FooterNavItem[] = [
-    {
-      label: 'Weiter',
-      endIcon: faAngleRight,
-      clickHandler(history: RouteComponentProps['history']) {
-        const campaign = availableCampaigns[chosenIndex];
+  const handleCampaignClick = (index: number) => {
+    const campaign = availableCampaigns[index];
 
-        // Important to push first new state and *then* dispatching the new campaigns.
-        // The base layout is updated when the campaign changes and this causes
-        // a re-render of this page.
-        history.push(
-          providerInfo[campaign.config.provider].navigation[
-            campaign.config.navigation
-          ].pages[0].path,
-        );
+    // Important to push first new state and *then* dispatching the new campaigns.
+    // The base layout is updated when the campaign changes and this causes
+    // a re-render of this page.
+    history.push(
+      providerInfo[campaign.config.provider].navigation[
+        campaign.config.navigation
+      ].pages[0].path,
+    );
 
-        dispatch({
-          type: 'set-campaign',
-          campaign,
-        });
+    dispatch({
+      type: 'set-campaign',
+      campaign,
+    });
 
-        navDispath({
-          type: 'set-navigation-by-provider',
-          provider: campaign.config.provider,
-          navSlug: campaign.config.navigation,
-        });
-      },
-    },
-  ];
+    navDispath({
+      type: 'set-navigation-by-provider',
+      provider: campaign.config.provider,
+      navSlug: campaign.config.navigation,
+    });
+  };
 
   return (
     <>
-      <div className="mx-auto flex flex-col h-full">
-        <div className="hl-4xl mb-6 text-center">
-          Wähle eine Untersuchung aus
-        </div>
-        <div className="text-center">
-          {availableCampaigns.map((x, i) => {
-            const border =
-              i === chosenIndex
-                ? 'border-solid border-4 border-yellow-700'
-                : 'border-solid border-4 border-yellow-300';
-            return (
-              <div
-                key={i}
-                className={`${border} p-5 mt-5 cursor-pointer`}
-                onClick={() => setChosenIndex(i)}
-              >
-                <div className="hl-xl">{x.title}</div>
-                <div>{x.description}</div>
-              </div>
-            );
-          })}
+      <div className="mx-auto flex flex-col h-full text-center">
+        <div className="hl-4xl mb-6">Wähle eine Untersuchung aus</div>
+        <div className="space-x-4">
+          {availableCampaigns.map((x, i) => (
+            <button
+              key={x.id}
+              type="button"
+              className="p-5 mt-5 border-solid border-4 border-yellow-700"
+              onClick={() => handleCampaignClick(i)}
+            >
+              <div className="hl-xl">{x.title}</div>
+              <div>{x.description}</div>
+            </button>
+          ))}
         </div>
       </div>
-      <FooterNav items={footerNavItems} />
+      {/* <FooterNav items={footerNavItems} /> */}
     </>
   );
 }
