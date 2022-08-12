@@ -1,4 +1,6 @@
-const ttDefault = {
+import { NavigationState } from 'renderer/contexts/types';
+
+const ttDefault: NavigationState = {
   pageIndex: 0,
   pages: [
     {

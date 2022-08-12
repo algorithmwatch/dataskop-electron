@@ -1,6 +1,6 @@
-// import ytRoutes from './routes';
+import { NavigationState } from 'renderer/contexts/types';
 
-const ytDefaultNav = {
+const ytDefaultNav: NavigationState = {
   pageIndex: 0,
   pages: [
     {
