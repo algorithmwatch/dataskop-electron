@@ -63,7 +63,7 @@ export default function ProviderLoginPage(): JSX.Element {
             </div>
             <Button
               onClick={() => {
-                window.electron.ipcRenderer.invoke('scraping-clear-storage');
+                window.electron.ipc.invoke('scraping-clear-storage');
                 // dispatch({ type: 'reset-scraping' });
               }}
             >

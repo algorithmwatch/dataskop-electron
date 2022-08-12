@@ -6,12 +6,12 @@ describe('App', () => {
   it('should render', () => {
     window.electron = {};
     window.electron.procEnv = '{}';
-    window.electron.ipcRenderer = {};
-    window.electron.ipcRenderer.invoke = () => console.log('mock invoke');
-    window.electron.ipcRenderer.on = () => console.log('mock on');
-    window.electron.ipcRenderer.removeAllListeners = () =>
+    window.electron.ipc = {};
+    window.electron.ipc.invoke = () => console.log('mock invoke');
+    window.electron.ipc.on = () => console.log('mock on');
+    window.electron.ipc.removeAllListeners = () =>
       console.log('mock removeAllListeners');
-    window.electron.ipcRenderer.removeListener = () =>
+    window.electron.ipc.removeListener = () =>
       console.log('mock removeListener');
     expect(render(<App />)).toBeTruthy();
   });

@@ -14,11 +14,7 @@ import Button from '../Button';
 
 const invokeExport = async (data) => {
   const filename = `dataskop-${dayjs().format('YYYY-MM-DD-HH-mm-s')}.json`;
-  window.electron.ipcRenderer.invoke(
-    'results-export',
-    JSON.stringify(data),
-    filename,
-  );
+  window.electron.ipc.invoke('results-export', JSON.stringify(data), filename);
 };
 
 export default function MyData({ data }) {

@@ -30,6 +30,8 @@ import {
 } from './ipc';
 import ScrapingWindow from './ScrapingWindow';
 
+const CALLBACK_NAV = 'scraping-navigation-happened';
+
 export default function ScrapingManager({
   disableInput = false,
   campaign,
@@ -110,10 +112,8 @@ export default function ScrapingManager({
     await goToUrl(provider.loginUrl, {
       clear: true,
     });
-    return window.electron.ipcRenderer.invoke('scraping-remove-view');
+    return window.electron.ipc.invoke('scraping-remove-view');
   };
-
-  const CALLBACK_NAV = 'scraping-navigation-happened';
 
   useEffect(() => {
     const checkIfLoggedOut = async () => {
@@ -163,7 +163,7 @@ export default function ScrapingManager({
   // start scraping when `isScrapingStarted` was set to true
   useEffect(() => {
     const startScraping = async () => {
-      window.electron.ipcRenderer.log.info('Start scraping', campaign.config);
+      window.electron.log.info('Start scraping', campaign.config);
 
       // create a uuid every time you hit start scraping
       const sId = uuidv4();
@@ -173,8 +173,11 @@ export default function ScrapingManager({
         provider.deserializeConfigMapping,
         makeGetHtml(userConfig.logHtml),
         getHtmlLazy,
-        sId,
-        userConfig.logHtml,
+        {
+          sessionId: sId,
+          logHtml: userConfig.logHtml,
+          monitoring: userConfig.monitoring,
+        },
       );
 
       dispatch({
@@ -207,7 +210,7 @@ export default function ScrapingManager({
         });
 
         if (result === null || !result.success) {
-          window.electron.ipcRenderer.log.info(
+          window.electron.log.info(
             'The scraping result was marked as unsuccessful. However, we continue.',
             result,
           );
@@ -235,17 +238,17 @@ export default function ScrapingManager({
     runScraperOnce();
   }, [scrapingProgress.value, sessionId, isScrapingPaused]);
 
-  // initialize & cleanup
+  // Initialize & clean up
 
   const initScraper = async (): Promise<string | null> => {
-    await window.electron.ipcRenderer.invoke('scraping-init-view', {
+    await window.electron.ipc.invoke('scraping-init-view', {
       muted: isMuted,
       allowInput: !disableInput,
       persist: provider.persistScrapingBrowser,
     });
 
     await setNavigationCallback(CALLBACK_NAV);
-    window.electron.ipcRenderer.on(CALLBACK_NAV, checkLoginCb);
+    window.electron.ipc.on(CALLBACK_NAV, checkLoginCb);
 
     // manually check if a user is logged in to proceed immediately
     if (await checkLoginCb()) {
@@ -255,8 +258,8 @@ export default function ScrapingManager({
   };
 
   const cleanUpScraper = () => {
-    window.electron.ipcRenderer.removeListener(CALLBACK_NAV, checkLoginCb);
-    window.electron.ipcRenderer.invoke('scraping-remove-view');
+    window.electron.ipc.removeListener(CALLBACK_NAV, checkLoginCb);
+    window.electron.ipc.invoke('scraping-remove-view');
   };
 
   useEffect(() => {
@@ -273,7 +276,7 @@ export default function ScrapingManager({
 
   useEffect(() => {
     const reloadScrapingView = async () => {
-      await window.electron.ipcRenderer.invoke('scraping-remove-view');
+      await window.electron.ipc.invoke('scraping-remove-view');
       await initScraper();
       setForceReload(forceReload + 1);
     };

@@ -38,11 +38,11 @@ const queue = new PQueue({ concurrency: 1 });
 const initDb = async () => {
   class CustomAsyncAdapter {
     async read() {
-      return window.electron.ipcRenderer.invoke('db-read');
+      return window.electron.ipc.invoke('db-read');
     }
 
     async write(data: any) {
-      return window.electron.ipcRenderer.invoke('db-write', data);
+      return window.electron.ipc.invoke('db-write', data);
     }
   }
 

@@ -17,7 +17,7 @@ export default function SettingsPage(): JSX.Element {
     (async () =>
       setStorage(
         humanFileSize(
-          _.sum(await window.electron.ipcRenderer.invoke('export-debug-size')),
+          _.sum(await window.electron.ipc.invoke('export-debug-size')),
         ),
       ))();
   }, []);
@@ -83,11 +83,7 @@ export default function SettingsPage(): JSX.Element {
 
       <div className="pt-10">Platform url: {platformUrl}</div>
       <div className="pt-10 pb-10">
-        <Button
-          onClick={() =>
-            window.electron.ipcRenderer.invoke('update-check-beta')
-          }
-        >
+        <Button onClick={() => window.electron.ipc.invoke('update-check-beta')}>
           Check beta update
         </Button>
       </div>
@@ -99,7 +95,7 @@ export default function SettingsPage(): JSX.Element {
           disabled={exportOngoing}
           onClick={async () => {
             setExportOngoing(true);
-            await window.electron.ipcRenderer.invoke('export-debug-archive');
+            await window.electron.ipc.invoke('export-debug-archive');
             setExportOngoing(false);
           }}
         >
@@ -115,7 +111,7 @@ export default function SettingsPage(): JSX.Element {
         <div className="pt-10 pb-10">
           <Button
             onClick={() => {
-              window.electron.ipcRenderer.invoke('export-debug-clean');
+              window.electron.ipc.invoke('export-debug-clean');
             }}
           >
             Remove debug files (logs, html)

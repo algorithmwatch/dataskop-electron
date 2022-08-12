@@ -6,14 +6,11 @@ import { GetHtmlFunction } from 'renderer/providers/types';
 import { getUniquePath } from 'renderer/vendor/cheerio-unique-selector';
 
 const clickElement = async (selector: string) => {
-  return window.electron.ipcRenderer.invoke('scraping-click-element', selector);
+  return window.electron.ipc.invoke('scraping-click-element', selector);
 };
 
 const elementExists = async (selector: string) => {
-  return window.electron.ipcRenderer.invoke(
-    'scraping-element-exists',
-    selector,
-  );
+  return window.electron.ipc.invoke('scraping-element-exists', selector);
 };
 
 const changeWatchHistoryUrl = 'https://www.youtube.com/feed/history';

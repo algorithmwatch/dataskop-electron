@@ -18,7 +18,7 @@ export default function ResultsDetailsPage() {
     )}.json`;
     const results = await getScrapingResultsBySession(sessionId);
     const lookups = filterLookupBySession(results, await getLookups());
-    window.electron.ipcRenderer.invoke(
+    window.electron.ipc.invoke(
       'results-export',
       JSON.stringify({ results, lookups }),
       filename,

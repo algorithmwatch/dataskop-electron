@@ -19,11 +19,7 @@ import { getVideos } from '../../providers/youtube/lib/utils';
 const invokeExport = async () => {
   const filename = `dataskop-${dayjs().format('YYYY-MM-DD-HH-mm-s')}.json`;
   const data = await getAllData();
-  window.electron.ipcRenderer.invoke(
-    'results-export',
-    JSON.stringify(data),
-    filename,
-  );
+  window.electron.ipc.invoke('results-export', JSON.stringify(data), filename);
 };
 
 const invokeImageExport = async (data: ScrapingResultSaved[]) => {
@@ -33,7 +29,7 @@ const invokeImageExport = async (data: ScrapingResultSaved[]) => {
       return x.fields.recommendedVideos.map(({ id }: { id: any }) => id);
     })
     .flat();
-  window.electron.ipcRenderer.invoke(
+  window.electron.ipc.invoke(
     'youtube-results-export-images',
     uniq(ytIds),
     filename,
@@ -44,8 +40,8 @@ const invokeImport = async (loadData: {
   (events: any, newRowsString: string): Promise<void>;
   (event: Electron.IpcRendererEvent, ...args: any[]): void;
 }) => {
-  window.electron.ipcRenderer.on('results-import-data', loadData);
-  window.electron.ipcRenderer.invoke('results-import');
+  window.electron.ipc.on('results-import-data', loadData);
+  window.electron.ipc.invoke('results-import');
 };
 
 export default function ResultsPage(): JSX.Element {

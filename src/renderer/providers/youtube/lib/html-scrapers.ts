@@ -22,15 +22,13 @@ async function lookupOrScrapeVideos(
     );
   }
   const getHtml = async () => {
-    await window.electron.ipcRenderer.invoke('scraping-background-init');
+    await window.electron.ipc.invoke('scraping-background-init');
     return () =>
-      window.electron.ipcRenderer.invoke(
-        'scraping-background-get-current-html',
-      );
+      window.electron.ipc.invoke('scraping-background-get-current-html');
   };
 
   await submitConfirmForm(getHtml, (sel) =>
-    window.electron.ipcRenderer.invoke('scraping-background-submit-form', sel),
+    window.electron.ipc.invoke('scraping-background-submit-form', sel),
   );
 
   // important to wait some secconds to set the responding cookie in the session
@@ -39,7 +37,7 @@ async function lookupOrScrapeVideos(
   // only fetch new videos that are not already stored
   const toFetch = _.uniq(videoIds.filter((x) => !readyIds.has(x)));
 
-  const fetched: any[] = await window.electron.ipcRenderer.invoke(
+  const fetched: any[] = await window.electron.ipc.invoke(
     'youtube-scraping-background-videos',
     toFetch,
   );
@@ -65,7 +63,7 @@ async function lookupOrScrapeVideos(
     );
   }
 
-  await window.electron.ipcRenderer.invoke('scraping-background-close');
+  await window.electron.ipc.invoke('scraping-background-close');
 
   return getLookups({ deleteOld: false, ids: videoIds });
 }

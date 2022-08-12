@@ -35,7 +35,7 @@ export default function ScrapingWindow({
   };
 
   useEffect(() => {
-    window.electron.ipcRenderer.invoke('scraping-set-muted', isMuted);
+    window.electron.ipc.invoke('scraping-set-muted', isMuted);
   }, [isMuted]);
 
   useEffect(() => {
@@ -45,10 +45,10 @@ export default function ScrapingWindow({
       b.width -= margin * 2;
       b.x += margin;
       b.y += margin;
-      window.electron.ipcRenderer.invoke('scraping-set-bounds', b);
+      window.electron.ipc.invoke('scraping-set-bounds', b);
     } else {
       const b = { ...bounds, width: 0, height: 0 };
-      window.electron.ipcRenderer.invoke('scraping-set-bounds', b);
+      window.electron.ipc.invoke('scraping-set-bounds', b);
     }
   }, [bounds, visibleWindow]);
 

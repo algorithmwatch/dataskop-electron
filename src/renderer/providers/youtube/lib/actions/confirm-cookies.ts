@@ -7,7 +7,7 @@ import { getUniquePath } from '../../../../vendor/cheerio-unique-selector';
 const rootUrl = 'https://www.youtube.com/';
 
 const submitFormScraping = (selector: string) => {
-  return window.electron.ipcRenderer.invoke('scraping-submit-form', selector);
+  return window.electron.ipc.invoke('scraping-submit-form', selector);
 };
 
 const onlySubmitConsentForm = async (html: string) => {
@@ -28,7 +28,7 @@ const onlySubmitConsentForm = async (html: string) => {
 };
 
 const confirmCockieForm = async () => {
-  const url = await window.electron.ipcRenderer.invoke('scraping-get-url');
+  const url = await window.electron.ipc.invoke('scraping-get-url');
 
   if (
     url !== null &&

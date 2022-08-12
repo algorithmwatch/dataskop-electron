@@ -176,7 +176,7 @@ const getReadyHtml = async (getCurrentHtml: GetCurrentHtml) => {
 const clickOnElement = (element: cheerio.Cheerio, $html: cheerio.Root) => {
   const path = getUniquePath(element, $html);
   window.electron.log.info(path);
-  return window.electron.ipcRenderer.invoke('scraping-click-element', path);
+  return window.electron.ipc.invoke('scraping-click-element', path);
 };
 
 export { parseUntilDone, getReadyHtml, clickOnElement };

@@ -285,9 +285,9 @@ const ScrapingProvider = ({ children }: ScrapingProviderProps) => {
   // Expose the status of the scraping to the main process to check wheter the
   // can safely be closed.
   useEffect(() => {
-    window.electron.ipcRenderer.removeAllListeners('close-action');
-    window.electron.ipcRenderer.on('close-action', () => {
-      window.electron.ipcRenderer.invoke(
+    window.electron.ipc.removeAllListeners('close-action');
+    window.electron.ipc.on('close-action', () => {
+      window.electron.ipc.invoke(
         'close-main-window',
         state.scrapingProgress.isActive,
       );

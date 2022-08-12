@@ -61,7 +61,7 @@ const configReducer = (state: State, action: Action): State => {
 
     case 'set-user-config': {
       // sync changes back to disk
-      window.electron.ipcRenderer.invoke('db-set-config', action.newValues);
+      window.electron.ipc.invoke('db-set-config', action.newValues);
       return {
         ...state,
         userConfig: { ...state.userConfig, ...action.newValues },
@@ -89,15 +89,11 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
   useEffect(() => {
     (async () => {
       // in devopment, this returns the electron version instead of the app version.
-      const version = await window.electron.ipcRenderer.invoke(
-        'get-version-number',
-      );
+      const version = await window.electron.ipc.invoke('get-version-number');
 
-      const userConfig = await window.electron.ipcRenderer.invoke(
-        'db-get-config',
-      );
+      const userConfig = await window.electron.ipc.invoke('db-get-config');
 
-      const env = await window.electron.ipcRenderer.invoke('get-env');
+      const env = await window.electron.ipc.invoke('get-env');
 
       if (!env) {
         window.electron.log.error('Could not get ENV from main. Aborting.');
