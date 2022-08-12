@@ -47,6 +47,7 @@ const exportChannels = [
   'export-debug-archive',
   'export-debug-size',
   'export-debug-clean',
+  'import-files',
 ];
 
 // db.ts

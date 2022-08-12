@@ -6,6 +6,7 @@ import { readdir, stat } from 'fs/promises';
 import path from 'path';
 import { getNowString } from '../renderer/lib/utils/time';
 import { dbFolder } from './db';
+import { postDownloadFileProcessing } from './scraping';
 import { addMainHandler } from './utils';
 
 const logDir = path.dirname(log.default.transports.file.getFile().path);
@@ -131,5 +132,20 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
     return [htmlDir, logDir].map((dir) =>
       fs.readdirSync(dir).forEach((f) => fs.rmSync(`${dir}/${f}`)),
     );
+  });
+
+  addMainHandler('import-files', async (_e: any, paths: string[]) => {
+    console.log(paths);
+    const dir = path.join(app.getPath('userData'), 'downloads', getNowString());
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+
+    for (const p of paths) {
+      const dest = path.join(dir, path.basename(p));
+
+      fs.copyFileSync(p, dest);
+      await postDownloadFileProcessing(dest);
+    }
   });
 }

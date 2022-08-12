@@ -14,6 +14,29 @@ import { addMainHandler, delay, getNowString, stripNonAscii } from './utils';
 
 let scrapingView: BrowserView | null = null;
 
+export const postDownloadFileProcessing = async (filePath: string) => {
+  let filePathExtracted = '';
+
+  if (filePath.endsWith('.zip')) {
+    log.info('Unzipping downloaded file');
+
+    filePathExtracted = filePath.replace(/\.zip$/, '');
+
+    // some delay is needed to prevent a race condition
+    await delay(1000);
+
+    fs.createReadStream(filePath).pipe(
+      unzipper.Extract({ path: filePathExtracted }),
+    );
+
+    // some delay is needed to prevent a race condition
+    await delay(1000);
+    log.info('Unzipping done. Deleting original file.');
+    fs.unlinkSync(filePath);
+  }
+  return filePathExtracted;
+};
+
 export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
   log.debug('called registerScrapingHandlers', mainWindow == null);
 
@@ -124,29 +147,15 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
             if (state === 'completed') {
               log.info('Download successfully');
 
-              if (filePath.endsWith('.zip')) {
-                log.info('Unzipping downloaded file');
-
-                filePathExtracted = filePath.replace(/\.zip$/, '');
-
-                // some delay is needed to prevent a race condition
-                await delay(1000);
-
-                try {
-                  fs.createReadStream(filePath).pipe(
-                    unzipper.Extract({ path: filePathExtracted }),
-                  );
-                } catch (error) {
-                  log.error(error);
-                  mainWindow.webContents.send(
-                    'scraping-download-done',
-                    false,
-                    '',
-                  );
-                }
-                // some delay is needed to prevent a race condition
-                await delay(1000);
-                fs.unlinkSync(filePath);
+              try {
+                filePathExtracted = await postDownloadFileProcessing(filePath);
+              } catch (error) {
+                log.error(error);
+                mainWindow.webContents.send(
+                  'scraping-download-done',
+                  false,
+                  '',
+                );
               }
             } else {
               log.info(`Download failed: ${state}`);
