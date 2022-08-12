@@ -54,7 +54,11 @@ export default function ProviderLoginPage(): JSX.Element {
             <div className="mt-4">
               <Button
                 onClick={() => {
-                  dispatch({ type: 'set-is-attached', isAttached: true });
+                  dispatch({
+                    type: 'set-attached',
+                    attached: true,
+                    visible: true,
+                  });
                   sendEvent(campaign, 'clicked start scraping');
                 }}
               >

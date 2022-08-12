@@ -3,6 +3,11 @@
  *
  * @module
  */
+import { faAngleRight } from '@fortawesome/pro-regular-svg-icons';
+import { RouteComponentProps } from 'react-router';
+import FooterNav, {
+  FooterNavItem,
+} from 'renderer/providers/youtube/components/FooterNav';
 import { useNavigation } from '../../../contexts';
 // import FooterNav, {
 //   FooterNavItem,
@@ -18,17 +23,17 @@ import uplogo from '../../../static/images/logos/up-logo.png';
 export default function StartPage(): JSX.Element {
   const { getNextPage } = useNavigation();
 
-  // const footerNavItems: FooterNavItem[] = [
-  //   {
-  //     label: 'Weiter',
-  //     // size: 'large',
-  //     endIcon: faAngleRight,
-  //     classNames: 'mx-auto',
-  //     clickHandler(history: RouteComponentProps['history']) {
-  //       history.push(getNextPage('path'));
-  //     },
-  //   },
-  // ];
+  const footerNavItems: FooterNavItem[] = [
+    {
+      label: 'Weiter',
+      // size: 'large',
+      endIcon: faAngleRight,
+      classNames: 'mx-auto',
+      clickHandler(history: RouteComponentProps['history']) {
+        history.push(getNextPage('path'));
+      },
+    },
+  ];
 
   return (
     <>
@@ -75,7 +80,7 @@ export default function StartPage(): JSX.Element {
           </div>
         </div>
       </div>
-      {/* <FooterNav items={footerNavItems} /> */}
+      <FooterNav items={footerNavItems} />
     </>
   );
 }

@@ -5,10 +5,9 @@ import { profileScraperSlugToFun } from '../scrapers';
 async function* profileProcedure(
   getHtml: GetHtmlFunction,
   _getHtmlLazy: GetHtmlLazyFunction,
-  _sessionId: string,
   config: ProfileProcedureConfig,
   _scrapingConfig: YtScrapingConfig,
-  enableLogging: boolean,
+  procedureArgs: any,
 ) {
   const { profileScrapers } = config;
 
@@ -17,7 +16,10 @@ async function* profileProcedure(
 
   // get background information such as history or subscriptions
   for (const slug of profileScrapers) {
-    const data = await profileScraperSlugToFun[slug](getHtml, enableLogging);
+    const data = await profileScraperSlugToFun[slug](
+      getHtml,
+      procedureArgs.enableLogging,
+    );
     step += 1;
     // already return here if there is no further scraping
     if (step < maxSteps) yield [step / maxSteps, data];

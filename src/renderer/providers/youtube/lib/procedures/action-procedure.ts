@@ -10,15 +10,14 @@ import {
 async function* actionProcedure(
   getHtml: GetHtmlFunction,
   _getHtmlLazy: GetHtmlLazyFunction,
-  sessionId: string,
   config: ActionProcedureConfig,
   _scrapingConfig: YtScrapingConfig,
-  _enableLogging: boolean,
+  procedureArgs: any,
 ) {
   const { slug } = config;
 
   if (slug === 'yt-activate-watch-history') {
-    const data = await getScrapingResultsBySession(sessionId, {
+    const data = await getScrapingResultsBySession(procedureArgs.sessionId, {
       slug: 'yt-deactivate-watch-history',
     });
     const {

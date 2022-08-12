@@ -67,7 +67,7 @@ export default function ScrapingManager({
     const isLoggedIn = cookies.some(
       (x: any) => x.name === provider.loginCookie,
     );
-    dispatch({ type: 'set-user-logged-in', isUserLoggedIn: isLoggedIn });
+    dispatch({ type: 'set-user-logged-in', loggedIn: isLoggedIn });
     return isLoggedIn;
   };
 
@@ -224,6 +224,7 @@ export default function ScrapingManager({
 
           setSessionFinishedAt(sessionId);
           dispatch({ type: 'scraping-has-finished' });
+          window.electron.log.info('Scraping done');
         } else {
           // Store data w/ async
           addScrapingResult(sessionId, step, result);
@@ -232,7 +233,7 @@ export default function ScrapingManager({
         dispatch({ type: 'increment-finished' });
       } catch (err) {
         dispatch({ type: 'set-scraping-error', scrapingError: err as Error });
-        console.error(err);
+        window.electron.log.error(err);
       }
     };
     runScraperOnce();

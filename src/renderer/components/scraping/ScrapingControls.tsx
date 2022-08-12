@@ -40,15 +40,15 @@ export default function ScrapingControls({
   // controls for the scraping
 
   const pauseScraping = () => {
-    dispatch({ type: 'set-scraping-paused', isScrapingPaused: true });
+    dispatch({ type: 'set-scraping-paused', paused: true });
   };
 
   const resumeScraping = () => {
-    dispatch({ type: 'set-scraping-paused', isScrapingPaused: false });
+    dispatch({ type: 'set-scraping-paused', paused: false });
   };
 
   const toggleIsMuted = () => {
-    dispatch({ type: 'set-muted', isMuted: !isMuted });
+    dispatch({ type: 'set-muted', muted: !isMuted });
   };
 
   const toggleVis = () => {
@@ -56,7 +56,7 @@ export default function ScrapingControls({
   };
 
   const startScraping = () => {
-    dispatch({ type: 'set-scraping-started', isScrapingStarted: true });
+    dispatch({ type: 'set-scraping-started', started: true });
   };
 
   return (

@@ -17,6 +17,7 @@ import {
   BrowserWindow,
   dialog,
   ipcMain,
+  Notification,
   powerSaveBlocker,
   screen,
   session,
@@ -27,7 +28,7 @@ import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import 'regenerator-runtime/runtime';
 import registerBackgroundScrapingHandlers from './background-scraping';
-import registerDbHandlers from './db';
+import registerDbHandlers, { configStore } from './db';
 import registerExportHandlers from './export';
 import { buildMenu } from './menu';
 import registerYoutubeHanderls from './providers/youtube';
@@ -105,10 +106,13 @@ const installExtensions = async () => {
     .catch(log.error);
 };
 
-const handleTrayClick = (name) => {
+const handleTrayClick = (name: string) => {
+  if (name === 'on') configStore.set('monitoring', true);
+  if (name === 'off') configStore.set('monitoring', false);
+
   if (mainWindow == null) {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    createWindow();
+    createWindow(true);
   } else {
     mainWindow.focus();
   }
@@ -291,4 +295,18 @@ ipcMain.handle('get-env', () => {
     TRACK_EVENTS: process.env.TRACK_EVENTS,
     SERIOUS_PROTECTION: process.env.SERIOUS_PROTECTION,
   };
+});
+
+// Handle notifications from the renderer
+
+ipcMain.handle('show-notification', (_e, title, body) => {
+  console.log(_e, title, body);
+  const n = new Notification({
+    title,
+    body,
+  });
+  n.show();
+  n.on('click', () => {
+    createWindow();
+  });
 });
