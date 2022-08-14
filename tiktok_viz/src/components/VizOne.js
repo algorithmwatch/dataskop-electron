@@ -19,6 +19,8 @@ function VizOne() {
   //
   const [totActivity, avgMinsPerDay, numAppOpen, coreTimeString, videoData] =
     arrangeDataVizOne(timeSlots, timeRange);
+
+  const options = ["letzte 7 Tage", "letzte 30 Tage", "letzte 90 Tage"];
   //   const [videoData, setData] = useState();
 
   //   useEffect(() => {
@@ -73,38 +75,15 @@ function VizOne() {
     });
     // headerRef.current.append(chart);
     // toggleRef.current.append(chart);
-    boxesRef.current.append(chart);
+    toggleRef.current.append(chart);
     return () => chart.remove();
   }, [videoData]);
 
   return (
     <div className="App">
       <header className="VizOne-header" ref={headerRef}>
-        Deine Nutzungszeit <VizOneDropDown text="letzte 30 Tage" />
+        Deine Nutzungszeit <VizOneDropDown options={options} />
       </header>
-      <div className="toggle-button" ref={toggleRef}>
-        <VizOneToggleButtons
-          onClick={() => {
-            timeSlots = true;
-          }}
-          toggleColor="yellow-toggle"
-          classname1="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-yellow-300 dark:peer-focus:ring-yellow-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-yellow-400"
-          textLabel="Tageszeiten"
-        />
-        <VizOneToggleButtons
-          // onClick={() => {
-          //   timeSlots = true;
-          // }}
-          toggleColor="orange-toggle"
-          classname1="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-orange-300 dark:peer-focus:ring-orange-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-500"
-          textLabel="Häufigkeit App-Aktivierung"
-        />
-        <VizOneToggleButtons
-          toggleColor="teal-toggle"
-          classname1="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-teal-300 dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-teal-600"
-          textLabel="Watchtime in %"
-        />
-      </div>
       <div className="ui-container-stats" ref={boxesRef}>
         <div className="box1">
           <VizOneBoxes
@@ -130,6 +109,30 @@ function VizOne() {
             statisticText="Kernzeit"
           />
         </div>
+      </div>
+      <div></div>
+      <div className="toggle-button" ref={toggleRef}>
+        <VizOneToggleButtons
+          onClick={() => {
+            timeSlots = true;
+          }}
+          toggleColor="pink-toggle"
+          classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
+          textLabel="Tageszeiten"
+        />
+        <VizOneToggleButtons
+          // onClick={() => {
+          //   timeSlots = true;
+          // }}
+          toggleColor="black-toggle"
+          classname1="w-11 h-6 bg-gray-300  rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-gray-300 dark:peer-focus:ring-gray-300 peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-black"
+          textLabel="Häufigkeit App-Aktivierung"
+        />
+        <VizOneToggleButtons
+          toggleColor="aqua-toggle"
+          classname1="w-11 h-6 bg-aqua-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-aqua-light dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-aqua-dark"
+          textLabel="Watchtime in %"
+        />
       </div>
     </div>
   );

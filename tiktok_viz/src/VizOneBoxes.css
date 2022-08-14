@@ -1,7 +1,7 @@
 .card {
     /* "max-w-sm rounded overflow-hidden shadow-lg" */
     border: 2px  ;
-    border-color: palevioletred;
+    border-color:#007e7a;
     border-image: linear-gradient(to right, rgb(155, 224, 245)) 1;
     box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.2s;
