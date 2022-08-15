@@ -5,7 +5,13 @@
  */
 import React from 'react';
 import { providerInfo } from 'renderer/providers/info';
-import { NavigationState, NavigationStatePage } from './types';
+import {
+  LayoutProps,
+  NavigationState,
+  NavigationStatePage,
+  Path,
+  SectionKey,
+} from './types';
 
 type Action =
   | { type: 'set-page-index'; pageIndex: number }
@@ -18,9 +24,12 @@ type Dispatch = (action: Action) => void;
 
 type NavigationProviderProps = { children: React.ReactNode };
 
-type NavigationFunctionSignature = <Prop extends keyof NavigationStatePage>(
-  propName?: Prop,
-) => NavigationStatePage | NavigationStatePage[Prop];
+type NavigationFunctionSignature = {
+  (propName: 'path'): Path;
+  (propName: 'layoutProps'): LayoutProps;
+  (propName: 'sectionKey'): SectionKey;
+  (propname?: undefined): NavigationStatePage;
+};
 
 type NavigationStateContextType =
   | {
@@ -42,6 +51,9 @@ const initialNavigationState: NavigationState = {
     {
       path: '/select_campaign',
       sectionKey: null,
+      layoutProps: {
+        hideHeader: true,
+      },
     },
   ],
   sections: {},
@@ -89,12 +101,8 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
     const nextPageObj = state.pages[nextIndex];
 
     if (propName) {
-      if (!nextPageObj[propName]) {
-        throw new Error(
-          `Property "${propName}" does not exist on next page object`,
-        );
-      }
-      return nextPageObj[propName];
+      const result = nextPageObj[propName];
+      return result;
     }
 
     return nextPageObj;
@@ -110,11 +118,6 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
     const prevPageObj = state.pages[prevIndex];
 
     if (propName) {
-      if (!prevPageObj[propName]) {
-        throw new Error(
-          `Property "${propName}" does not exist on previous page object`,
-        );
-      }
       return prevPageObj[propName];
     }
 
@@ -131,11 +134,6 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
     const currentPageObj = state.pages[currentIndex];
 
     if (propName) {
-      if (!currentPageObj[propName]) {
-        throw new Error(
-          `Property "${propName}" does not exist on current page object`,
-        );
-      }
       return currentPageObj[propName];
     }
 
