@@ -5,13 +5,7 @@
  */
 import React from 'react';
 import { providerInfo } from 'renderer/providers/info';
-import {
-  LayoutProps,
-  NavigationState,
-  NavigationStatePage,
-  Path,
-  SectionKey,
-} from './types';
+import { NavigationState, NavigationStatePage } from './types';
 
 type Action =
   | { type: 'set-page-index'; pageIndex: number }
@@ -25,9 +19,9 @@ type Dispatch = (action: Action) => void;
 type NavigationProviderProps = { children: React.ReactNode };
 
 type NavigationFunctionSignature = {
-  (propName: 'path'): Path;
-  (propName: 'layoutProps'): LayoutProps;
-  (propName: 'sectionKey'): SectionKey;
+  (propName: 'path'): NavigationStatePage['path'];
+  (propName: 'layoutProps'): NavigationStatePage['layoutProps'];
+  (propName: 'sectionKey'): NavigationStatePage['sectionKey'];
   (propname?: undefined): NavigationStatePage;
 };
 
@@ -91,7 +85,7 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
     initialNavigationState,
   );
 
-  const getNextPage: NavigationFunctionSignature = (propName) => {
+  const getNextPage = ((propName) => {
     const nextIndex = state.pageIndex + 1;
 
     if (!state.pages[nextIndex]) {
@@ -106,9 +100,9 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
     }
 
     return nextPageObj;
-  };
+  }) as NavigationFunctionSignature;
 
-  const getPreviousPage: NavigationFunctionSignature = (propName) => {
+  const getPreviousPage = ((propName) => {
     const prevIndex = state.pageIndex - 1;
 
     if (!state.pages[prevIndex]) {
@@ -122,9 +116,9 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
     }
 
     return prevPageObj;
-  };
+  }) as NavigationFunctionSignature;
 
-  const getCurrentPage: NavigationFunctionSignature = (propName) => {
+  const getCurrentPage = ((propName) => {
     const currentIndex = state.pageIndex;
 
     if (!state.pages[currentIndex]) {
@@ -138,7 +132,7 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
     }
 
     return currentPageObj;
-  };
+  }) as NavigationFunctionSignature;
 
   const getPageIndexByPath = (path: NavigationStatePage['path']): number =>
     state.pages.findIndex((page) => page.path === path);
