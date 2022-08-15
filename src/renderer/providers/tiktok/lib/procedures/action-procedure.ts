@@ -7,6 +7,12 @@ import {
   GetHtmlLazyFunction,
 } from 'renderer/providers/types';
 
+const isCaptcha = ($html: cheerio.Root) => {
+  return !!$html(
+    '.captcha_verify_container, #captcha_container, .captcha_verify_bar, .captcha_verify_action',
+  ).first().length;
+};
+
 const clickOnDownloadTab = async (getCurrentHtml: GetCurrentHtml) => {
   const html = await getReadyHtml(getCurrentHtml);
   const $html = cheerio.load(html);
@@ -16,7 +22,7 @@ const clickOnDownloadTab = async (getCurrentHtml: GetCurrentHtml) => {
     .find('span:contains("Download data")')
     .first();
 
-  window.electron.log.info(downloadDataTab);
+  window.electron.log.debug(downloadDataTab);
 
   if (downloadDataTab.length) {
     await clickOnElement(downloadDataTab, $html);
@@ -25,7 +31,10 @@ const clickOnDownloadTab = async (getCurrentHtml: GetCurrentHtml) => {
   return false;
 };
 
-const clickDownloadButton = async (getCurrentHtml: GetCurrentHtml) => {
+const checkDownloadButton = async (
+  getCurrentHtml: GetCurrentHtml,
+  click = true,
+) => {
   const html = await getReadyHtml(getCurrentHtml);
   const $html = cheerio.load(html);
 
@@ -33,7 +42,9 @@ const clickDownloadButton = async (getCurrentHtml: GetCurrentHtml) => {
     '.dyddownload-container button:contains("Download")',
   ).first();
 
-  window.electron.log.info(downloadButton);
+  window.electron.log.debug(downloadButton);
+
+  if (!click && downloadButton.length) return true;
 
   if (downloadButton.length) {
     await clickOnElement(downloadButton, $html);
@@ -46,13 +57,28 @@ const isDumpCreationPending = async (getCurrentHtml: GetCurrentHtml) => {
   const html = await getReadyHtml(getCurrentHtml);
   const $html = cheerio.load(html);
 
-  const pendingButton = $html(
-    '.dyddownload-container button:contains("Pending")',
+  const pendingButton1 = $html(
+    '.dyddownload-container button:disabled div:contains("Pending")',
+  ).first().length;
+
+  const pendingButton2 = $html(
+    'button:disabled div:contains("Processing request")',
+  ).first().length;
+
+  return !!(pendingButton1 + pendingButton2);
+};
+
+const isDownloadExpired = async (getCurrentHtml: GetCurrentHtml) => {
+  const html = await getReadyHtml(getCurrentHtml);
+  const $html = cheerio.load(html);
+
+  const expiredButton = $html(
+    '.dyddownload-container button:disabled div:contains("Expired")',
   ).first();
 
-  window.electron.log.info(pendingButton);
+  window.electron.log.debug(expiredButton);
 
-  return !!pendingButton.length;
+  return !!expiredButton.length;
 };
 
 const clickOnJsonFormat = ($html: cheerio.Root) => {
@@ -94,7 +120,61 @@ const requestData = async (getCurrentHtml: GetCurrentHtml) => {
   }
 };
 
-// https://www.tiktok.com/setting?activeTab=dyd
+// the lang paramater is important because we are filtering by text later on
+const GET_DATA_URL = 'https://www.tiktok.com/setting?activeTab=dyd&lang=en';
+
+const notify = (title: string, body: string) => {
+  return window.electron.ipc.invoke('show-notification', title, body);
+};
+
+const monitorDataExport = async (getHtml: GetHtmlFunction) => {
+  window.electron.log.info('Started monitor data export');
+
+  // the lang paramater is important because we are filtering by text later on
+  const getCurrentHtml = await getHtml(GET_DATA_URL);
+
+  if (await isDumpCreationPending(getCurrentHtml)) {
+    notify('Warte auf Datenexport', 'Der Datenexport wird gerade erzeugt...');
+    return { status: 'monitoring-pending' };
+  }
+
+  const successClickTab = await clickOnDownloadTab(getCurrentHtml);
+  if (!successClickTab) {
+    throw new Error("Failed to find 'Download data' tab");
+  }
+
+  if (await isDumpCreationPending(getCurrentHtml)) {
+    notify('Warte auf Datenexport', 'Der Datenexport wird gerade erzeugt...');
+    return { status: 'monitoring-pending' };
+  }
+
+  if (await checkDownloadButton(getCurrentHtml, false)) {
+    notify('Download verfügbar', 'Der Datenexport steht zum Download bereit');
+    return { status: 'monitoring-download-available' };
+  }
+
+  if (await isDownloadExpired(getCurrentHtml)) {
+    notify(
+      'Download abgelaufen',
+      'Der Datenexport muss erneut beantragt werden.',
+    );
+    return { status: 'monitoring-download-expired' };
+  }
+
+  if (isCaptcha(cheerio.load((await getCurrentHtml()).html))) {
+    notify(
+      'Captcha erforderlich',
+      'Wir konnten den Status der Datenspende aufgrund eines Captchas nicht überprüfen.',
+    );
+    return { status: 'monitoring-captcha' };
+  }
+
+  notify(
+    'Download abgelaufen',
+    'Der Datenexport muss erneut beantragt werden.',
+  );
+  return { status: 'monitoring-nothing-found' };
+};
 
 // browser needs to store session data
 // 1. check if logged in
@@ -103,11 +183,14 @@ const requestData = async (getCurrentHtml: GetCurrentHtml) => {
 // 4. if no, get the data
 
 const getDataExport = async (getHtml: GetHtmlFunction) => {
-  window.electron.log.info('Started data export step');
+  window.electron.log.info('Started get data export');
 
-  // the lang paramater is important because we are filtering by text later on
-  const getDataUrl = 'https://www.tiktok.com/setting?activeTab=dyd&lang=en';
-  const getCurrentHtml = await getHtml(getDataUrl);
+  const getCurrentHtml = await getHtml(GET_DATA_URL);
+
+  // Check if we have to wait (first try)
+  if (await isDumpCreationPending(getCurrentHtml)) {
+    return { status: 'data-pending' };
+  }
 
   const successClickTab = await clickOnDownloadTab(getCurrentHtml);
   if (!successClickTab) {
@@ -115,24 +198,21 @@ const getDataExport = async (getHtml: GetHtmlFunction) => {
   }
 
   window.electron.log.info('Looking for download button');
-  const successDownloadClick = await clickDownloadButton(getCurrentHtml);
+  const successDownloadClick = await checkDownloadButton(getCurrentHtml);
 
   if (successDownloadClick) {
     let filePath = null;
     let lastReceived = new Date().getTime();
 
-    window.electron.ipcRenderer.on('scraping-download-started', () =>
+    window.electron.ipc.on('scraping-download-started', () =>
       window.electron.log.info('Downloading started'),
     );
 
-    window.electron.ipcRenderer.on(
-      'scraping-download-progress',
-      (bytes: number) => {
-        lastReceived = new Date().getTime();
-      },
-    );
+    window.electron.ipc.on('scraping-download-progress', (bytes: number) => {
+      lastReceived = new Date().getTime();
+    });
 
-    window.electron.ipcRenderer.on(
+    window.electron.ipc.on(
       'scraping-download-done',
       (success: boolean, path: string) => {
         window.electron.log.info('Downloading done: ', success, path);
@@ -146,8 +226,7 @@ const getDataExport = async (getHtml: GetHtmlFunction) => {
     // Wait until a download is finished
     while (true) {
       await currentDelay();
-      if (filePath != null)
-        return [true, { filePath, status: 'data downloaded' }];
+      if (filePath != null) return { filePath, status: 'data-downloaded' };
       if (new Date().getTime() - lastReceived > 60 * 1000) {
         throw new Error(
           'Downloading time exceeded: no updates for over 60 seconds',
@@ -155,40 +234,40 @@ const getDataExport = async (getHtml: GetHtmlFunction) => {
       }
     }
   } else {
-    // Check if we have to wait
+    // Check if we have to wait (second try)
     if (await isDumpCreationPending(getCurrentHtml)) {
-      return [false, { status: 'pending' }];
+      return { status: 'data-pending' };
     }
 
     // Request a new dump
     try {
       await requestData(getCurrentHtml);
-      return [false, { status: 'data requested' }];
+      return [false, { status: 'data-requested' }];
     } catch (error) {
-      throw new Error('Could not request new export:' + error);
+      throw new Error(`Could not request new export:${error}`);
     }
   }
 };
 
+// eslint-disable-next-line require-yield
 async function* actionProcedure(
   getHtml: GetHtmlFunction,
   _getHtmlLazy: GetHtmlLazyFunction,
-  sessionId: string,
   config: any,
   _scrapingConfig: any,
-  _enableLogging: boolean,
+  procedureArgs: any,
 ) {
   const { slug } = config;
 
   if (slug === 'tt-data-export') {
     try {
-      const [done, data] = await getDataExport(getHtml);
-      if (done)
-        return [1, { success: true, slug, fields: { data }, errors: [] }];
-      else return [1, { success: false, slug, fields: { data }, errors: [] }];
+      const data = await (procedureArgs.monitoring
+        ? monitorDataExport
+        : getDataExport)(getHtml);
+
+      return [1, { success: true, slug, fields: { data }, errors: [] }];
     } catch (error) {
-      window.electron.log.error('Error with data export step:');
-      window.electron.log.error(error);
+      window.electron.log.error('Error with data export step:', error);
       return [1, { success: false, slug, fields: {}, errors: [error] }];
     }
   }

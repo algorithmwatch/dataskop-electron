@@ -61,7 +61,11 @@ export default function OnboardingPage1(): JSX.Element {
               <Button
                 onClick={() => {
                   setShowLoginWindow(true);
-                  dispatch({ type: 'set-is-attached', isAttached: true });
+                  dispatch({
+                    type: 'set-attached',
+                    attached: true,
+                    visible: true,
+                  });
                   sendEvent(campaign, 'clicked start scraping');
                 }}
               >

@@ -5,10 +5,9 @@ import { scrapeVideoSearch } from '../scrapers';
 async function* searchProcedure(
   getHtml: GetHtmlFunction,
   _getHtmlLazy: GetHtmlLazyFunction,
-  _sessionId: string,
   config: SearchProcedureConfig,
   _scrapingConfig: YtScrapingConfig,
-  _enableLogging: boolean,
+  _procedureArgs: any,
 ) {
   const { queries } = config;
   for (const [i, q] of queries.entries()) {

@@ -23,7 +23,7 @@ export type Bounds = {
 };
 
 type Action =
-  | { type: 'set-is-attached'; isAttached: boolean }
+  | { type: 'set-attached'; attached: boolean; visible: boolean }
   | {
       type: 'set-campaign';
       campaign: Campaign | null;
@@ -36,11 +36,11 @@ type Action =
       type: 'set-scraping-progress-bar';
       scrapingProgress: ScrapingProgress;
     }
-  | { type: 'set-user-logged-in'; isUserLoggedIn: boolean }
-  | { type: 'set-scraping-started'; isScrapingStarted: boolean }
-  | { type: 'set-scraping-paused'; isScrapingPaused: boolean }
+  | { type: 'set-user-logged-in'; loggedIn: boolean }
+  | { type: 'set-scraping-started'; started: boolean }
+  | { type: 'set-scraping-paused'; paused: boolean }
   | { type: 'scraping-has-finished' }
-  | { type: 'set-muted'; isMuted: boolean }
+  | { type: 'set-muted'; muted: boolean }
   | { type: 'set-fixed-window'; fixedWindow: boolean }
   | { type: 'set-visible-window'; visibleWindow: boolean }
   | { type: 'set-bounds'; bounds: Bounds }
@@ -120,11 +120,11 @@ const initialState: State = {
 
 const scrapingReducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case 'set-is-attached': {
+    case 'set-attached': {
       return {
         ...state,
-        isAttached: action.isAttached,
-        visibleWindow: action.isAttached,
+        isAttached: action.attached,
+        visibleWindow: action.visible,
       };
     }
 
@@ -147,22 +147,22 @@ const scrapingReducer = (state: State, action: Action): State => {
     }
 
     case 'set-user-logged-in': {
-      return { ...state, isUserLoggedIn: action.isUserLoggedIn };
+      return { ...state, isUserLoggedIn: action.loggedIn };
     }
 
     case 'set-scraping-started': {
       return {
         ...state,
-        isScrapingStarted: action.isScrapingStarted,
+        isScrapingStarted: action.started,
       };
     }
 
     case 'set-scraping-paused': {
-      return { ...state, isScrapingPaused: action.isScrapingPaused };
+      return { ...state, isScrapingPaused: action.paused };
     }
 
     case 'set-muted': {
-      return { ...state, isMuted: action.isMuted };
+      return { ...state, isMuted: action.muted };
     }
 
     // Changing this values doesn't work right now. (Guess: The scraping window
@@ -222,7 +222,7 @@ const scrapingReducer = (state: State, action: Action): State => {
       };
     }
 
-    // reset everything besides campaign + scraping config
+    // reset everything besides campaign and some other fields
     case 'reset-scraping': {
       return {
         ...initialState,

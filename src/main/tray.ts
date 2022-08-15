@@ -18,13 +18,13 @@ const buildTray = (handleTrayClick: (str: string) => any, icon: string) => {
         {
           label: 'On',
           type: 'radio',
-          checked: true,
+          checked: false,
           click: () => handleTrayClick('on'),
         },
         {
           label: 'Off',
           type: 'radio',
-          checked: false,
+          checked: true,
           click: () => handleTrayClick('off'),
         },
       ],

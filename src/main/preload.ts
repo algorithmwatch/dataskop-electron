@@ -9,6 +9,7 @@ const mainChannels = [
   'close-main-window',
   'update-check-beta',
   'update-restart-app',
+  'show-notification',
 ];
 
 // scraping.ts
@@ -46,6 +47,7 @@ const exportChannels = [
   'export-debug-archive',
   'export-debug-size',
   'export-debug-clean',
+  'import-files',
 ];
 
 // db.ts

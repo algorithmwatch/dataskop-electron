@@ -56,10 +56,9 @@ const getSeedVideosRepeat = async (
 async function* videosProcedure(
   getHtml: GetHtmlFunction,
   _getHtmlLazy: GetHtmlLazyFunction,
-  sessionId: string,
   config: VideoProcedureConfig,
   scrapingConfig: YtScrapingConfig,
-  enableLogging: boolean,
+  procedureArgs: any,
 ) {
   const {
     followVideos,
@@ -68,6 +67,7 @@ async function* videosProcedure(
     seedVideosRepeat,
     doLogout,
   } = config;
+  const { enableLogging, sessionId } = procedureArgs;
 
   const isFollowingVideos = !(followVideos == null || followVideos === 0);
   const scrapeComments = false;

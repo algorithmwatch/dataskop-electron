@@ -6,21 +6,8 @@ import {
 
 const deserializeConfigSteps = (config: ScrapingConfig, mapping: any) => {
   return config.steps.map((step) => {
-    return (
-      x: GetHtmlFunction,
-      y: GetHtmlLazyFunction,
-      sessiondId: string,
-      enableLogging: boolean,
-    ) =>
-      mapping[step.type].call(
-        this,
-        x,
-        y,
-        sessiondId,
-        step,
-        config,
-        enableLogging,
-      );
+    return (x: GetHtmlFunction, y: GetHtmlLazyFunction, procedureArgs: any) =>
+      mapping[step.type].call(this, x, y, step, config, procedureArgs);
   });
 };
 
@@ -29,8 +16,7 @@ const createScrapingGenerator = (
   mapping: any,
   getHtml: GetHtmlFunction,
   getHtmlLazy: GetHtmlLazyFunction,
-  sessionId: string,
-  enableLogging: boolean,
+  procedureArgs: any,
 ) => {
   const genMakers = deserializeConfigSteps(scrapingConfig, mapping);
 
@@ -38,7 +24,7 @@ const createScrapingGenerator = (
     let i = 0;
 
     for (const genM of genMakers) {
-      const singleGen = genM(getHtml, getHtmlLazy, sessionId, enableLogging);
+      const singleGen = genM(getHtml, getHtmlLazy, procedureArgs);
 
       while (true) {
         const { value, done } = await singleGen.next();

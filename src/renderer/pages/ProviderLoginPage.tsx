@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /**
  * Login to provider.
  *
@@ -7,6 +8,7 @@ import { faAngleLeft } from '@fortawesome/pro-regular-svg-icons';
 import { Button } from '@material-ui/core';
 import { useEffect } from 'react';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
+import DropFile from 'renderer/components/DropFile';
 import ContentWrapper from 'renderer/providers/youtube/components/ContentWrapper';
 import { useConfig, useNavigation, useScraping } from '../contexts';
 import FooterNav, {
@@ -54,7 +56,11 @@ export default function ProviderLoginPage(): JSX.Element {
             <div className="mt-4">
               <Button
                 onClick={() => {
-                  dispatch({ type: 'set-is-attached', isAttached: true });
+                  dispatch({
+                    type: 'set-attached',
+                    attached: true,
+                    visible: true,
+                  });
                   sendEvent(campaign, 'clicked start scraping');
                 }}
               >
@@ -72,6 +78,7 @@ export default function ProviderLoginPage(): JSX.Element {
           </div>
           <div>
             <div className="hl-xl mb-4">Daten importieren</div>
+            <DropFile />
           </div>
         </div>
       </ContentWrapper>

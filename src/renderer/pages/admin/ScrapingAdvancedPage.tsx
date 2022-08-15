@@ -26,8 +26,9 @@ export default function AdvancedScrapingPage(): JSX.Element {
 
   // enable and disable scraping window
   useEffect(() => {
-    dispatch({ type: 'set-is-attached', isAttached: true });
-    return () => dispatch({ type: 'set-is-attached', isAttached: false });
+    dispatch({ type: 'set-attached', attached: true, visible: true });
+    return () =>
+      dispatch({ type: 'set-attached', attached: false, visible: false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -164,10 +164,11 @@ const getReadyHtml = async (getCurrentHtml: GetCurrentHtml) => {
   while (i < maxTries) {
     await currentDelay();
     const newResult = await getCurrentHtml();
-    if (result.hash == newResult.hash) {
+    if (result.hash === newResult.hash) {
       return result.html;
     }
     result = newResult;
+    i += 1;
   }
 
   return result.html;
