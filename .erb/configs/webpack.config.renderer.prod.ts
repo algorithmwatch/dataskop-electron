@@ -2,38 +2,38 @@
  * Build config for electron renderer process
  */
 
-import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import path from 'path';
-import TerserPlugin from 'terser-webpack-plugin';
-import webpack from 'webpack';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import { merge } from 'webpack-merge';
-import checkNodeEnv from '../scripts/check-node-env';
-import deleteSourceMaps from '../scripts/delete-source-maps';
-import baseConfig from './webpack.config.base';
-import webpackPaths from './webpack.paths';
+import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import path from "path";
+import TerserPlugin from "terser-webpack-plugin";
+import webpack from "webpack";
+import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
+import { merge } from "webpack-merge";
+import checkNodeEnv from "../scripts/check-node-env";
+import deleteSourceMaps from "../scripts/delete-source-maps";
+import baseConfig from "./webpack.config.base";
+import webpackPaths from "./webpack.paths";
 
-checkNodeEnv('production');
+checkNodeEnv("production");
 deleteSourceMaps();
 
 const configuration: webpack.Configuration = {
-  devtool: 'source-map',
-  mode: 'production',
-  target: ['web', 'electron-renderer'],
+  devtool: "source-map",
+  mode: "production",
+  target: ["web", "electron-renderer"],
   entry: [
-    'core-js',
-    'regenerator-runtime/runtime',
-    path.join(webpackPaths.srcRendererPath, 'index.tsx'),
+    "core-js",
+    "regenerator-runtime/runtime",
+    path.join(webpackPaths.srcRendererPath, "index.tsx"),
   ],
 
   output: {
     path: webpackPaths.distRendererPath,
-    publicPath: './',
-    filename: 'renderer.js',
+    publicPath: "./",
+    filename: "renderer.js",
     library: {
-      type: 'umd',
+      type: "umd",
     },
   },
 
@@ -44,14 +44,14 @@ const configuration: webpack.Configuration = {
         use: [
           MiniCssExtractPlugin.loader,
           {
-            loader: 'css-loader',
+            loader: "css-loader",
             options: {
               modules: true,
               sourceMap: true,
               importLoaders: 1,
             },
           },
-          'sass-loader',
+          "sass-loader",
         ],
         include: /\.module\.s?(c|a)ss$/,
       },
@@ -59,21 +59,21 @@ const configuration: webpack.Configuration = {
         test: /\.s?(a|c)ss$/,
         use: [
           MiniCssExtractPlugin.loader,
-          'css-loader',
-          'sass-loader',
-          'postcss-loader',
+          "css-loader",
+          "sass-loader",
+          "postcss-loader",
         ],
         exclude: /\.module\.s?(c|a)ss$/,
       },
       // Fonts
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/i,
-        type: 'asset/resource',
+        type: "asset/resource",
       },
       // Images
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: 'asset/resource',
+        type: "asset/resource",
       },
     ],
   },
@@ -99,28 +99,28 @@ const configuration: webpack.Configuration = {
      * development checks
      */
     new webpack.EnvironmentPlugin({
-      NODE_ENV: 'production',
+      NODE_ENV: "production",
       DEBUG_PROD: false,
     }),
 
     new MiniCssExtractPlugin({
-      filename: 'style.css',
+      filename: "style.css",
     }),
 
     new BundleAnalyzerPlugin({
-      analyzerMode: process.env.ANALYZE === 'true' ? 'server' : 'disabled',
+      analyzerMode: process.env.ANALYZE === "true" ? "server" : "disabled",
     }),
 
     new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: path.join(webpackPaths.srcRendererPath, 'index.ejs'),
+      filename: "index.html",
+      template: path.join(webpackPaths.srcRendererPath, "index.ejs"),
       minify: {
         collapseWhitespace: true,
         removeAttributeQuotes: true,
         removeComments: true,
       },
       isBrowser: false,
-      isDevelopment: process.env.NODE_ENV !== 'production',
+      isDevelopment: process.env.NODE_ENV !== "production",
     }),
   ],
 };

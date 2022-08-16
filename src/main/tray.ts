@@ -1,5 +1,5 @@
-import { app, Menu, nativeImage, Tray } from 'electron';
-import path from 'path';
+import { app, Menu, nativeImage, Tray } from "electron";
+import path from "path";
 
 let tray: Tray | null = null;
 const buildTray = (handleTrayClick: (str: string) => any, icon: string) => {
@@ -10,44 +10,44 @@ const buildTray = (handleTrayClick: (str: string) => any, icon: string) => {
 
   // Context Menu
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'About', role: 'about' },
-    { label: 'Separator', type: 'separator' },
+    { label: "About", role: "about" },
+    { label: "Separator", type: "separator" },
     {
-      label: 'Status',
+      label: "Status",
       submenu: [
         {
-          label: 'On',
-          type: 'radio',
+          label: "On",
+          type: "radio",
           checked: false,
-          click: () => handleTrayClick('on'),
+          click: () => handleTrayClick("on"),
         },
         {
-          label: 'Off',
-          type: 'radio',
+          label: "Off",
+          type: "radio",
           checked: true,
-          click: () => handleTrayClick('off'),
+          click: () => handleTrayClick("off"),
         },
       ],
     },
-    { label: 'Separator', type: 'separator' },
-    { label: 'Quit', role: 'quit' },
+    { label: "Separator", type: "separator" },
+    { label: "Quit", role: "quit" },
   ]);
 
-  tray.setToolTip('DataSkop');
+  tray.setToolTip("DataSkop");
   tray.setContextMenu(contextMenu);
 };
 
 const appFolder = path.dirname(process.execPath);
-const updateExe = path.resolve(appFolder, '..', 'Update.exe');
+const updateExe = path.resolve(appFolder, "..", "Update.exe");
 const exeName = path.basename(process.execPath);
 
 // https://www.electronjs.org/docs/latest/api/app#appsetloginitemsettingssettings-macos-windows
 const pathArgs = {
   path: updateExe,
   args: [
-    '--processStart',
+    "--processStart",
     `"${exeName}"`,
-    '--process-start-args',
+    "--process-start-args",
     `"--hidden"`,
   ],
 };

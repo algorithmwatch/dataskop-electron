@@ -1,12 +1,12 @@
-import { faAngleLeft } from '@fortawesome/pro-solid-svg-icons';
-import { useEffect } from 'react';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
-import { useConfig, useNavigation, useScraping } from 'renderer/contexts';
-import Button from 'renderer/providers/youtube/components/Button';
-import ContentWrapper from 'renderer/providers/youtube/components/ContentWrapper';
+import { faAngleLeft } from "@fortawesome/pro-solid-svg-icons";
+import { useEffect } from "react";
+import { RouteComponentProps, useHistory } from "react-router-dom";
+import { useConfig, useNavigation, useScraping } from "renderer/contexts";
+import Button from "renderer/providers/youtube/components/Button";
+import ContentWrapper from "renderer/providers/youtube/components/ContentWrapper";
 import FooterNav, {
   FooterNavItem,
-} from 'renderer/providers/youtube/components/FooterNav';
+} from "renderer/providers/youtube/components/FooterNav";
 
 export default function SelectDemoPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -19,18 +19,18 @@ export default function SelectDemoPage(): JSX.Element {
 
   const footerNavItems: FooterNavItem[] = [
     {
-      label: 'Zurück',
+      label: "Zurück",
       startIcon: faAngleLeft,
-      theme: 'link',
-      clickHandler(history: RouteComponentProps['history']) {
-        dispatch({ type: 'set-visible-window', visibleWindow: false });
-        history.push(getPreviousPage('path'));
+      theme: "link",
+      clickHandler(history: RouteComponentProps["history"]) {
+        dispatch({ type: "set-visible-window", visibleWindow: false });
+        history.push(getPreviousPage("path"));
       },
     },
   ];
 
   useEffect(
-    () => dispatch({ type: 'set-demo-mode', demoMode: false, demoData: null }),
+    () => dispatch({ type: "set-demo-mode", demoMode: false, demoData: null }),
     [],
   );
 
@@ -53,12 +53,12 @@ export default function SelectDemoPage(): JSX.Element {
                   <Button
                     onClick={() => {
                       dispatch({
-                        type: 'set-demo-mode',
+                        type: "set-demo-mode",
                         demoMode: true,
                         demoData,
                       });
-                      sendEvent(campaign, 'clicked use demo data');
-                      hist.push(getNextPage('path'));
+                      sendEvent(campaign, "clicked use demo data");
+                      hist.push(getNextPage("path"));
                     }}
                   >
                     {demoData.title}

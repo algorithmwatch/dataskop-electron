@@ -6,7 +6,7 @@ function About() {
         DataSkop ist eine Plattform für Datenspenden. Datenspenden können
         helfen, Licht in die Blackboxes der Algorithmen sozialer Medien und
         automatischer Entscheidungssysteme zu bringen. Das zeigen Beispiele wie
-        der{' '}
+        der{" "}
         <a
           className="link-blue"
           target="_blank"
@@ -14,10 +14,10 @@ function About() {
           rel="noreferrer"
         >
           Citizen Browser
-        </a>{' '}
+        </a>{" "}
         des gemeinnützigen US-Journalistenbüros The Markup, der der
         Funktionsweise von Facebook auf den Zahn fühlt, oder die
-        Datenspendeinfrastruktur{' '}
+        Datenspendeinfrastruktur{" "}
         <a
           className="link-blue"
           target="_blank"
@@ -26,7 +26,7 @@ function About() {
         >
           Mozilla Rally
         </a>
-        . Auch die Projekte{' '}
+        . Auch die Projekte{" "}
         <a
           className="link-blue"
           target="_blank"
@@ -34,8 +34,8 @@ function About() {
           rel="noreferrer"
         >
           OpenSchufa
-        </a>{' '}
-        (2018) und{' '}
+        </a>{" "}
+        (2018) und{" "}
         <a
           target="_blank"
           href="https://projekte.sueddeutsche.de/artikel/politik/wahlfilter-wie-verzerrt-ist-instagram-e639571/"
@@ -77,7 +77,7 @@ function About() {
         neuen Vorhaben wächst damit die DataSkop-Community.
       </p>
       <p>
-        Mehr erfahren auf{' '}
+        Mehr erfahren auf{" "}
         <a
           href="http://dataskop.net/"
           target="_blank"
@@ -92,7 +92,7 @@ function About() {
 
       <p>
         DataSkop ist ein Verbundprojekt und wird von AlgorithmWatch koordiniert.
-        In Zusammenarbeit mit der{' '}
+        In Zusammenarbeit mit der{" "}
         <a
           href="https://europeannewschool.com/"
           className="link-blue"
@@ -100,10 +100,10 @@ function About() {
           rel="noreferrer"
         >
           European New School of Digital Studies
-        </a>{' '}
+        </a>{" "}
         (Europa-Universität Viadrina) setzen wir erste eigene
         Datenspendeprojekte um und bestimmten die Funktionalität der Plattform
-        genauer. Der Fachbereich Design der{' '}
+        genauer. Der Fachbereich Design der{" "}
         <a
           href="https://www.fh-potsdam.de/design/"
           className="link-blue"
@@ -111,8 +111,8 @@ function About() {
           rel="noreferrer"
         >
           Fachhochschule Potsdam
-        </a>{' '}
-        wird die Visualisierungskonzepte entwickeln. Die{' '}
+        </a>{" "}
+        wird die Visualisierungskonzepte entwickeln. Die{" "}
         <a
           href="https://www.uni-paderborn.de/"
           className="link-blue"
@@ -120,7 +120,7 @@ function About() {
           rel="noreferrer"
         >
           Universität Paderborn
-        </a>{' '}
+        </a>{" "}
         und der Verein
         <a
           href="https://medialepfade.org/"
@@ -129,7 +129,7 @@ function About() {
           rel="noreferrer"
         >
           Mediale Pfade
-        </a>{' '}
+        </a>{" "}
         erarbeiten medienpädagogische Konzepte und Workshops, in denen DataSkop
         als Lernwerkzeug eingesetzt werden soll. Das dreijährige Vorhaben wird
         durch das Bundesministerium für Bildung und Forschung (
@@ -141,7 +141,7 @@ function About() {
         >
           BMBF
         </a>
-        ) im Rahmen des Programms{' '}
+        ) im Rahmen des Programms{" "}
         <a
           href="https://www.technik-zum-menschen-bringen.de/foerderung/bekanntmachungen/digisou"
           className="link-blue"
@@ -149,7 +149,7 @@ function About() {
           rel="noreferrer"
         >
           Mensch-Technik-Interaktion für digitale Souveränität
-        </a>{' '}
+        </a>{" "}
         gefördert.
       </p>
 

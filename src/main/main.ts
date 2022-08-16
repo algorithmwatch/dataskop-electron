@@ -10,8 +10,8 @@
  */
 
 // Do not (!) change the import to: `import Sentry from '@sentry/electron'`
-import * as Sentry from '@sentry/electron/main';
-import 'core-js/stable';
+import * as Sentry from "@sentry/electron/main";
+import "core-js/stable";
 import {
   app,
   BrowserWindow,
@@ -22,25 +22,25 @@ import {
   screen,
   session,
   shell,
-} from 'electron';
-import log from 'electron-log';
-import { autoUpdater } from 'electron-updater';
-import path from 'path';
-import 'regenerator-runtime/runtime';
-import registerBackgroundScrapingHandlers from './background-scraping';
-import registerDbHandlers, { configStore } from './db';
-import registerExportHandlers from './export';
-import { buildMenu } from './menu';
-import registerYoutubeHanderls from './providers/youtube';
-import registerScrapingHandlers from './scraping';
-import { buildTray } from './tray';
-import { resolveHtmlPath } from './utils';
+} from "electron";
+import log from "electron-log";
+import { autoUpdater } from "electron-updater";
+import path from "path";
+import "regenerator-runtime/runtime";
+import registerBackgroundScrapingHandlers from "./background-scraping";
+import registerDbHandlers, { configStore } from "./db";
+import registerExportHandlers from "./export";
+import { buildMenu } from "./menu";
+import registerYoutubeHanderls from "./providers/youtube";
+import registerScrapingHandlers from "./scraping";
+import { buildTray } from "./tray";
+import { resolveHtmlPath } from "./utils";
 
 // read .env files for development
-require('dotenv').config();
+require("dotenv").config();
 
 const DEBUG =
-  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+  process.env.NODE_ENV === "development" || process.env.DEBUG_PROD === "true";
 
 if (process.env.SENTRY_DSN) {
   Sentry.init({
@@ -52,7 +52,7 @@ let mainWindow: BrowserWindow | null = null;
 
 class AppUpdater {
   constructor() {
-    log.transports.file.level = DEBUG ? 'debug' : 'info';
+    log.transports.file.level = DEBUG ? "debug" : "info";
 
     if (process.env.UPDATE_FEED_URL) {
       autoUpdater.setFeedURL(process.env.UPDATE_FEED_URL);
@@ -64,39 +64,39 @@ class AppUpdater {
 }
 
 // send update-related events to renderer
-autoUpdater.on('update-available', () => {
-  mainWindow?.webContents.send('update-available');
+autoUpdater.on("update-available", () => {
+  mainWindow?.webContents.send("update-available");
 });
-autoUpdater.on('update-downloaded', () => {
-  mainWindow?.webContents.send('update-downloaded');
+autoUpdater.on("update-downloaded", () => {
+  mainWindow?.webContents.send("update-downloaded");
 });
-autoUpdater.on('error', async (_event, error) => {
-  mainWindow?.webContents.send('update-error', error);
+autoUpdater.on("error", async (_event, error) => {
+  mainWindow?.webContents.send("update-error", error);
 });
 
 // handle update-related events from renderer
-ipcMain.handle('update-check-beta', () => {
-  autoUpdater.channel = 'beta';
+ipcMain.handle("update-check-beta", () => {
+  autoUpdater.channel = "beta";
   return autoUpdater.checkForUpdatesAndNotify();
 });
-ipcMain.handle('update-restart-app', () => {
-  log.debug('called handle update-restart-app');
+ipcMain.handle("update-restart-app", () => {
+  log.debug("called handle update-restart-app");
   autoUpdater.quitAndInstall();
 });
 
-if (process.env.NODE_ENV === 'production') {
-  const sourceMapSupport = require('source-map-support');
+if (process.env.NODE_ENV === "production") {
+  const sourceMapSupport = require("source-map-support");
   sourceMapSupport.install();
 }
 
 if (DEBUG) {
-  require('electron-debug')();
+  require("electron-debug")();
 }
 
 const installExtensions = async () => {
-  const installer = require('electron-devtools-installer');
+  const installer = require("electron-devtools-installer");
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS'];
+  const extensions = ["REACT_DEVELOPER_TOOLS"];
 
   return installer
     .default(
@@ -107,8 +107,8 @@ const installExtensions = async () => {
 };
 
 const handleTrayClick = (name: string) => {
-  if (name === 'on') configStore.set('monitoring', true);
-  if (name === 'off') configStore.set('monitoring', false);
+  if (name === "on") configStore.set("monitoring", true);
+  if (name === "off") configStore.set("monitoring", false);
 
   if (mainWindow == null) {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -119,7 +119,7 @@ const handleTrayClick = (name: string) => {
 };
 
 const createWindow = async (monitoring = false) => {
-  log.debug('called createWindow', mainWindow == null);
+  log.debug("called createWindow", mainWindow == null);
 
   if (DEBUG) {
     await installExtensions();
@@ -138,14 +138,14 @@ const createWindow = async (monitoring = false) => {
       callback({
         responseHeaders: {
           ...details.responseHeaders,
-          'Content-Security-Policy': [cspString],
+          "Content-Security-Policy": [cspString],
         },
       });
     });
 
   const RESOURCES_PATH = app.isPackaged
-    ? path.join(process.resourcesPath, 'assets')
-    : path.join(__dirname, '../../assets');
+    ? path.join(process.resourcesPath, "assets")
+    : path.join(__dirname, "../../assets");
 
   const getAssetPath = (...paths: string[]): string => {
     return path.join(RESOURCES_PATH, ...paths);
@@ -157,21 +157,21 @@ const createWindow = async (monitoring = false) => {
     height: 800,
     minWidth: 800,
     minHeight: 600,
-    icon: getAssetPath('icon.png'),
+    icon: getAssetPath("icon.png"),
     webPreferences: {
       preload: app.isPackaged
-        ? path.join(__dirname, 'preload.js')
-        : path.join(__dirname, '../../.erb/dll/preload.js'),
+        ? path.join(__dirname, "preload.js")
+        : path.join(__dirname, "../../.erb/dll/preload.js"),
       backgroundThrottling: false,
       sandbox: false,
     },
   });
 
-  mainWindow.loadURL(resolveHtmlPath('index.html'));
+  mainWindow.loadURL(resolveHtmlPath("index.html"));
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-  mainWindow.webContents.on('did-finish-load', () => {
+  mainWindow.webContents.on("did-finish-load", () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
@@ -195,20 +195,20 @@ const createWindow = async (monitoring = false) => {
   in the state of the renderer process. So we have to communicate back and forth.
   */
 
-  mainWindow.on('close', (e) => {
-    mainWindow?.webContents.send('close-action');
+  mainWindow.on("close", (e) => {
+    mainWindow?.webContents.send("close-action");
     e.preventDefault();
   });
 
-  mainWindow.on('closed', () => {
+  mainWindow.on("closed", () => {
     mainWindow = null;
   });
 
   buildMenu(mainWindow);
-  buildTray(handleTrayClick, getAssetPath('icon.png'));
+  buildTray(handleTrayClick, getAssetPath("icon.png"));
 
   // Open urls in the user's browser
-  mainWindow.webContents.on('new-window', (event, url) => {
+  mainWindow.webContents.on("new-window", (event, url) => {
     event.preventDefault();
     shell.openExternal(url);
   });
@@ -220,7 +220,7 @@ const createWindow = async (monitoring = false) => {
   }, 1000);
 
   // Allow scraping to happend in brackground
-  powerSaveBlocker.start('prevent-app-suspension');
+  powerSaveBlocker.start("prevent-app-suspension");
 
   // Register general handlers
   registerScrapingHandlers(mainWindow);
@@ -236,19 +236,19 @@ const createWindow = async (monitoring = false) => {
  * Controlling main window
  */
 
-ipcMain.handle('close-main-window', (_e, isCurrentlyScraping: boolean) => {
-  log.debug('called handle close-main-window', mainWindow == null);
+ipcMain.handle("close-main-window", (_e, isCurrentlyScraping: boolean) => {
+  log.debug("called handle close-main-window", mainWindow == null);
   if (mainWindow === null) return;
 
   if (isCurrentlyScraping) {
     const choice = dialog.showMessageBoxSync(mainWindow, {
-      type: 'question',
-      buttons: ['Ja, beenden', 'Abbrechen'],
+      type: "question",
+      buttons: ["Ja, beenden", "Abbrechen"],
       defaultId: 1,
       cancelId: 1,
-      title: 'Bestätigen',
+      title: "Bestätigen",
       message:
-        'Willst du DataSkop wirklich beenden? Der Scraping-Vorgang läuft noch.',
+        "Willst du DataSkop wirklich beenden? Der Scraping-Vorgang läuft noch.",
     });
     if (choice === 1) {
       return;
@@ -257,10 +257,10 @@ ipcMain.handle('close-main-window', (_e, isCurrentlyScraping: boolean) => {
   mainWindow.destroy();
 });
 
-app.on('window-all-closed', () => {
+app.on("window-all-closed", () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
-  if (process.platform !== 'darwin') {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });
@@ -271,8 +271,8 @@ app
   .catch(log.error);
 
 // macOS only
-app.on('activate', () => {
-  log.debug('called activate', mainWindow == null);
+app.on("activate", () => {
+  log.debug("called activate", mainWindow == null);
 
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
@@ -281,11 +281,11 @@ app.on('activate', () => {
 
 // Expose certain information to the renderer
 
-ipcMain.handle('get-version-number', () => {
+ipcMain.handle("get-version-number", () => {
   return app.getVersion();
 });
 
-ipcMain.handle('get-env', () => {
+ipcMain.handle("get-env", () => {
   // Expose configs done via .env to the renderer. The keys have to explicitly
   // specified as follows (right now).
   return {
@@ -299,14 +299,14 @@ ipcMain.handle('get-env', () => {
 
 // Handle notifications from the renderer
 
-ipcMain.handle('show-notification', (_e, title, body) => {
+ipcMain.handle("show-notification", (_e, title, body) => {
   console.log(_e, title, body);
   const n = new Notification({
     title,
     body,
   });
   n.show();
-  n.on('click', () => {
+  n.on("click", () => {
     createWindow();
   });
 });

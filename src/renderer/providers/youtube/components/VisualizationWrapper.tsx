@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import { useScraping } from '../../../contexts';
-import { getLookups, getScrapingResultsBySession } from '../../../lib/db';
-import AutoplayChain from './visualizations/AutoplayChain';
-import MyData from './visualizations/MyData';
-import NewsTop5 from './visualizations/NewsTop5';
-import Profile from './visualizations/profile';
-import SearchResultsCompare from './visualizations/SearchResultsCompare';
+import { useEffect, useState } from "react";
+import { useScraping } from "../../../contexts";
+import { getLookups, getScrapingResultsBySession } from "../../../lib/db";
+import AutoplayChain from "./visualizations/AutoplayChain";
+import MyData from "./visualizations/MyData";
+import NewsTop5 from "./visualizations/NewsTop5";
+import Profile from "./visualizations/profile";
+import SearchResultsCompare from "./visualizations/SearchResultsCompare";
 
 export default function VisualizationWrapper({ name }: { name: string }) {
   const [data, setData] = useState<any>(null);
@@ -19,7 +19,7 @@ export default function VisualizationWrapper({ name }: { name: string }) {
       if (demoData) {
         // migrate outdated lookup format
         if (
-          'lookups' in demoData.data &&
+          "lookups" in demoData.data &&
           Array.isArray(demoData.data.lookups)
         ) {
           const transformed = Object.assign(
@@ -47,19 +47,19 @@ export default function VisualizationWrapper({ name }: { name: string }) {
 
   if ((!demoMode && !sessionId) || data === null) return null;
 
-  if (name === 'autoplaychain') {
+  if (name === "autoplaychain") {
     return <AutoplayChain data={data.results} />;
   }
-  if (name === 'newstop5') {
+  if (name === "newstop5") {
     return <NewsTop5 data={data.results} />;
   }
-  if (name === 'searchresultscompare') {
+  if (name === "searchresultscompare") {
     return <SearchResultsCompare data={data.results} />;
   }
-  if (name === 'profile') {
+  if (name === "profile") {
     return <Profile data={data.results} lookups={data.lookups} />;
   }
-  if (name === 'mydata') {
+  if (name === "mydata") {
     return <MyData data={data} />;
   }
 

@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { faSpinnerThird } from '@fortawesome/pro-light-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect, useState } from 'react';
-import { useScraping } from 'renderer/contexts';
+import { faSpinnerThird } from "@fortawesome/pro-light-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
+import { useScraping } from "renderer/contexts";
 
 export default function ScrapingProgressBar() {
   const {
@@ -15,7 +15,7 @@ export default function ScrapingProgressBar() {
     getEtaUntil,
   } = useScraping();
 
-  const [etaMin, setEtaMin] = useState('15 Minuten');
+  const [etaMin, setEtaMin] = useState("15 Minuten");
 
   useEffect(() => {
     if (finishedTasks > 5) {
@@ -25,12 +25,12 @@ export default function ScrapingProgressBar() {
       if (minutes >= 2) {
         setEtaMin(`${minutes} Minuten`);
       } else if (minutes === 1) {
-        setEtaMin('eine Minute');
+        setEtaMin("eine Minute");
       } else {
-        setEtaMin('unter eine Minute');
+        setEtaMin("unter eine Minute");
       }
     } else {
-      setEtaMin('15 Minuten');
+      setEtaMin("15 Minuten");
     }
   }, [finishedTasks]);
 
@@ -43,7 +43,7 @@ export default function ScrapingProgressBar() {
     <div
       className="w-64 h-10 relative flex items-center cursor-pointer group"
       onClick={() =>
-        dispatch({ type: 'set-visible-window', visibleWindow: !visibleWindow })
+        dispatch({ type: "set-visible-window", visibleWindow: !visibleWindow })
       }
     >
       <div className="z-20 w-full flex items-center justify-center px-2 space-x-2 text-yellow-1300 group-hover:text-yellow-1100">

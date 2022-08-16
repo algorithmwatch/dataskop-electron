@@ -1,8 +1,8 @@
-import _ from 'lodash';
-import { useEffect, useState } from 'react';
-import { humanFileSize } from 'renderer/lib/utils/strings';
-import Button from 'renderer/providers/youtube/components/Button';
-import { useConfig } from '../../contexts';
+import _ from "lodash";
+import { useEffect, useState } from "react";
+import { humanFileSize } from "renderer/lib/utils/strings";
+import Button from "renderer/providers/youtube/components/Button";
+import { useConfig } from "../../contexts";
 
 export default function SettingsPage(): JSX.Element {
   const {
@@ -11,13 +11,13 @@ export default function SettingsPage(): JSX.Element {
   } = useConfig();
 
   const [exportOngoing, setExportOngoing] = useState(false);
-  const [storage, setStorage] = useState<string>('calculating...');
+  const [storage, setStorage] = useState<string>("calculating...");
 
   useEffect(() => {
     (async () =>
       setStorage(
         humanFileSize(
-          _.sum(await window.electron.ipc.invoke('export-debug-size')),
+          _.sum(await window.electron.ipc.invoke("export-debug-size")),
         ),
       ))();
   }, []);
@@ -29,11 +29,11 @@ export default function SettingsPage(): JSX.Element {
       {userConfig && (
         <div className="grid grid-cols-4 gap-4">
           <div className="m-5">
-            <div>Start on login: {userConfig.openAtLogin ? 'yes' : 'no'}</div>
+            <div>Start on login: {userConfig.openAtLogin ? "yes" : "no"}</div>
             <Button
               onClick={() =>
                 dipatchConfig({
-                  type: 'set-user-config',
+                  type: "set-user-config",
                   newValues: {
                     openAtLogin: !userConfig.openAtLogin,
                   },
@@ -44,11 +44,11 @@ export default function SettingsPage(): JSX.Element {
             </Button>
           </div>
           <div className="m-5">
-            <div>Debug logging: {userConfig.debugLogging ? 'yes' : 'no'}</div>
+            <div>Debug logging: {userConfig.debugLogging ? "yes" : "no"}</div>
             <Button
               onClick={() =>
                 dipatchConfig({
-                  type: 'set-user-config',
+                  type: "set-user-config",
                   newValues: {
                     debugLogging: !userConfig.debugLogging,
                   },
@@ -59,11 +59,11 @@ export default function SettingsPage(): JSX.Element {
             </Button>
           </div>
           <div className="m-5">
-            <div>HTML logging: {userConfig.htmlLogging ? 'yes' : 'no'}</div>
+            <div>HTML logging: {userConfig.htmlLogging ? "yes" : "no"}</div>
             <Button
               onClick={() =>
                 dipatchConfig({
-                  type: 'set-user-config',
+                  type: "set-user-config",
                   newValues: {
                     htmlLogging: !userConfig.htmlLogging,
                   },
@@ -74,7 +74,7 @@ export default function SettingsPage(): JSX.Element {
             </Button>
           </div>
           <div className="m-5">
-            <div>Monitoring: {userConfig.monitoring ? 'yes' : 'no'}</div>
+            <div>Monitoring: {userConfig.monitoring ? "yes" : "no"}</div>
           </div>
         </div>
       )}
@@ -83,7 +83,7 @@ export default function SettingsPage(): JSX.Element {
 
       <div className="pt-10">Platform url: {platformUrl}</div>
       <div className="pt-10 pb-10">
-        <Button onClick={() => window.electron.ipc.invoke('update-check-beta')}>
+        <Button onClick={() => window.electron.ipc.invoke("update-check-beta")}>
           Check beta update
         </Button>
       </div>
@@ -95,13 +95,13 @@ export default function SettingsPage(): JSX.Element {
           disabled={exportOngoing}
           onClick={async () => {
             setExportOngoing(true);
-            await window.electron.ipc.invoke('export-debug-archive');
+            await window.electron.ipc.invoke("export-debug-archive");
             setExportOngoing(false);
           }}
         >
           Export debug archive
         </Button>
-        {exportOngoing && 'Exporting...'}
+        {exportOngoing && "Exporting..."}
       </div>
 
       <div className="pb-20">Storage of debug files: {storage}</div>
@@ -111,7 +111,7 @@ export default function SettingsPage(): JSX.Element {
         <div className="pt-10 pb-10">
           <Button
             onClick={() => {
-              window.electron.ipc.invoke('export-debug-clean');
+              window.electron.ipc.invoke("export-debug-clean");
             }}
           >
             Remove debug files (logs, html)

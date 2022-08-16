@@ -1,5 +1,5 @@
-import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import classNames from "classnames";
+import { useEffect, useState } from "react";
 
 export default function Stepper({ steps, currentStepIndex = 0, updateIndex }) {
   const [stepIndex, setStepIndex] = useState(0);
@@ -30,9 +30,9 @@ export default function Stepper({ steps, currentStepIndex = 0, updateIndex }) {
             key={key}
             onClick={() => updateStepIndex(key)}
             className={classNames({
-              'w-5 h-5 rounded-full border focus:outline-none': true,
-              'border-yellow-500 bg-yellow-500': currentStep.key === key,
-              'border-yellow-500': currentStep.key !== key,
+              "w-5 h-5 rounded-full border focus:outline-none": true,
+              "border-yellow-500 bg-yellow-500": currentStep.key === key,
+              "border-yellow-500": currentStep.key !== key,
             })}
           />
         ))}

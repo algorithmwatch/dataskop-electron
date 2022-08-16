@@ -1,13 +1,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
-import { RouteComponentProps } from 'react-router-dom';
+import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
+import { RouteComponentProps } from "react-router-dom";
 import FooterNav, {
   FooterNavItem,
-} from 'renderer/providers/youtube/components/FooterNav';
-import { useModal } from '../../../contexts';
-import { useNavigation } from '../../../contexts/navigation';
+} from "renderer/providers/youtube/components/FooterNav";
+import { useModal } from "../../../contexts";
+import { useNavigation } from "../../../contexts/navigation";
 
 export default function DonationPage1(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -15,18 +15,18 @@ export default function DonationPage1(): JSX.Element {
 
   const footerNavItems: FooterNavItem[] = [
     {
-      label: 'Zurück',
-      theme: 'link',
+      label: "Zurück",
+      theme: "link",
       startIcon: faAngleLeft,
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getPreviousPage('path'));
+      clickHandler(history: RouteComponentProps["history"]) {
+        history.push(getPreviousPage("path"));
       },
     },
     {
-      label: 'Zustimmen & Weiter',
+      label: "Zustimmen & Weiter",
       endIcon: faAngleRight,
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getNextPage('path'));
+      clickHandler(history: RouteComponentProps["history"]) {
+        history.push(getNextPage("path"));
       },
     },
   ];
@@ -69,8 +69,8 @@ export default function DonationPage1(): JSX.Element {
                 className="link-blue"
                 onClick={() =>
                   dispatchModal({
-                    type: 'set-modal-options',
-                    options: { isOpen: true, componentName: 'terms' },
+                    type: "set-modal-options",
+                    options: { isOpen: true, componentName: "terms" },
                   })
                 }
               >
@@ -81,8 +81,8 @@ export default function DonationPage1(): JSX.Element {
                 className="link-blue"
                 onClick={() =>
                   dispatchModal({
-                    type: 'set-modal-options',
-                    options: { isOpen: true, componentName: 'privacy' },
+                    type: "set-modal-options",
+                    options: { isOpen: true, componentName: "privacy" },
                   })
                 }
               >

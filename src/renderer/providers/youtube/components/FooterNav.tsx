@@ -1,9 +1,9 @@
-import { RouteComponentProps, useHistory } from 'react-router-dom';
-import Button, { ButtonProps } from './Button';
+import { RouteComponentProps, useHistory } from "react-router-dom";
+import Button, { ButtonProps } from "./Button";
 
 export interface FooterNavItem extends ButtonProps {
   label: string;
-  clickHandler: (history: RouteComponentProps['history']) => void;
+  clickHandler: (history: RouteComponentProps["history"]) => void;
 }
 
 function FooterNav({ items = [] }: { items: FooterNavItem[] }) {

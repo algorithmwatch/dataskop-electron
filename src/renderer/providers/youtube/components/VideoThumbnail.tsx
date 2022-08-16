@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/mouse-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events */
-import { Channel } from '@algorithmwatch/harke';
-import Tippy, { TippyProps } from '@tippyjs/react';
-import _ from 'lodash';
-import dayjs from 'renderer/lib/dayjs';
+import { Channel } from "@algorithmwatch/harke";
+import Tippy, { TippyProps } from "@tippyjs/react";
+import _ from "lodash";
+import dayjs from "renderer/lib/dayjs";
 
 export default function VideoThumbnail({
   videoId,
@@ -49,7 +49,7 @@ export default function VideoThumbnail({
     if (type === 1) {
       const truncatedString = _.truncate(creatorName, {
         length: 10,
-        omission: '…',
+        omission: "…",
       });
       return (
         <div
@@ -104,7 +104,7 @@ export function TooltipContent({
     tooltipContent.push(
       <div key="creator-udate">
         {video.channel?.name && video.channel.name}
-        {video.uploadDate && `, ${dayjs(video.uploadDate).format('LL')}`}
+        {video.uploadDate && `, ${dayjs(video.uploadDate).format("LL")}`}
       </div>,
     );
   }
@@ -112,7 +112,7 @@ export function TooltipContent({
   if (video.viewCount) {
     tooltipContent.push(
       <div key="view-count">
-        {String(video.viewCount).replace(/(.)(?=(\d{3})+$)/g, '$1.')} Aufrufe
+        {String(video.viewCount).replace(/(.)(?=(\d{3})+$)/g, "$1.")} Aufrufe
       </div>,
     );
   }

@@ -1,5 +1,5 @@
-import classNames from 'classnames';
-import { ReactNode } from 'react';
+import classNames from "classnames";
+import { ReactNode } from "react";
 
 function ContentWrapper({
   centerY,
@@ -11,8 +11,8 @@ function ContentWrapper({
   return (
     <div
       className={classNames(
-        'mx-auto max-w-prose flex flex-col justify-center',
-        centerY ? 'h-full' : 'my-10',
+        "mx-auto max-w-prose flex flex-col justify-center",
+        centerY ? "h-full" : "my-10",
       )}
     >
       <div>{children}</div>

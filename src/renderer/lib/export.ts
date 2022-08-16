@@ -3,11 +3,11 @@
  *
  * @module
  */
-import _ from 'lodash';
-import { ExportToCsv } from 'renderer/vendor/export-to-csv';
-import { flatten } from 'renderer/vendor/flat';
-import { renameKeys } from 'renderer/vendor/lodash-contrib';
-import dayjs from './dayjs';
+import _ from "lodash";
+import { ExportToCsv } from "renderer/vendor/export-to-csv";
+import { flatten } from "renderer/vendor/flat";
+import { renameKeys } from "renderer/vendor/lodash-contrib";
+import dayjs from "./dayjs";
 
 const exportCsv = ({
   filename,
@@ -25,13 +25,13 @@ const exportCsv = ({
   enumerateRows?: boolean;
 }) => {
   // `__` is Django's way of handling nested objects
-  const flatData = data.map((x) => flatten(x, { delimiter: '__' }));
+  const flatData = data.map((x) => flatten(x, { delimiter: "__" }));
 
   // remove, rename and transform columns
   const cleanedData = _(flatData)
     .map((x, i) => {
       // start by 1
-      if (enumerateRows) x['index'] = i + 1;
+      if (enumerateRows) x["index"] = i + 1;
       return x;
     })
     .map(transformColumns)
@@ -44,17 +44,17 @@ const exportCsv = ({
     .value();
 
   // add missing keys to objects and set a blank value ('')
-  const defaultValues = headers.reduce((a, v) => ({ ...a, [v]: '' }), {});
+  const defaultValues = headers.reduce((a, v) => ({ ...a, [v]: "" }), {});
 
   const finalData = cleanedData.map((x) =>
     Object.assign({ ...defaultValues }, x),
   );
 
   const csvExporter = new ExportToCsv({
-    filename: `dataskop-${filename}-${dayjs().format('YYYY-MM-DD-HH-mm-s')}`,
+    filename: `dataskop-${filename}-${dayjs().format("YYYY-MM-DD-HH-mm-s")}`,
     showLabels: true,
     headers,
-    fieldSeparator: ';', // makes CSV to work with Excel
+    fieldSeparator: ";", // makes CSV to work with Excel
   });
   csvExporter.generateCsv(finalData);
 };

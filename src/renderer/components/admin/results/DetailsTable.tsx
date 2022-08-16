@@ -1,18 +1,18 @@
 /* eslint-disable no-return-assign */
 /* eslint-disable react/jsx-key */
 /* eslint-disable react/jsx-props-no-spreading */
-import { faCaretDown, faCaretUp } from '@fortawesome/pro-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Box, Collapse, IconButton, Typography } from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import dayjs from 'dayjs';
-import React from 'react';
+import { faCaretDown, faCaretUp } from "@fortawesome/pro-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Box, Collapse, IconButton, Typography } from "@material-ui/core";
+import Paper from "@material-ui/core/Paper";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import dayjs from "dayjs";
+import React from "react";
 
 function Row({ row }: { row: any }) {
   const [open, setOpen] = React.useState(false);
@@ -38,7 +38,7 @@ function Row({ row }: { row: any }) {
         </TableCell>
         <TableCell align="right">{row.step}</TableCell>
         <TableCell align="right">{row.scrapedAt}</TableCell>
-        <TableCell align="right">{row.success ? 'yes' : 'no'}</TableCell>
+        <TableCell align="right">{row.success ? "yes" : "no"}</TableCell>
         <TableCell align="right">{JSON.stringify(row.errors)}</TableCell>
         {/* <TableCell align="right">{row.protein}</TableCell> */}
       </TableRow>

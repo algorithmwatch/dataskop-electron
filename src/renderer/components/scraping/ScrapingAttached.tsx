@@ -3,10 +3,10 @@
  *
  * @module
  */
-import { useEffect } from 'react';
-import { useConfig, useScraping } from 'renderer/contexts';
-import { currentDelay } from 'renderer/lib/delay';
-import ScrapingManager from './ScrapingManager';
+import { useEffect } from "react";
+import { useConfig, useScraping } from "renderer/contexts";
+import { currentDelay } from "renderer/lib/delay";
+import ScrapingManager from "./ScrapingManager";
 
 export default function ScrapingAttached() {
   const {
@@ -32,11 +32,11 @@ export default function ScrapingAttached() {
   useEffect(() => {
     (async () => {
       if (userConfig && userConfig.monitoring && !isScrapingStarted) {
-        dispatch({ type: 'set-attached', attached: true, visible: false });
-        console.log('now1');
+        dispatch({ type: "set-attached", attached: true, visible: false });
+        console.log("now1");
         await currentDelay();
-        console.log('now2');
-        dispatch({ type: 'set-scraping-started', started: true });
+        console.log("now2");
+        dispatch({ type: "set-scraping-started", started: true });
 
         // Attach
         // Check if loggend in, then act
@@ -49,11 +49,11 @@ export default function ScrapingAttached() {
     (async () => {
       if (userConfig && userConfig.monitoring && isScrapingFinished) {
         configDispatch({
-          type: 'set-user-config',
+          type: "set-user-config",
           newValues: { monitoring: false },
         });
-        dispatch({ type: 'reset-scraping' });
-        dispatch({ type: 'set-attached', attached: false, visible: false });
+        dispatch({ type: "reset-scraping" });
+        dispatch({ type: "set-attached", attached: false, visible: false });
 
         // Disable monitoring flag
         // Process post-monitoring result

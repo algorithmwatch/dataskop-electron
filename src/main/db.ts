@@ -4,26 +4,26 @@
   doesnot support it. This should get changed when it's possible.
  */
 
-import { app } from 'electron';
-import Store from 'electron-store';
-import path from 'path';
-import { setOpenAtLogin } from './tray';
-import { addMainHandler } from './utils';
+import { app } from "electron";
+import Store from "electron-store";
+import path from "path";
+import { setOpenAtLogin } from "./tray";
+import { addMainHandler } from "./utils";
 
-const userFolder = app.getPath('userData');
-const dbFolder = path.join(userFolder, 'databases');
+const userFolder = app.getPath("userData");
+const dbFolder = path.join(userFolder, "databases");
 
 const dataStore = new Store({
-  name: 'data',
+  name: "data",
   cwd: dbFolder,
-  encryptionKey: 'DaTaSk0p',
+  encryptionKey: "DaTaSk0p",
   defaults: { data: null },
 });
 
 const configStore = new Store({
-  name: 'config',
+  name: "config",
   cwd: dbFolder,
-  encryptionKey: 'DaTaSk0p',
+  encryptionKey: "DaTaSk0p",
   defaults: {
     openAtLogin: true,
     monitoring: null,
@@ -33,26 +33,26 @@ const configStore = new Store({
 });
 
 // run once on init
-setOpenAtLogin(configStore.get('openAtLogin'));
+setOpenAtLogin(configStore.get("openAtLogin"));
 
-configStore.onDidChange('openAtLogin', (newValue) =>
+configStore.onDidChange("openAtLogin", (newValue) =>
   setOpenAtLogin(!!newValue),
 );
 
 export default async function registerDbHandlers() {
-  addMainHandler('db-write', (_e: any, data: any) => {
-    dataStore.set('data', data);
+  addMainHandler("db-write", (_e: any, data: any) => {
+    dataStore.set("data", data);
   });
 
-  addMainHandler('db-read', () => {
-    return dataStore.get('data');
+  addMainHandler("db-read", () => {
+    return dataStore.get("data");
   });
 
-  addMainHandler('db-set-config', (_e: any, object: any) => {
+  addMainHandler("db-set-config", (_e: any, object: any) => {
     return configStore.set(object);
   });
 
-  addMainHandler('db-get-config', (_e: any, key = null) => {
+  addMainHandler("db-get-config", (_e: any, key = null) => {
     if (key == null) return configStore.store;
     return configStore.get(key);
   });

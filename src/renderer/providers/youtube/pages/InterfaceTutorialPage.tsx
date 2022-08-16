@@ -1,13 +1,13 @@
-import { faMousePointer } from '@fortawesome/pro-light-svg-icons';
-import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { useNavigation, useScraping } from 'renderer/contexts';
+import { faMousePointer } from "@fortawesome/pro-light-svg-icons";
+import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect } from "react";
+import { RouteComponentProps } from "react-router-dom";
+import { useNavigation, useScraping } from "renderer/contexts";
 import FooterNav, {
   FooterNavItem,
-} from 'renderer/providers/youtube/components/FooterNav';
-import { PerfectArrow } from 'renderer/providers/youtube/components/PerfectArrow';
+} from "renderer/providers/youtube/components/FooterNav";
+import { PerfectArrow } from "renderer/providers/youtube/components/PerfectArrow";
 
 export default function InterfaceTutorialPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -18,20 +18,20 @@ export default function InterfaceTutorialPage(): JSX.Element {
 
   const footerNavItems: FooterNavItem[] = [
     {
-      label: 'Zurück',
+      label: "Zurück",
       startIcon: faAngleLeft,
-      theme: 'link',
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getPreviousPage('path'));
+      theme: "link",
+      clickHandler(history: RouteComponentProps["history"]) {
+        history.push(getPreviousPage("path"));
       },
     },
     {
-      label: 'Weiter',
+      label: "Weiter",
       // size: 'large',
-      classNames: 'ml-auto',
+      classNames: "ml-auto",
       endIcon: faAngleRight,
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getNextPage('path'));
+      clickHandler(history: RouteComponentProps["history"]) {
+        history.push(getNextPage("path"));
       },
     },
   ];
@@ -39,7 +39,7 @@ export default function InterfaceTutorialPage(): JSX.Element {
   useEffect(() => {
     // start scraping
     if (isUserLoggedIn && !isScrapingStarted) {
-      dispatch({ type: 'set-scraping-started', started: true });
+      dispatch({ type: "set-scraping-started", started: true });
     }
   }, []);
 

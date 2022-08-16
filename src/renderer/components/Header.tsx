@@ -1,10 +1,10 @@
-import { faBars } from '@fortawesome/pro-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
-import { useLocation } from 'react-router';
-import Drawer from 'renderer/components/Drawer';
-import { useConfig, useNavigation } from 'renderer/contexts';
-import logo from 'renderer/providers/tiktok/static/images/bildmarke.svg';
+import { faBars } from "@fortawesome/pro-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
+import { useLocation } from "react-router";
+import Drawer from "renderer/components/Drawer";
+import { useConfig, useNavigation } from "renderer/contexts";
+import logo from "renderer/providers/tiktok/static/images/bildmarke.svg";
 
 export default function Header() {
   const { pathname } = useLocation();
@@ -12,7 +12,7 @@ export default function Header() {
     state: { version },
   } = useConfig();
   const { getCurrentPage } = useNavigation();
-  const showHeader = getCurrentPage('layoutProps')?.showHeader || true;
+  const showHeader = getCurrentPage("layoutProps")?.showHeader || true;
   const [menuIsOpen, setMenuIsOpen] = useState(false);
 
   return (

@@ -1,6 +1,6 @@
-import { GetHtmlFunction, GetHtmlLazyFunction } from 'renderer/providers/types';
-import { SearchProcedureConfig, YtScrapingConfig } from '..';
-import { scrapeVideoSearch } from '../scrapers';
+import { GetHtmlFunction, GetHtmlLazyFunction } from "renderer/providers/types";
+import { SearchProcedureConfig, YtScrapingConfig } from "..";
+import { scrapeVideoSearch } from "../scrapers";
 
 async function* searchProcedure(
   getHtml: GetHtmlFunction,

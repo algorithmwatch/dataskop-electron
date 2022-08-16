@@ -1,18 +1,18 @@
-import '@testing-library/jest-dom';
-import { render } from '@testing-library/react';
-import App from '../renderer/App';
+import "@testing-library/jest-dom";
+import { render } from "@testing-library/react";
+import App from "../renderer/App";
 
-describe('App', () => {
-  it('should render', () => {
+describe("App", () => {
+  it("should render", () => {
     window.electron = {};
-    window.electron.procEnv = '{}';
+    window.electron.procEnv = "{}";
     window.electron.ipc = {};
-    window.electron.ipc.invoke = () => console.log('mock invoke');
-    window.electron.ipc.on = () => console.log('mock on');
+    window.electron.ipc.invoke = () => console.log("mock invoke");
+    window.electron.ipc.on = () => console.log("mock on");
     window.electron.ipc.removeAllListeners = () =>
-      console.log('mock removeAllListeners');
+      console.log("mock removeAllListeners");
     window.electron.ipc.removeListener = () =>
-      console.log('mock removeListener');
+      console.log("mock removeListener");
     expect(render(<App />)).toBeTruthy();
   });
 });

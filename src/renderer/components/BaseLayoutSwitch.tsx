@@ -1,8 +1,8 @@
-import { ReactNode, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { useNavigation, useScraping } from 'renderer/contexts';
-import YoutubeBase from '../providers/youtube/components/BaseLayout';
-import BaseLayout from './BaseLayout';
+import { ReactNode, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { useNavigation, useScraping } from "renderer/contexts";
+import YoutubeBase from "../providers/youtube/components/BaseLayout";
+import BaseLayout from "./BaseLayout";
 
 export default function BaseLayoutSwitch({
   children,
@@ -21,11 +21,11 @@ export default function BaseLayoutSwitch({
   useEffect(() => {
     const pageIndex = getPageIndexByPath(pathname);
     if (pageIndex !== -1) {
-      dispatch({ type: 'set-page-index', pageIndex });
+      dispatch({ type: "set-page-index", pageIndex });
     }
   }, [pathname]);
 
-  if (campaign?.config.provider === 'youtube')
+  if (campaign?.config.provider === "youtube")
     return <YoutubeBase>{children}</YoutubeBase>;
 
   return <BaseLayout>{children}</BaseLayout>;

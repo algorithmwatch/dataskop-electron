@@ -5,16 +5,16 @@ import {
   faPlay,
   faSearch,
   faUser,
-} from '@fortawesome/pro-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import dayjs from 'dayjs';
-import { useEffect, useMemo, useRef, useState } from 'react';
+} from "@fortawesome/pro-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import dayjs from "dayjs";
+import { useEffect, useMemo, useRef, useState } from "react";
 // import { ScrapingResult } from '../../lib/db/types';
-import Button from '../Button';
+import Button from "../Button";
 
 const invokeExport = async (data) => {
-  const filename = `dataskop-${dayjs().format('YYYY-MM-DD-HH-mm-s')}.json`;
-  window.electron.ipc.invoke('results-export', JSON.stringify(data), filename);
+  const filename = `dataskop-${dayjs().format("YYYY-MM-DD-HH-mm-s")}.json`;
+  window.electron.ipc.invoke("results-export", JSON.stringify(data), filename);
 };
 
 export default function MyData({ data }) {
@@ -22,24 +22,24 @@ export default function MyData({ data }) {
   const containerRef = useRef();
   // TODO: Jump keys for missing entries
   const jumpRefs = new Map([
-    ['user-watch-history', useRef()],
-    ['subscribed-channels', useRef()],
-    ['search-results-videos', useRef()],
+    ["user-watch-history", useRef()],
+    ["subscribed-channels", useRef()],
+    ["search-results-videos", useRef()],
   ]);
 
   const [renderJson, setRenderJson] = useState(false);
 
   const db = useMemo(() => {
     const history = data.results.find(
-      (x) => x.success && x.slug.includes('user-watch-history'),
+      (x) => x.success && x.slug.includes("user-watch-history"),
     )?.fields.videos;
 
     const channels = data.results.find(
-      (x) => x.success && x.slug.includes('subscribed-channels'),
+      (x) => x.success && x.slug.includes("subscribed-channels"),
     )?.fields.channels;
 
     const queries = data.results.find(
-      (x) => x.success && x.slug.includes('search-results-videos'),
+      (x) => x.success && x.slug.includes("search-results-videos"),
     )?.fields.videos;
 
     return {
@@ -52,7 +52,7 @@ export default function MyData({ data }) {
   const stringifiedHtml = useMemo(() => {
     if (!renderJson) return <div>Loading</div>;
 
-    const lines = stringifiedData.split('\n');
+    const lines = stringifiedData.split("\n");
     const jumpRefsKeys = [...jumpRefs.keys()];
 
     const html = lines.map((l, i) => {
@@ -60,7 +60,7 @@ export default function MyData({ data }) {
       if (field.length === 2) {
         const jumpKey = jumpRefsKeys.find((j) => l.includes(j));
         if (jumpKey) {
-          console.log('jumpKey', jumpKey);
+          console.log("jumpKey", jumpKey);
           return (
             <div key={i} ref={jumpRefs.get(jumpKey)}>
               <span className="font-bold text-blue-700">{field[0]}"</span>:
@@ -97,9 +97,9 @@ export default function MyData({ data }) {
 
   const scrollTo = (jumpKey) => {
     const ref = jumpRefs.get(jumpKey);
-    console.log('scrollto', jumpKey, ref?.current);
+    console.log("scrollto", jumpKey, ref?.current);
     if (ref?.current) {
-      ref.current.scrollIntoView({ behavior: 'smooth' });
+      ref.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -118,7 +118,7 @@ export default function MyData({ data }) {
             {db.channels && db.channels.length > 0 && (
               <div
                 className="p-2"
-                onClick={() => scrollTo('subscribed-channels')}
+                onClick={() => scrollTo("subscribed-channels")}
               >
                 <FontAwesomeIcon icon={faUser} className="mr-3" size="lg" />
                 {db.channels.length} Kanäle, denen du folgst
@@ -127,7 +127,7 @@ export default function MyData({ data }) {
             {db.history && db.history.length > 0 && (
               <div
                 className="p-2  "
-                onClick={() => scrollTo('user-watch-history')}
+                onClick={() => scrollTo("user-watch-history")}
               >
                 <FontAwesomeIcon icon={faList} className="mr-3" size="lg" />
                 Die letzten {db.history.length} Videos, die du gesehen hast
@@ -135,7 +135,7 @@ export default function MyData({ data }) {
             )}
             <div
               className="p-2 "
-              onClick={() => scrollTo('subscribed-channels')}
+              onClick={() => scrollTo("subscribed-channels")}
             >
               <FontAwesomeIcon icon={faPlay} className="mr-3" size="lg" />
               12 Videos mit insgesamt 120 Empfehlung
@@ -143,7 +143,7 @@ export default function MyData({ data }) {
             {db.queries && db.queries.length > 0 && (
               <div
                 className="p-2 "
-                onClick={() => scrollTo('search-results-videos')}
+                onClick={() => scrollTo("search-results-videos")}
               >
                 <FontAwesomeIcon icon={faSearch} className="mr-3" size="lg" />
                 {db.queries.length} Suchbegriffe mit insg. 80 Ergebnissen

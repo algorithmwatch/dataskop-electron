@@ -2,22 +2,22 @@
  * Youtube specific code for main.
  */
 
-import { getThumbnails, getVideoUrl } from '@algorithmwatch/harke';
-import { BrowserWindow, dialog, session } from 'electron';
-import fetch from 'electron-fetch';
-import log from 'electron-log';
-import fs from 'fs';
-import pLimit from 'p-limit';
-import path from 'path';
-import { addMainHandler } from '../utils';
+import { getThumbnails, getVideoUrl } from "@algorithmwatch/harke";
+import { BrowserWindow, dialog, session } from "electron";
+import fetch from "electron-fetch";
+import log from "electron-log";
+import fs from "fs";
+import pLimit from "p-limit";
+import path from "path";
+import { addMainHandler } from "../utils";
 
 export default function registerYoutubeHandlers(mainWindow: BrowserWindow) {
   addMainHandler(
-    'youtube-scraping-background-videos',
+    "youtube-scraping-background-videos",
     (_event: any, videoIds: any[]) => {
       async function scrapeMetaInformation(videoId: string) {
         const url = getVideoUrl(videoId);
-        const ses = session.fromPartition('background-scraping');
+        const ses = session.fromPartition("background-scraping");
         const res = await fetch(url, { session: ses, useSessionCookies: true });
         const html = await res.text();
         return { html, videoId };
@@ -33,7 +33,7 @@ export default function registerYoutubeHandlers(mainWindow: BrowserWindow) {
   );
 
   addMainHandler(
-    'youtube-results-export-images',
+    "youtube-results-export-images",
     async (_event: any, ytIds: string[], filename: any) => {
       async function downloadYtImage(ytId: string, folder: string) {
         const url = getThumbnails(ytId).default.maxRes;

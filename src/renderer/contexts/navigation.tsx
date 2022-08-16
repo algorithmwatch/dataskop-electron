@@ -3,14 +3,14 @@
  *
  * @module
  */
-import React from 'react';
-import { providerInfo } from 'renderer/providers/info';
-import { NavigationState, NavigationStatePage } from './types';
+import React from "react";
+import { providerInfo } from "renderer/providers/info";
+import { NavigationState, NavigationStatePage } from "./types";
 
 type Action =
-  | { type: 'set-page-index'; pageIndex: number }
+  | { type: "set-page-index"; pageIndex: number }
   | {
-      type: 'set-navigation-by-provider';
+      type: "set-navigation-by-provider";
       provider: string;
       navSlug: string;
     };
@@ -19,9 +19,9 @@ type Dispatch = (action: Action) => void;
 type NavigationProviderProps = { children: React.ReactNode };
 
 type NavigationFunctionSignature = {
-  (propName: 'path'): NavigationStatePage['path'];
-  (propName: 'layoutProps'): NavigationStatePage['layoutProps'];
-  (propName: 'sectionKey'): NavigationStatePage['sectionKey'];
+  (propName: "path"): NavigationStatePage["path"];
+  (propName: "layoutProps"): NavigationStatePage["layoutProps"];
+  (propName: "sectionKey"): NavigationStatePage["sectionKey"];
   (propname?: undefined): NavigationStatePage;
 };
 
@@ -32,7 +32,7 @@ type NavigationStateContextType =
       getNextPage: NavigationFunctionSignature;
       getPreviousPage: NavigationFunctionSignature;
       getCurrentPage: NavigationFunctionSignature;
-      getPageIndexByPath: (path: NavigationStatePage['path']) => number;
+      getPageIndexByPath: (path: NavigationStatePage["path"]) => number;
     }
   | undefined;
 
@@ -43,7 +43,7 @@ const initialNavigationState: NavigationState = {
   pageIndex: 0,
   pages: [
     {
-      path: '/select_campaign',
+      path: "/select_campaign",
       sectionKey: null,
       layoutProps: {
         hideHeader: true,
@@ -58,10 +58,10 @@ const NavigationReducer = (
   action: Action,
 ): NavigationState => {
   switch (action.type) {
-    case 'set-page-index': {
+    case "set-page-index": {
       return { ...state, pageIndex: action.pageIndex };
     }
-    case 'set-navigation-by-provider': {
+    case "set-navigation-by-provider": {
       const navConfig =
         providerInfo[action.provider].navigation[action.navSlug];
 
@@ -134,7 +134,7 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
     return currentPageObj;
   }) as NavigationFunctionSignature;
 
-  const getPageIndexByPath = (path: NavigationStatePage['path']): number =>
+  const getPageIndexByPath = (path: NavigationStatePage["path"]): number =>
     state.pages.findIndex((page) => page.path === path);
 
   const value = {
@@ -157,7 +157,7 @@ const useNavigation = () => {
   const context = React.useContext(NavigationStateContext);
 
   if (context === undefined) {
-    throw new Error('useNavigation must be used within a NavigationProvider');
+    throw new Error("useNavigation must be used within a NavigationProvider");
   }
 
   return context;

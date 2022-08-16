@@ -2,7 +2,7 @@ import {
   GetHtmlFunction,
   GetHtmlLazyFunction,
   ScrapingConfig,
-} from 'renderer/providers/types';
+} from "renderer/providers/types";
 
 const deserializeConfigSteps = (config: ScrapingConfig, mapping: any) => {
   return config.steps.map((step) => {

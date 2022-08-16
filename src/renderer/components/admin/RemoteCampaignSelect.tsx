@@ -1,7 +1,7 @@
-import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
-import { useEffect, useState } from 'react';
-import { getActiveCampaigns } from 'renderer/lib/networking';
-import { useConfig, useScraping } from '../../contexts';
+import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
+import { useEffect, useState } from "react";
+import { getActiveCampaigns } from "renderer/lib/networking";
+import { useConfig, useScraping } from "../../contexts";
 
 export default function RemoteCampaignConfig() {
   const {
@@ -17,7 +17,7 @@ export default function RemoteCampaignConfig() {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { scraping_config, id, title, description, slug } = remoteCampaign;
     dispatch({
-      type: 'set-campaign',
+      type: "set-campaign",
       campaign: { id, title, slug, description, config: scraping_config },
     });
   };
@@ -43,7 +43,7 @@ export default function RemoteCampaignConfig() {
         <InputLabel id="rsc-select-label">Wähle aus (Remote Config)</InputLabel>
         <Select
           labelId="rsc-select-label"
-          value={(chosenCam != null && chosenCam) || ''}
+          value={(chosenCam != null && chosenCam) || ""}
           onChange={handleChange}
         >
           {camOptions != null

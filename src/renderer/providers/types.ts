@@ -1,4 +1,4 @@
-import { NavigationState } from 'renderer/contexts/types';
+import { NavigationState } from "renderer/contexts/types";
 
 export type GetCurrentHtml = () => Promise<{ html: string; hash: string }>;
 

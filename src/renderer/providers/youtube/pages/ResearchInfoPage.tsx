@@ -1,13 +1,13 @@
-import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
-import { useEffect, useState } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { useScraping } from 'renderer/contexts';
-import { useNavigation } from 'renderer/contexts/navigation';
-import ContentWrapper from 'renderer/providers/youtube/components/ContentWrapper';
+import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
+import { useEffect, useState } from "react";
+import { RouteComponentProps } from "react-router-dom";
+import { useScraping } from "renderer/contexts";
+import { useNavigation } from "renderer/contexts/navigation";
+import ContentWrapper from "renderer/providers/youtube/components/ContentWrapper";
 import FooterNav, {
   FooterNavItem,
-} from 'renderer/providers/youtube/components/FooterNav';
-import visual from '../static/images/research-info/visual.svg';
+} from "renderer/providers/youtube/components/FooterNav";
+import visual from "../static/images/research-info/visual.svg";
 
 export default function ResearchInfoPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -21,29 +21,29 @@ export default function ResearchInfoPage(): JSX.Element {
   } = useScraping();
   const footerNavItems: FooterNavItem[] = [
     {
-      label: 'Zurück',
+      label: "Zurück",
       startIcon: faAngleLeft,
-      theme: 'link',
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getPreviousPage('path'));
+      theme: "link",
+      clickHandler(history: RouteComponentProps["history"]) {
+        history.push(getPreviousPage("path"));
       },
     },
     {
-      label: 'Weiter',
+      label: "Weiter",
       // size: 'large',
       endIcon: faAngleRight,
       disabled: nextButtonIsDisabled && !demoMode,
       tippyOptions:
         nextButtonIsDisabled && !demoMode
           ? {
-              content: 'Bitte warte, bis alle Daten geladen sind.',
-              theme: 'process-info',
-              placement: 'left',
+              content: "Bitte warte, bis alle Daten geladen sind.",
+              theme: "process-info",
+              placement: "left",
             }
           : undefined,
-      clickHandler(history: RouteComponentProps['history']) {
+      clickHandler(history: RouteComponentProps["history"]) {
         if (!nextButtonIsDisabled || demoMode) {
-          history.push(getNextPage('path'));
+          history.push(getNextPage("path"));
         }
       },
     },
@@ -52,7 +52,7 @@ export default function ResearchInfoPage(): JSX.Element {
   useEffect(() => {
     if (campaign === null) return;
     const stepIndex = campaign.config.steps.findIndex(
-      (s) => s.type === 'video',
+      (s) => s.type === "video",
     );
     if (demoMode || step > stepIndex) {
       setNextButtonIsDisabled(false);

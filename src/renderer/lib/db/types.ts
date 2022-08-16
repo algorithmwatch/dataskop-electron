@@ -1,8 +1,8 @@
-import { ParserResult } from '@algorithmwatch/harke';
-import { Campaign, ScrapingConfig } from '../../providers/types';
+import { ParserResult } from "@algorithmwatch/harke";
+import { Campaign, ScrapingConfig } from "../../providers/types";
 
 // re-defining the slug of `ParserResult` from `harke-parser` because the slug is not changable
-interface ScrapingResult extends Omit<ParserResult, 'slug'> {
+interface ScrapingResult extends Omit<ParserResult, "slug"> {
   slug: string;
   success: boolean;
 }
@@ -28,7 +28,7 @@ interface ScrapingSession {
 interface LookupItem {
   data: any;
   createdAt: number;
-  provider: 'youtube';
+  provider: "youtube";
 }
 
 interface LookupMap {

@@ -9,16 +9,16 @@
 // @ts-nocheck
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { constants } from '@algorithmwatch/harke';
-import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
-import { useForm } from 'react-hook-form';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
-import { useNavigation, useScraping } from 'renderer/contexts';
-import { addQuestionnaireToSession } from 'renderer/lib/db';
-import Button from 'renderer/providers/youtube/components/Button';
+import { constants } from "@algorithmwatch/harke";
+import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
+import { useForm } from "react-hook-form";
+import { RouteComponentProps, useHistory } from "react-router-dom";
+import { useNavigation, useScraping } from "renderer/contexts";
+import { addQuestionnaireToSession } from "renderer/lib/db";
+import Button from "renderer/providers/youtube/components/Button";
 import FooterNav, {
   FooterNavItem,
-} from 'renderer/providers/youtube/components/FooterNav';
+} from "renderer/providers/youtube/components/FooterNav";
 
 export default function QuestionnairePage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -38,38 +38,38 @@ export default function QuestionnairePage(): JSX.Element {
 
   const footerNavItems: FooterNavItem[] = [
     {
-      label: 'Zurück',
-      theme: 'link',
+      label: "Zurück",
+      theme: "link",
       startIcon: faAngleLeft,
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getPreviousPage('path'));
+      clickHandler(history: RouteComponentProps["history"]) {
+        history.push(getPreviousPage("path"));
       },
     },
     {
-      label: 'Weiter',
+      label: "Weiter",
       endIcon: faAngleRight,
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getNextPage('path'));
+      clickHandler(history: RouteComponentProps["history"]) {
+        history.push(getNextPage("path"));
       },
     },
   ];
 
   const usage = {
-    vpn: 'Ich nutze YouTube über ein VPN.',
-    shared: 'Ich teile meinen YouTube Account mit mind. einer weiteren Person.',
-    multiple: 'Ich nutze YouTube über verschiedene Accounts.',
-    anon: 'Ich nutze YouTube überwiegend ohne eingeloggt zu sein.',
-    local: 'Ich nutze YouTube überwiegend im oben angegebenen PLZ',
+    vpn: "Ich nutze YouTube über ein VPN.",
+    shared: "Ich teile meinen YouTube Account mit mind. einer weiteren Person.",
+    multiple: "Ich nutze YouTube über verschiedene Accounts.",
+    anon: "Ich nutze YouTube überwiegend ohne eingeloggt zu sein.",
+    local: "Ich nutze YouTube überwiegend im oben angegebenen PLZ",
   };
 
   const onSubmit = (values) => {
     if (sessionId === null) {
-      console.error('session is not set');
+      console.error("session is not set");
     } else {
       addQuestionnaireToSession(sessionId, values);
     }
 
-    hist.push(getNextPage('path'));
+    hist.push(getNextPage("path"));
   };
 
   return (

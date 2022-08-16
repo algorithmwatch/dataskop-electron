@@ -1,10 +1,10 @@
 // @ts-nocheck
 
 /* eslint-disable react-hooks/exhaustive-deps */
-import { faSpinnerThird } from '@fortawesome/pro-light-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
-import { useScraping } from 'renderer/contexts';
+import { faSpinnerThird } from "@fortawesome/pro-light-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
+import { useScraping } from "renderer/contexts";
 
 export default function ScrapingProgressBar() {
   const {
@@ -18,7 +18,7 @@ export default function ScrapingProgressBar() {
     getEtaUntil,
   } = useScraping();
 
-  const [etaMin, setEtaMin] = useState('wenige Minuten');
+  const [etaMin, setEtaMin] = useState("wenige Minuten");
 
   // useEffect(() => {
   //   if (finishedTasks > 5) {
@@ -42,10 +42,10 @@ export default function ScrapingProgressBar() {
   // }
 
   const typeDescriptionMap = {
-    action: 'Scraping Profil',
-    profile: 'Scraping Profil',
-    video: 'Empfehlungsexperimente…',
-    search: 'Suchexperiment…',
+    action: "Scraping Profil",
+    profile: "Scraping Profil",
+    video: "Empfehlungsexperimente…",
+    search: "Suchexperiment…",
   };
   const currentType = campaign?.config.steps[step].type;
   const description = typeDescriptionMap[currentType];

@@ -1,5 +1,5 @@
-import { StartPage } from '../pages';
+import { StartPage } from "../pages";
 
-const tiktokRoutes = [{ path: '/tiktok/start', comp: StartPage }];
+const tiktokRoutes = [{ path: "/tiktok/start", comp: StartPage }];
 
 export default tiktokRoutes;

@@ -4,16 +4,16 @@
  *
  * @module
  */
-import { faAngleLeft } from '@fortawesome/pro-regular-svg-icons';
-import { Button } from '@material-ui/core';
-import { useEffect } from 'react';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
-import DropFile from 'renderer/components/DropFile';
-import ContentWrapper from 'renderer/providers/youtube/components/ContentWrapper';
-import { useConfig, useNavigation, useScraping } from '../contexts';
+import { faAngleLeft } from "@fortawesome/pro-regular-svg-icons";
+import { Button } from "@material-ui/core";
+import { useEffect } from "react";
+import { RouteComponentProps, useHistory } from "react-router-dom";
+import DropFile from "renderer/components/DropFile";
+import ContentWrapper from "renderer/providers/youtube/components/ContentWrapper";
+import { useConfig, useNavigation, useScraping } from "../contexts";
 import FooterNav, {
   FooterNavItem,
-} from '../providers/youtube/components/FooterNav';
+} from "../providers/youtube/components/FooterNav";
 
 export default function ProviderLoginPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -26,12 +26,12 @@ export default function ProviderLoginPage(): JSX.Element {
 
   const footerNavItems: FooterNavItem[] = [
     {
-      label: 'Zurück',
+      label: "Zurück",
       startIcon: faAngleLeft,
-      theme: 'link',
-      clickHandler(history: RouteComponentProps['history']) {
-        dispatch({ type: 'set-visible-window', visibleWindow: false });
-        history.push(getPreviousPage('path'));
+      theme: "link",
+      clickHandler(history: RouteComponentProps["history"]) {
+        dispatch({ type: "set-visible-window", visibleWindow: false });
+        history.push(getPreviousPage("path"));
       },
     },
   ];
@@ -43,7 +43,7 @@ export default function ProviderLoginPage(): JSX.Element {
       // dispatch({ type: 'set-visible-window', visibleWindow: false });
 
       // go to next page
-      hist.push(getNextPage('path'));
+      hist.push(getNextPage("path"));
     }
   }, [isUserLoggedIn]);
 
@@ -57,11 +57,11 @@ export default function ProviderLoginPage(): JSX.Element {
               <Button
                 onClick={() => {
                   dispatch({
-                    type: 'set-attached',
+                    type: "set-attached",
                     attached: true,
                     visible: true,
                   });
-                  sendEvent(campaign, 'clicked start scraping');
+                  sendEvent(campaign, "clicked start scraping");
                 }}
               >
                 Anmelden
@@ -69,7 +69,7 @@ export default function ProviderLoginPage(): JSX.Element {
             </div>
             <Button
               onClick={() => {
-                window.electron.ipc.invoke('scraping-clear-storage');
+                window.electron.ipc.invoke("scraping-clear-storage");
                 // dispatch({ type: 'reset-scraping' });
               }}
             >

@@ -1,10 +1,10 @@
-import { ParserResult } from '@algorithmwatch/harke';
-import { range } from 'lodash';
-import { GetCurrentHtml, GetHtmlFunction } from 'renderer/providers/types';
-import { getUniquePath } from 'renderer/vendor/cheerio-unique-selector';
-import { ScrapingResult } from '../db';
-import { currentDelay } from '../delay';
-import { delay } from '../utils/time';
+import { ParserResult } from "@algorithmwatch/harke";
+import { range } from "lodash";
+import { GetCurrentHtml, GetHtmlFunction } from "renderer/providers/types";
+import { getUniquePath } from "renderer/vendor/cheerio-unique-selector";
+import { ScrapingResult } from "../db";
+import { currentDelay } from "../delay";
+import { delay } from "../utils/time";
 
 /**
  * Keep trying to parse the HTML and wait if necessary. Not reloading the HTML
@@ -19,7 +19,7 @@ const waitUntilDone = async (
   isDoneCheck: null | ((arg0: ScrapingResult, arg1: number) => boolean) = null,
   timeout: number,
   times: number,
-  slugPrefix = 'yt',
+  slugPrefix = "yt",
 ) => {
   const curTimeout = timeout;
 
@@ -28,7 +28,7 @@ const waitUntilDone = async (
     success: false,
     fields: {},
     errors: [],
-    slug: '',
+    slug: "",
   } as ScrapingResult;
 
   let prevHash = null;
@@ -91,13 +91,13 @@ const parseUntilDone = async (
   numTries = 3,
   baseTimeout = 13,
   timeout = 1000,
-  slugPrefix = 'yt',
+  slugPrefix = "yt",
 ) => {
   let lastRes = {
     success: false,
     fields: {},
     errors: [],
-    slug: '',
+    slug: "",
   } as ScrapingResult;
 
   const allErros = [];
@@ -132,13 +132,13 @@ const parseUntilDone = async (
       );
 
     // hotfix to overcome channel error
-    if (lastRes.errors.length === 1 && lastRes.errors[0].field === 'channel') {
+    if (lastRes.errors.length === 1 && lastRes.errors[0].field === "channel") {
       lastRes.success = true;
       lastRes.fields.channel = {
-        id: 'invalid',
-        name: '',
-        url: '',
-        thumbnail: '',
+        id: "invalid",
+        name: "",
+        url: "",
+        thumbnail: "",
       };
       return lastRes;
     }
@@ -146,7 +146,7 @@ const parseUntilDone = async (
       message: `Too many failed tries to extract html: ${JSON.stringify(
         allErros,
       )}`,
-      field: 'general error',
+      field: "general error",
     });
   }
   return lastRes;
@@ -177,7 +177,7 @@ const getReadyHtml = async (getCurrentHtml: GetCurrentHtml) => {
 const clickOnElement = (element: cheerio.Cheerio, $html: cheerio.Root) => {
   const path = getUniquePath(element, $html);
   window.electron.log.info(path);
-  return window.electron.ipc.invoke('scraping-click-element', path);
+  return window.electron.ipc.invoke("scraping-click-element", path);
 };
 
 export { parseUntilDone, getReadyHtml, clickOnElement };

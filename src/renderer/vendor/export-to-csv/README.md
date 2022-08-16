@@ -14,25 +14,25 @@ yarn add export-to-csv
 ## Usage
 
 ```javascript
-import { ExportToCsv } from 'export-to-csv';
+import { ExportToCsv } from "export-to-csv";
 
 var data = [
   {
-    name: 'Test 1',
+    name: "Test 1",
     age: 13,
     average: 8.2,
     approved: true,
     description: "using 'Content here, content here' ",
   },
   {
-    name: 'Test 2',
+    name: "Test 2",
     age: 11,
     average: 8.2,
     approved: true,
     description: "using 'Content here, content here' ",
   },
   {
-    name: 'Test 4',
+    name: "Test 4",
     age: 10,
     average: 8.2,
     approved: true,
@@ -41,12 +41,12 @@ var data = [
 ];
 
 const options = {
-  fieldSeparator: ',',
+  fieldSeparator: ",",
   quoteStrings: '"',
-  decimalSeparator: '.',
+  decimalSeparator: ".",
   showLabels: true,
   showTitle: true,
-  title: 'My Awesome CSV',
+  title: "My Awesome CSV",
   useTextFile: false,
   useBom: true,
   useKeysAsHeaders: true,

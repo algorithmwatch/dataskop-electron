@@ -1,10 +1,10 @@
-import ReactModal from 'react-modal';
-import { useModal } from 'renderer/contexts';
-import Button from './Button';
-import ModalContentComponents from './modal/ModalContentComponents';
+import ReactModal from "react-modal";
+import { useModal } from "renderer/contexts";
+import Button from "./Button";
+import ModalContentComponents from "./modal/ModalContentComponents";
 
 // https://github.com/reactjs/react-modal/issues/632#issuecomment-378755186
-if (process.env.NODE_ENV !== 'test') ReactModal.setAppElement('#root');
+if (process.env.NODE_ENV !== "test") ReactModal.setAppElement("#root");
 
 function Modal() {
   const {
@@ -17,7 +17,7 @@ function Modal() {
 
   const closeModal = () => {
     dispatch({
-      type: 'set-modal-options',
+      type: "set-modal-options",
       options: { isOpen: false },
     });
   };
@@ -30,7 +30,7 @@ function Modal() {
       shouldCloseOnOverlayClick
       style={{
         content: {
-          transform: 'translate(-50%, -50%)',
+          transform: "translate(-50%, -50%)",
         },
       }}
       overlayClassName="z-60 fixed inset-0 bg-yellow-1400/50 overflow-auto"
@@ -38,7 +38,7 @@ function Modal() {
     >
       <div
         className="max-w-prose overflow-y-auto pr-4"
-        style={{ maxHeight: '90%' }}
+        style={{ maxHeight: "90%" }}
       >
         {CurrentModalComponent && <CurrentModalComponent />}
       </div>

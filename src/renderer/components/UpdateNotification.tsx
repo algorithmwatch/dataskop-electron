@@ -1,23 +1,23 @@
-import { faSpinnerThird } from '@fortawesome/pro-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect, useState } from 'react';
-import Button from '../providers/youtube/components/Button';
+import { faSpinnerThird } from "@fortawesome/pro-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
+import Button from "../providers/youtube/components/Button";
 
 export default function UpdateNotification(): JSX.Element {
   const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
   const [showRestartButton, setShowRestartButton] = useState(false);
 
   useEffect(() => {
-    window.electron.ipc.on('update-available', () => {
-      window.electron.ipc.removeAllListeners('update-available');
+    window.electron.ipc.on("update-available", () => {
+      window.electron.ipc.removeAllListeners("update-available");
       setIsUpdateAvailable(true);
     });
-    window.electron.ipc.on('update-downloaded', () => {
-      window.electron.ipc.removeAllListeners('update-downloaded');
+    window.electron.ipc.on("update-downloaded", () => {
+      window.electron.ipc.removeAllListeners("update-downloaded");
       setShowRestartButton(true);
     });
 
-    window.electron.ipc.on('update-error', (_event: any, error: Error) => {
+    window.electron.ipc.on("update-error", (_event: any, error: Error) => {
       console.error(`error ${JSON.stringify(error)}`);
     });
   }, []);
@@ -44,7 +44,7 @@ export default function UpdateNotification(): JSX.Element {
                 </div>
                 <Button
                   onClick={() =>
-                    window.electron.ipc.invoke('update-restart-app')
+                    window.electron.ipc.invoke("update-restart-app")
                   }
                 >
                   Neustarten

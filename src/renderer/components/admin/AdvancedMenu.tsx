@@ -1,6 +1,6 @@
-import { Button, Menu, MenuItem } from '@material-ui/core';
-import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { Button, Menu, MenuItem } from "@material-ui/core";
+import React from "react";
+import { useHistory } from "react-router-dom";
 
 export default function AdvancedMenu({
   menuItems,
@@ -47,7 +47,7 @@ export default function AdvancedMenu({
                 history.push(to);
               }
 
-              if (typeof onItemClicked === 'function') {
+              if (typeof onItemClicked === "function") {
                 onItemClicked();
               }
 

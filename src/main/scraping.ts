@@ -2,25 +2,25 @@
  * controlling the scraping window
  */
 
-import crypto from 'crypto';
-import { app, BrowserView, BrowserWindow, session } from 'electron';
-import log from 'electron-log';
-import fs from 'fs';
-import { range } from 'lodash';
-import path from 'path';
-import unzipper from 'unzipper';
-import { postLoadUrlYoutube } from './providers/youtube';
-import { addMainHandler, delay, getNowString, stripNonAscii } from './utils';
+import crypto from "crypto";
+import { app, BrowserView, BrowserWindow, session } from "electron";
+import log from "electron-log";
+import fs from "fs";
+import { range } from "lodash";
+import path from "path";
+import unzipper from "unzipper";
+import { postLoadUrlYoutube } from "./providers/youtube";
+import { addMainHandler, delay, getNowString, stripNonAscii } from "./utils";
 
 let scrapingView: BrowserView | null = null;
 
 export const postDownloadFileProcessing = async (filePath: string) => {
-  let filePathExtracted = '';
+  let filePathExtracted = "";
 
-  if (filePath.endsWith('.zip')) {
-    log.info('Unzipping downloaded file');
+  if (filePath.endsWith(".zip")) {
+    log.info("Unzipping downloaded file");
 
-    filePathExtracted = filePath.replace(/\.zip$/, '');
+    filePathExtracted = filePath.replace(/\.zip$/, "");
 
     // some delay is needed to prevent a race condition
     await delay(1000);
@@ -31,25 +31,25 @@ export const postDownloadFileProcessing = async (filePath: string) => {
 
     // some delay is needed to prevent a race condition
     await delay(1000);
-    log.info('Unzipping done. Deleting original file.');
+    log.info("Unzipping done. Deleting original file.");
     fs.unlinkSync(filePath);
   }
   return filePathExtracted;
 };
 
 export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
-  log.debug('called registerScrapingHandlers', mainWindow == null);
+  log.debug("called registerScrapingHandlers", mainWindow == null);
 
   // register several handlers for the scraping view
 
   addMainHandler(
-    'scraping-init-view',
+    "scraping-init-view",
     (
       _eventInit: any,
       { muted = true, allowInput = true, persist = false }: any,
     ) => {
       log.debug(
-        'called scraping-init-view',
+        "called scraping-init-view",
         scrapingView == null,
         mainWindow == null,
         muted,
@@ -61,7 +61,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         try {
           mainWindow?.removeBrowserView(scrapingView);
         } catch (error) {
-          log.error('Could not remove the scraping view from the main window');
+          log.error("Could not remove the scraping view from the main window");
           log.error(error);
         }
 
@@ -70,13 +70,13 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
           // Not calling it will result in errors with event handlers.
           scrapingView?.webContents.destroy();
         } catch (error) {
-          log.error('Could not destroy the scraping view');
+          log.error("Could not destroy the scraping view");
           log.error(error);
         }
       }
 
       // Don't do string interpolation for partition.
-      const partition = persist ? 'persist:scraping' : 'scraping';
+      const partition = persist ? "persist:scraping" : "scraping";
       const newView = new BrowserView({
         webPreferences: {
           partition,
@@ -93,16 +93,16 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
       if (!allowInput) {
         const preventInputCss =
-          'html, body { pointer-events: none; height: 100%; overflow-y: hidden;}';
+          "html, body { pointer-events: none; height: 100%; overflow-y: hidden;}";
 
-        newView.webContents.on('before-input-event', (event) =>
+        newView.webContents.on("before-input-event", (event) =>
           event.preventDefault(),
         );
         newView.webContents.insertCSS(preventInputCss);
 
         // Not sure if this is necessary but better to disable user input asap (before did-finish-load fires)
-        newView.webContents.on('did-finish-load', () => {
-          newView.webContents.on('before-input-event', (event) =>
+        newView.webContents.on("did-finish-load", () => {
+          newView.webContents.on("before-input-event", (event) =>
             event.preventDefault(),
           );
           newView.webContents.insertCSS(preventInputCss);
@@ -111,58 +111,58 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
       // Download items to user data directory
       newView.webContents.session.on(
-        'will-download',
+        "will-download",
         (_eventDownload, item) => {
           // Set the save path, making Electron not to prompt a save dialog.
 
           const filePath = path.join(
-            app.getPath('userData'),
-            'downloads',
+            app.getPath("userData"),
+            "downloads",
             item.getFilename(),
           );
 
           item.setSavePath(filePath);
 
-          mainWindow.webContents.send('scraping-download-started');
+          mainWindow.webContents.send("scraping-download-started");
 
-          item.on('updated', (_event, state) => {
-            if (state === 'interrupted') {
-              log.info('Download is interrupted but can be resumed');
-            } else if (state === 'progressing') {
+          item.on("updated", (_event, state) => {
+            if (state === "interrupted") {
+              log.info("Download is interrupted but can be resumed");
+            } else if (state === "progressing") {
               if (item.isPaused()) {
-                log.info('Download is paused');
+                log.info("Download is paused");
               } else {
                 log.info(`Received bytes: ${item.getReceivedBytes()}`);
                 mainWindow.webContents.send(
-                  'scraping-download-progress',
+                  "scraping-download-progress",
                   item.getReceivedBytes(),
                 );
               }
             }
           });
 
-          let filePathExtracted = '';
+          let filePathExtracted = "";
 
-          item.once('done', async (_event, state) => {
-            if (state === 'completed') {
-              log.info('Download successfully');
+          item.once("done", async (_event, state) => {
+            if (state === "completed") {
+              log.info("Download successfully");
 
               try {
                 filePathExtracted = await postDownloadFileProcessing(filePath);
               } catch (error) {
                 log.error(error);
                 mainWindow.webContents.send(
-                  'scraping-download-done',
+                  "scraping-download-done",
                   false,
-                  '',
+                  "",
                 );
               }
             } else {
               log.info(`Download failed: ${state}`);
             }
             mainWindow.webContents.send(
-              'scraping-download-done',
-              state === 'completed',
+              "scraping-download-done",
+              state === "completed",
               filePathExtracted,
             );
           });
@@ -173,14 +173,14 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     },
   );
 
-  addMainHandler('scraping-clear-storage', async () => {
-    log.info('clearing storage for scraping view');
-    await session.fromPartition('scraping').clearStorageData();
-    return session.fromPartition('persist:scraping').clearStorageData();
+  addMainHandler("scraping-clear-storage", async () => {
+    log.info("clearing storage for scraping view");
+    await session.fromPartition("scraping").clearStorageData();
+    return session.fromPartition("persist:scraping").clearStorageData();
   });
 
   addMainHandler(
-    'scraping-load-url',
+    "scraping-load-url",
     async (
       _event: any,
       url: string,
@@ -189,7 +189,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       const view = scrapingView;
 
       if (view == null) {
-        throw new Error('scraping-load-url was called while the view is null');
+        throw new Error("scraping-load-url was called while the view is null");
       }
 
       if (clear) {
@@ -209,19 +209,19 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       // https://www.electronjs.org/releases/stable?version=12&page=3#12.0.0
       // https://www.whatismybrowser.com/guides/the-latest-user-agent/
 
-      let userAgent = 'Mozilla/5.0';
+      let userAgent = "Mozilla/5.0";
       if (
-        process.platform === 'darwin' ||
-        process.platform === 'win32' ||
-        process.platform === 'linux'
+        process.platform === "darwin" ||
+        process.platform === "win32" ||
+        process.platform === "linux"
       )
         userAgent = {
           darwin:
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Vivaldi/4.3',
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Vivaldi/4.3",
           win32:
-            'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Vivaldi/4.3',
+            "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Vivaldi/4.3",
           linux:
-            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Vivaldi/4.3',
+            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Vivaldi/4.3",
         }[process.platform];
 
       // try 5 times and then give up
@@ -234,7 +234,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
             userAgent,
           });
         } catch (error) {
-          log.log('There is an error with `.loadError`, retry...', error);
+          log.log("There is an error with `.loadError`, retry...", error);
           await delay(2000);
           continue;
         }
@@ -247,20 +247,20 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
             true,
           );
 
-          if (url.includes('youtube')) {
+          if (url.includes("youtube")) {
             await postLoadUrlYoutube(view);
           }
 
           if (withHtml) {
             const html = await view.webContents.executeJavaScript(
-              'document.documentElement.outerHTML',
+              "document.documentElement.outerHTML",
             );
             return html;
           }
 
           return null;
         } catch (error) {
-          log.log('strange error, retry...');
+          log.log("strange error, retry...");
           log.log(error);
           await delay(1000 * i);
         }
@@ -272,20 +272,20 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     },
   );
 
-  addMainHandler('scraping-get-cookies', async () => {
+  addMainHandler("scraping-get-cookies", async () => {
     const cookies = await scrapingView?.webContents.session.cookies.get({});
     return cookies;
   });
 
-  addMainHandler('scraping-get-url', () => scrapingView?.webContents.getURL());
+  addMainHandler("scraping-get-url", () => scrapingView?.webContents.getURL());
 
   addMainHandler(
-    'scraping-navigation-cb',
+    "scraping-navigation-cb",
     async (_event: any, cbSlug: string, remove = false) => {
       const view = scrapingView;
 
       // TODO: find a better event?
-      const navEvent = 'page-title-updated';
+      const navEvent = "page-title-updated";
       const cb = () => {
         mainWindow.webContents.send(cbSlug);
       };
@@ -300,32 +300,32 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
   const getCurrentHtml = async () => {
     const html = await scrapingView?.webContents.executeJavaScript(
-      'document.documentElement.outerHTML',
+      "document.documentElement.outerHTML",
     );
-    const hash = crypto.createHash('md5').update(html).digest('hex');
+    const hash = crypto.createHash("md5").update(html).digest("hex");
 
     return { html, hash };
   };
 
-  addMainHandler('scraping-get-current-html', getCurrentHtml);
+  addMainHandler("scraping-get-current-html", getCurrentHtml);
 
-  addMainHandler('scraping-scroll-down', async () => {
+  addMainHandler("scraping-scroll-down", async () => {
     await scrapingView?.webContents.executeJavaScript(
-      'window.scrollBy(0, 100);',
+      "window.scrollBy(0, 100);",
     );
   });
 
-  addMainHandler('scraping-set-muted', async (_event: any, muted: boolean) => {
+  addMainHandler("scraping-set-muted", async (_event: any, muted: boolean) => {
     await scrapingView?.webContents.setAudioMuted(muted);
   });
 
-  addMainHandler('scraping-remove-view', async () => {
+  addMainHandler("scraping-remove-view", async () => {
     if (scrapingView === null) return;
 
     try {
       mainWindow?.removeBrowserView(scrapingView);
     } catch (error) {
-      log.error('Could not remove the scraping view from the main window');
+      log.error("Could not remove the scraping view from the main window");
       log.error(error);
     }
 
@@ -334,7 +334,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       // Not calling it will result in errors with event handlers.
       scrapingView?.webContents.destroy();
     } catch (error) {
-      log.error('Could not destroy the scraping view');
+      log.error("Could not destroy the scraping view");
       log.error(error);
     }
 
@@ -342,14 +342,14 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
   });
 
   addMainHandler(
-    'scraping-set-bounds',
+    "scraping-set-bounds",
     async (_event: any, bounds: Electron.Rectangle) => {
       scrapingView?.setBounds(bounds);
     },
   );
 
   addMainHandler(
-    'scraping-click-element',
+    "scraping-click-element",
     async (_event: any, selector: any) => {
       await scrapingView?.webContents.executeJavaScript(
         `document.querySelector("${selector}").click()`,
@@ -357,14 +357,14 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     },
   );
 
-  addMainHandler('scraping-submit-form', async (_event: any, selector: any) => {
+  addMainHandler("scraping-submit-form", async (_event: any, selector: any) => {
     await scrapingView?.webContents.executeJavaScript(
       `document.querySelector("${selector}").submit()`,
     );
   });
 
   addMainHandler(
-    'scraping-element-exists',
+    "scraping-element-exists",
     async (_event: any, selector: any) => {
       return scrapingView?.webContents.executeJavaScript(
         `document.querySelector("${selector}") !== null`,
@@ -372,12 +372,12 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     },
   );
 
-  addMainHandler('scraping-log-html', async (_event: any, url: string) => {
+  addMainHandler("scraping-log-html", async (_event: any, url: string) => {
     const { html, hash } = await getCurrentHtml();
 
     // macOS: ~/Library/Application\ Support/Electron/html
-    const userFolder = app.getPath('userData');
-    const userFolderHtml = path.join(userFolder, 'html');
+    const userFolder = app.getPath("userData");
+    const userFolderHtml = path.join(userFolder, "html");
 
     if (!fs.existsSync(userFolderHtml)) fs.mkdirSync(userFolderHtml);
 

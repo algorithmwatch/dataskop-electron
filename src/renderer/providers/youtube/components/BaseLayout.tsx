@@ -4,22 +4,22 @@ import {
   faInfoCircle,
   faPaperPlane,
   faUserSecret,
-} from '@fortawesome/pro-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import classNames from 'classnames';
-import { ReactNode, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import logo from 'renderer/static/images/logos/dslogo.svg';
+} from "@fortawesome/pro-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import classNames from "classnames";
+import { ReactNode, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import logo from "renderer/static/images/logos/dslogo.svg";
 import {
   useConfig,
   useModal,
   useNavigation,
   useScraping,
-} from '../../../contexts';
-import Modal from './Modal';
-import ProcessIndicator from './ProcessIndicator';
-import ScrapingProgressBar from './ScrapingProgressBar';
-import Sidebar from './Sidebar';
+} from "../../../contexts";
+import Modal from "./Modal";
+import ProcessIndicator from "./ProcessIndicator";
+import ScrapingProgressBar from "./ScrapingProgressBar";
+import Sidebar from "./Sidebar";
 
 export default function Base({
   children,
@@ -27,7 +27,7 @@ export default function Base({
   children: ReactNode;
 }): JSX.Element {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
-  const [sectionKey, setSectionKey] = useState('');
+  const [sectionKey, setSectionKey] = useState("");
   const { pathname } = useLocation();
   const {
     state: { pageIndex, sections },
@@ -42,22 +42,22 @@ export default function Base({
   } = useConfig();
   const sidebarMenu = [
     {
-      label: 'Über',
+      label: "Über",
       icon: faInfoCircle,
       onClick: () => {
         dispatchModal({
-          type: 'set-modal-options',
-          options: { isOpen: true, componentName: 'about' },
+          type: "set-modal-options",
+          options: { isOpen: true, componentName: "about" },
         });
       },
     },
     {
-      label: 'Kontakt',
+      label: "Kontakt",
       icon: faPaperPlane,
       onClick: () => {
         dispatchModal({
-          type: 'set-modal-options',
-          options: { isOpen: true, componentName: 'contact' },
+          type: "set-modal-options",
+          options: { isOpen: true, componentName: "contact" },
         });
       },
     },
@@ -72,22 +72,22 @@ export default function Base({
     //   },
     // },
     {
-      label: 'Datenspendevertrag',
+      label: "Datenspendevertrag",
       icon: faFileContract, // faFileSignatur
       onClick: () => {
         dispatchModal({
-          type: 'set-modal-options',
-          options: { isOpen: true, componentName: 'terms' },
+          type: "set-modal-options",
+          options: { isOpen: true, componentName: "terms" },
         });
       },
     },
     {
-      label: 'Datenschutz',
+      label: "Datenschutz",
       icon: faUserSecret,
       onClick: () => {
         dispatchModal({
-          type: 'set-modal-options',
-          options: { isOpen: true, componentName: 'privacy' },
+          type: "set-modal-options",
+          options: { isOpen: true, componentName: "privacy" },
         });
       },
     },
@@ -98,9 +98,9 @@ export default function Base({
     const page = getCurrentPage();
 
     // set processIndicator
-    if (typeof page.sectionKey !== 'undefined') {
+    if (typeof page.sectionKey !== "undefined") {
       if (page.sectionKey === null) {
-        setSectionKey('');
+        setSectionKey("");
       } else {
         setSectionKey(page.sectionKey);
       }
@@ -111,14 +111,14 @@ export default function Base({
     <div className="relative flex flex-col h-screen justify-between bg-yellow-100 bg-[url('renderer/providers/youtube/static/images/bg.png')] bg-[length:90%] dark:bg-blue-900 overflow-hidden text-yellow-1500">
       <Modal />
       <header
-        className={classNames('flex items-center py-4 px-6 z-20 h-[4.375rem]', {
-          'opacity-0': pathname === '/yt/start',
+        className={classNames("flex items-center py-4 px-6 z-20 h-[4.375rem]", {
+          "opacity-0": pathname === "/yt/start",
         })}
       >
         <div>
-          <img src={logo} style={{ width: '8rem' }} alt="Dataskop Logo" />
+          <img src={logo} style={{ width: "8rem" }} alt="Dataskop Logo" />
         </div>
-        {version && version.includes('beta') && (
+        {version && version.includes("beta") && (
           <div className="ml-3 text-sm bg-yellow-300 px-1.5 py-0.5 text-yellow-1300">
             Beta
           </div>

@@ -1,10 +1,10 @@
 // only extract data from HTML, used for
 
-import { parseVideoNoJs } from '@algorithmwatch/harke';
-import _ from 'lodash';
-import { addLookups, getLookups } from 'renderer/lib/db';
-import { currentDelay } from 'renderer/lib/delay';
-import { submitConfirmForm } from './actions/confirm-cookies';
+import { parseVideoNoJs } from "@algorithmwatch/harke";
+import _ from "lodash";
+import { addLookups, getLookups } from "renderer/lib/db";
+import { currentDelay } from "renderer/lib/delay";
+import { submitConfirmForm } from "./actions/confirm-cookies";
 
 async function lookupOrScrapeVideos(
   videoIds: string[],
@@ -22,23 +22,23 @@ async function lookupOrScrapeVideos(
     );
   }
   const getHtml = async () => {
-    await window.electron.ipc.invoke('scraping-background-init');
+    await window.electron.ipc.invoke("scraping-background-init");
     return () =>
-      window.electron.ipc.invoke('scraping-background-get-current-html');
+      window.electron.ipc.invoke("scraping-background-get-current-html");
   };
 
   await submitConfirmForm(getHtml, (sel) =>
-    window.electron.ipc.invoke('scraping-background-submit-form', sel),
+    window.electron.ipc.invoke("scraping-background-submit-form", sel),
   );
 
   // important to wait some secconds to set the responding cookie in the session
-  await currentDelay('longer');
+  await currentDelay("longer");
 
   // only fetch new videos that are not already stored
   const toFetch = _.uniq(videoIds.filter((x) => !readyIds.has(x)));
 
   const fetched: any[] = await window.electron.ipc.invoke(
-    'youtube-scraping-background-videos',
+    "youtube-scraping-background-videos",
     toFetch,
   );
 
@@ -49,7 +49,7 @@ async function lookupOrScrapeVideos(
         data: {
           ...parseVideoNoJs(x.html),
           createdAt: Date.now(),
-          provider: 'youtube',
+          provider: "youtube",
         },
       },
     })),
@@ -63,7 +63,7 @@ async function lookupOrScrapeVideos(
     );
   }
 
-  await window.electron.ipc.invoke('scraping-background-close');
+  await window.electron.ipc.invoke("scraping-background-close");
 
   return getLookups({ deleteOld: false, ids: videoIds });
 }

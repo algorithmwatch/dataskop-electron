@@ -24,7 +24,7 @@ function About() {
         2.1. Algorithmwatch stellt mit DataSkop eine Plattform für Datenspenden
         bereit, auf der Nutzer:innen zuvor gesammelte personenbezogene Daten
         abrufen und Algorithmwatch und verbundenen Partnerinstitutionen zur
-        Forschung und Untersuchung zur Verfügung stellen können.{' '}
+        Forschung und Untersuchung zur Verfügung stellen können.{" "}
       </p>
 
       <p>
@@ -34,7 +34,7 @@ function About() {
         des Individuums stärken und Menschen dazu befähigen, informiert mit
         Daten umzugehen, sicher in digitalen Umgebungen zu agieren,
         algorithmische Strukturen zu erkennen und diese in ihren Grundzügen zu
-        verstehen.{' '}
+        verstehen.{" "}
       </p>
 
       <p>
@@ -76,7 +76,7 @@ function About() {
         möglich, erst die Datenspende erfordert eine Registrierung bei DataSkop
         und setzt die Einrichtung eines Nutzungskontos für die Plattform voraus.
         Die Nutzer:innen sind verpflichtet, die bei der Registrierung erhobenen
-        Daten wahrheitsgemäß und vollständig anzugeben.{' '}
+        Daten wahrheitsgemäß und vollständig anzugeben.{" "}
       </p>
 
       <p>
@@ -111,7 +111,7 @@ function About() {
       <p>
         5.2. Für die Nutzung von DataSkop ist es zunächst erforderlich, dass
         Nutzer:innen sich die DataSkop App herunterladen und auf ihrem Endgerät
-        installieren.{' '}
+        installieren.{" "}
       </p>
 
       <p>
@@ -136,7 +136,7 @@ function About() {
 
       <p>
         5.5. Im Nutzungskonto stehen die getätigten Datenspenden für die
-        Nutzer:innen zur An- und Übersicht zur Verfügung.{' '}
+        Nutzer:innen zur An- und Übersicht zur Verfügung.{" "}
       </p>
 
       <p>
@@ -173,7 +173,7 @@ function About() {
         sie können entscheiden, ob sie die Datenspende vornehmen wollen. Mit
         einem Klick auf die Schaltfläche „Daten spenden“ bestätigen die
         Nutzer:innen ausdrücklich zur Spende bereit und mit den damit
-        verbundenen Verarbeitungen einverstanden zu sein.{' '}
+        verbundenen Verarbeitungen einverstanden zu sein.{" "}
       </p>
 
       <p>
@@ -239,7 +239,7 @@ function About() {
 
       <p>
         10.2. Das Recht der Parteien zur außerordentlichen Kündigung des
-        Vertrags aus wichtigem Grund bleibt unberührt.{' '}
+        Vertrags aus wichtigem Grund bleibt unberührt.{" "}
       </p>
 
       <p>10.3. Jede Kündigung bedarf der Textform.</p>
@@ -283,7 +283,7 @@ function About() {
 
       <p>
         13.2. Sollten einzelne Bestimmungen dieses Vertrages ungültig sein oder
-        werden, bleibt die Gültigkeit der übrigen Bestimmungen unberührt.{' '}
+        werden, bleibt die Gültigkeit der übrigen Bestimmungen unberührt.{" "}
       </p>
 
       <p>

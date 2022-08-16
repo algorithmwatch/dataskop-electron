@@ -8,15 +8,15 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@material-ui/core';
-import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
-import ReactJson from 'react-json-view';
-import { getLocalCampaigns, modifyLocalCampaigns } from 'renderer/lib/db';
-import { getValidErrors } from 'renderer/lib/validation';
-import { Campaign } from 'renderer/providers/types';
-import { defaultCampaign } from 'renderer/providers/youtube';
-import Button from 'renderer/providers/youtube/components/Button';
+} from "@material-ui/core";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import ReactJson from "react-json-view";
+import { getLocalCampaigns, modifyLocalCampaigns } from "renderer/lib/db";
+import { getValidErrors } from "renderer/lib/validation";
+import { Campaign } from "renderer/providers/types";
+import { defaultCampaign } from "renderer/providers/youtube";
+import Button from "renderer/providers/youtube/components/Button";
 
 export default function ScrapingConfigEditorPage(): JSX.Element {
   const [rows, setRows] = useState<Campaign[]>([]);
@@ -28,7 +28,7 @@ export default function ScrapingConfigEditorPage(): JSX.Element {
   };
 
   const newConfig = async () => {
-    const slug = `youtube-${dayjs().format('YYYY-MM-DD-HH-mm-s')}`;
+    const slug = `youtube-${dayjs().format("YYYY-MM-DD-HH-mm-s")}`;
     const config = { ...defaultCampaign, slug, title: slug };
     await modifyLocalCampaigns(config);
     loadData();

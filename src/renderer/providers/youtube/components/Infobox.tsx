@@ -1,10 +1,10 @@
-import { faLightbulb, IconDefinition } from '@fortawesome/pro-light-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ReactNode } from 'react';
+import { faLightbulb, IconDefinition } from "@fortawesome/pro-light-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ReactNode } from "react";
 
 export default function Infobox({
   icon = faLightbulb,
-  classname = '',
+  classname = "",
   children,
 }: {
   icon?: IconDefinition;

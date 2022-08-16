@@ -5,9 +5,9 @@
  * Started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
  * @module
  */
-import _ from 'lodash';
-import React, { useEffect } from 'react';
-import { Campaign, DemoData } from 'renderer/providers/types';
+import _ from "lodash";
+import React, { useEffect } from "react";
+import { Campaign, DemoData } from "renderer/providers/types";
 
 export type ScrapingProgress = {
   isActive: boolean;
@@ -23,39 +23,39 @@ export type Bounds = {
 };
 
 type Action =
-  | { type: 'set-attached'; attached: boolean; visible: boolean }
+  | { type: "set-attached"; attached: boolean; visible: boolean }
   | {
-      type: 'set-campaign';
+      type: "set-campaign";
       campaign: Campaign | null;
     }
   | {
-      type: 'set-available-campaigns';
+      type: "set-available-campaigns";
       availableCampaigns: Campaign[];
     }
   | {
-      type: 'set-scraping-progress-bar';
+      type: "set-scraping-progress-bar";
       scrapingProgress: ScrapingProgress;
     }
-  | { type: 'set-user-logged-in'; loggedIn: boolean }
-  | { type: 'set-scraping-started'; started: boolean }
-  | { type: 'set-scraping-paused'; paused: boolean }
-  | { type: 'scraping-has-finished' }
-  | { type: 'set-muted'; muted: boolean }
-  | { type: 'set-fixed-window'; fixedWindow: boolean }
-  | { type: 'set-visible-window'; visibleWindow: boolean }
-  | { type: 'set-bounds'; bounds: Bounds }
-  | { type: 'set-scraping-error'; scrapingError: Error | null }
-  | { type: 'set-session-id'; sessionId: string }
-  | { type: 'reset-scraping' }
+  | { type: "set-user-logged-in"; loggedIn: boolean }
+  | { type: "set-scraping-started"; started: boolean }
+  | { type: "set-scraping-paused"; paused: boolean }
+  | { type: "scraping-has-finished" }
+  | { type: "set-muted"; muted: boolean }
+  | { type: "set-fixed-window"; fixedWindow: boolean }
+  | { type: "set-visible-window"; visibleWindow: boolean }
+  | { type: "set-bounds"; bounds: Bounds }
+  | { type: "set-scraping-error"; scrapingError: Error | null }
+  | { type: "set-session-id"; sessionId: string }
+  | { type: "reset-scraping" }
   | {
-      type: 'scraping-has-started';
+      type: "scraping-has-started";
       sessionId: string | null;
       stepGenerator: AsyncGenerator | null;
     }
-  | { type: 'set-disable-input'; disableInput: boolean }
-  | { type: 'set-demo-mode'; demoMode: boolean; demoData: DemoData | null }
+  | { type: "set-disable-input"; disableInput: boolean }
+  | { type: "set-demo-mode"; demoMode: boolean; demoData: DemoData | null }
   | {
-      type: 'increment-finished';
+      type: "increment-finished";
     };
 
 type Dispatch = (action: Action) => void;
@@ -120,7 +120,7 @@ const initialState: State = {
 
 const scrapingReducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case 'set-attached': {
+    case "set-attached": {
       return {
         ...state,
         isAttached: action.attached,
@@ -128,58 +128,58 @@ const scrapingReducer = (state: State, action: Action): State => {
       };
     }
 
-    case 'set-campaign': {
+    case "set-campaign": {
       return {
         ...state,
         campaign: action.campaign,
       };
     }
 
-    case 'set-available-campaigns': {
+    case "set-available-campaigns": {
       return {
         ...state,
         availableCampaigns: action.availableCampaigns,
       };
     }
 
-    case 'set-scraping-progress-bar': {
+    case "set-scraping-progress-bar": {
       return { ...state, scrapingProgress: action.scrapingProgress };
     }
 
-    case 'set-user-logged-in': {
+    case "set-user-logged-in": {
       return { ...state, isUserLoggedIn: action.loggedIn };
     }
 
-    case 'set-scraping-started': {
+    case "set-scraping-started": {
       return {
         ...state,
         isScrapingStarted: action.started,
       };
     }
 
-    case 'set-scraping-paused': {
+    case "set-scraping-paused": {
       return { ...state, isScrapingPaused: action.paused };
     }
 
-    case 'set-muted': {
+    case "set-muted": {
       return { ...state, isMuted: action.muted };
     }
 
     // Changing this values doesn't work right now. (Guess: The scraping window
     // needs to get refreshed to make it work.)
-    case 'set-fixed-window': {
+    case "set-fixed-window": {
       return { ...state, fixedWindow: action.fixedWindow };
     }
 
-    case 'set-visible-window': {
+    case "set-visible-window": {
       return { ...state, visibleWindow: action.visibleWindow };
     }
 
-    case 'set-bounds': {
+    case "set-bounds": {
       return { ...state, bounds: action.bounds };
     }
 
-    case 'set-scraping-error': {
+    case "set-scraping-error": {
       return {
         ...state,
         scrapingError: action.scrapingError,
@@ -187,7 +187,7 @@ const scrapingReducer = (state: State, action: Action): State => {
       };
     }
 
-    case 'scraping-has-started': {
+    case "scraping-has-started": {
       return {
         ...state,
         sessionId: action.sessionId,
@@ -200,7 +200,7 @@ const scrapingReducer = (state: State, action: Action): State => {
       };
     }
 
-    case 'scraping-has-finished': {
+    case "scraping-has-finished": {
       return {
         ...state,
         visibleWindow: false,
@@ -215,7 +215,7 @@ const scrapingReducer = (state: State, action: Action): State => {
       };
     }
 
-    case 'set-session-id': {
+    case "set-session-id": {
       return {
         ...state,
         sessionId: action.sessionId,
@@ -223,22 +223,22 @@ const scrapingReducer = (state: State, action: Action): State => {
     }
 
     // reset everything besides campaign and some other fields
-    case 'reset-scraping': {
+    case "reset-scraping": {
       return {
         ...initialState,
-        ..._.pick(state, ['sessionid', 'campaign', 'isAttached', 'bounds']),
+        ..._.pick(state, ["sessionid", "campaign", "isAttached", "bounds"]),
       };
     }
 
-    case 'set-disable-input': {
+    case "set-disable-input": {
       return { ...state, disableInput: action.disableInput };
     }
 
-    case 'set-demo-mode': {
+    case "set-demo-mode": {
       return { ...state, demoMode: action.demoMode, demoData: action.demoData };
     }
 
-    case 'increment-finished': {
+    case "increment-finished": {
       return { ...state, finishedTasks: state.finishedTasks + 1 };
     }
 
@@ -285,10 +285,10 @@ const ScrapingProvider = ({ children }: ScrapingProviderProps) => {
   // Expose the status of the scraping to the main process to check wheter the
   // can safely be closed.
   useEffect(() => {
-    window.electron.ipc.removeAllListeners('close-action');
-    window.electron.ipc.on('close-action', () => {
+    window.electron.ipc.removeAllListeners("close-action");
+    window.electron.ipc.on("close-action", () => {
       window.electron.ipc.invoke(
-        'close-main-window',
+        "close-main-window",
         state.scrapingProgress.isActive,
       );
     });
@@ -305,7 +305,7 @@ const useScraping = () => {
   const context = React.useContext(ScrapingStateContext);
 
   if (context === undefined) {
-    throw new Error('useScraping must be used within a ScrapingProvider');
+    throw new Error("useScraping must be used within a ScrapingProvider");
   }
 
   return context;

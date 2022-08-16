@@ -1,12 +1,12 @@
-import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { useNavigation, useScraping } from 'renderer/contexts';
-import ContactContainer from 'renderer/providers/youtube/components/ContactContaier';
-import ContentWrapper from 'renderer/providers/youtube/components/ContentWrapper';
+import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
+import { Link, RouteComponentProps } from "react-router-dom";
+import { useNavigation, useScraping } from "renderer/contexts";
+import ContactContainer from "renderer/providers/youtube/components/ContactContaier";
+import ContentWrapper from "renderer/providers/youtube/components/ContentWrapper";
 import FooterNav, {
   FooterNavItem,
-} from 'renderer/providers/youtube/components/FooterNav';
-import VisualizationWrapper from '../components/VisualizationWrapper';
+} from "renderer/providers/youtube/components/FooterNav";
+import VisualizationWrapper from "../components/VisualizationWrapper";
 
 export default function MyDataPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -19,29 +19,29 @@ export default function MyDataPage(): JSX.Element {
 
   const footerNavItems: FooterNavItem[] = [
     {
-      label: 'Zurück',
-      theme: 'link',
+      label: "Zurück",
+      theme: "link",
       startIcon: faAngleLeft,
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getPreviousPage('path'));
+      clickHandler(history: RouteComponentProps["history"]) {
+        history.push(getPreviousPage("path"));
       },
     },
     {
-      label: 'Weiter',
+      label: "Weiter",
       endIcon: faAngleRight,
       disabled: demoMode || noMoreDonations,
       tippyOptions:
         demoMode || noMoreDonations
           ? {
               content: !demoMode
-                ? 'Es können aktuell keine Daten mehr gespendet werden.'
-                : 'Die Demo ist hier zu Ende',
-              theme: 'process-info',
-              placement: 'left',
+                ? "Es können aktuell keine Daten mehr gespendet werden."
+                : "Die Demo ist hier zu Ende",
+              theme: "process-info",
+              placement: "left",
             }
           : undefined,
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getNextPage('path'));
+      clickHandler(history: RouteComponentProps["history"]) {
+        history.push(getNextPage("path"));
       },
     },
   ];
@@ -55,7 +55,7 @@ export default function MyDataPage(): JSX.Element {
             <p>
               <span className="line-through">
                 Wenn Du Dataskop mit einer Datenspende unterstützen möchtest,
-              </span>{' '}
+              </span>{" "}
               <Link
                 to="/yt/onboarding1"
                 className="underline hover:no-underline text-blue-600"

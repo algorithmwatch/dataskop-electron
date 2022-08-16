@@ -1,13 +1,13 @@
-import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
-import { RouteComponentProps } from 'react-router-dom';
-import { goToUrl } from 'renderer/components/scraping/ipc';
-import { useNavigation, useScraping } from 'renderer/contexts';
-import ContentWrapper from 'renderer/providers/youtube/components/ContentWrapper';
+import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
+import { RouteComponentProps } from "react-router-dom";
+import { goToUrl } from "renderer/components/scraping/ipc";
+import { useNavigation, useScraping } from "renderer/contexts";
+import ContentWrapper from "renderer/providers/youtube/components/ContentWrapper";
 import FooterNav, {
   FooterNavItem,
-} from 'renderer/providers/youtube/components/FooterNav';
-import { providerInfo } from '../../';
-import whatsHappening from '../static/images/start/img_was_passiert.jpg';
+} from "renderer/providers/youtube/components/FooterNav";
+import { providerInfo } from "../../";
+import whatsHappening from "../static/images/start/img_was_passiert.jpg";
 
 export default function OnboardingPage2(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -20,28 +20,28 @@ export default function OnboardingPage2(): JSX.Element {
     await goToUrl(providerInfo[campaign.config.provider].loginUrl, {
       clear: true,
     });
-    dispatch({ type: 'reset-scraping' });
+    dispatch({ type: "reset-scraping" });
   };
   const footerNavItems: FooterNavItem[] = [
     {
-      label: 'Zurück',
+      label: "Zurück",
       disabled: isScrapingStarted || isScrapingFinished,
       startIcon: faAngleLeft,
-      theme: 'link',
-      async clickHandler(history: RouteComponentProps['history']) {
+      theme: "link",
+      async clickHandler(history: RouteComponentProps["history"]) {
         await resetScraping();
         setTimeout(() => {
           // logout
-          history.push(getPreviousPage('path'));
+          history.push(getPreviousPage("path"));
         }, 0);
       },
     },
     {
-      label: 'Weiter',
+      label: "Weiter",
       endIcon: faAngleRight,
-      classNames: 'ml-auto',
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getNextPage('path'));
+      classNames: "ml-auto",
+      clickHandler(history: RouteComponentProps["history"]) {
+        history.push(getNextPage("path"));
       },
     },
   ];

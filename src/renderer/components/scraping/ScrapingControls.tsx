@@ -3,10 +3,10 @@
  *
  * @module
  */
-import { useScraping } from 'renderer/contexts';
-import { providerInfo } from 'renderer/providers/info';
-import Button from '../../providers/youtube/components/Button';
-import { goToUrl } from './ipc';
+import { useScraping } from "renderer/contexts";
+import { providerInfo } from "renderer/providers/info";
+import Button from "../../providers/youtube/components/Button";
+import { goToUrl } from "./ipc";
 
 export default function ScrapingControls({
   hideControls = false,
@@ -34,40 +34,40 @@ export default function ScrapingControls({
         clear: true,
       });
     }
-    dispatch({ type: 'reset-scraping' });
+    dispatch({ type: "reset-scraping" });
   };
 
   // controls for the scraping
 
   const pauseScraping = () => {
-    dispatch({ type: 'set-scraping-paused', paused: true });
+    dispatch({ type: "set-scraping-paused", paused: true });
   };
 
   const resumeScraping = () => {
-    dispatch({ type: 'set-scraping-paused', paused: false });
+    dispatch({ type: "set-scraping-paused", paused: false });
   };
 
   const toggleIsMuted = () => {
-    dispatch({ type: 'set-muted', muted: !isMuted });
+    dispatch({ type: "set-muted", muted: !isMuted });
   };
 
   const toggleVis = () => {
-    dispatch({ type: 'set-visible-window', visibleWindow: !visibleWindow });
+    dispatch({ type: "set-visible-window", visibleWindow: !visibleWindow });
   };
 
   const startScraping = () => {
-    dispatch({ type: 'set-scraping-started', started: true });
+    dispatch({ type: "set-scraping-started", started: true });
   };
 
   return (
     <>
       <div>
-        <p style={{ color: 'red' }}>
+        <p style={{ color: "red" }}>
           {scrapingError !== null &&
             `${scrapingError.name}: ${scrapingError.message}`}
         </p>
         <br />
-        <div className={hideControls ? 'invisible' : ''}>
+        <div className={hideControls ? "invisible" : ""}>
           <Button onClick={resetScraping}>reset scraping</Button>
           {!isUserLoggedIn && <p>Please login before continuing.</p>}
           {isUserLoggedIn && !isScrapingStarted && (
@@ -80,9 +80,9 @@ export default function ScrapingControls({
             <Button onClick={resumeScraping}>resume scraping</Button>
           )}
 
-          <Button onClick={toggleIsMuted}>is {!isMuted && 'not'} muted</Button>
+          <Button onClick={toggleIsMuted}>is {!isMuted && "not"} muted</Button>
           <Button onClick={toggleVis}>
-            {!visibleWindow ? 'show' : 'hide'} scraping window
+            {!visibleWindow ? "show" : "hide"} scraping window
           </Button>
         </div>
         {isScrapingStarted && (

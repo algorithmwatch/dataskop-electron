@@ -5,16 +5,16 @@
  *
  * @module
  */
-import { faTimes } from '@fortawesome/pro-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { pick, round } from 'lodash';
-import { useEffect } from 'react';
-import { Rnd } from 'react-rnd';
-import { Bounds, useScraping } from 'renderer/contexts';
+import { faTimes } from "@fortawesome/pro-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { pick, round } from "lodash";
+import { useEffect } from "react";
+import { Rnd } from "react-rnd";
+import { Bounds, useScraping } from "renderer/contexts";
 
 export default function ScrapingWindow({
   forceReload = 0,
-  initPosition = 'center',
+  initPosition = "center",
   initSizeFactorHeight = 0.8,
   initSizeFactorWidth = 0.6,
 }: {
@@ -31,11 +31,11 @@ export default function ScrapingWindow({
   } = useScraping();
 
   const setBounds = (newBounds: Bounds) => {
-    dispatch({ type: 'set-bounds', bounds: newBounds });
+    dispatch({ type: "set-bounds", bounds: newBounds });
   };
 
   useEffect(() => {
-    window.electron.ipc.invoke('scraping-set-muted', isMuted);
+    window.electron.ipc.invoke("scraping-set-muted", isMuted);
   }, [isMuted]);
 
   useEffect(() => {
@@ -45,10 +45,10 @@ export default function ScrapingWindow({
       b.width -= margin * 2;
       b.x += margin;
       b.y += margin;
-      window.electron.ipc.invoke('scraping-set-bounds', b);
+      window.electron.ipc.invoke("scraping-set-bounds", b);
     } else {
       const b = { ...bounds, width: 0, height: 0 };
-      window.electron.ipc.invoke('scraping-set-bounds', b);
+      window.electron.ipc.invoke("scraping-set-bounds", b);
     }
   }, [bounds, visibleWindow]);
 
@@ -67,7 +67,7 @@ export default function ScrapingWindow({
         y: round(height * leftOverSpace),
       };
 
-      if (initPosition === 'center') {
+      if (initPosition === "center") {
         res.x = round(width * leftOverSpaceWidth * 0.5);
         res.y = round(height * leftOverSpace * 0.5);
       }
@@ -83,7 +83,7 @@ export default function ScrapingWindow({
   return (
     <div
       style={{
-        position: 'fixed',
+        position: "fixed",
         left: 0,
         top: 0,
       }}
@@ -92,10 +92,10 @@ export default function ScrapingWindow({
         enableResizing={!fixedWindow}
         disableDragging={fixedWindow}
         className="bg-gray-100"
-        size={pick(bounds, ['width', 'height'])}
-        position={pick(bounds, ['x', 'y'])}
+        size={pick(bounds, ["width", "height"])}
+        position={pick(bounds, ["x", "y"])}
         onDragStop={(_e, d) => {
-          setBounds({ ...bounds, ...pick(d, ['x', 'y']) });
+          setBounds({ ...bounds, ...pick(d, ["x", "y"]) });
         }}
         onResize={(_e, _direction, ref, _delta, position) => {
           setBounds({
@@ -107,16 +107,16 @@ export default function ScrapingWindow({
       />
       <div
         onClick={() => {
-          dispatch({ type: 'set-visible-window', visibleWindow: false });
+          dispatch({ type: "set-visible-window", visibleWindow: false });
         }}
         className="flex items-center justify-center cursor-pointer bg-gray-300 hover:bg-gray-200"
         style={{
           width: 30,
           height: 30,
-          position: 'fixed',
+          position: "fixed",
           left: bounds.x + bounds.width - 30,
           top: bounds.y,
-          color: 'white',
+          color: "white",
         }}
       >
         <FontAwesomeIcon icon={faTimes} className="text-yellow-1500 text-xl" />

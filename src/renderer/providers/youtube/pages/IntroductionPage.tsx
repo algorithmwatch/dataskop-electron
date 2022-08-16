@@ -1,29 +1,29 @@
-import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
-import { RouteComponentProps } from 'react-router-dom';
-import { useNavigation } from 'renderer/contexts/navigation';
-import ContentWrapper from 'renderer/providers/youtube/components/ContentWrapper';
+import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
+import { RouteComponentProps } from "react-router-dom";
+import { useNavigation } from "renderer/contexts/navigation";
+import ContentWrapper from "renderer/providers/youtube/components/ContentWrapper";
 import FooterNav, {
   FooterNavItem,
-} from 'renderer/providers/youtube/components/FooterNav';
-import visual from '../static/images/start/visual.svg';
+} from "renderer/providers/youtube/components/FooterNav";
+import visual from "../static/images/start/visual.svg";
 
 export default function IntroductionPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
 
   const footerNavItems: FooterNavItem[] = [
     {
-      label: 'Zurück',
+      label: "Zurück",
       startIcon: faAngleLeft,
-      theme: 'link',
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getPreviousPage('path'));
+      theme: "link",
+      clickHandler(history: RouteComponentProps["history"]) {
+        history.push(getPreviousPage("path"));
       },
     },
     {
-      label: 'Weiter',
+      label: "Weiter",
       endIcon: faAngleRight,
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getNextPage('path'));
+      clickHandler(history: RouteComponentProps["history"]) {
+        history.push(getNextPage("path"));
       },
     },
   ];

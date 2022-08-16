@@ -1,4 +1,4 @@
-import { actionProcedure } from './action-procedure';
+import { actionProcedure } from "./action-procedure";
 
 const deserializeMapping = {
   action: actionProcedure,

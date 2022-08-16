@@ -1,31 +1,31 @@
-import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
-import { RouteComponentProps } from 'react-router-dom';
-import { useNavigation } from 'renderer/contexts/navigation';
-import ContentWrapper from 'renderer/providers/youtube/components/ContentWrapper';
+import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
+import { RouteComponentProps } from "react-router-dom";
+import { useNavigation } from "renderer/contexts/navigation";
+import ContentWrapper from "renderer/providers/youtube/components/ContentWrapper";
 import FooterNav, {
   FooterNavItem,
-} from 'renderer/providers/youtube/components/FooterNav';
-import explainImage1 from '../static/images/scraping-explanation/scraper1.png';
-import explainImage2 from '../static/images/scraping-explanation/scraper2.png';
+} from "renderer/providers/youtube/components/FooterNav";
+import explainImage1 from "../static/images/scraping-explanation/scraper1.png";
+import explainImage2 from "../static/images/scraping-explanation/scraper2.png";
 
 export default function ScrapingExplanationPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
 
   const footerNavItems: FooterNavItem[] = [
     {
-      label: 'Zurück',
+      label: "Zurück",
       startIcon: faAngleLeft,
-      theme: 'link',
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getPreviousPage('path'));
+      theme: "link",
+      clickHandler(history: RouteComponentProps["history"]) {
+        history.push(getPreviousPage("path"));
       },
     },
     {
-      label: 'Weiter',
+      label: "Weiter",
       // size: 'large',
       endIcon: faAngleRight,
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getNextPage('path'));
+      clickHandler(history: RouteComponentProps["history"]) {
+        history.push(getNextPage("path"));
       },
     },
   ];

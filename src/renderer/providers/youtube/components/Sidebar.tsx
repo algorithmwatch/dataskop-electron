@@ -1,11 +1,11 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { IconDefinition } from '@fortawesome/pro-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import classNames from 'classnames';
-import { useState } from 'react';
-import AdvancedMenu from 'renderer/components/admin/AdvancedMenu';
-import { useConfig } from 'renderer/contexts';
+import { IconDefinition } from "@fortawesome/pro-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import classNames from "classnames";
+import { useState } from "react";
+import AdvancedMenu from "renderer/components/admin/AdvancedMenu";
+import { useConfig } from "renderer/contexts";
 
 export default function Sidebar({
   menuItems = [],
@@ -29,16 +29,16 @@ export default function Sidebar({
   const [versionClicked, setVersionClicked] = useState(0);
   const handleversionClicked = () => {
     if (versionClicked > 2) {
-      dispatch({ type: 'show-advanced-menu' });
+      dispatch({ type: "show-advanced-menu" });
     } else setVersionClicked(versionClicked + 1);
   };
 
   const sidebarClasses = classNames({
-    'w-80 fixed inset-y-0 bg-yellow-300 z-50': true,
-    'transition-all duration-200 ease-in-out': true,
-    'flex flex-col justify-between': true,
-    '-right-80': !isOpen,
-    'right-0': isOpen,
+    "w-80 fixed inset-y-0 bg-yellow-300 z-50": true,
+    "transition-all duration-200 ease-in-out": true,
+    "flex flex-col justify-between": true,
+    "-right-80": !isOpen,
+    "right-0": isOpen,
   });
 
   return (
@@ -63,7 +63,7 @@ export default function Sidebar({
           ))}
 
           <div className="border border-yellow-900/50 text-sm text-yellow-1300 p-3">
-            <strong>Hast Du technische Probleme?</strong> Schreibe eine Mail an{' '}
+            <strong>Hast Du technische Probleme?</strong> Schreibe eine Mail an{" "}
             <a
               href="mailto:support@dataskop.net"
               className="underline hover:no-underline"
@@ -81,17 +81,17 @@ export default function Sidebar({
               <AdvancedMenu
                 onItemClicked={() => onIsOpenChange(false)}
                 menuItems={[
-                  { label: 'start', to: '/yt/start' },
+                  { label: "start", to: "/yt/start" },
                   {
-                    label: 'advanced scraping',
-                    to: '/admin/scraping/advanced',
+                    label: "advanced scraping",
+                    to: "/admin/scraping/advanced",
                   },
                   {
-                    label: 'scraping config editor',
-                    to: '/admin/scraping/editor',
+                    label: "scraping config editor",
+                    to: "/admin/scraping/editor",
                   },
-                  { label: 'results', to: '/admin/results' },
-                  { label: 'settings', to: '/admin/settings' },
+                  { label: "results", to: "/admin/results" },
+                  { label: "settings", to: "/admin/settings" },
                 ]}
               />
             </div>

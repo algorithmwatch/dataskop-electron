@@ -1,12 +1,12 @@
-import { faAngleLeft } from '@fortawesome/pro-solid-svg-icons';
-import { useEffect, useState } from 'react';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
-import { useConfig, useNavigation, useScraping } from 'renderer/contexts';
-import Button from 'renderer/providers/youtube/components/Button';
-import ContentWrapper from 'renderer/providers/youtube/components/ContentWrapper';
+import { faAngleLeft } from "@fortawesome/pro-solid-svg-icons";
+import { useEffect, useState } from "react";
+import { RouteComponentProps, useHistory } from "react-router-dom";
+import { useConfig, useNavigation, useScraping } from "renderer/contexts";
+import Button from "renderer/providers/youtube/components/Button";
+import ContentWrapper from "renderer/providers/youtube/components/ContentWrapper";
 import FooterNav, {
   FooterNavItem,
-} from 'renderer/providers/youtube/components/FooterNav';
+} from "renderer/providers/youtube/components/FooterNav";
 
 export default function OnboardingPage1(): JSX.Element {
   const [_showLoginWindow, setShowLoginWindow] = useState(false);
@@ -20,12 +20,12 @@ export default function OnboardingPage1(): JSX.Element {
 
   const footerNavItems: FooterNavItem[] = [
     {
-      label: 'Zurück',
+      label: "Zurück",
       startIcon: faAngleLeft,
-      theme: 'link',
-      clickHandler(history: RouteComponentProps['history']) {
-        dispatch({ type: 'set-visible-window', visibleWindow: false });
-        history.push(getPreviousPage('path'));
+      theme: "link",
+      clickHandler(history: RouteComponentProps["history"]) {
+        dispatch({ type: "set-visible-window", visibleWindow: false });
+        history.push(getPreviousPage("path"));
       },
     },
   ];
@@ -33,14 +33,14 @@ export default function OnboardingPage1(): JSX.Element {
   useEffect(() => {
     if (isUserLoggedIn) {
       // hide login window
-      dispatch({ type: 'set-visible-window', visibleWindow: false });
+      dispatch({ type: "set-visible-window", visibleWindow: false });
       // go to next page
-      hist.push(getNextPage('path'));
+      hist.push(getNextPage("path"));
     }
   }, [isUserLoggedIn]);
 
   useEffect(
-    () => dispatch({ type: 'set-demo-mode', demoMode: false, demoData: null }),
+    () => dispatch({ type: "set-demo-mode", demoMode: false, demoData: null }),
     [],
   );
 
@@ -62,11 +62,11 @@ export default function OnboardingPage1(): JSX.Element {
                 onClick={() => {
                   setShowLoginWindow(true);
                   dispatch({
-                    type: 'set-attached',
+                    type: "set-attached",
                     attached: true,
                     visible: true,
                   });
-                  sendEvent(campaign, 'clicked start scraping');
+                  sendEvent(campaign, "clicked start scraping");
                 }}
               >
                 Anmelden
@@ -86,12 +86,12 @@ export default function OnboardingPage1(): JSX.Element {
                 onClick={() => {
                   if (campaign === null) return;
                   dispatch({
-                    type: 'set-demo-mode',
+                    type: "set-demo-mode",
                     demoMode: true,
                     demoData: campaign.config.demoData[0],
                   });
-                  sendEvent(campaign, 'clicked use demo data');
-                  hist.push('/yt/onboarding2');
+                  sendEvent(campaign, "clicked use demo data");
+                  hist.push("/yt/onboarding2");
                 }}
               >
                 Demo starten

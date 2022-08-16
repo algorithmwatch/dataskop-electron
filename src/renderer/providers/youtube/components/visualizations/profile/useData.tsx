@@ -1,9 +1,9 @@
 // @ts-nocheck
 
-import * as chrono from 'chrono-node';
-import { mean, rollups, sum } from 'd3-array';
-import { useEffect, useState } from 'react';
-import { LookupMap, ScrapingResult } from '../../../../../lib/db/types';
+import * as chrono from "chrono-node";
+import { mean, rollups, sum } from "d3-array";
+import { useEffect, useState } from "react";
+import { LookupMap, ScrapingResult } from "../../../../../lib/db/types";
 
 const parseDate = (str: string, referenceDate: Date) => {
   const germanDate = chrono.de.parseDate(str, referenceDate);
@@ -16,11 +16,11 @@ export const useData = (raw: Array<ScrapingResult>, lookups: LookupMap) => {
   const [data, setData] = useState({ loading: true });
 
   const slugHistory = raw.find(
-    (x) => x.success && x.slug.includes('user-watch-history'),
+    (x) => x.success && x.slug.includes("user-watch-history"),
   )?.fields.videos;
 
   const channels = raw.find(
-    (x) => x.success && x.slug.includes('subscribed-channels'),
+    (x) => x.success && x.slug.includes("subscribed-channels"),
   )?.fields.channels;
 
   useEffect(() => {

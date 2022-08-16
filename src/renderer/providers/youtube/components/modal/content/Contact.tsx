@@ -3,19 +3,19 @@ function About() {
     <div className="space-y-4">
       <div className="hl-3xl">Kontakt</div>
       <p>
-        E-Mail:{' '}
+        E-Mail:{" "}
         <a className="link-blue" href="mailto:info@dataskop.net">
           info@dataskop.net
         </a>
       </p>
       <p>
-        Technischer Support:{' '}
+        Technischer Support:{" "}
         <a className="link-blue" href="mailto:support@dataskop.net">
           support@dataskop.net
         </a>
       </p>
       <p>
-        Twitter:{' '}
+        Twitter:{" "}
         <a
           className="link-blue"
           target="_blank"
@@ -26,7 +26,7 @@ function About() {
         </a>
       </p>
       <p>
-        Mehr erfahren auf{' '}
+        Mehr erfahren auf{" "}
         <a
           className="link-blue"
           target="_blank"

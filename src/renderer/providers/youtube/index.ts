@@ -1,12 +1,12 @@
-import { ProviderInformation } from '../types';
-import { confirmCockieForm } from './lib/actions/confirm-cookies';
-import { ytNavigation } from './lib/navigation';
-import { deserializeMapping } from './lib/procedures';
+import { ProviderInformation } from "../types";
+import { confirmCockieForm } from "./lib/actions/confirm-cookies";
+import { ytNavigation } from "./lib/navigation";
+import { deserializeMapping } from "./lib/procedures";
 
 const youtubeInfo: ProviderInformation = {
-  startUrl: 'https://www.youtube.com',
-  loginUrl: 'https://www.youtube.com/account',
-  loginCookie: 'LOGIN_INFO',
+  startUrl: "https://www.youtube.com",
+  loginUrl: "https://www.youtube.com/account",
+  loginCookie: "LOGIN_INFO",
   persistScrapingBrowser: false,
   disableInputAfterLogin: true,
   navigation: ytNavigation,
@@ -14,5 +14,5 @@ const youtubeInfo: ProviderInformation = {
   deserializeConfigMapping: deserializeMapping,
 };
 
-export * from './lib';
+export * from "./lib";
 export { youtubeInfo };

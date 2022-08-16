@@ -16,13 +16,13 @@
  * - don't pass the whole JSON object via IPC every time a changes of the DB is needed (This code was added before contextIsolation so initially we had access to node and the file system)
  * @module
  */
-import _ from 'lodash';
-import { Low } from 'lowdb';
-import PQueue from 'p-queue';
-import { Campaign, ScrapingConfig } from '../../providers/types';
-import dayjs from '../dayjs';
-import { statsForArray } from '../utils/math';
-import { LookupMap, ScrapingResultSaved, ScrapingSession } from './types';
+import _ from "lodash";
+import { Low } from "lowdb";
+import PQueue from "p-queue";
+import { Campaign, ScrapingConfig } from "../../providers/types";
+import dayjs from "../dayjs";
+import { statsForArray } from "../utils/math";
+import { LookupMap, ScrapingResultSaved, ScrapingSession } from "./types";
 
 type Data = {
   scrapingSessions: ScrapingSession[];
@@ -38,11 +38,11 @@ const queue = new PQueue({ concurrency: 1 });
 const initDb = async () => {
   class CustomAsyncAdapter {
     async read() {
-      return window.electron.ipc.invoke('db-read');
+      return window.electron.ipc.invoke("db-read");
     }
 
     async write(data: any) {
-      return window.electron.ipc.invoke('db-write', data);
+      return window.electron.ipc.invoke("db-write", data);
     }
   }
 
@@ -53,7 +53,7 @@ const initDb = async () => {
 initDb();
 
 const setUpDb = async () => {
-  if (db === null) throw Error('db is not initialized');
+  if (db === null) throw Error("db is not initialized");
 
   await db.read();
 
@@ -84,7 +84,7 @@ const addNewSession = async (
 
   await setUpDb();
 
-  if (db === null || db.data === null) throw Error('db is not initialized');
+  if (db === null || db.data === null) throw Error("db is not initialized");
   db.data.scrapingSessions.push(obj);
 
   return db.write();
@@ -128,7 +128,7 @@ const addQuestionnaireToSession = async (
 const getSessions = async () => {
   const data = await setUpDb();
 
-  const sessionsCount = _.countBy(data.scrapingResults, 'sessionId');
+  const sessionsCount = _.countBy(data.scrapingResults, "sessionId");
   const sessions = data.scrapingSessions.map((x) => ({
     ...x,
     count: sessionsCount[x.sessionId] ?? 0,
@@ -154,7 +154,7 @@ const getSessionById = async (
 const queuedAddScrapingResult = async (obj: ScrapingResultSaved) => {
   await setUpDb();
 
-  if (db === null || db.data === null) throw Error('db is not initialized');
+  if (db === null || db.data === null) throw Error("db is not initialized");
 
   db.data.scrapingResults.push(obj);
 
@@ -174,7 +174,7 @@ const addScrapingResult = (sessionId: string, step: number, data: any) => {
 
 const getScrapingResults = async () => {
   const data = await setUpDb();
-  return _.orderBy(data.scrapingResults, 'scrapedAt');
+  return _.orderBy(data.scrapingResults, "scrapedAt");
 };
 
 const getScrapingResultsBySession = async (
@@ -195,7 +195,7 @@ const getScrapingResultsBySession = async (
 
 const modifyLocalCampaigns = async (campaign: Campaign, remove = false) => {
   await setUpDb();
-  if (db === null || db.data === null) throw Error('db is not initialized');
+  if (db === null || db.data === null) throw Error("db is not initialized");
 
   const newData =
     db.data.campaigns?.filter((x) => x.slug !== campaign.slug) || [];
@@ -228,7 +228,7 @@ const getLookups = async (
   // clear all lookups and get fresh data.
   if (
     options.deleteOld &&
-    dayjs().diff(dayjs(lookup.oldest), 'day') > KEEP_LOOKUPS_MAX_DAYS
+    dayjs().diff(dayjs(lookup.oldest), "day") > KEEP_LOOKUPS_MAX_DAYS
   ) {
     await clearLookups();
     return {};
@@ -246,7 +246,7 @@ const addLookups = async (newItems: LookupMap) => {
 
   await setUpDb();
 
-  if (db === null || db.data === null) throw Error('db is not initialized');
+  if (db === null || db.data === null) throw Error("db is not initialized");
 
   if (db.data.lookup == null) {
     db.data.lookup = { items: newItems, oldest: Date.now() };
@@ -259,7 +259,7 @@ const addLookups = async (newItems: LookupMap) => {
 const clearLookups = async () => {
   await setUpDb();
 
-  if (db === null || db.data === null) throw Error('db is not initialized');
+  if (db === null || db.data === null) throw Error("db is not initialized");
 
   db.data.lookup = null;
   return db.write();
@@ -272,7 +272,7 @@ const getAllData = async () => {
 };
 
 const clearData = async () => {
-  if (db === null) throw Error('db is not initialized');
+  if (db === null) throw Error("db is not initialized");
 
   if (db.data === null) return;
   // keep campaign data
@@ -295,7 +295,7 @@ const importResultRows = async (
   const sum = _.uniqWith(old.concat(rows), _.isEqual);
 
   // db.data can't be null
-  if (db === null || db.data === null) throw Error('db is not initialized');
+  if (db === null || db.data === null) throw Error("db is not initialized");
   db.data.scrapingResults = sum;
   await db.write();
 
@@ -308,7 +308,7 @@ const importSessionRows = async (rows: ScrapingSession[]): Promise<number> => {
   const sum = _.uniqWith(old.concat(rows), _.isEqual);
 
   // db.data can't be null
-  if (db === null || db.data === null) throw Error('db is not initialized');
+  if (db === null || db.data === null) throw Error("db is not initialized");
   db.data.scrapingSessions = sum;
   await db.write();
 

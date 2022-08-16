@@ -2,38 +2,38 @@
  * Scraping in the background without executing JavaScript.
  */
 
-import crypto from 'crypto';
-import { BrowserWindow, session } from 'electron';
-import { addMainHandler } from './utils';
+import crypto from "crypto";
+import { BrowserWindow, session } from "electron";
+import { addMainHandler } from "./utils";
 
 let backgroundScrapingWindow: null | BrowserWindow = null;
 
 export default function registerBackgroundScrapingHandlers() {
-  addMainHandler('scraping-background-init', () => {
+  addMainHandler("scraping-background-init", () => {
     backgroundScrapingWindow = new BrowserWindow({
       show: false,
       width: 1280,
       height: 800,
       webPreferences: {
-        session: session.fromPartition('background-scraping'),
+        session: session.fromPartition("background-scraping"),
         backgroundThrottling: false,
         sandbox: false,
       },
     });
-    return backgroundScrapingWindow.loadURL('https://google.com');
+    return backgroundScrapingWindow.loadURL("https://google.com");
   });
 
-  addMainHandler('scraping-background-get-current-html', async () => {
+  addMainHandler("scraping-background-get-current-html", async () => {
     const html = await backgroundScrapingWindow?.webContents.executeJavaScript(
-      'document.documentElement.outerHTML',
+      "document.documentElement.outerHTML",
     );
-    const hash = crypto.createHash('md5').update(html).digest('hex');
+    const hash = crypto.createHash("md5").update(html).digest("hex");
 
     return { html, hash };
   });
 
   addMainHandler(
-    'scraping-background-submit-form',
+    "scraping-background-submit-form",
     async (_event: any, selector: any) => {
       await backgroundScrapingWindow?.webContents.executeJavaScript(
         `document.querySelector("${selector}").submit()`,
@@ -41,7 +41,7 @@ export default function registerBackgroundScrapingHandlers() {
     },
   );
 
-  addMainHandler('scraping-background-close', async () => {
+  addMainHandler("scraping-background-close", async () => {
     return backgroundScrapingWindow?.close();
   });
 }

@@ -3,9 +3,9 @@
  *
  * @module
  */
-import base64 from 'base-64';
-import { ScrapingSession } from 'renderer/lib/db';
-import { Campaign } from 'renderer/providers/types';
+import base64 from "base-64";
+import { ScrapingSession } from "renderer/lib/db";
+import { Campaign } from "renderer/providers/types";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const postJson = (
@@ -14,10 +14,10 @@ const postJson = (
   body: Object,
 ) => {
   return fetch(url, {
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify(body),
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Basic ${base64.encode(`user:${seriousProtection}`)}`,
     },
   });
@@ -43,7 +43,7 @@ const getActiveCampaigns = async (
 
     // hotfix for migration
     if (x.config === null) return;
-    x.config.navigation ||= 'yt-default';
+    x.config.navigation ||= "yt-default";
   });
 
   return activeCampaigns;

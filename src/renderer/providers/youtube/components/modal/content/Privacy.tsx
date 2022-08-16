@@ -49,7 +49,7 @@ function Privacy() {
         Die Server unserer Websites erfassen automatisch Ihre Zugriffe auf die
         Websites. Wenn Sie also unsere Websites besuchen oder nutzen, werden
         automatisch gewisse technische Daten an uns übermittelt. Dabei handelt
-        es sich um die folgenden Informationen:{' '}
+        es sich um die folgenden Informationen:{" "}
       </p>
       <p> </p>
       <p>-        IP-Adresse,</p>
@@ -98,7 +98,7 @@ function Privacy() {
       <p> </p>
       <p>
         Wenn Sie die Daten an uns und unsere Kooperationspartner spenden
-        möchten, können Sie einen DataSkop-Nutzungskonto erstellen.{' '}
+        möchten, können Sie einen DataSkop-Nutzungskonto erstellen.{" "}
       </p>
       <p> </p>
       <p>
@@ -130,7 +130,7 @@ function Privacy() {
         Ihre Datenspende im Rahmen und zur Durchführung des Projekts zur
         Erfüllung des Datenspendevertrags (Art. 6 Abs. 1 lit. b) DSGVO). Die
         Datenspenden werden dabei grundsätzlich für die Dauer des jeweiligen
-        Forschungsprojekts verarbeitet.{' '}
+        Forschungsprojekts verarbeitet.{" "}
       </p>
       <p> </p>
       <p>
@@ -152,7 +152,7 @@ function Privacy() {
         Damit Sie die Datenspende-Funktionen nutzen können, ist es notwendig,
         dass die Software auf Ihren Internetzugang zugreift. Bei Ihrem Zugriff
         auf unseren Server werden die Serverlogdaten verarbeitet. Insoweit
-        verweisen wir auf die Angaben unter Ziffer II. 1 „Besuch der Websites“.{' '}
+        verweisen wir auf die Angaben unter Ziffer II. 1 „Besuch der Websites“.{" "}
       </p>
       <p> </p>
       <p>
@@ -167,7 +167,7 @@ function Privacy() {
         Wir bieten Ihnen die Möglichkeit, zu uns Kontakt aufzunehmen, zum
         Beispiel über unsere oben genannte E-Mail-Adresse. In diesen Fällen
         teilen Sie uns Ihre E-Mail-Adresse sowie ggf. Ihren Namen, einen Betreff
-        und den Inhalt der Nachricht mit.{' '}
+        und den Inhalt der Nachricht mit.{" "}
       </p>
       <p> </p>
       <p>
@@ -183,7 +183,7 @@ function Privacy() {
 
       <p>
         Wir nutzen Ihre Datenspenden (ggf. in Zusammenarbeit mit unseren
-        Kooperationspartnern) für Forschungszwecke.{' '}
+        Kooperationspartnern) für Forschungszwecke.{" "}
       </p>
       <p> </p>
       <p>
@@ -192,7 +192,7 @@ function Privacy() {
         ausgewiesenen Kooperationspartner übermittelt. Einzelheiten zu den
         Verarbeitungen durch die Kooperationspartner können Sie den
         Informationen bei der Abgabe der Datenspende und den ggf. zusätzlich
-        gegebenen Informationen der Kooperationspartner entnehmen.{' '}
+        gegebenen Informationen der Kooperationspartner entnehmen.{" "}
       </p>
       <p> </p>
       <p>
@@ -200,7 +200,7 @@ function Privacy() {
         weiteren Kooperationspartnern geteilt. In diesem Fall teilen wir Ihnen
         eine solche geplante Übermittlung mit angemessener Frist im Vorfeld mit
         und geben Ihnen die Möglichkeit, der Weitergabe der Daten an den
-        weiteren Kooperationspartner zu widersprechen.{' '}
+        weiteren Kooperationspartner zu widersprechen.{" "}
       </p>
 
       <p>
@@ -225,7 +225,7 @@ function Privacy() {
       <p>
         Die Datenschutz-Grundverordnung garantiert Ihnen gewisse Rechte, die Sie
         uns gegenüber – soweit die gesetzlichen Voraussetzungen vorliegen –
-        geltend machen können.{' '}
+        geltend machen können.{" "}
       </p>
 
       <p>
@@ -286,7 +286,7 @@ function Privacy() {
         personenbezogener Daten, die aufgrund eines berechtigten Interesses
         unsererseits oder zur Wahrung einer Aufgabe im öffentlichen Interesse
         erforderlich ist, oder die in Ausübung öffentlicher Gewalt erfolgt,
-        Widerspruch einzulegen.{' '}
+        Widerspruch einzulegen.{" "}
       </p>
       <p> </p>
       <p>
@@ -306,7 +306,7 @@ function Privacy() {
       <p> </p>
       <p>
         Um Ihr Widerspruchsrecht auszuüben, können Sie uns bspw. eine Nachricht
-        an die oben genannte Kontaktadresse senden.{' '}
+        an die oben genannte Kontaktadresse senden.{" "}
       </p>
       <p> </p>
 
@@ -326,7 +326,7 @@ function Privacy() {
       <p />
       <p>
         Sie haben keine vertragliche oder gesetzliche Pflicht, uns
-        personenbezogene Daten bereitzustellen.{' '}
+        personenbezogene Daten bereitzustellen.{" "}
       </p>
 
       <p>
@@ -350,7 +350,7 @@ function Privacy() {
         infizieren. Wir verwenden sowohl sog. Session-Cookies, die sich
         automatisch löschen, nachdem Sie Ihre Browsersitzung beenden als auch
         Cookies, die sich erst nach dem Erreichen einer gewissen Speicherdauer
-        selbständig löschen.{' '}
+        selbständig löschen.{" "}
       </p>
       <p> </p>
       <p>
@@ -383,16 +383,16 @@ function Privacy() {
       </p>
       <p> </p>
       <p>
-        Die bei Aufruf von{' '}
+        Die bei Aufruf von{" "}
         <a
           href="http://datenspende.dataskop.net"
           target="_blank"
           rel="noreferrer"
         >
           datenspende.dataskop.net
-        </a>{' '}
+        </a>{" "}
         von uns gesetzten Cookie hat die Bezeichnung „sessionid“ und wird nach
-        24 Stunden ungültig und{' '}
+        24 Stunden ungültig und{" "}
       </p>
 
       <p>Berlin, Juli 2021</p>

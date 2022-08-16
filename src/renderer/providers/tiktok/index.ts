@@ -1,11 +1,11 @@
-import { ProviderInformation } from '../types';
-import { ttNavigation } from './lib/navigation';
-import { deserializeMapping } from './lib/procedures';
+import { ProviderInformation } from "../types";
+import { ttNavigation } from "./lib/navigation";
+import { deserializeMapping } from "./lib/procedures";
 
 const tiktokInfo: ProviderInformation = {
-  startUrl: 'https://www.tiktok.com',
-  loginUrl: 'https://www.tiktok.com/login/',
-  loginCookie: 'cmpl_token',
+  startUrl: "https://www.tiktok.com",
+  loginUrl: "https://www.tiktok.com/login/",
+  loginCookie: "cmpl_token",
   persistScrapingBrowser: true,
   disableInputAfterLogin: false,
   navigation: ttNavigation,
@@ -13,5 +13,5 @@ const tiktokInfo: ProviderInformation = {
   deserializeConfigMapping: deserializeMapping,
 };
 
-export * from './lib';
+export * from "./lib";
 export { tiktokInfo };

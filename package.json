@@ -209,7 +209,7 @@
     "electronmon": "^2.0.2",
     "eslint": "^8.15.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-erb": "^4.0.3",
+    "eslint-config-": "^4.0.3",
     "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-typescript": "^2.7.1",
     "eslint-import-resolver-webpack": "^0.13.2",
@@ -319,7 +319,7 @@
         }
       }
     ],
-    "singleQuote": true,
+    "singleQuote": false,
     "trailingComma": "all"
   }
 }

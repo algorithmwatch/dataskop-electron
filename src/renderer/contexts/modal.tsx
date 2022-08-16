@@ -4,9 +4,9 @@
  * @module
  */
 
-import React from 'react';
+import React from "react";
 
-type Action = { type: 'set-modal-options'; options: { [key: string]: any } };
+type Action = { type: "set-modal-options"; options: { [key: string]: any } };
 type Dispatch = (action: Action) => void;
 type State = {
   isOpen: boolean;
@@ -26,19 +26,19 @@ const ModalStateContext = React.createContext<
 
 const ModalReducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case 'set-modal-options': {
+    case "set-modal-options": {
       const newState = { ...state };
 
-      if (typeof action.options.isOpen !== 'undefined') {
+      if (typeof action.options.isOpen !== "undefined") {
         newState.isOpen = action.options.isOpen;
       }
-      if (typeof action.options.componentName !== 'undefined') {
+      if (typeof action.options.componentName !== "undefined") {
         newState.componentName = action.options.componentName;
       }
-      if (typeof action.options.onAfterOpen !== 'undefined') {
+      if (typeof action.options.onAfterOpen !== "undefined") {
         newState.onAfterOpen = action.options.onAfterOpen;
       }
-      if (typeof action.options.onClose !== 'undefined') {
+      if (typeof action.options.onClose !== "undefined") {
         newState.onClose = action.options.onClose;
       }
       return newState;
@@ -52,7 +52,7 @@ const ModalReducer = (state: State, action: Action): State => {
 const ModalProvider = ({ children }: ModalProviderProps) => {
   const [state, dispatch] = React.useReducer(ModalReducer, {
     isOpen: false,
-    componentName: '',
+    componentName: "",
     onAfterOpen: () => null,
     onClose: () => null,
   });
@@ -73,7 +73,7 @@ const useModal = () => {
   const context = React.useContext(ModalStateContext);
 
   if (context === undefined) {
-    throw new Error('useModal must be used within a ModalProvider');
+    throw new Error("useModal must be used within a ModalProvider");
   }
 
   return context;

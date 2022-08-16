@@ -5,25 +5,25 @@
 // TypeScript Version: 3.7
 
 declare namespace Glide {
-  type Type = 'slider' | 'carousel';
+  type Type = "slider" | "carousel";
 
   type Pattern =
     /**
      * Move one forward
      */
-    | '>'
+    | ">"
     /**
      * Move one backward
      */
-    | '<'
+    | "<"
     /**
      * Rewinds to end (last slide)
      */
-    | '>>'
+    | ">>"
     /**
      * Rewinds to start (first slide)
      */
-    | '<<'
+    | "<<"
     /**
      * Go to {i} zero-based slide (eq. '=1', will go to second slide)
      */
@@ -34,112 +34,112 @@ declare namespace Glide {
      * Called before first mounting begins. However, the mounting phase has
      * not been started, and components are not bootstrapped yet.
      */
-    | 'mount.before'
+    | "mount.before"
 
     /**
      * Called right after first mounting. All components have been mounted.
      */
-    | 'mount.after'
+    | "mount.after"
 
     /**
      * Called right after updating settings with update() API method.
      */
-    | 'update'
+    | "update"
 
     /**
      * Called right after starting an instance with play() API method.
      */
-    | 'play'
+    | "play"
 
     /**
      * Called right after stopping instance with pause() API method.
      */
-    | 'pause'
+    | "pause"
 
     /**
      * Called right before setting up a slider to its initial state. At this
      * point, classes, translations, and sizes are applied.
      */
-    | 'build.before'
+    | "build.before"
 
     /**
      * Called right after setting up a slider to its initial state. At this
      * point, classes, translations, and sizes are applied.
      */
-    | 'build.after'
+    | "build.after"
 
     /**
      * Called right before calculating new index and making a transition.
      * The movement schema (eg. =1) string has been parsed.
      */
-    | 'run.before'
+    | "run.before"
 
     /**
      * Called right after calculating new index and before making a
      * transition. The movement schema (eg. =1) string has been parsed.
      */
-    | 'run'
+    | "run"
 
     /**
      * Called after calculating new index and making a transition. The
      * movement schema (eg. =1) string has been parsed.
      */
-    | 'run.after'
+    | "run.after"
 
     /**
      * Called after calculating new index and making a transition, while we
      * did an offset animation. Offset animation take place at two moments:
      */
-    | 'run.offset'
+    | "run.offset"
 
     /**
      * Called right after calculating the new index, but before making a
      * transition, while we did a rewinding to the start index.
      */
-    | 'run.start'
+    | "run.start"
 
     /**
      * Called right after calculating the new index, but before making a
      * transition, while we did a rewinding to the last index.
      */
-    | 'run.end'
+    | "run.end"
 
     /**
      * Called right before movement transition begins.
      */
-    | 'move'
+    | "move"
 
     /**
      * Called right after movement transition ends.
      */
-    | 'move.after'
+    | "move.after"
 
     /**
      * Called when the window is being resized. This event throttled
      */
-    | 'resize'
+    | "resize"
 
     /**
      * Called right after swiping begins.
      */
-    | 'swipe.start'
+    | "swipe.start"
 
     /**
      * Called during swiping movement.
      */
-    | 'swipe.move'
+    | "swipe.move"
 
     /**
      * Called right after swiping ends.
      */
-    | 'swipe.end'
+    | "swipe.end"
 
     /**
      * Called right before a translate applies, while we doing a jump to the
      * first or last slide from offset movement. This event is only used
      * when a type is set up to carousel.
      */
-    | 'translate.jump';
+    | "translate.jump";
 
   type TransformerFunction = (
     glide: Static,
@@ -297,7 +297,7 @@ declare namespace Glide {
      *
      * @default 'ltr'
      */
-    direction?: 'ltr' | 'rtr';
+    direction?: "ltr" | "rtr";
 
     /**
      * The value of the future viewports which have to be visible in the

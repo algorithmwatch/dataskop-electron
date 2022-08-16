@@ -1,17 +1,17 @@
-import { Card } from '@material-ui/core';
-import { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import LocalCampaignSelect from '../../components/admin/LocalCampaignSelect';
-import RemoteCampaignSelect from '../../components/admin/RemoteCampaignSelect';
-import { makeGetHtml } from '../../components/scraping/ipc';
-import ScrapingControls from '../../components/scraping/ScrapingControls';
-import { useScraping } from '../../contexts/scraping';
-import { Campaign } from '../../providers/types';
-import Button from '../../providers/youtube/components/Button';
+import { Card } from "@material-ui/core";
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import LocalCampaignSelect from "../../components/admin/LocalCampaignSelect";
+import RemoteCampaignSelect from "../../components/admin/RemoteCampaignSelect";
+import { makeGetHtml } from "../../components/scraping/ipc";
+import ScrapingControls from "../../components/scraping/ScrapingControls";
+import { useScraping } from "../../contexts/scraping";
+import { Campaign } from "../../providers/types";
+import Button from "../../providers/youtube/components/Button";
 import {
   activateWatchHistory,
   deactivateWatchHistory,
-} from '../../providers/youtube/lib/actions/manage-watch-history';
+} from "../../providers/youtube/lib/actions/manage-watch-history";
 
 export default function AdvancedScrapingPage(): JSX.Element {
   const {
@@ -22,13 +22,13 @@ export default function AdvancedScrapingPage(): JSX.Element {
   const history = useHistory();
 
   const setCampaign = (campaign: Campaign) =>
-    dispatch({ type: 'set-campaign', campaign });
+    dispatch({ type: "set-campaign", campaign });
 
   // enable and disable scraping window
   useEffect(() => {
-    dispatch({ type: 'set-attached', attached: true, visible: true });
+    dispatch({ type: "set-attached", attached: true, visible: true });
     return () =>
-      dispatch({ type: 'set-attached', attached: false, visible: false });
+      dispatch({ type: "set-attached", attached: false, visible: false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

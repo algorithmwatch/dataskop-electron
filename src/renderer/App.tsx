@@ -3,18 +3,18 @@ import {
   Redirect,
   Route,
   Switch,
-} from 'react-router-dom';
-import './App.global.css';
-import BaseLayoutSwitch from './components/BaseLayoutSwitch';
-import ScrapingAttached from './components/scraping/ScrapingAttached';
-import UpdateNotification from './components/UpdateNotification';
+} from "react-router-dom";
+import "./App.global.css";
+import BaseLayoutSwitch from "./components/BaseLayoutSwitch";
+import ScrapingAttached from "./components/scraping/ScrapingAttached";
+import UpdateNotification from "./components/UpdateNotification";
 import {
   ConfigProvider,
   ModalProvider,
   NavigationProvider,
   ScrapingProvider,
-} from './contexts';
-import { allRoutes } from './routes';
+} from "./contexts";
+import { allRoutes } from "./routes";
 
 export default function App() {
   return (

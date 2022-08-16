@@ -1,11 +1,11 @@
-import dayjs from 'dayjs';
-import { useEffect } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-import ResultsDetails from '../../components/admin/results/ResultDetails';
-import { useScraping } from '../../contexts';
-import { getLookups, getScrapingResultsBySession } from '../../lib/db';
-import Button from '../../providers/youtube/components/Button';
-import { filterLookupBySession } from '../../providers/youtube/lib/utils';
+import dayjs from "dayjs";
+import { useEffect } from "react";
+import { useHistory, useParams } from "react-router-dom";
+import ResultsDetails from "../../components/admin/results/ResultDetails";
+import { useScraping } from "../../contexts";
+import { getLookups, getScrapingResultsBySession } from "../../lib/db";
+import Button from "../../providers/youtube/components/Button";
+import { filterLookupBySession } from "../../providers/youtube/lib/utils";
 
 export default function ResultsDetailsPage() {
   const { sessionId }: { sessionId: string } = useParams();
@@ -14,19 +14,19 @@ export default function ResultsDetailsPage() {
 
   const invokeExport = async () => {
     const filename = `dataskop-${sessionId}-${dayjs().format(
-      'YYYY-MM-DD-HH-mm-s',
+      "YYYY-MM-DD-HH-mm-s",
     )}.json`;
     const results = await getScrapingResultsBySession(sessionId);
     const lookups = filterLookupBySession(results, await getLookups());
     window.electron.ipc.invoke(
-      'results-export',
+      "results-export",
       JSON.stringify({ results, lookups }),
       filename,
     );
   };
 
   useEffect(() => {
-    dispatch({ type: 'set-session-id', sessionId });
+    dispatch({ type: "set-session-id", sessionId });
   }, [sessionId]);
 
   return (

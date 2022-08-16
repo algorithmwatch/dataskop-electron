@@ -3,14 +3,14 @@
  *
  * @module
  */
-import { faAngleLeft } from '@fortawesome/pro-regular-svg-icons';
-import { useEffect } from 'react';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
-import ContentWrapper from 'renderer/providers/youtube/components/ContentWrapper';
-import { useConfig, useNavigation, useScraping } from '../contexts';
+import { faAngleLeft } from "@fortawesome/pro-regular-svg-icons";
+import { useEffect } from "react";
+import { RouteComponentProps, useHistory } from "react-router-dom";
+import ContentWrapper from "renderer/providers/youtube/components/ContentWrapper";
+import { useConfig, useNavigation, useScraping } from "../contexts";
 import FooterNav, {
   FooterNavItem,
-} from '../providers/youtube/components/FooterNav';
+} from "../providers/youtube/components/FooterNav";
 
 export default function ProviderLoginSuccessPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -23,13 +23,13 @@ export default function ProviderLoginSuccessPage(): JSX.Element {
 
   const footerNavItems: FooterNavItem[] = [
     {
-      label: 'Zurück',
+      label: "Zurück",
       startIcon: faAngleLeft,
       disabled: true,
-      theme: 'link',
-      clickHandler(history: RouteComponentProps['history']) {
-        dispatch({ type: 'set-visible-window', visibleWindow: false });
-        history.push(getPreviousPage('path'));
+      theme: "link",
+      clickHandler(history: RouteComponentProps["history"]) {
+        dispatch({ type: "set-visible-window", visibleWindow: false });
+        history.push(getPreviousPage("path"));
       },
     },
   ];
@@ -47,7 +47,7 @@ export default function ProviderLoginSuccessPage(): JSX.Element {
     // if (isUserLoggedIn && !isScrapingStarted) {
 
     // start scraping
-    dispatch({ type: 'set-scraping-started', started: true });
+    dispatch({ type: "set-scraping-started", started: true });
     // }
   }, []);
 

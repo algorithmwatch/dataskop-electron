@@ -5,11 +5,11 @@
  * override it?
  * @module
  */
-import { useEffect } from 'react';
-import { useHistory } from 'react-router';
-import { getActiveCampaigns } from 'renderer/lib/networking';
-import { localActiveCampaings, providerInfo } from 'renderer/providers/info';
-import { useConfig, useNavigation, useScraping } from '../contexts';
+import { useEffect } from "react";
+import { useHistory } from "react-router";
+import { getActiveCampaigns } from "renderer/lib/networking";
+import { localActiveCampaings, providerInfo } from "renderer/providers/info";
+import { useConfig, useNavigation, useScraping } from "../contexts";
 
 export default function SelectCampaignPage(): JSX.Element {
   const {
@@ -39,7 +39,7 @@ export default function SelectCampaignPage(): JSX.Element {
 
       // only use campaigns that have a valid provider configuration
       dispatch({
-        type: 'set-available-campaigns',
+        type: "set-available-campaigns",
         availableCampaigns: filteredCampaigns,
       });
 
@@ -47,24 +47,24 @@ export default function SelectCampaignPage(): JSX.Element {
       const featuredCampaigns = filteredCampaigns.filter((x) => x.featured);
       if (featuredCampaigns.length > 0) {
         dispatch({
-          type: 'set-campaign',
+          type: "set-campaign",
           campaign: featuredCampaigns[0],
         });
 
         navDispath({
-          type: 'set-navigation-by-provider',
+          type: "set-navigation-by-provider",
           provider: featuredCampaigns[0].config.provider,
           navSlug: featuredCampaigns[0].config.navigation,
         });
       }
 
-      sendEvent(null, 'successfully fetched remote config');
+      sendEvent(null, "successfully fetched remote config");
     } catch (error) {
       window.electron.log.error(
-        'not able to set sraping config from remote',
+        "not able to set sraping config from remote",
         error,
       );
-      sendEvent(null, 'failed to fetch remote config');
+      sendEvent(null, "failed to fetch remote config");
     }
   };
 
@@ -85,12 +85,12 @@ export default function SelectCampaignPage(): JSX.Element {
     );
 
     dispatch({
-      type: 'set-campaign',
+      type: "set-campaign",
       campaign,
     });
 
     navDispath({
-      type: 'set-navigation-by-provider',
+      type: "set-navigation-by-provider",
       provider: campaign.config.provider,
       navSlug: campaign.config.navigation,
     });

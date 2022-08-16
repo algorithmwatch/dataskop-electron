@@ -3,13 +3,13 @@
  * for CSV exports. This was initially implemented for the YT education mode.
  * @module
  */
-import { constants } from '@algorithmwatch/harke';
-import _ from 'lodash';
-import dayjs from 'renderer/lib/dayjs';
-import { exportCsv } from 'renderer/lib/export';
-import { fixDuplicatedString } from 'renderer/lib/utils/strings';
-import { renameKeys } from 'renderer/vendor/lodash-contrib';
-import { lookupOrScrapeVideos } from './html-scrapers';
+import { constants } from "@algorithmwatch/harke";
+import _ from "lodash";
+import dayjs from "renderer/lib/dayjs";
+import { exportCsv } from "renderer/lib/export";
+import { fixDuplicatedString } from "renderer/lib/utils/strings";
+import { renameKeys } from "renderer/vendor/lodash-contrib";
+import { lookupOrScrapeVideos } from "./html-scrapers";
 
 const translateCategories = (cat: string) => {
   const newCat = constants.categories.filter((x) => x.en === cat);
@@ -17,7 +17,7 @@ const translateCategories = (cat: string) => {
   return cat;
 };
 
-const onlineSince = (x) => dayjs().diff(dayjs(x), 'day');
+const onlineSince = (x) => dayjs().diff(dayjs(x), "day");
 
 const getBaseInformation = (item, suffix: string | null = null) => {
   const result = {
@@ -46,45 +46,45 @@ const exportWatchHistoryCsv = async (data) => {
   data.forEach((x) => {
     const rawDate = lookups[x.id].data.publishedAt;
 
-    x['Online_seit_Tage'] = onlineSince(rawDate);
+    x["Online_seit_Tage"] = onlineSince(rawDate);
     x.category = translateCategories(x.category);
 
     // hotfix: remove duplicated channel name (scraped from watch history)
-    x['channelName'] = fixDuplicatedString(x['channelName']);
+    x["channelName"] = fixDuplicatedString(x["channelName"]);
   });
 
   exportCsv({
-    filename: 'watch-history',
+    filename: "watch-history",
     data,
     enumerateRows: true,
     headers: [
-      'Nr',
-      'Titel',
-      'Videolaenge_Sek',
-      'Kanalname',
-      'Wiedergabezeit_Prozent',
-      'Wiedergabezeit_Absolut_Sek',
-      'Aufrufe',
-      'Kategorie',
-      'Online_seit_Tage',
-      'Wochentag',
+      "Nr",
+      "Titel",
+      "Videolaenge_Sek",
+      "Kanalname",
+      "Wiedergabezeit_Prozent",
+      "Wiedergabezeit_Absolut_Sek",
+      "Aufrufe",
+      "Kategorie",
+      "Online_seit_Tage",
+      "Wochentag",
     ],
     renameColumns: {
-      index: 'Nr',
-      title: 'Titel',
-      duration: 'Videolaenge_Sek',
-      channelName: 'Kanalname',
-      percWatched: 'Wiedergabezeit_Prozent',
-      watchTime: 'Wiedergabezeit_Absolut_Sek',
-      category: 'Kategorie',
-      viewCount: 'Aufrufe',
+      index: "Nr",
+      title: "Titel",
+      duration: "Videolaenge_Sek",
+      channelName: "Kanalname",
+      percWatched: "Wiedergabezeit_Prozent",
+      watchTime: "Wiedergabezeit_Absolut_Sek",
+      category: "Kategorie",
+      viewCount: "Aufrufe",
     },
     transformColumns: (x) => {
       const d = dayjs(x.date);
       // from ms to s
       x.duration = x.duration / 1000;
       // only the date is in the date, not the time
-      x['Wochentag'] = d.format('dd');
+      x["Wochentag"] = d.format("dd");
 
       return x;
     },
@@ -96,7 +96,7 @@ const exportAutoplaychainCsv = (data) => {
     .map((x, i) => {
       const seed = {
         Nr: i + 1,
-        ...getBaseInformation(x[0], '_seed'),
+        ...getBaseInformation(x[0], "_seed"),
       };
 
       const rows = x.slice(1).map((r, i) => {
@@ -111,7 +111,7 @@ const exportAutoplaychainCsv = (data) => {
     .flat();
 
   exportCsv({
-    filename: 'autoplay',
+    filename: "autoplay",
     data: transformedData,
     headers: Object.keys(transformedData[0]),
   });
@@ -158,7 +158,7 @@ const exportNewsCsv = async (data) => {
     .map((x, i) => {
       const seed = {
         Nr: i + 1,
-        ...getBaseInformation(x.video, '_seed'),
+        ...getBaseInformation(x.video, "_seed"),
       };
 
       const rowsIn = x.signedInVideos
@@ -166,7 +166,7 @@ const exportNewsCsv = async (data) => {
         .map((r, i) => {
           return {
             Empfehlung_in: i + 1,
-            ...getRecoInformation(lookups, r, '_in'),
+            ...getRecoInformation(lookups, r, "_in"),
           };
         });
 
@@ -175,7 +175,7 @@ const exportNewsCsv = async (data) => {
         .map((r, i) => {
           return {
             Empfehlung_out: i + 1,
-            ...getRecoInformation(lookups, r, '_out'),
+            ...getRecoInformation(lookups, r, "_out"),
           };
         });
 
@@ -189,7 +189,7 @@ const exportNewsCsv = async (data) => {
     .flat();
 
   exportCsv({
-    filename: 'news',
+    filename: "news",
     data: transformedData,
     headers: Object.keys(transformedData[0]),
   });
@@ -224,7 +224,7 @@ const exportSearchCsv = async (data) => {
         .map((r, i) => {
           return {
             Empfehlung_in: i + 1,
-            ...getRecoInformation(lookups, r, '_in'),
+            ...getRecoInformation(lookups, r, "_in"),
           };
         });
 
@@ -233,7 +233,7 @@ const exportSearchCsv = async (data) => {
         .map((r, i) => {
           return {
             Empfehlung_out: i + 1,
-            ...getRecoInformation(lookups, r, '_out'),
+            ...getRecoInformation(lookups, r, "_out"),
           };
         });
 
@@ -247,7 +247,7 @@ const exportSearchCsv = async (data) => {
     .flat();
 
   exportCsv({
-    filename: 'search',
+    filename: "search",
     data: transformedData,
     headers: Object.keys(transformedData[0]),
   });

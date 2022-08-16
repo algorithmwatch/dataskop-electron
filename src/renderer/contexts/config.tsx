@@ -7,14 +7,14 @@
  * Started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
  * @module
  */
-import * as Sentry from '@sentry/electron/renderer';
-import React, { useEffect } from 'react';
-import { postEvent } from 'renderer/lib/networking';
-import { Campaign } from 'renderer/providers/types';
+import * as Sentry from "@sentry/electron/renderer";
+import React, { useEffect } from "react";
+import { postEvent } from "renderer/lib/networking";
+import { Campaign } from "renderer/providers/types";
 
 type Action =
   | {
-      type: 'set-config';
+      type: "set-config";
       version: string;
       isDebug: boolean;
       showAdvancedMenu: boolean;
@@ -23,9 +23,9 @@ type Action =
       seriousProtection: string;
       userConfig: any;
     }
-  | { type: 'show-advanced-menu' }
-  | { type: 'set-debug'; isDebug: boolean }
-  | { type: 'set-user-config'; newValues: any };
+  | { type: "show-advanced-menu" }
+  | { type: "set-debug"; isDebug: boolean }
+  | { type: "set-user-config"; newValues: any };
 type Dispatch = (action: Action) => void;
 type State = {
   version: string;
@@ -44,24 +44,24 @@ const ConfigStateContext = React.createContext<
 
 const configReducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case 'set-config': {
+    case "set-config": {
       return {
         ...state,
         ...action,
       };
     }
 
-    case 'set-debug': {
+    case "set-debug": {
       return { ...state, isDebug: action.isDebug };
     }
 
-    case 'show-advanced-menu': {
+    case "show-advanced-menu": {
       return { ...state, showAdvancedMenu: true };
     }
 
-    case 'set-user-config': {
+    case "set-user-config": {
       // sync changes back to disk
-      window.electron.ipc.invoke('db-set-config', action.newValues);
+      window.electron.ipc.invoke("db-set-config", action.newValues);
       return {
         ...state,
         userConfig: { ...state.userConfig, ...action.newValues },
@@ -77,7 +77,7 @@ const configReducer = (state: State, action: Action): State => {
 const ConfigProvider = ({ children }: ConfigProviderProps) => {
   // initial values get overriden with `useEffect` when the component gets mounten
   const [state, dispatch] = React.useReducer(configReducer, {
-    version: 'loading...',
+    version: "loading...",
     isDebug: false,
     showAdvancedMenu: false,
     platformUrl: null,
@@ -89,19 +89,19 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
   useEffect(() => {
     (async () => {
       // in devopment, this returns the electron version instead of the app version.
-      const version = await window.electron.ipc.invoke('get-version-number');
+      const version = await window.electron.ipc.invoke("get-version-number");
 
-      const userConfig = await window.electron.ipc.invoke('db-get-config');
+      const userConfig = await window.electron.ipc.invoke("db-get-config");
 
-      const env = await window.electron.ipc.invoke('get-env');
+      const env = await window.electron.ipc.invoke("get-env");
 
       if (!env) {
-        window.electron.log.error('Could not get ENV from main. Aborting.');
+        window.electron.log.error("Could not get ENV from main. Aborting.");
         return;
       }
 
       const isDebug =
-        env.NODE_ENV === 'development' || env.DEBUG_PROD === 'true';
+        env.NODE_ENV === "development" || env.DEBUG_PROD === "true";
       const platformUrl = env.PLATFORM_URL ?? null;
       const trackEvents = !!env.TRACK_EVENTS;
       const seriousProtection = env.SERIOUS_PROTECTION ?? null;
@@ -114,7 +114,7 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
       }
 
       dispatch({
-        type: 'set-config',
+        type: "set-config",
         isDebug,
         version,
         platformUrl,
@@ -158,7 +158,7 @@ const useConfig = () => {
   const context = React.useContext(ConfigStateContext);
 
   if (context === undefined) {
-    throw new Error('useConfig must be used within a ConfigProvider');
+    throw new Error("useConfig must be used within a ConfigProvider");
   }
 
   return context;

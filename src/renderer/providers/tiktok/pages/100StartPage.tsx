@@ -3,12 +3,12 @@
  *
  * @module
  */
-import { faAngleRight } from '@fortawesome/pro-regular-svg-icons';
-import { RouteComponentProps } from 'react-router';
+import { faAngleRight } from "@fortawesome/pro-regular-svg-icons";
+import { RouteComponentProps } from "react-router";
 import FooterNav, {
   FooterNavItem,
-} from 'renderer/providers/youtube/components/FooterNav';
-import { useNavigation } from '../../../contexts';
+} from "renderer/providers/youtube/components/FooterNav";
+import { useNavigation } from "../../../contexts";
 // import FooterNav, {
 //   FooterNavItem,
 // } from '../../youtube/components/FooterNav';
@@ -25,12 +25,12 @@ export default function StartPage(): JSX.Element {
 
   const footerNavItems: FooterNavItem[] = [
     {
-      label: 'Weiter',
+      label: "Weiter",
       // size: 'large',
       endIcon: faAngleRight,
-      classNames: 'mx-auto',
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getNextPage('path'));
+      classNames: "mx-auto",
+      clickHandler(history: RouteComponentProps["history"]) {
+        history.push(getNextPage("path"));
       },
     },
   ];

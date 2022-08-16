@@ -1,5 +1,5 @@
-import { Dialog, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment } from "react";
 
 // inspired by https://bensthoughts.dev/blog/react/headless-ui-drawer
 
@@ -12,8 +12,8 @@ type DrawerProps = {
 };
 
 export default function Drawer({
-  title = '',
-  description = '',
+  title = "",
+  description = "",
   children,
   isOpen,
   setIsOpen,

@@ -1,7 +1,7 @@
-import { tiktokInfo } from './tiktok';
-import { defaultCampaign } from './tiktok/lib';
-import { Campaign, ProviderInformation } from './types';
-import { youtubeInfo } from './youtube';
+import { tiktokInfo } from "./tiktok";
+import { defaultCampaign } from "./tiktok/lib";
+import { Campaign, ProviderInformation } from "./types";
+import { youtubeInfo } from "./youtube";
 
 const providerInfo: { [key: string]: ProviderInformation } = {
   youtube: youtubeInfo,

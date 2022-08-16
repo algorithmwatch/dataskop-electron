@@ -1,6 +1,6 @@
-import { GetHtmlFunction, GetHtmlLazyFunction } from 'renderer/providers/types';
-import { ProfileProcedureConfig, YtScrapingConfig } from '..';
-import { profileScraperSlugToFun } from '../scrapers';
+import { GetHtmlFunction, GetHtmlLazyFunction } from "renderer/providers/types";
+import { ProfileProcedureConfig, YtScrapingConfig } from "..";
+import { profileScraperSlugToFun } from "../scrapers";
 
 async function* profileProcedure(
   getHtml: GetHtmlFunction,

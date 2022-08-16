@@ -1,13 +1,13 @@
-import { IconDefinition } from '@fortawesome/pro-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy, { TippyProps } from '@tippyjs/react';
-import cn from 'classnames';
-import { MouseEvent, ReactNode } from 'react';
+import { IconDefinition } from "@fortawesome/pro-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Tippy, { TippyProps } from "@tippyjs/react";
+import cn from "classnames";
+import { MouseEvent, ReactNode } from "react";
 
 export interface ButtonProps {
-  type?: 'button' | 'submit';
-  size?: 'small' | 'medium' | 'large';
-  theme?: 'outline' | 'link' | 'blue';
+  type?: "button" | "submit";
+  size?: "small" | "medium" | "large";
+  theme?: "outline" | "link" | "blue";
   startIcon?: IconDefinition;
   endIcon?: IconDefinition;
   classNames?: string;
@@ -18,12 +18,12 @@ export interface ButtonProps {
 }
 
 export default function Button({
-  type = 'button',
-  size = 'medium',
-  theme = 'outline',
+  type = "button",
+  size = "medium",
+  theme = "outline",
   startIcon,
   endIcon,
-  classNames = '',
+  classNames = "",
   disabled = false,
   tippyOptions,
   onClick,
@@ -34,7 +34,7 @@ export default function Button({
 
   if (startIcon) {
     buttonContent.push(
-      <span key="start-icon" className={size === 'large' ? 'mr-2.5' : 'mr-2'}>
+      <span key="start-icon" className={size === "large" ? "mr-2.5" : "mr-2"}>
         <FontAwesomeIcon icon={startIcon} />
       </span>,
     );
@@ -48,7 +48,7 @@ export default function Button({
 
   if (endIcon) {
     buttonContent.push(
-      <span key="end-icon" className={size === 'large' ? 'ml-2.5' : 'ml-2'}>
+      <span key="end-icon" className={size === "large" ? "ml-2.5" : "ml-2"}>
         <FontAwesomeIcon icon={endIcon} />
       </span>,
     );
@@ -57,24 +57,24 @@ export default function Button({
   // set button classes
 
   const buttonSize = {
-    small: 'px-3 py-2.5 text-sm',
-    medium: 'px-5 py-4 text-base',
-    large: 'px-6 py-5 text-xl',
+    small: "px-3 py-2.5 text-sm",
+    medium: "px-5 py-4 text-base",
+    large: "px-6 py-5 text-xl",
   };
 
   const buttonTheme = {
     outline: cn({
-      'border-2 focus:outline-none text-yellow-1500': true,
-      'border-yellow-700 hover:text-yellow-1200 focus:ring-4 focus:ring-yellow-500 focus:ring-opacity-50':
+      "border-2 focus:outline-none text-yellow-1500": true,
+      "border-yellow-700 hover:text-yellow-1200 focus:ring-4 focus:ring-yellow-500 focus:ring-opacity-50":
         !disabled,
-      'border-yellow-1200/50 text-yellow-1200 opacity-50': disabled,
+      "border-yellow-1200/50 text-yellow-1200 opacity-50": disabled,
     }),
-    link: cn('text-yellow-1500 focus:outline-none', {
-      'hover:underline': !disabled,
-      'opacity-20': disabled,
+    link: cn("text-yellow-1500 focus:outline-none", {
+      "hover:underline": !disabled,
+      "opacity-20": disabled,
     }),
-    blue: cn('border-2 focus:outline-none text-white', {
-      'border-blue-500 bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50':
+    blue: cn("border-2 focus:outline-none text-white", {
+      "border-blue-500 bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50":
         !disabled,
     }),
   };

@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import { useDropArea } from 'react-use';
+import { useDropArea } from "react-use";
 
 const handleFiles = (files: File[]) => {
   return window.electron.ipc.invoke(
-    'import-files',
+    "import-files",
     files.map(({ path }) => path),
   );
 };

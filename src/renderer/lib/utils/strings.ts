@@ -20,7 +20,7 @@ const fixDuplicatedString = (x: string): string => {
   else return x;
 };
 
-const stripNonAscii = (x: string) => x.replace(/[^a-z0-9]/gi, '');
+const stripNonAscii = (x: string) => x.replace(/[^a-z0-9]/gi, "");
 
 /**
  * Format bytes as human-readable text.
@@ -37,12 +37,12 @@ function humanFileSize(bytes: number, si = false, dp = 1) {
   const thresh = si ? 1000 : 1024;
 
   if (Math.abs(bytes) < thresh) {
-    return bytes + ' B';
+    return bytes + " B";
   }
 
   const units = si
-    ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-    : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+    ? ["kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+    : ["KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"];
   let u = -1;
   const r = 10 ** dp;
 
@@ -54,7 +54,7 @@ function humanFileSize(bytes: number, si = false, dp = 1) {
     u < units.length - 1
   );
 
-  return bytes.toFixed(dp) + ' ' + units[u];
+  return bytes.toFixed(dp) + " " + units[u];
 }
 
 export { splitByWhitespace, fixDuplicatedString, stripNonAscii, humanFileSize };

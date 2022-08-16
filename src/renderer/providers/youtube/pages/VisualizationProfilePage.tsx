@@ -1,12 +1,12 @@
-import { faAngleLeft, faAngleRight } from '@fortawesome/pro-solid-svg-icons';
-import { useEffect, useState } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { useScraping } from 'renderer/contexts';
-import { useNavigation } from 'renderer/contexts/navigation';
+import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
+import { useEffect, useState } from "react";
+import { RouteComponentProps } from "react-router-dom";
+import { useScraping } from "renderer/contexts";
+import { useNavigation } from "renderer/contexts/navigation";
 import FooterNav, {
   FooterNavItem,
-} from 'renderer/providers/youtube/components/FooterNav';
-import VisualizationWrapper from '../components/VisualizationWrapper';
+} from "renderer/providers/youtube/components/FooterNav";
+import VisualizationWrapper from "../components/VisualizationWrapper";
 
 export default function VisualizationProfilePage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -23,7 +23,7 @@ export default function VisualizationProfilePage(): JSX.Element {
   useEffect(() => {
     if (campaign === null) return;
     const stepIndex = campaign.config.steps.findIndex(
-      (s) => s.type === 'profile',
+      (s) => s.type === "profile",
     );
     if (demoMode || step > stepIndex) {
       setNextButtonIsDisabled(false);
@@ -32,28 +32,28 @@ export default function VisualizationProfilePage(): JSX.Element {
 
   const footerNavItems: FooterNavItem[] = [
     {
-      label: 'Zurück',
-      theme: 'link',
+      label: "Zurück",
+      theme: "link",
       startIcon: faAngleLeft,
-      clickHandler(history: RouteComponentProps['history']) {
-        history.push(getPreviousPage('path'));
+      clickHandler(history: RouteComponentProps["history"]) {
+        history.push(getPreviousPage("path"));
       },
     },
     {
-      label: 'Weiter',
+      label: "Weiter",
       // size: 'large',
       endIcon: faAngleRight,
       disabled: nextButtonIsDisabled,
       tippyOptions: nextButtonIsDisabled
         ? {
-            content: 'Bitte warte, bis alle Daten geladen sind.',
-            theme: 'process-info',
-            placement: 'left',
+            content: "Bitte warte, bis alle Daten geladen sind.",
+            theme: "process-info",
+            placement: "left",
           }
         : undefined,
-      clickHandler(history: RouteComponentProps['history']) {
+      clickHandler(history: RouteComponentProps["history"]) {
         if (!nextButtonIsDisabled) {
-          history.push(getNextPage('path'));
+          history.push(getNextPage("path"));
         }
       },
     },

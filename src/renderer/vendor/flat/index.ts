@@ -10,7 +10,7 @@ function isBuffer(obj) {
   return (
     obj &&
     obj.constructor &&
-    typeof obj.constructor.isBuffer === 'function' &&
+    typeof obj.constructor.isBuffer === "function" &&
     obj.constructor.isBuffer(obj)
   );
 }
@@ -22,7 +22,7 @@ function keyIdentity(key) {
 function flatten(target, opts) {
   opts = opts || {};
 
-  const delimiter = opts.delimiter || '.';
+  const delimiter = opts.delimiter || ".";
   const maxDepth = opts.maxDepth;
   const transformKey = opts.transformKey || keyIdentity;
   const output = {};
@@ -34,7 +34,7 @@ function flatten(target, opts) {
       const isarray = opts.safe && Array.isArray(value);
       const type = Object.prototype.toString.call(value);
       const isbuffer = isBuffer(value);
-      const isobject = type === '[object Object]' || type === '[object Array]';
+      const isobject = type === "[object Object]" || type === "[object Array]";
 
       const newKey = prev
         ? prev + delimiter + transformKey(key)
@@ -62,7 +62,7 @@ function flatten(target, opts) {
 function unflatten(target, opts) {
   opts = opts || {};
 
-  const delimiter = opts.delimiter || '.';
+  const delimiter = opts.delimiter || ".";
   const overwrite = opts.overwrite || false;
   const transformKey = opts.transformKey || keyIdentity;
   const result = {};
@@ -70,7 +70,7 @@ function unflatten(target, opts) {
   const isbuffer = isBuffer(target);
   if (
     isbuffer ||
-    Object.prototype.toString.call(target) !== '[object Object]'
+    Object.prototype.toString.call(target) !== "[object Object]"
   ) {
     return target;
   }
@@ -80,7 +80,7 @@ function unflatten(target, opts) {
   function getkey(key) {
     const parsedKey = Number(key);
 
-    return isNaN(parsedKey) || key.indexOf('.') !== -1 || opts.object
+    return isNaN(parsedKey) || key.indexOf(".") !== -1 || opts.object
       ? key
       : parsedKey;
   }
@@ -95,8 +95,8 @@ function unflatten(target, opts) {
 
   function isEmpty(val) {
     const type = Object.prototype.toString.call(val);
-    const isArray = type === '[object Array]';
-    const isObject = type === '[object Object]';
+    const isArray = type === "[object Array]";
+    const isObject = type === "[object Object]";
 
     if (!val) {
       return true;
@@ -109,7 +109,7 @@ function unflatten(target, opts) {
 
   target = Object.keys(target).reduce(function (result, key) {
     const type = Object.prototype.toString.call(target[key]);
-    const isObject = type === '[object Object]' || type === '[object Array]';
+    const isObject = type === "[object Object]" || type === "[object Array]";
     if (!isObject || isEmpty(target[key])) {
       result[key] = target[key];
       return result;
@@ -125,20 +125,20 @@ function unflatten(target, opts) {
     let recipient = result;
 
     while (key2 !== undefined) {
-      if (key1 === '__proto__') {
+      if (key1 === "__proto__") {
         return;
       }
 
       const type = Object.prototype.toString.call(recipient[key1]);
-      const isobject = type === '[object Object]' || type === '[object Array]';
+      const isobject = type === "[object Object]" || type === "[object Array]";
 
       // do not write over falsey, non-undefined values if overwrite is false
-      if (!overwrite && !isobject && typeof recipient[key1] !== 'undefined') {
+      if (!overwrite && !isobject && typeof recipient[key1] !== "undefined") {
         return;
       }
 
       if ((overwrite && !isobject) || (!overwrite && recipient[key1] == null)) {
-        recipient[key1] = typeof key2 === 'number' && !opts.object ? [] : {};
+        recipient[key1] = typeof key2 === "number" && !opts.object ? [] : {};
       }
 
       recipient = recipient[key1];

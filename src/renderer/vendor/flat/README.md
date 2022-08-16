@@ -17,14 +17,14 @@ Flattens the object - it'll return an object one level deep, regardless of how
 nested the original object was:
 
 ```javascript
-var flatten = require('flat');
+var flatten = require("flat");
 
 flatten({
   key1: {
-    keyA: 'valueI',
+    keyA: "valueI",
   },
   key2: {
-    keyB: 'valueII',
+    keyB: "valueII",
   },
   key3: { a: { b: { c: 2 } } },
 });
@@ -41,11 +41,11 @@ flatten({
 Flattening is reversible too, you can call `flatten.unflatten()` on an object:
 
 ```javascript
-var unflatten = require('flat').unflatten;
+var unflatten = require("flat").unflatten;
 
 unflatten({
-  'three.levels.deep': 42,
-  'three.levels': {
+  "three.levels.deep": 42,
+  "three.levels": {
     nested: true,
   },
 });
@@ -72,15 +72,15 @@ When enabled, both `flat` and `unflatten` will preserve arrays and their
 contents. This is disabled by default.
 
 ```javascript
-var flatten = require('flat');
+var flatten = require("flat");
 
 flatten(
   {
     this: [
-      { contains: 'arrays' },
+      { contains: "arrays" },
       {
         preserving: {
-          them: 'for you',
+          them: "for you",
         },
       },
     ],
@@ -107,9 +107,9 @@ When enabled, arrays will not be created automatically when calling unflatten, l
 ```javascript
 unflatten(
   {
-    'hello.you.0': 'ipsum',
-    'hello.you.1': 'lorem',
-    'hello.other.world': 'foo',
+    "hello.you.0": "ipsum",
+    "hello.you.1": "lorem",
+    "hello.other.world": "foo",
   },
   { object: true },
 );
@@ -130,8 +130,8 @@ When enabled, existing keys in the unflattened object may be overwritten if they
 ```javascript
 unflatten(
   {
-    TRAVIS: 'true',
-    'TRAVIS.DIR': '/home/travis/build/kvz/environmental',
+    TRAVIS: "true",
+    "TRAVIS.DIR": "/home/travis/build/kvz/environmental",
   },
   { overwrite: true },
 );
@@ -150,15 +150,15 @@ This only makes sense on ordered arrays, and since we're overwriting data, shoul
 Maximum number of nested objects to flatten.
 
 ```javascript
-var flatten = require('flat');
+var flatten = require("flat");
 
 flatten(
   {
     key1: {
-      keyA: 'valueI',
+      keyA: "valueI",
     },
     key2: {
-      keyB: 'valueII',
+      keyB: "valueII",
     },
     key3: { a: { b: { c: 2 } } },
   },
@@ -177,22 +177,22 @@ flatten(
 Transform each part of a flat key before and after flattening.
 
 ```javascript
-var flatten = require('flat');
-var unflatten = require('flat').unflatten;
+var flatten = require("flat");
+var unflatten = require("flat").unflatten;
 
 flatten(
   {
     key1: {
-      keyA: 'valueI',
+      keyA: "valueI",
     },
     key2: {
-      keyB: 'valueII',
+      keyB: "valueII",
     },
     key3: { a: { b: { c: 2 } } },
   },
   {
     transformKey: function (key) {
-      return '__' + key + '__';
+      return "__" + key + "__";
     },
   },
 );
@@ -205,9 +205,9 @@ flatten(
 
 unflatten(
   {
-    '__key1__.__keyA__': 'valueI',
-    '__key2__.__keyB__': 'valueII',
-    '__key3__.__a__.__b__.__c__': 2,
+    "__key1__.__keyA__": "valueI",
+    "__key2__.__keyB__": "valueII",
+    "__key3__.__a__.__b__.__c__": 2,
   },
   {
     transformKey: function (key) {

@@ -28,6 +28,9 @@
   // Boilerplate above, DataSkop from here:
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": false
+  },
   "[yaml]": {
     "editor.defaultFormatter": "redhat.vscode-yaml"
   },
@@ -42,13 +45,11 @@
       "source.organizeImports": true
     }
   },
-  "editor.rulers": [
-    80
-  ],
+  "editor.rulers": [80],
   "[shellscript]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
   },
   "[dotenv]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
-  },
+  }
 }

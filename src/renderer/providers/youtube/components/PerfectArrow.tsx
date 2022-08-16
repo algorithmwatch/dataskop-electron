@@ -1,4 +1,4 @@
-import { ArrowOptions, getArrow } from 'perfect-arrows';
+import { ArrowOptions, getArrow } from "perfect-arrows";
 
 type Point = { x: number; y: number };
 

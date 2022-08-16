@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import Header from 'renderer/components/Header';
+import { ReactNode } from "react";
+import Header from "renderer/components/Header";
 
 export default function BaseLayout({
   children,

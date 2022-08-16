@@ -5,21 +5,21 @@
  *
  * @module
  */
-import { range } from 'lodash';
-import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { useConfig, useModal, useScraping } from 'renderer/contexts';
-import { currentDelay } from 'renderer/lib/delay';
-import { createScrapingGenerator } from 'renderer/lib/scraping';
-import { delay } from 'renderer/lib/utils/time';
-import { providerInfo } from 'renderer/providers/info';
-import { Campaign } from 'renderer/providers/types';
-import { v4 as uuidv4 } from 'uuid';
+import { range } from "lodash";
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { useConfig, useModal, useScraping } from "renderer/contexts";
+import { currentDelay } from "renderer/lib/delay";
+import { createScrapingGenerator } from "renderer/lib/scraping";
+import { delay } from "renderer/lib/utils/time";
+import { providerInfo } from "renderer/providers/info";
+import { Campaign } from "renderer/providers/types";
+import { v4 as uuidv4 } from "uuid";
 import {
   addNewSession,
   addScrapingResult,
   setSessionFinishedAt,
-} from '../../lib/db';
+} from "../../lib/db";
 import {
   extractHtml,
   getCookies,
@@ -27,10 +27,10 @@ import {
   makeGetHtml,
   scrollDown,
   setNavigationCallback,
-} from './ipc';
-import ScrapingWindow from './ScrapingWindow';
+} from "./ipc";
+import ScrapingWindow from "./ScrapingWindow";
 
-const CALLBACK_NAV = 'scraping-navigation-happened';
+const CALLBACK_NAV = "scraping-navigation-happened";
 
 export default function ScrapingManager({
   disableInput = false,
@@ -67,7 +67,7 @@ export default function ScrapingManager({
     const isLoggedIn = cookies.some(
       (x: any) => x.name === provider.loginCookie,
     );
-    dispatch({ type: 'set-user-logged-in', loggedIn: isLoggedIn });
+    dispatch({ type: "set-user-logged-in", loggedIn: isLoggedIn });
     return isLoggedIn;
   };
 
@@ -108,25 +108,25 @@ export default function ScrapingManager({
   };
 
   const resetScraping = async () => {
-    dispatch({ type: 'reset-scraping' });
+    dispatch({ type: "reset-scraping" });
     await goToUrl(provider.loginUrl, {
       clear: true,
     });
-    return window.electron.ipc.invoke('scraping-remove-view');
+    return window.electron.ipc.invoke("scraping-remove-view");
   };
 
   useEffect(() => {
     const checkIfLoggedOut = async () => {
       if (!isUserLoggedIn && isScrapingStarted) {
         const logoutSteps = campaign.config.steps.filter(
-          (x) => 'doLogout' in x && x.doLogout,
+          (x) => "doLogout" in x && x.doLogout,
         );
         if (logoutSteps.length === 1) {
           const logoutStepIndex = campaign.config.steps.indexOf(logoutSteps[0]);
 
           // the step will increment later on, so it's one off
           if (scrapingProgress.step + 1 < logoutStepIndex) {
-            sendEvent(campaign, 'user was logged out', {
+            sendEvent(campaign, "user was logged out", {
               loggedOutIn: scrapingProgress.step,
               logoutStep: logoutStepIndex,
             });
@@ -134,13 +134,13 @@ export default function ScrapingManager({
             await resetScraping();
 
             dispatchModal({
-              type: 'set-modal-options',
-              options: { isOpen: true, componentName: 'logout' },
+              type: "set-modal-options",
+              options: { isOpen: true, componentName: "logout" },
             });
 
             // go to start after some time
             setTimeout(() => {
-              history.push('/');
+              history.push("/");
             }, 2000);
           }
         }
@@ -153,7 +153,7 @@ export default function ScrapingManager({
     const loggedIn = await checkForLogIn();
 
     if (loggedIn && provider.disableInputAfterLogin)
-      dispatch({ type: 'set-disable-input', disableInput: true });
+      dispatch({ type: "set-disable-input", disableInput: true });
 
     if (!loggedIn) provider.confirmCookie();
 
@@ -163,7 +163,7 @@ export default function ScrapingManager({
   // start scraping when `isScrapingStarted` was set to true
   useEffect(() => {
     const startScraping = async () => {
-      window.electron.log.info('Start scraping', campaign.config);
+      window.electron.log.info("Start scraping", campaign.config);
 
       // create a uuid every time you hit start scraping
       const sId = uuidv4();
@@ -181,7 +181,7 @@ export default function ScrapingManager({
       );
 
       dispatch({
-        type: 'scraping-has-started',
+        type: "scraping-has-started",
         stepGenerator: gen,
         sessionId: sId,
       });
@@ -205,16 +205,16 @@ export default function ScrapingManager({
         const [newFrac, step, result] = value;
 
         dispatch({
-          type: 'set-scraping-progress-bar',
+          type: "set-scraping-progress-bar",
           scrapingProgress: { isActive: true, value: newFrac, step },
         });
 
         if (result === null || !result.success) {
           window.electron.log.info(
-            'The scraping result was marked as unsuccessful. However, we continue.',
+            "The scraping result was marked as unsuccessful. However, we continue.",
             result,
           );
-          sendEvent(campaign, 'scraping error', result);
+          sendEvent(campaign, "scraping error", result);
         }
 
         if (done) {
@@ -223,16 +223,16 @@ export default function ScrapingManager({
           await addScrapingResult(sessionId, step, result);
 
           setSessionFinishedAt(sessionId);
-          dispatch({ type: 'scraping-has-finished' });
-          window.electron.log.info('Scraping done');
+          dispatch({ type: "scraping-has-finished" });
+          window.electron.log.info("Scraping done");
         } else {
           // Store data w/ async
           addScrapingResult(sessionId, step, result);
         }
 
-        dispatch({ type: 'increment-finished' });
+        dispatch({ type: "increment-finished" });
       } catch (err) {
-        dispatch({ type: 'set-scraping-error', scrapingError: err as Error });
+        dispatch({ type: "set-scraping-error", scrapingError: err as Error });
         window.electron.log.error(err);
       }
     };
@@ -242,7 +242,7 @@ export default function ScrapingManager({
   // Initialize & clean up
 
   const initScraper = async (): Promise<string | null> => {
-    await window.electron.ipc.invoke('scraping-init-view', {
+    await window.electron.ipc.invoke("scraping-init-view", {
       muted: isMuted,
       allowInput: !disableInput,
       persist: provider.persistScrapingBrowser,
@@ -260,7 +260,7 @@ export default function ScrapingManager({
 
   const cleanUpScraper = () => {
     window.electron.ipc.removeListener(CALLBACK_NAV, checkLoginCb);
-    window.electron.ipc.invoke('scraping-remove-view');
+    window.electron.ipc.invoke("scraping-remove-view");
   };
 
   useEffect(() => {
@@ -277,7 +277,7 @@ export default function ScrapingManager({
 
   useEffect(() => {
     const reloadScrapingView = async () => {
-      await window.electron.ipc.invoke('scraping-remove-view');
+      await window.electron.ipc.invoke("scraping-remove-view");
       await initScraper();
       setForceReload(forceReload + 1);
     };
