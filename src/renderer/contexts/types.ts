@@ -8,6 +8,6 @@ export type NavigationStatePage = {
   path: string;
   sectionKey: null | string;
   layoutProps?: {
-    hideHeader: boolean;
+    showHeader?: boolean;
   };
 };
