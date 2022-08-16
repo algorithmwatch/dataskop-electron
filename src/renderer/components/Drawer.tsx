@@ -1,3 +1,5 @@
+import { faXmark } from "@fortawesome/pro-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 
@@ -21,40 +23,37 @@ export default function Drawer({
   return (
     <Transition show={isOpen} as={Fragment}>
       <Dialog
-        unmount={false}
         onClose={() => setIsOpen(false)}
         className="fixed z-30 inset-0 overflow-hidden"
       >
-        <div className="flex w-screen h-screen">
-          {/* Overlay */}
+        <div className="w-screen h-screen">
+          {/* Background overlay */}
           <Transition.Child
             as={Fragment}
-            enter="transition-opacity ease-in duration-300"
+            enter="transition-opacity ease-linear duration-200"
             enterFrom="opacity-0"
-            enterTo="opacity-30"
-            entered="opacity-30"
-            leave="transition-opacity ease-out duration-300"
-            leaveFrom="opacity-30"
+            enterTo="opacity-100"
+            leave="transition-opacity ease-linear duration-300"
+            leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="z-40 fixed inset-0 bg-black" />
+            <Dialog.Overlay className="z-40 fixed inset-0 bg-black bg-opacity-30" />
           </Transition.Child>
 
           {/* Drawer */}
           <Transition.Child
             as={Fragment}
-            enter="transition-all absolute"
-            entered="absolute"
+            enter="transition-all ease-in-out duration-200"
             enterFrom="-right-96"
             enterTo="right-0"
-            leave="transition-all absolute"
+            leave="transition-all ease-in-out duration-300"
             leaveFrom="right-0"
             leaveTo="-right-96"
           >
             <div
-              className={`flex flex-col justify-between bg-gray-500 z-50
-                          w-96 p-6 overflow-hidden text-left
-                          align-middle shadow-xl rounded-r-2xl`}
+              className={`fixed h-screen flex flex-col space-y-6 items-start bg-white z-50
+                          w-96 px-10 pt-24 pb-10
+                          shadow-xl`}
             >
               <div>
                 <Dialog.Title className="font-bold text-2xl md:text-4xl text-blue-500">
@@ -63,10 +62,13 @@ export default function Drawer({
                 <Dialog.Description>{description}</Dialog.Description>
                 {children}
               </div>
-              <div className="self-center mt-10">
-                Das ist ein test
-                <span onClick={() => setIsOpen(!isOpen)}>Schließen</span>
-              </div>
+              <button
+                type="button"
+                // className="text-3xl"
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                <FontAwesomeIcon icon={faXmark} size="2x" />
+              </button>
             </div>
           </Transition.Child>
         </div>
