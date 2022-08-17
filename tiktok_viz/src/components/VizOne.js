@@ -7,6 +7,8 @@ import VizOneDropDown from "./VizOneDropDown";
 import VizOneToggleButtons from "./VizOneToggleButtons";
 import React from "react";
 
+import addTooltips from "../utils/tooltips";
+
 function VizOne() {
   const headerRef = useRef();
   const boxesRef = useRef();
@@ -42,49 +44,52 @@ function VizOne() {
 
   useEffect(() => {
     if (videoData === undefined) return;
-    const chart = Plot.plot({
-      width: 2000,
-      marginBottom: 75,
-      marginTop: 60,
-      height: 500,
-      marginLeft: 60,
-      marginRight: 60,
-      style: {
-        background: "transparent",
-      },
-      x: {
-        tickFormat: (d) =>
-          `${d.getDate()}.${
-            d.getMonth() === 0 ? 12 : d.getMonth() + 1
-          }.${d.getFullYear()}`,
-        tickRotate: -90,
-        label: "Zeitverlauf",
-      },
-      y: {
-        grid: true,
-        label: "Minuten",
-      },
-      color: {
-        legend: true,
-      },
-      //   color: {
-      //     type: "diverging",
-      //     scheme: "burd",
-      //   },
-      // scale: --> `${date_prev.getDate()}.${date_prev.getMonth() === 0 ? 12 : date_prev.getMonth() + 1}`
-      marks: [
-        Plot.barY(
-          videoData,
-          Plot.stackY({
-            x: "Date",
-            y: "TotalTime",
-            reverse: true,
-            fill: timeSlots ? "TimeOfDay" : "black",
-          })
-        ),
-        Plot.ruleY([0]),
-      ],
-    });
+    const chart = addTooltips(
+      Plot.plot({
+        width: 2000,
+        marginBottom: 75,
+        marginTop: 60,
+        height: 500,
+        marginLeft: 60,
+        marginRight: 60,
+        style: {
+          background: "transparent",
+        },
+        x: {
+          tickFormat: (d) =>
+            `${d.getDate()}.${
+              d.getMonth() === 0 ? 12 : d.getMonth() + 1
+            }.${d.getFullYear()}`,
+          tickRotate: -90,
+          label: "Zeitverlauf",
+        },
+        y: {
+          grid: true,
+          label: "Minuten",
+        },
+        color: {
+          legend: true,
+        },
+        //   color: {
+        //     type: "diverging",
+        //     scheme: "burd",
+        //   },
+        // scale: --> `${date_prev.getDate()}.${date_prev.getMonth() === 0 ? 12 : date_prev.getMonth() + 1}`
+        marks: [
+          Plot.barY(
+            videoData,
+            Plot.stackY({
+              x: "Date",
+              y: "TotalTime",
+              title: (d) => `peter ${d.Date} ${d.TotalTime} ${d.TimeOfDay}`,
+              reverse: true,
+              fill: timeSlots ? "TimeOfDay" : "black",
+            })
+          ),
+          Plot.ruleY([0]),
+        ],
+      })
+    );
     // headerRef.current.append(chart);
     boxesRef.current.append(chart);
     // toggleRef.current.append(chart);
