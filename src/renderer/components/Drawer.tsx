@@ -6,20 +6,12 @@ import { Fragment } from "react";
 // inspired by https://bensthoughts.dev/blog/react/headless-ui-drawer
 
 type DrawerProps = {
-  title?: string;
-  description?: string;
-  children: React.ReactNode;
   isOpen: boolean;
   setIsOpen: (val: boolean) => void;
+  children: React.ReactNode;
 };
 
-export default function Drawer({
-  title = "",
-  description = "",
-  children,
-  isOpen,
-  setIsOpen,
-}: DrawerProps) {
+export default function Drawer({ children, isOpen, setIsOpen }: DrawerProps) {
   return (
     <Transition show={isOpen} as={Fragment}>
       <Dialog
@@ -51,24 +43,20 @@ export default function Drawer({
             leaveTo="-right-96"
           >
             <div
-              className={`fixed h-screen flex flex-col space-y-6 items-start bg-white z-50
-                          w-96 px-10 pt-24 pb-10
-                          shadow-xl`}
+              className={`fixed h-screen bg-white z-50
+                          w-96 shadow-xl`}
             >
-              <div>
-                <Dialog.Title className="font-bold text-2xl md:text-4xl text-blue-500">
-                  {title}
-                </Dialog.Title>
-                <Dialog.Description>{description}</Dialog.Description>
-                {children}
-              </div>
+              {/* close button */}
               <button
                 type="button"
-                // className="text-3xl"
+                className="absolute right-4 top-4 text-3xl"
                 onClick={() => setIsOpen(!isOpen)}
               >
-                <FontAwesomeIcon icon={faXmark} size="2x" />
+                <FontAwesomeIcon icon={faXmark} />
               </button>
+
+              {/* menu content */}
+              {children}
             </div>
           </Transition.Child>
         </div>
