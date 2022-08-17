@@ -39,6 +39,9 @@ function coreTime(coreTimeObj, hour) {
   return coreTimeObj;
 }
 
+// helper function for converting days to ms
+const convertDaysToMs = (days) => days * 24 * 60 * 60 * 1000;
+
 // helper function for getiing core time, an array is returned
 function getCoreTime(coreTimeObj) {
   const vals = Object.values(coreTimeObj);
@@ -47,18 +50,20 @@ function getCoreTime(coreTimeObj) {
 }
 
 // for single-color bars
-function addTimeOfDay(ogVidData, time_prev, totalTime, timeRange) {
-  let result = [];
+function addTimeOfDay(ogVidData, result, timeRange) {
+  let totalTime = 0;
   let totActivity = 0;
   let coreTimeObj = {};
   let date_prev = new Date(ogVidData[0].Date);
-  console.log("hi");
+  let time_prev = new Date(date_prev.getTime());
 
   // compute date you want to stop looping
-  const dateToStop = new Date(withoutTime(date_prev) - timeRange);
+  const dateToStop = new Date(
+    withoutTime(date_prev) - convertDaysToMs(timeRange)
+  );
   console.log(dateToStop);
-  for (let vidEntry of ogVidData) {
-    const date_curr = new Date(vidEntry.Date);
+  for (let entry of ogVidData) {
+    const date_curr = new Date(entry.Date);
 
     // stop looping when you reach end of 7, 30, or 90 days
     if (date_curr < dateToStop) {
@@ -66,23 +71,21 @@ function addTimeOfDay(ogVidData, time_prev, totalTime, timeRange) {
     }
     const time_curr = date_curr.getTime();
     coreTime(coreTimeObj, date_curr.getHours());
-    if (time_prev) {
-      if (checkDatesEqual(date_prev, date_curr)) {
-        let gap = Number((time_prev - time_curr) / (1000 * 60)); // gap in minutes
-        // if gap < 5 mins or gap > 5 mins and no new log in was made
-        // console.log(gap);
-        if (gap < 5) {
-          // || (gap > 2 && !checkNewLogin(date_prev, date_curr))) {
-          totalTime += gap;
-          totActivity += gap;
-        }
-      } else {
-        result.push({
-          Date: date_prev,
-          TotalTime: totalTime,
-        });
-        totalTime = 0;
+    if (checkDatesEqual(date_prev, date_curr)) {
+      let gap = Number((time_prev - time_curr) / (1000 * 60)); // gap in minutes
+      // if gap < 5 mins or gap > 5 mins and no new log in was made
+      // console.log(gap);
+      if (gap < 5) {
+        // || (gap > 2 && !checkNewLogin(date_prev, date_curr))) {
+        totalTime += gap;
+        totActivity += gap;
       }
+    } else {
+      result.push({
+        Date: date_prev,
+        TotalTime: totalTime,
+      });
+      totalTime = 0;
     }
     date_prev = date_curr;
     time_prev = time_curr;
@@ -106,9 +109,9 @@ function getTimeOfDay(entryHour) {
     timeOfDay = "Morgens";
   } else if (entryHour >= 12 && entryHour < 18) {
     timeOfDay = "Mittags";
-  } else if (entryHour < 22) {
+  } else if (entryHour >= 18 && entryHour < 22) {
     timeOfDay = "Abends";
-  } else {
+  } else if (entryHour >= 22 || entryHour < 6) {
     timeOfDay = "Nachts";
   }
 
@@ -120,22 +123,42 @@ function withoutTime(dateObj) {
   return new Date(dateObj.toDateString());
 }
 
+function addLiveData(result, date_prev, timeOfDay_prev, totalTime) {
+  result.find((o, i) => {
+    if (o.Date === withoutTime(date_prev) && o.TimeOfDay === timeOfDay_prev) {
+      result[i].TotalTime += totalTime;
+      return true;
+    }
+    result.push({
+      Date: withoutTime(date_prev),
+      TimeOfDay: timeOfDay_prev,
+      TotalTime: totalTime,
+    });
+  });
+}
 // for bars split into time slots
-function addTimeSlots(
-  ogVidData,
-  time_prev,
-  timeOfDay_prev,
-  totalTime,
-  timeRange
-) {
-  let result = [];
+function addTimeSlots(ogVidData, result, timeRange, liveData) {
+  let totalTime = 0;
   let totActivity = 0;
   let coreTimeObj = {};
+  console.log(timeRange);
+  // let date_prev = liveData
+  //   ? new Date(Object.keys(data)[0].WatchTime)
+  //   : new Date(data[0].Date);
   let date_prev = new Date(ogVidData[0].Date);
+  let time_prev = date_prev.getTime();
+  let timeOfDay_prev = getTimeOfDay(date_prev.getHours());
+
   // compute date you want to stop looping
-  const dateToStop = new Date(withoutTime(date_prev) - timeRange);
-  for (let vidEntry of ogVidData) {
-    const date_curr = new Date(vidEntry.Date);
+  const dateToStop = new Date(
+    withoutTime(date_prev) - convertDaysToMs(timeRange)
+  );
+  for (let entry of ogVidData) {
+    // console.log(entry);
+    const date_curr = new Date(entry.Date);
+    // const date_curr = liveData
+    //   ? new Date(Object.keys(data)[i].WatchTime)
+    //   : new Date(data[i].Date);
 
     // stop looping when you reach end of 7, 30, or 90 days
     if (date_curr < dateToStop) {
@@ -143,33 +166,34 @@ function addTimeSlots(
     }
 
     const time_curr = date_curr.getTime();
-    const entryHrCurr = date_curr.getHours();
-    const timeOfDay_curr = getTimeOfDay(entryHrCurr);
-    coreTime(coreTimeObj, entryHrCurr);
-    if (date_prev && time_prev && timeOfDay_prev) {
-      if (
-        checkDatesEqual(date_prev, date_curr) &&
-        timeOfDay_prev === timeOfDay_curr
-      ) {
-        // console.log(timeOfDay_curr, timeOfDay_prev);
-        let gap = Number((time_prev - time_curr) / (1000 * 60)); // gives gap in minutes
-        // if gap < 5 mins or gap > 5 mins and no new log in was made
-        // console.log(gap);
-        if (gap < 5) {
-          // || (gap > 2 && !checkNewLogin(date_prev, date_curr))) {
-          totalTime += gap;
-          totActivity += gap;
-        }
-      } else {
-        // console.log(totalTime);
-        result.push({
-          Date: withoutTime(date_prev),
-          TimeOfDay: timeOfDay_prev,
-          TotalTime: totalTime,
-        });
-        totalTime = 0;
+    // const entryHrCurr = date_curr.getHours();
+    const timeOfDay_curr = getTimeOfDay(date_curr.getHours());
+    coreTime(coreTimeObj, date_curr.getHours());
+    if (
+      checkDatesEqual(date_prev, date_curr) &&
+      timeOfDay_prev === timeOfDay_curr
+    ) {
+      let gap = Number((time_prev - time_curr) / (1000 * 60)); // gives gap in minutes
+      // if gap < 5 mins or gap > 5 mins and no new log in was made
+      if (gap < 5) {
+        // || (gap > 2 && !checkNewLogin(date_prev, date_curr))) {
+        totalTime += gap;
+        totActivity += gap;
       }
+    } else {
+      // if (liveData) {
+      //   addLiveData(result, date_prev, timeOfDay_prev, totalTime);
+      // } else {
+      // console.log(totalTime);
+      result.push({
+        Date: withoutTime(date_prev),
+        TimeOfDay: timeOfDay_prev,
+        TotalTime: totalTime,
+      });
+      // }
+      totalTime = 0;
     }
+
     date_prev = date_curr;
     time_prev = time_curr;
     timeOfDay_prev = timeOfDay_curr;
@@ -194,7 +218,9 @@ function getNumAppOpen(ogLoginData, timeRange) {
   let date_prev = new Date(ogLoginData[0].Date);
 
   // compute date you want to stop looping
-  const dateToStop = new Date(withoutTime(date_prev) - timeRange);
+  const dateToStop = new Date(
+    withoutTime(date_prev) - convertDaysToMs(timeRange)
+  );
   for (let entry of ogLoginData) {
     let date_curr = new Date(entry.Date);
 
@@ -215,48 +241,53 @@ function getNumAppOpen(ogLoginData, timeRange) {
 export function arrangeDataVizOne(timeSlots, timeRange) {
   // If we want to show bars that break up days into different time slots
   // let date_prev = null;
-  let time_prev = null;
   let totalTime = 0;
-  let timeOfDay_prev = null;
-  let ogVidData = biggestData.Activity["Video Browsing History"].VideoList;
-  const ogLoginData = biggestData.Activity["Login History"].LoginHistoryList;
-  let data;
+  const ogVidData = data000.Activity["Video Browsing History"].VideoList;
+  const ogLoginData = data000.Activity["Login History"].LoginHistoryList;
+  const ogTikTokLiveData =
+    med["Tiktok Live"]["Watch Live History"].WatchLiveMap;
+  // console.log(ogTikTokLiveData);
+  let result = [];
   let totActivity; // let hi = 'hi';
   let coreTimeArray;
 
   if (timeSlots) {
-    [data, totActivity, coreTimeArray] = addTimeSlots(
+    [result, totActivity, coreTimeArray] = addTimeSlots(
       ogVidData,
-      time_prev,
-      timeOfDay_prev,
-      totalTime,
-      timeRange
+      result,
+      timeRange,
+      false
     );
+
+    // [totActivity, coreTimeArray] = addTimeSlots(
+    //   ogTikTokLiveData,
+    //   result,
+    //   timeRange,
+    //   true
+    // );
     // const selectedDays = 60; // this will be a user input
     // const avgMinsPerDay = totActivity / selectedDays;
     // // console.log(data);
     // return [totActivity, avgMinsPerDay, numAppOpen, data];
   } else {
-    [data, totActivity, coreTimeArray] = addTimeOfDay(
+    [result, totActivity, coreTimeArray] = addTimeOfDay(
       ogVidData,
-      time_prev,
-      totalTime,
+      result,
       timeRange
     );
   }
-  console.log(coreTimeArray);
-  const selectedDays = timeRange / (1000 * 3600 * 24); // this will be a user input
-  const avgMinsPerDay = totActivity / selectedDays;
+  // console.log(coreTimeArray);
+  const avgMinsPerDay = totActivity / timeRange;
   const numAppOpen = getNumAppOpen(ogLoginData, timeRange);
   const coreTimeString =
     coreTimeArray.length > 1 ? `${coreTimeArray}` : `${coreTimeArray[0]}`;
-  console.log(data);
+  // console.log(result);
   return [
     totActivity.toFixed(0),
     avgMinsPerDay.toFixed(0),
     numAppOpen,
     coreTimeString,
-    data,
+    result,
   ];
   // console.log(videoData);
 }

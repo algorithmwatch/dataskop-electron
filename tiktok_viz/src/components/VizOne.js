@@ -5,6 +5,7 @@ import { arrangeDataVizOne } from "../utils/viz_utilities";
 import VizOneBoxes from "./VizOneBoxes";
 import VizOneDropDown from "./VizOneDropDown";
 import VizOneToggleButtons from "./VizOneToggleButtons";
+import React from "react";
 
 function VizOne() {
   const headerRef = useRef();
@@ -13,15 +14,22 @@ function VizOne() {
   // store whether or not user clicked on button to show time slots (default unclicked)
   // timeSlotsFunc = () => false;
   let timeSlots = true;
-  // 7 days in milliseconds = 6.048e8, 30 days in ms = 2.592e9, 90 days in ms = 7.776e9
-  let timeRange = 6.048e8; // this will be linked to button
+  // have to input 6, 29, or 89 days to get proper amount of days
+  let timeRange = 29; // this will be linked to button
 
-  //
+  const rangeOptions = [
+    { option: "letzte 7 Tage", value: 6 },
+    { option: "letzte 30 Tage", value: 29 },
+    { option: "letzte 90 Tage", value: 89 },
+  ];
+  const [range, setRange] = useState(rangeOptions[0]);
+  // useEffect(() => {setData(data);)};
   const [totActivity, avgMinsPerDay, numAppOpen, coreTimeString, videoData] =
-    arrangeDataVizOne(timeSlots, timeRange);
-
-  const options = ["letzte 7 Tage", "letzte 30 Tage", "letzte 90 Tage"];
-  //   const [videoData, setData] = useState();
+    React.useMemo(
+      () => arrangeDataVizOne(timeSlots, range.value),
+      [timeSlots, range.value]
+    );
+  // const options = ["letzte 7 Tage", "letzte 30 Tage", "letzte 90 Tage"];
 
   //   useEffect(() => {
   //     arrangeDataVizOne(timeSlots).then(setData);
@@ -65,25 +73,51 @@ function VizOne() {
       //   },
       // scale: --> `${date_prev.getDate()}.${date_prev.getMonth() === 0 ? 12 : date_prev.getMonth() + 1}`
       marks: [
-        Plot.barY(videoData, {
-          x: "Date",
-          y: "TotalTime",
-          fill: timeSlots ? "TimeOfDay" : "black", // need to make this conditional
-        }),
+        Plot.barY(
+          videoData,
+          Plot.stackY({
+            x: "Date",
+            y: "TotalTime",
+            reverse: true,
+            fill: timeSlots ? "TimeOfDay" : "black",
+          })
+        ),
         Plot.ruleY([0]),
       ],
     });
     // headerRef.current.append(chart);
+    boxesRef.current.append(chart);
     // toggleRef.current.append(chart);
-    toggleRef.current.append(chart);
     return () => chart.remove();
   }, [videoData]);
 
   return (
     <div className="App">
       <header className="VizOne-header" ref={headerRef}>
-        Deine Nutzungszeit <VizOneDropDown options={options} />
+        Deine Nutzungszeit{" "}
+        <VizOneDropDown
+          options={rangeOptions}
+          onChange={(e) => {
+            setRange(e);
+          }}
+          selected={range}
+        />
       </header>
+      <div className="toggle-button" ref={toggleRef}>
+        <VizOneToggleButtons
+          onClick={() => {
+            timeSlots = true;
+          }}
+          toggleColor="pink-toggle"
+          classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
+          textLabel="Tageszeiten"
+        />
+        <VizOneToggleButtons
+          toggleColor="aqua-toggle"
+          classname1="w-11 h-6 bg-aqua-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-aqua-light dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-aqua-dark"
+          textLabel="Watchtime in %"
+        />
+      </div>
       <div className="ui-container-stats" ref={boxesRef}>
         <div className="box1">
           <VizOneBoxes
@@ -109,30 +143,6 @@ function VizOne() {
             statisticText="Kernzeit"
           />
         </div>
-      </div>
-      <div></div>
-      <div className="toggle-button" ref={toggleRef}>
-        <VizOneToggleButtons
-          onClick={() => {
-            timeSlots = true;
-          }}
-          toggleColor="pink-toggle"
-          classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
-          textLabel="Tageszeiten"
-        />
-        <VizOneToggleButtons
-          // onClick={() => {
-          //   timeSlots = true;
-          // }}
-          toggleColor="black-toggle"
-          classname1="w-11 h-6 bg-gray-300  rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-gray-300 dark:peer-focus:ring-gray-300 peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-black"
-          textLabel="Häufigkeit App-Aktivierung"
-        />
-        <VizOneToggleButtons
-          toggleColor="aqua-toggle"
-          classname1="w-11 h-6 bg-aqua-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-aqua-light dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-aqua-dark"
-          textLabel="Watchtime in %"
-        />
       </div>
     </div>
   );

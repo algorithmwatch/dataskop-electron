@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="visualizations">
       <header>
-        Select a Visualization <VizOneDropDown text="" />
+        Select a Visualization <VizOneDropDown text="Viz One" />
       </header>
 
       <VizOne />
