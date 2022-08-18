@@ -11,12 +11,6 @@ const Boxes = (props) => {
         <p className="text-gray-700 text-base">{props.statisticText}</p>
       </div>
     </div>
-    // <div className="ui card">
-    //   <h2>
-    //     <b>{props.statistic}</b>
-    //   </h2>
-    //   <div>{props.statisticText}</div>
-    // </div>
   );
 };
 

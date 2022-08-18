@@ -9,6 +9,13 @@ import React from "react";
 
 import addTooltips from "../utils/tooltips";
 
+function rangeOfTime(timeofday) {
+  if (timeofday === "Morgens") return "6:00 - 11:59";
+  if (timeofday === "Mittags") return "12:00 - 17:59";
+  if (timeofday === "Abends") return "18:00 - 21:59";
+  if (timeofday === "Nachts") return "22:00 - 5:59";
+}
+
 function VizOne() {
   const headerRef = useRef();
   const boxesRef = useRef();
@@ -16,13 +23,12 @@ function VizOne() {
   // store whether or not user clicked on button to show time slots (default unclicked)
   // timeSlotsFunc = () => false;
   let timeSlots = true;
-  // have to input 6, 29, or 89 days to get proper amount of days
-  let timeRange = 29; // this will be linked to button
 
+  // have to input 6, 29, or 89 days to get proper amount of days
   const rangeOptions = [
-    { option: "letzte 7 Tage", value: 6 },
-    { option: "letzte 30 Tage", value: 29 },
-    { option: "letzte 90 Tage", value: 89 },
+    { option: "letzte 7 Tage", value: 7 },
+    { option: "letzte 30 Tage", value: 30 },
+    { option: "letzte 90 Tage", value: 90 },
   ];
   const [range, setRange] = useState(rangeOptions[0]);
   // useEffect(() => {setData(data);)};
@@ -69,6 +75,7 @@ function VizOne() {
         },
         color: {
           legend: true,
+          range: ["#330010", "#990030", "#ff0050", "#ff99b9"],
         },
         //   color: {
         //     type: "diverging",
@@ -81,7 +88,7 @@ function VizOne() {
             Plot.stackY({
               x: "Date",
               y: "TotalTime",
-              title: (d) => `peter ${d.Date} ${d.TotalTime} ${d.TimeOfDay}`,
+              title: (d) => `${d.TimeOfDay}: ${rangeOfTime(d.TimeOfDay)}`,
               reverse: true,
               fill: timeSlots ? "TimeOfDay" : "black",
             })
@@ -91,7 +98,7 @@ function VizOne() {
       })
     );
     // headerRef.current.append(chart);
-    boxesRef.current.append(chart);
+    toggleRef.current.append(chart);
     // toggleRef.current.append(chart);
     return () => chart.remove();
   }, [videoData]);
@@ -108,22 +115,7 @@ function VizOne() {
           selected={range}
         />
       </header>
-      <div className="toggle-button" ref={toggleRef}>
-        <VizOneToggleButtons
-          onClick={() => {
-            timeSlots = true;
-          }}
-          toggleColor="pink-toggle"
-          classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
-          textLabel="Tageszeiten"
-        />
-        <VizOneToggleButtons
-          toggleColor="aqua-toggle"
-          classname1="w-11 h-6 bg-aqua-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-aqua-light dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-aqua-dark"
-          textLabel="Watchtime in %"
-        />
-      </div>
-      <div className="ui-container-stats" ref={boxesRef}>
+      <div className="ui-container-stats">
         <div className="box1">
           <VizOneBoxes
             statistic={`${totActivity} min.`}
@@ -149,6 +141,22 @@ function VizOne() {
           />
         </div>
       </div>
+      <div className="toggle-button" ref={toggleRef}>
+        <VizOneToggleButtons
+          onClick={() => {
+            timeSlots = true;
+          }}
+          toggleColor="pink-toggle"
+          classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
+          textLabel="Tageszeiten"
+        />
+        <VizOneToggleButtons
+          toggleColor="aqua-toggle"
+          classname1="w-11 h-6 bg-aqua-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-aqua-light dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-aqua-dark"
+          textLabel="Watchtime in %"
+        />
+      </div>
+      <div ref={toggleRef}></div>
     </div>
   );
 }

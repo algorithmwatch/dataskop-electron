@@ -69,17 +69,10 @@ function addTimeOfDay(ogVidData, result, timeRange) {
     if (date_curr < dateToStop) {
       break;
     }
+
     const time_curr = date_curr.getTime();
     coreTime(coreTimeObj, date_curr.getHours());
     if (checkDatesEqual(date_prev, date_curr)) {
-      let gap = Number((time_prev - time_curr) / (1000 * 60)); // gap in minutes
-      // if gap < 5 mins or gap > 5 mins and no new log in was made
-      // console.log(gap);
-      if (gap < 5) {
-        // || (gap > 2 && !checkNewLogin(date_prev, date_curr))) {
-        totalTime += gap;
-        totActivity += gap;
-      }
     } else {
       result.push({
         Date: date_prev,
@@ -96,6 +89,10 @@ function addTimeOfDay(ogVidData, result, timeRange) {
     Date: date_prev,
     TotalTime: totalTime,
   });
+
+  // function makeWatchtimeData(data) {
+  //   data.map((entry) => {Date: withoutTime(entry.Date), Length: })
+  // }
 
   // below is an array of most common hours user used TikTok
   const coreTimeArray = getCoreTime(coreTimeObj);
@@ -136,8 +133,16 @@ function addLiveData(result, date_prev, timeOfDay_prev, totalTime) {
     });
   });
 }
+
+// function makeWatchtimeData(ogVidData) {
+//   count
+//   for (entry of ogVidData) {
+
+//   }
+// }
+
 // for bars split into time slots
-function addTimeSlots(ogVidData, result, timeRange, liveData) {
+function makeTimeSlots(ogVidData, result, timeRange, liveData) {
   let totalTime = 0;
   let totActivity = 0;
   let coreTimeObj = {};
@@ -151,7 +156,7 @@ function addTimeSlots(ogVidData, result, timeRange, liveData) {
 
   // compute date you want to stop looping
   const dateToStop = new Date(
-    withoutTime(date_prev) - convertDaysToMs(timeRange)
+    withoutTime(date_prev) - convertDaysToMs(timeRange - 1)
   );
   for (let entry of ogVidData) {
     // console.log(entry);
@@ -215,17 +220,21 @@ function addTimeSlots(ogVidData, result, timeRange, liveData) {
 // opened TikTok
 function getNumAppOpen(ogLoginData, timeRange) {
   let total = 0;
+
   let date_prev = new Date(ogLoginData[0].Date);
 
   // compute date you want to stop looping
   const dateToStop = new Date(
-    withoutTime(date_prev) - convertDaysToMs(timeRange)
+    withoutTime(date_prev) - convertDaysToMs(timeRange - 1)
   );
+
+  console.log(dateToStop);
   for (let entry of ogLoginData) {
     let date_curr = new Date(entry.Date);
 
     // stop looping when you reach end of 7, 30, or 90 days
     if (date_curr < dateToStop) {
+      console.log("broke");
       break;
     }
 
@@ -240,19 +249,16 @@ function getNumAppOpen(ogLoginData, timeRange) {
 
 export function arrangeDataVizOne(timeSlots, timeRange) {
   // If we want to show bars that break up days into different time slots
-  // let date_prev = null;
-  let totalTime = 0;
-  const ogVidData = data000.Activity["Video Browsing History"].VideoList;
-  const ogLoginData = data000.Activity["Login History"].LoginHistoryList;
+  const ogVidData = biggestData.Activity["Video Browsing History"].VideoList;
+  const ogLoginData = biggestData.Activity["Login History"].LoginHistoryList;
   const ogTikTokLiveData =
     med["Tiktok Live"]["Watch Live History"].WatchLiveMap;
-  // console.log(ogTikTokLiveData);
   let result = [];
-  let totActivity; // let hi = 'hi';
+  let totActivity;
   let coreTimeArray;
 
   if (timeSlots) {
-    [result, totActivity, coreTimeArray] = addTimeSlots(
+    [result, totActivity, coreTimeArray] = makeTimeSlots(
       ogVidData,
       result,
       timeRange,
@@ -265,10 +271,6 @@ export function arrangeDataVizOne(timeSlots, timeRange) {
     //   timeRange,
     //   true
     // );
-    // const selectedDays = 60; // this will be a user input
-    // const avgMinsPerDay = totActivity / selectedDays;
-    // // console.log(data);
-    // return [totActivity, avgMinsPerDay, numAppOpen, data];
   } else {
     [result, totActivity, coreTimeArray] = addTimeOfDay(
       ogVidData,
@@ -281,7 +283,10 @@ export function arrangeDataVizOne(timeSlots, timeRange) {
   const numAppOpen = getNumAppOpen(ogLoginData, timeRange);
   const coreTimeString =
     coreTimeArray.length > 1 ? `${coreTimeArray}` : `${coreTimeArray[0]}`;
-  // console.log(result);
+
+  // make totActivity & avgMinsPerDay into hour if > 60 mins
+  // totActivity > 60 && (totActivity /= 60);
+  // avgMinsPerDay > 60 && (avgMinsPerDay /= 60);
   return [
     totActivity.toFixed(0),
     avgMinsPerDay.toFixed(0),

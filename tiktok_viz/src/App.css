@@ -16,8 +16,8 @@
 
 .VizOne-header {
   background-color: white;
-  min-height: 3vh;
-  margin-top: 3vh;
+  /* min-height: 3vh;
+  margin-top: 3vh; */
   margin-bottom: 2vh;
   /* display: flex;
   flex-direction: column; */
@@ -33,7 +33,7 @@
 }
 
 .ui-container-stats {
-  height: 5vh;
+  /* height: 5vh; */
   /* display: flex; */
   /* flex-direction: column; */
   align-items: center;

@@ -4,12 +4,45 @@ import VizOneDropDown from "./VizOneDropDown";
 import { breakFrequency, twoOrLessVids } from "../utils/viz_utilities";
 
 function App() {
+  // const selectVizOptions = [
+  //   { option: "Viz 1" },
+  //   { option: "Viz 2" },
+  //   { option: "Viz 3" },
+  // ];
+
+  // const selectDataOptions = [
+  //   { option: "biggest" },
+  //   { option: "data000" },
+  //   { option: "med" },
+  //   { option: "small" },
+  // ];
+
+  // const [viz, setViz] = useState(selectVizOptions[0]);
+  // const [data, setData] = useState(selectDataOptions[0]);
+
   return (
     <div className="visualizations">
       <header>
-        Select a Visualization <VizOneDropDown text="Viz One" />
+        Select a Visualization{" "}
+        <VizOneDropDown
+        // selected={viz}
+        // options={selectVizOptions}
+        // onChange={(e) => {
+        //   setViz(e);
+        // }}
+        />
       </header>
 
+      <h2>
+        Select data{" "}
+        <VizOneDropDown
+        // selected={data}
+        // options={selectDataOptions}
+        // onChange={(e) => {
+        //   setData(e);
+        // }}
+        />
+      </h2>
       <VizOne />
     </div>
   );
