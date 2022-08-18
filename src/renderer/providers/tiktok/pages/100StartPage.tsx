@@ -31,13 +31,13 @@ export default function StartPage(): JSX.Element {
       <div className="grow mx-auto flex flex-col h-full min-h-0">
         <div className="grow flex flex-col justify-center items-center max-h-[65%] h-full">
           <img src={dslogo} alt="Dataskop Logo" className="w-80 mx-auto" />
-          <div className="mt-4">
+          <div className="mt-6">
             <Button endIcon={faAngleRight} onClick={hadnleNextClick}>
               Start
             </Button>
           </div>
         </div>
-        <div className="flex">
+        <div className="flex pb-8">
           <div className="text-center">
             <div className="font-bold mb-3">Partner:</div>
             <div className="flex flex-wrap items-center justify-center mb-5 max-w-xl">

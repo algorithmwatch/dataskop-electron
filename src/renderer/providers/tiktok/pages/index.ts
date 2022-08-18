@@ -1,3 +1,4 @@
 import StartPage from "./100StartPage";
+import IntroductionPage from "./200IntroductionPage";
 
-export { StartPage };
+export { StartPage, IntroductionPage };
