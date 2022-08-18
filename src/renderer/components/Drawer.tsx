@@ -49,10 +49,10 @@ export default function Drawer({ children, isOpen, setIsOpen }: DrawerProps) {
               {/* close button */}
               <button
                 type="button"
-                className="absolute right-4 top-4 text-3xl"
+                className="absolute right-6 top-6"
                 onClick={() => setIsOpen(!isOpen)}
               >
-                <FontAwesomeIcon icon={faXmark} />
+                <FontAwesomeIcon icon={faXmark} size="2x" />
               </button>
 
               {/* menu content */}

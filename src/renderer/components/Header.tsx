@@ -5,7 +5,7 @@ import logo from "renderer/providers/tiktok/static/images/bildmarke.svg";
 
 const ToggleMenuButton = ({ toggle }: { toggle: () => void }) => {
   return (
-    <button type="button" className="mr-1" onClick={toggle}>
+    <button type="button" className="mr-2" onClick={toggle}>
       <FontAwesomeIcon icon={faBars} size="2x" />
     </button>
   );
