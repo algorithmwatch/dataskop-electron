@@ -8,6 +8,13 @@
  */
 
 @layer base {
+  body {
+    @apply h-screen w-screen;
+  }
+}
+
+#root {
+  @apply min-h-full h-full w-full;
 }
 
 .link-blue {

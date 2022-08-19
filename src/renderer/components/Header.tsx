@@ -5,7 +5,7 @@ import logo from "renderer/providers/tiktok/static/images/bildmarke.svg";
 
 const ToggleMenuButton = ({ toggle }: { toggle: () => void }) => {
   return (
-    <button type="button" className="mr-1" onClick={toggle}>
+    <button type="button" className="mr-2" onClick={toggle}>
       <FontAwesomeIcon icon={faBars} size="2x" />
     </button>
   );
@@ -18,7 +18,8 @@ export default function Header({ toggleMenu }: { toggleMenu: () => void }) {
 
   return (
     <>
-      <header className="p-4 flex justify-between items-center">
+      <header className="fixed inset-x-0 top-0 p-4 flex justify-between items-center">
+        {/* Logo */}
         <div className="relative">
           <img src={logo} alt="Dataskop Logo" className="w-[52px]" />
           {version && version.includes("beta") && (

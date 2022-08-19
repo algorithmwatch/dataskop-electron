@@ -16,7 +16,7 @@ export default function BaseLayout({
   const showHeader = getCurrentPage("layoutProps")?.showHeader || true;
 
   return (
-    <div>
+    <>
       {showHeader && (
         <>
           <Header toggleMenu={toggleMenu} />
@@ -24,8 +24,7 @@ export default function BaseLayout({
         </>
       )}
 
-      {/* <main className="flex flex-grow flex-col justify-between overflow-auto pt-4 pb-2"> */}
-      <main className="">{children}</main>
-    </div>
+      <main className="min-h-full flex flex-col">{children}</main>
+    </>
   );
 }

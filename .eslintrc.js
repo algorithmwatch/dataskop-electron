@@ -19,6 +19,7 @@ module.exports = {
     "no-underscore-dangle": "off",
     "no-continue": "off",
     "@typescript-eslint/no-explicit-any": "off",
+    "react/jsx-props-no-spreading": "off",
   },
   parserOptions: {
     ecmaVersion: 2020,
