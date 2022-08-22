@@ -10,6 +10,7 @@
 import * as Sentry from "@sentry/electron/renderer";
 import React, { useEffect } from "react";
 import { postEvent } from "renderer/lib/networking";
+import { isNumeric } from "renderer/lib/utils/math";
 import { Campaign } from "renderer/providers/types";
 
 type Action =
@@ -21,6 +22,7 @@ type Action =
       platformUrl: string;
       trackEvents: boolean;
       seriousProtection: string;
+      autoSelectCampaign: number | null;
       userConfig: any;
     }
   | { type: "show-advanced-menu" }
@@ -34,6 +36,7 @@ type State = {
   platformUrl: string | null;
   trackEvents: boolean;
   seriousProtection: string | null;
+  autoSelectCampaign: number | null;
   userConfig: any;
 };
 type ConfigProviderProps = { children: React.ReactNode };
@@ -83,6 +86,7 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
     platformUrl: null,
     trackEvents: false,
     seriousProtection: null,
+    autoSelectCampaign: null,
     userConfig: null,
   });
 
@@ -105,6 +109,9 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
       const platformUrl = env.PLATFORM_URL ?? null;
       const trackEvents = !!env.TRACK_EVENTS;
       const seriousProtection = env.SERIOUS_PROTECTION ?? null;
+      const autoSelectCampaign = isNumeric(env.AUTO_SELECT_CAMPAIGN)
+        ? parseInt(env.AUTO_SELECT_CAMPAIGN, 10)
+        : null;
       const showAdvancedMenu = isDebug;
 
       if (env.SENTRY_DSN) {
@@ -120,6 +127,7 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
         platformUrl,
         trackEvents,
         seriousProtection,
+        autoSelectCampaign,
         showAdvancedMenu,
         userConfig,
       });

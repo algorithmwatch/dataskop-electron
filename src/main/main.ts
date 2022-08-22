@@ -294,6 +294,7 @@ ipcMain.handle("get-env", () => {
     PLATFORM_URL: process.env.PLATFORM_URL,
     TRACK_EVENTS: process.env.TRACK_EVENTS,
     SERIOUS_PROTECTION: process.env.SERIOUS_PROTECTION,
+    AUTO_SELECT_CAMPAIGN: process.env.AUTO_SELECT_CAMPAIGN,
   };
 });
 

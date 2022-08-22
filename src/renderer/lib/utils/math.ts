@@ -25,4 +25,8 @@ const randomIntFromInterval = (min: number, max?: number) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-export { medianForArray, statsForArray, randomIntFromInterval };
+const isNumeric = (str: string) => {
+  return /^\d+$/.test(str);
+};
+
+export { medianForArray, statsForArray, randomIntFromInterval, isNumeric };

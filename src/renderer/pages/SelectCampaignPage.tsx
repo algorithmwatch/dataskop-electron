@@ -18,63 +18,14 @@ export default function SelectCampaignPage(): JSX.Element {
   } = useScraping();
 
   const {
-    state: { platformUrl, seriousProtection },
+    state: { platformUrl, seriousProtection, autoSelectCampaign },
     sendEvent,
   } = useConfig();
 
   const { dispatch: navDispath } = useNavigation();
   const history = useHistory();
 
-  const setActiveCampaign = async () => {
-    if (platformUrl == null) return;
-
-    try {
-      const campaigns = localActiveCampaings.concat(
-        await getActiveCampaigns(platformUrl, seriousProtection),
-      );
-
-      const filteredCampaigns = campaigns.filter(
-        (x) => x.config && x.config.provider,
-      );
-
-      // only use campaigns that have a valid provider configuration
-      dispatch({
-        type: "set-available-campaigns",
-        availableCampaigns: filteredCampaigns,
-      });
-
-      // if a featured campaign exists, skip over the campaign selection page
-      const featuredCampaigns = filteredCampaigns.filter((x) => x.featured);
-      if (featuredCampaigns.length > 0) {
-        dispatch({
-          type: "set-campaign",
-          campaign: featuredCampaigns[0],
-        });
-
-        navDispath({
-          type: "set-navigation-by-provider",
-          provider: featuredCampaigns[0].config.provider,
-          navSlug: featuredCampaigns[0].config.navigation,
-        });
-      }
-
-      sendEvent(null, "successfully fetched remote config");
-    } catch (error) {
-      window.electron.log.error(
-        "not able to set sraping config from remote",
-        error,
-      );
-      sendEvent(null, "failed to fetch remote config");
-    }
-  };
-
-  useEffect(() => {
-    setActiveCampaign();
-  }, [platformUrl, seriousProtection]);
-
-  const handleCampaignClick = (index: number) => {
-    const campaign = availableCampaigns[index];
-
+  const handleCampaignChange = (campaign: any) => {
     // Important to push first new state and *then* dispatching the new campaigns.
     // The base layout is updated when the campaign changes and this causes
     // a re-render of this page.
@@ -95,6 +46,54 @@ export default function SelectCampaignPage(): JSX.Element {
       navSlug: campaign.config.navigation,
     });
   };
+
+  const handleCampaignClick = (index: number) => {
+    const campaign = availableCampaigns[index];
+    handleCampaignChange(campaign);
+  };
+
+  const setActiveCampaign = async () => {
+    if (platformUrl == null) return;
+
+    if (autoSelectCampaign !== null) {
+      handleCampaignChange(localActiveCampaings[autoSelectCampaign]);
+      return;
+    }
+
+    try {
+      const campaigns = localActiveCampaings.concat(
+        await getActiveCampaigns(platformUrl, seriousProtection),
+      );
+
+      const filteredCampaigns = campaigns.filter(
+        (x) => x.config && x.config.provider,
+      );
+
+      // only use campaigns that have a valid provider configuration
+      dispatch({
+        type: "set-available-campaigns",
+        availableCampaigns: filteredCampaigns,
+      });
+
+      // if a featured campaign exists, skip over the campaign selection page
+      const featuredCampaigns = filteredCampaigns.filter((x) => x.featured);
+      if (featuredCampaigns.length === 1) {
+        handleCampaignChange(featuredCampaigns[0]);
+      }
+
+      sendEvent(null, "successfully fetched remote config");
+    } catch (error) {
+      window.electron.log.error(
+        "not able to set sraping config from remote",
+        error,
+      );
+      sendEvent(null, "failed to fetch remote config");
+    }
+  };
+
+  useEffect(() => {
+    setActiveCampaign();
+  }, [platformUrl, seriousProtection]);
 
   return (
     <>
