@@ -305,7 +305,9 @@
     "node": ">=16.x",
     "npm": ">=7.x"
   },
-  "browserslist": [],
+  "browserslist": [
+    "Chrome >= 102"
+  ],
   "prettier": {
     "overrides": [
       {
