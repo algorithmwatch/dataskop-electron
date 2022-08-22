@@ -9,8 +9,8 @@ import { Button } from "renderer/components/Button";
 import WizardLayout from "renderer/components/WizardLayout";
 import { useNavigation } from "../../../contexts";
 
-export default function IntroductionPage(): JSX.Element {
-  const { getNextPage, getPreviousPage } = useNavigation();
+export default function TutorialPage(): JSX.Element {
+  const { getNextPage, getPreviousPage, getCurrentPage } = useNavigation();
   const history = useHistory();
 
   const footerButtons = [
@@ -36,24 +36,9 @@ export default function IntroductionPage(): JSX.Element {
 
   return (
     <WizardLayout className="text-center" footerButtons={footerButtons}>
-      <h1 className="hl-4xl mb-20">Willkommen bei DataSkop 👋</h1>
+      <h1 className="hl-4xl mb-20">Tutorial</h1>
       <div className="space-y-4">
-        <p>
-          TikTok sammelt viele Daten über dich, aber weißt du auch welche?
-          Sogenannte “personenbezogene Daten” lassen Rückschlüsse auf deine
-          Persönlichkeit oder Lebensführung zu, aber sind nicht oder nur schwer
-          zugänglich.
-        </p>
-
-        <p>
-          Mit der DataSkop-App wollen wir gemeinsam mit dir dein TikTok-Profil
-          untersuchen und ordnen diese Daten ein.
-        </p>
-
-        <p>
-          Darüberhinaus tust du noch etwas Gutes für die Wissenschaft, wenn du
-          deine Daten am Ende spendest (darüber würden wir uns sehr freuen!)
-        </p>
+        <p>This is the content</p>
       </div>
     </WizardLayout>
   );

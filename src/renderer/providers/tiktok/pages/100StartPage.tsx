@@ -7,9 +7,6 @@ import { faAngleRight } from "@fortawesome/pro-regular-svg-icons";
 import { useHistory } from "react-router";
 import { Button } from "renderer/components/Button";
 import { useNavigation } from "../../../contexts";
-// import FooterNav, {
-//   FooterNavItem,
-// } from '../../youtube/components/FooterNav';
 import awlogo from "../../../static/images/logos/aw-logo.png";
 import bmbflogo from "../../../static/images/logos/bmbf-logo.png";
 import enslogo from "../../../static/images/logos/ens-logo.png";

@@ -12,11 +12,23 @@ const ttDefault: NavigationState = {
       sectionKey: null,
     },
     {
+      path: "/tiktok/tutorial",
+      sectionKey: null,
+    },
+    {
+      path: "/tiktok/before_login",
+      sectionKey: null,
+    },
+    {
       path: "/provider_login",
       sectionKey: null,
     },
     {
       path: "/provider_login_success",
+      sectionKey: null,
+    },
+    {
+      path: "/tiktok/waiting",
       sectionKey: null,
     },
   ],

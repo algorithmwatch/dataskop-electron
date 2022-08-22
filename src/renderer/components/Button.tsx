@@ -42,7 +42,7 @@ type BaseProps = {
   grow?: true | "onMobile";
 } & IconProps;
 
-type ButtonAsButton = BaseProps &
+export type ButtonAsButton = BaseProps &
   Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps> & {
     as?: "button";
   };
@@ -52,7 +52,7 @@ type ButtonAsExternal = BaseProps &
     as: "externalLink";
   };
 
-type ButtonProps = ButtonAsButton | ButtonAsExternal;
+export type ButtonProps = ButtonAsButton | ButtonAsExternal;
 
 export const Button = forwardRef(
   (
@@ -87,7 +87,7 @@ export const Button = forwardRef(
         {children !== "" && (
           <span className="max-w-xs truncate sm:max-w-[260px]">{children}</span>
         )}
-        {!isLoading && endIcon && (
+        {endIcon && (
           <FontAwesomeIcon
             icon={endIcon}
             aria-hidden="true"

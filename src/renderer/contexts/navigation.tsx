@@ -46,7 +46,7 @@ const initialNavigationState: NavigationState = {
       path: "/select_campaign",
       sectionKey: null,
       layoutProps: {
-        hideHeader: true,
+        showHeader: false,
       },
     },
   ],
@@ -103,7 +103,7 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
   }) as NavigationFunctionSignature;
 
   const getPreviousPage = ((propName) => {
-    const prevIndex = state.pageIndex - 1;
+    const prevIndex = state.pageIndex === 0 ? 0 : state.pageIndex - 1;
 
     if (!state.pages[prevIndex]) {
       throw new Error(`Previous page index "${prevIndex}" does not exist`);
@@ -136,6 +136,12 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
 
   const getPageIndexByPath = (path: NavigationStatePage["path"]): number =>
     state.pages.findIndex((page) => page.path === path);
+
+  // const navigateTo = (value: number | NavigationStatePage["path"]) => {
+  //   const pageIndex =
+  //     typeof value === "number" ? value : getPageIndexByPath(value);
+  //   dispatch({ type: "set-page-index", pageIndex });
+  // };
 
   const value = {
     state,

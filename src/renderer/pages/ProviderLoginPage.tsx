@@ -4,19 +4,16 @@
  *
  * @module
  */
-import { faAngleLeft } from "@fortawesome/pro-regular-svg-icons";
-import { Button } from "@material-ui/core";
+import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
 import { useEffect } from "react";
-import { RouteComponentProps, useHistory } from "react-router-dom";
-import DropFile from "renderer/components/DropFile";
-import ContentWrapper from "renderer/providers/youtube/components/ContentWrapper";
+import { useHistory } from "react-router-dom";
+import { Button } from "renderer/components/Button";
+import WizardLayout from "renderer/components/WizardLayout";
 import { useConfig, useNavigation, useScraping } from "../contexts";
-import FooterNav, {
-  FooterNavItem,
-} from "../providers/youtube/components/FooterNav";
 
 export default function ProviderLoginPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
+  const history = useHistory();
   const {
     state: { isUserLoggedIn, campaign },
     dispatch,
@@ -24,17 +21,32 @@ export default function ProviderLoginPage(): JSX.Element {
   const hist = useHistory();
   const { sendEvent } = useConfig();
 
-  const footerNavItems: FooterNavItem[] = [
-    {
-      label: "Zurück",
-      startIcon: faAngleLeft,
-      theme: "link",
-      clickHandler(history: RouteComponentProps["history"]) {
+  const footerButtons = [
+    <Button
+      key="1"
+      startIcon={faAngleLeft}
+      onClick={() => {
         dispatch({ type: "set-visible-window", visibleWindow: false });
         history.push(getPreviousPage("path"));
-      },
-    },
+      }}
+    >
+      Zurück
+    </Button>,
   ];
+
+  if (process.env.NODE_ENV === "development") {
+    footerButtons.push(
+      <Button
+        key="2"
+        endIcon={faAngleRight}
+        onClick={() => {
+          history.push(getNextPage("path"));
+        }}
+      >
+        Weiter
+      </Button>,
+    );
+  }
 
   useEffect(() => {
     if (isUserLoggedIn) {
@@ -48,41 +60,32 @@ export default function ProviderLoginPage(): JSX.Element {
   }, [isUserLoggedIn]);
 
   return (
-    <>
-      <ContentWrapper centerY>
-        <div className="space-y-10 text-center">
-          <div>
-            <div className="hl-4xl mb-6 text-center">Login bei Provider</div>
-            <div className="mt-4">
-              <Button
-                onClick={() => {
-                  dispatch({
-                    type: "set-attached",
-                    attached: true,
-                    visible: true,
-                  });
-                  sendEvent(campaign, "clicked start scraping");
-                }}
-              >
-                Anmelden
-              </Button>
-            </div>
-            <Button
-              onClick={() => {
-                window.electron.ipc.invoke("scraping-clear-storage");
-                // dispatch({ type: 'reset-scraping' });
-              }}
-            >
-              Reset storage
-            </Button>
-          </div>
-          <div>
-            <div className="hl-xl mb-4">Daten importieren</div>
-            <DropFile />
-          </div>
-        </div>
-      </ContentWrapper>
-      <FooterNav items={footerNavItems} />
-    </>
+    <WizardLayout className="text-center" footerButtons={footerButtons}>
+      <h1 className="hl-4xl mb-20">Login bei Provider</h1>
+      <div className="flex flex-col space-y-4">
+        <Button
+          onClick={() => {
+            dispatch({
+              type: "set-attached",
+              attached: true,
+              visible: true,
+            });
+            sendEvent(campaign, "clicked start scraping");
+          }}
+        >
+          Anmelden
+        </Button>
+        <Button
+          onClick={() => {
+            window.electron.ipc.invoke("scraping-clear-storage");
+            // dispatch({ type: 'reset-scraping' });
+          }}
+        >
+          Reset storage
+        </Button>
+
+        {/* <DropFile /> */}
+      </div>
+    </WizardLayout>
   );
 }

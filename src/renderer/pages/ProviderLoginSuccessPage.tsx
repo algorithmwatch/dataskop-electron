@@ -3,35 +3,35 @@
  *
  * @module
  */
-import { faAngleLeft } from "@fortawesome/pro-regular-svg-icons";
+
+import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
 import { useEffect } from "react";
-import { RouteComponentProps, useHistory } from "react-router-dom";
-import ContentWrapper from "renderer/providers/youtube/components/ContentWrapper";
-import { useConfig, useNavigation, useScraping } from "../contexts";
-import FooterNav, {
-  FooterNavItem,
-} from "../providers/youtube/components/FooterNav";
+import { useHistory } from "react-router-dom";
+import { Button } from "renderer/components/Button";
+import WizardLayout from "renderer/components/WizardLayout";
+import { useNavigation, useScraping } from "../contexts";
 
 export default function ProviderLoginSuccessPage(): JSX.Element {
-  const { getNextPage, getPreviousPage } = useNavigation();
   const {
-    state: { isUserLoggedIn, campaign },
+    state: { isUserLoggedIn },
     dispatch,
   } = useScraping();
-  const hist = useHistory();
-  const { sendEvent } = useConfig();
+  const history = useHistory();
+  const { getNextPage } = useNavigation();
 
-  const footerNavItems: FooterNavItem[] = [
-    {
-      label: "Zurück",
-      startIcon: faAngleLeft,
-      disabled: true,
-      theme: "link",
-      clickHandler(history: RouteComponentProps["history"]) {
-        dispatch({ type: "set-visible-window", visibleWindow: false });
-        history.push(getPreviousPage("path"));
-      },
-    },
+  const footerButtons = [
+    <Button key="1" startIcon={faAngleLeft} disabled>
+      Zurück
+    </Button>,
+    <Button
+      key="2"
+      startIcon={faAngleRight}
+      onClick={() => {
+        history.push(getNextPage("path"));
+      }}
+    >
+      Weiter
+    </Button>,
   ];
 
   useEffect(() => {
@@ -52,21 +52,16 @@ export default function ProviderLoginSuccessPage(): JSX.Element {
   }, []);
 
   return (
-    <>
-      <ContentWrapper centerY>
-        <div className="space-y-10 text-center">
-          <div>
-            <div className="hl-4xl mb-6 text-center">Success</div>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo
-              expedita delectus fugit aliquam qui! Nulla, quo. Autem pariatur
-              velit repellendus ipsum corporis odit vero, facilis, possimus ex
-              nam ratione delectus.
-            </p>
-          </div>
-        </div>
-      </ContentWrapper>
-      <FooterNav items={footerNavItems} />
-    </>
+    <WizardLayout className="text-center" footerButtons={footerButtons}>
+      <h1 className="hl-4xl mb-20">Success</h1>
+      <div className="flex flex-col space-y-4">
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo expedita
+          delectus fugit aliquam qui! Nulla, quo. Autem pariatur velit
+          repellendus ipsum corporis odit vero, facilis, possimus ex nam ratione
+          delectus.
+        </p>
+      </div>
+    </WizardLayout>
   );
 }
