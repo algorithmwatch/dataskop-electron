@@ -1,6 +1,7 @@
 import { ReactNode, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { useNavigation, useScraping } from "renderer/contexts";
+import { useConfig, useNavigation, useScraping } from "renderer/contexts";
+import { localActiveCampaings } from "renderer/providers/info";
 import YoutubeBase from "../providers/youtube/components/BaseLayout";
 import BaseLayout from "./BaseLayout";
 
@@ -10,9 +11,13 @@ export default function BaseLayoutSwitch({
   children: ReactNode;
 }): JSX.Element {
   const {
+    dispatch,
     state: { campaign },
   } = useScraping();
-  const { dispatch, getPageIndexByPath } = useNavigation();
+  const { dispatch: navDispath, getPageIndexByPath } = useNavigation();
+  const {
+    state: { autoSelectCampaign },
+  } = useConfig();
   const { pathname } = useLocation();
 
   // Keep page index in sync with the path name. The path name is not part of our
@@ -21,9 +26,29 @@ export default function BaseLayoutSwitch({
   useEffect(() => {
     const pageIndex = getPageIndexByPath(pathname);
     if (pageIndex !== -1) {
-      dispatch({ type: "set-page-index", pageIndex });
+      navDispath({ type: "set-page-index", pageIndex });
     }
   }, [pathname]);
+
+  useEffect(() => {
+    if (!module.hot) return;
+    if (autoSelectCampaign === null) return;
+
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    const campaign = localActiveCampaings[autoSelectCampaign];
+
+    dispatch({
+      type: "set-campaign",
+      campaign,
+    });
+
+    navDispath({
+      type: "set-navigation-by-provider",
+      provider: campaign.config.provider,
+      navSlug: campaign.config.navigation,
+      pathname,
+    });
+  }, [autoSelectCampaign]);
 
   if (campaign?.config.provider === "youtube")
     return <YoutubeBase>{children}</YoutubeBase>;

@@ -13,6 +13,7 @@ type Action =
       type: "set-navigation-by-provider";
       provider: string;
       navSlug: string;
+      pathname?: string;
     };
 type Dispatch = (action: Action) => void;
 
@@ -66,10 +67,14 @@ const NavigationReducer = (
         providerInfo[action.provider].navigation[action.navSlug];
 
       const basePages = initialNavigationState.pages;
+      const pages = basePages.concat(navConfig.pages);
+      const pageIndex = action.pathname
+        ? pages.findIndex((page) => page.path === action.pathname)
+        : initialNavigationState.pages.length;
 
       return {
-        pageIndex: initialNavigationState.pages.length,
-        pages: basePages.concat(navConfig.pages),
+        pageIndex,
+        pages,
         sections: navConfig.sections,
       };
     }
