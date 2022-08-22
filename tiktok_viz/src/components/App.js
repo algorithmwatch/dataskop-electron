@@ -1,7 +1,8 @@
 import "../App.css";
 import VizOne from "./VizOne";
+import VizTwo from "./VizTwo";
 import VizOneDropDown from "./VizOneDropDown";
-import { breakFrequency, twoOrLessVids } from "../utils/viz_utilities";
+import { breakFrequency, twoOrLessVids } from "../utils/viz_one_utilities";
 
 function App() {
   // const selectVizOptions = [
@@ -43,6 +44,7 @@ function App() {
         // }}
         />
       </h2>
+      <VizTwo />
       <VizOne />
     </div>
   );

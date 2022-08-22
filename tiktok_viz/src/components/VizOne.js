@@ -1,13 +1,14 @@
 import * as Plot from "@observablehq/plot";
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
-import { arrangeDataVizOne } from "../utils/viz_utilities";
-import VizOneBoxes from "./VizOneBoxes";
+import { arrangeDataVizOne } from "../utils/viz_one_utilities";
+import VizOneBoxes from "./VizBoxes";
 import VizOneDropDown from "./VizOneDropDown";
 import VizOneToggleButtons from "./VizOneToggleButtons";
 import React from "react";
 
 import addTooltips from "../utils/tooltips";
+import { geoStereographic } from "d3";
 
 function rangeOfTime(timeofday) {
   if (timeofday === "Morgens") return "6:00 - 11:59";
@@ -22,7 +23,11 @@ function VizOne() {
   const toggleRef = useRef();
   // store whether or not user clicked on button to show time slots (default unclicked)
   // timeSlotsFunc = () => false;
-  let timeSlots = true;
+  let typeOfGraph = "watchtime";
+  let totActivity = null;
+  let avgMinsPerDay = null;
+  let numAppOpen = null;
+  let coreTimeString = null;
 
   // have to input 6, 29, or 89 days to get proper amount of days
   const rangeOptions = [
@@ -31,22 +36,82 @@ function VizOne() {
     { option: "letzte 90 Tage", value: 90 },
   ];
   const [range, setRange] = useState(rangeOptions[0]);
-  // useEffect(() => {setData(data);)};
-  const [totActivity, avgMinsPerDay, numAppOpen, coreTimeString, videoData] =
-    React.useMemo(
-      () => arrangeDataVizOne(timeSlots, range.value),
-      [timeSlots, range.value]
-    );
-  // const options = ["letzte 7 Tage", "letzte 30 Tage", "letzte 90 Tage"];
 
-  //   useEffect(() => {
-  //     arrangeDataVizOne(timeSlots).then(setData);
-  //   }, []);
-  //   let videoData = arrangeDataVizOne(timeSlots);
+  const graphOptions = [
+    { option: "solid bars, watch activity", value: "default" },
+    { option: "time slot bars, watch activity", value: "timeSlot" },
+    { option: "percentage bars, watchtime", value: "watchtime" },
+  ];
+  const [graph, setGraph] = useState(graphOptions[0]);
+  const [videoData] = arrangeDataVizOne(
+    graphOptions[2].value,
+    rangeOptions[1].value
+  );
+  // const [totActivity, avgMinsPerDay, numAppOpen, coreTimeString, videoData] =
+  //   React.useMemo(
+  //     () => arrangeDataVizOne(graph.value, range.value),
+  //     [graph.value, range.value]
+  //   );
 
   //   useEffect(() => {
   //     d3.csv("/gistemp.csv", d3.autoType).then(setData);
   //   }, []);
+
+  // useEffect(() => {
+  //   if (videoData === undefined) return;
+  //   const chart = addTooltips(
+  //     Plot.plot({
+  //       width: 2000,
+  //       marginBottom: 75,
+  //       marginTop: 60,
+  //       height: 500,
+  //       marginLeft: 60,
+  //       marginRight: 60,
+  //       style: {
+  //         background: "transparent",
+  //       },
+  //       x: {
+  //         tickFormat: (d) =>
+  //           `${d.getDate()}.${
+  //             d.getMonth() === 0 ? 12 : d.getMonth() + 1
+  //           }.${d.getFullYear()}`,
+  //         tickRotate: -90,
+  //         label: "Zeitverlauf",
+  //       },
+  //       y: {
+  //         grid: true,
+  //         label: "Minuten",
+  //       },
+  //       color: {
+  //         legend: true,
+  //         range: ["#330010", "#990030", "#ff0050", "#ff99b9"],
+  //       },
+  //       //   color: {
+  //       //     type: "diverging",
+  //       //     scheme: "burd",
+  //       //   },
+  //       // scale: --> `${date_prev.getDate()}.${date_prev.getMonth() === 0 ? 12 : date_prev.getMonth() + 1}`
+  //       marks: [
+  //         Plot.barY(
+  //           videoData,
+  //           Plot.stackY({
+  //             x: "Date",
+  //             y: "TotalTime",
+  //             title: (d) => `${d.TimeOfDay}: ${rangeOfTime(d.TimeOfDay)}`,
+  //             reverse: true,
+  //             fill: typeOfGraph === "timeSlots" ? "TimeOfDay" : "black",
+  //           })
+  //         ),
+  //         Plot.ruleY([0]),
+  //       ],
+  //     })
+  //   );
+  //   // headerRef.current.append(chart);
+  //   toggleRef.current.append(chart);
+  //   // toggleRef.current.append(chart);
+  //   return () => chart.remove();
+  // }, [videoData]);
+  // console.log(videoData);
 
   useEffect(() => {
     if (videoData === undefined) return;
@@ -71,11 +136,11 @@ function VizOne() {
         },
         y: {
           grid: true,
-          label: "Minuten",
+          label: "Number of Videos",
         },
         color: {
           legend: true,
-          range: ["#330010", "#990030", "#ff0050", "#ff99b9"],
+          range: ["#00f2ea", "#008f8a"],
         },
         //   color: {
         //     type: "diverging",
@@ -85,13 +150,17 @@ function VizOne() {
         marks: [
           Plot.barY(
             videoData,
-            Plot.stackY({
-              x: "Date",
-              y: "TotalTime",
-              title: (d) => `${d.TimeOfDay}: ${rangeOfTime(d.TimeOfDay)}`,
-              reverse: true,
-              fill: timeSlots ? "TimeOfDay" : "black",
-            })
+            Plot.groupX(
+              {
+                y: "count",
+              },
+              { x: "Date", fill: "GapLabel" }
+              // {
+              //   y: "sum",
+              // },
+              // { x: "Date", y: "GapLength", fill: "GapLabel" }
+              // title: (d) => `${d.TimeOfDay}: ${rangeOfTime(d.TimeOfDay)}`,
+            )
           ),
           Plot.ruleY([0]),
         ],
@@ -142,10 +211,18 @@ function VizOne() {
         </div>
       </div>
       <div className="toggle-button" ref={toggleRef}>
-        <VizOneToggleButtons
-          onClick={() => {
-            timeSlots = true;
+        {/* <VizOneDropDown
+          options={graphOptions}
+          onChange={(e) => {
+            setGraph(e);
           }}
+          selected={graph}
+        /> */}
+        <VizOneToggleButtons
+          onClick={(e) => {
+            setGraph(e);
+          }}
+          selected={graph}
           toggleColor="pink-toggle"
           classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
           textLabel="Tageszeiten"
