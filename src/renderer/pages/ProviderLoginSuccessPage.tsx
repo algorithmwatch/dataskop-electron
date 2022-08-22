@@ -8,7 +8,7 @@ import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
-import WizardLayout from "renderer/components/WizardLayout";
+import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { useNavigation, useScraping } from "../contexts";
 
 export default function ProviderLoginSuccessPage(): JSX.Element {
@@ -19,20 +19,22 @@ export default function ProviderLoginSuccessPage(): JSX.Element {
   const history = useHistory();
   const { getNextPage } = useNavigation();
 
-  const footerButtons = [
-    <Button key="1" startIcon={faAngleLeft} disabled>
-      Zurück
-    </Button>,
-    <Button
-      key="2"
-      startIcon={faAngleRight}
-      onClick={() => {
-        history.push(getNextPage("path"));
-      }}
-    >
-      Weiter
-    </Button>,
-  ];
+  const footerSlots: FooterSlots = {
+    center: [
+      <Button key="1" startIcon={faAngleLeft} disabled>
+        Zurück
+      </Button>,
+      <Button
+        key="2"
+        startIcon={faAngleRight}
+        onClick={() => {
+          history.push(getNextPage("path"));
+        }}
+      >
+        Weiter
+      </Button>,
+    ],
+  };
 
   useEffect(() => {
     if (isUserLoggedIn) {
@@ -52,7 +54,7 @@ export default function ProviderLoginSuccessPage(): JSX.Element {
   }, []);
 
   return (
-    <WizardLayout className="text-center" footerButtons={footerButtons}>
+    <WizardLayout className="text-center" footerSlots={footerSlots}>
       <h1 className="hl-4xl mb-20">Success</h1>
       <div className="flex flex-col space-y-4">
         <p>

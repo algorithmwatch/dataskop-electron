@@ -13,6 +13,11 @@ const themes = {
     shadow-md shadow-sky-600/20
     hover:from-turquoise-600/90 hover:to-sky-600/90
     `,
+  text: `
+    text-cyan-500
+    hover:text-cyan-500/80
+  `,
+  // bg-clip-text text-transparent bg-gradient-to-r from-turquoise-600 to-sky-600
 };
 
 const sizes = {
@@ -39,7 +44,6 @@ type BaseProps = {
   theme?: keyof typeof themes;
   size?: keyof typeof sizes;
   isLoading?: boolean;
-  grow?: true | "onMobile";
 } & IconProps;
 
 export type ButtonAsButton = BaseProps &
@@ -62,8 +66,8 @@ export const Button = forwardRef(
       startIcon,
       endIcon,
       isLoading = false,
-      grow,
       children,
+      className,
       ...props
     }: ButtonProps,
     ref: any,
@@ -84,7 +88,7 @@ export const Button = forwardRef(
             className="shrink-0"
           />
         )}
-        {children !== "" && (
+        {children && (
           <span className="max-w-xs truncate sm:max-w-[260px]">{children}</span>
         )}
         {endIcon && (
@@ -97,18 +101,17 @@ export const Button = forwardRef(
       </>
     );
     const classNames = clsx(
-      "min-w-0 inline-flex items-center justify-center font-bold transition ease-out",
+      "min-w-0 inline-flex items-center justify-center font-bold",
       "focus:outline-none hover:no-underline",
       "disabled:opacity-70 disabled:cursor-not-allowed",
       themes[theme],
       sizes[size],
-      { grow: grow === true },
-      { "grow sm:grow-0": grow === "onMobile" },
       { [iconSizes[size]]: isLoading || startIcon || endIcon },
+      className,
     );
 
     if (props.as === "externalLink") {
-      const { as, className, target, rel, ...rest } = props;
+      const { as, target, rel, ...rest } = props;
       return (
         <a
           ref={ref}
@@ -122,7 +125,7 @@ export const Button = forwardRef(
       );
     }
 
-    const { as, type, className, ...rest } = props;
+    const { as, type, ...rest } = props;
     return (
       <button
         ref={ref}

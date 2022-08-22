@@ -21,21 +21,23 @@ export default function ProviderLoginPage(): JSX.Element {
   const hist = useHistory();
   const { sendEvent } = useConfig();
 
-  const footerButtons = [
-    <Button
-      key="1"
-      startIcon={faAngleLeft}
-      onClick={() => {
-        dispatch({ type: "set-visible-window", visibleWindow: false });
-        history.push(getPreviousPage("path"));
-      }}
-    >
-      Zurück
-    </Button>,
-  ];
+  const footerSlots = {
+    center: [
+      <Button
+        key="1"
+        startIcon={faAngleLeft}
+        onClick={() => {
+          dispatch({ type: "set-visible-window", visibleWindow: false });
+          history.push(getPreviousPage("path"));
+        }}
+      >
+        Zurück
+      </Button>,
+    ],
+  };
 
   if (process.env.NODE_ENV === "development") {
-    footerButtons.push(
+    footerSlots.center.push(
       <Button
         key="2"
         endIcon={faAngleRight}
@@ -60,7 +62,7 @@ export default function ProviderLoginPage(): JSX.Element {
   }, [isUserLoggedIn]);
 
   return (
-    <WizardLayout className="text-center" footerButtons={footerButtons}>
+    <WizardLayout className="text-center" footerSlots={footerSlots}>
       <h1 className="hl-4xl mb-20">Login bei Provider</h1>
       <div className="flex flex-col space-y-4">
         <Button
