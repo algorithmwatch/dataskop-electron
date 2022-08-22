@@ -9,7 +9,7 @@ import { Button } from "renderer/components/Button";
 import WizardLayout from "renderer/components/WizardLayout";
 import { useNavigation } from "../../../contexts";
 
-export default function TutorialPage(): JSX.Element {
+export default function VizTwoPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
 
@@ -25,17 +25,9 @@ export default function TutorialPage(): JSX.Element {
     </Button>,
     <Button
       key="2"
-      onClick={() => {
-        history.push(getNextPage("path"));
-      }}
-    >
-      Überspringen
-    </Button>,
-    <Button
-      key="3"
       endIcon={faAngleRight}
       onClick={() => {
-        console.log("show next slide");
+        history.push(getNextPage("path"));
       }}
     >
       Weiter
@@ -44,7 +36,7 @@ export default function TutorialPage(): JSX.Element {
 
   return (
     <WizardLayout className="text-center" footerButtons={footerButtons}>
-      <h1 className="hl-4xl mb-20">Tutorial</h1>
+      <h1 className="hl-4xl mb-20">Waiting Two Page</h1>
       <div className="space-y-4">
         <p>This is the content</p>
       </div>

@@ -16,7 +16,7 @@ export default function WizardLayout({
         <div className={clsx("max-w-prose", className)}>{children}</div>
       </div>
       {footerButtons && (
-        <nav className="bg-red-200 h-24 shrink-0 flex justify-between items-center px-6">
+        <nav className="h-24 shrink-0 flex justify-center items-center px-6 space-x-4">
           {footerButtons}
         </nav>
       )}

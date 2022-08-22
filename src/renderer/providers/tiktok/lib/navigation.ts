@@ -31,6 +31,38 @@ const ttDefault: NavigationState = {
       path: "/tiktok/waiting",
       sectionKey: null,
     },
+    {
+      path: "/tiktok/waiting_done",
+      sectionKey: null,
+    },
+    {
+      path: "/tiktok/viz_one",
+      sectionKey: null,
+    },
+    {
+      path: "/tiktok/viz_two",
+      sectionKey: null,
+    },
+    {
+      path: "/tiktok/viz_three",
+      sectionKey: null,
+    },
+    {
+      path: "/tiktok/donation_choice",
+      sectionKey: null,
+    },
+    {
+      path: "/tiktok/donation_form",
+      sectionKey: null,
+    },
+    {
+      path: "/tiktok/newsletter_choice",
+      sectionKey: null,
+    },
+    {
+      path: "/tiktok/thank_you",
+      sectionKey: null,
+    },
   ],
   sections: {},
 };
