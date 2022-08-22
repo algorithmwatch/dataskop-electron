@@ -44,7 +44,7 @@ function App() {
         // }}
         />
       </h2>
-      <VizTwo />
+      {/* <VizTwo /> */}
       <VizOne />
     </div>
   );

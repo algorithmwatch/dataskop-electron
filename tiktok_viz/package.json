@@ -5,6 +5,7 @@
   "dependencies": {
     "@headlessui/react": "^1.6.6",
     "@heroicons/react": "^1.0.6",
+    "@material-tailwind/react": "^1.2.3",
     "@observablehq/plot": "^0.5.2",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",

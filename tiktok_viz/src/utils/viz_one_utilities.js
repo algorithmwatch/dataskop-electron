@@ -34,8 +34,8 @@ const checkDatesEqual = (date1, date2) =>
   date1.getDate() === date2.getDate();
 
 // helper function for finding core time
-function coreTime(coreTimeObj, hour) {
-  hour in coreTimeObj ? (coreTimeObj[hour] += 1) : (coreTimeObj[hour] = 1);
+function coreTime(coreTimeObj, hour, gap) {
+  hour in coreTimeObj ? (coreTimeObj[hour] += gap) : (coreTimeObj[hour] = gap);
   return coreTimeObj;
 }
 
@@ -44,7 +44,7 @@ export function convertDaysToMs(days) {
   return days * 24 * 60 * 60 * 1000;
 }
 
-// helper function for getiing core time, an array is returned
+// helper function for getting core time(s), an array is returned
 function getCoreTime(coreTimeObj) {
   const vals = Object.values(coreTimeObj);
   const max = d3.max(vals);
@@ -73,13 +73,14 @@ function addTimeOfDay(ogVidData, result, timeRange) {
     }
 
     const time_curr = date_curr.getTime();
-    coreTime(coreTimeObj, date_curr.getHours());
-    if (checkDatesEqual(date_prev, date_curr)) {
+
+    if (withoutTime(date_prev) === withoutTime(date_curr)) {
       let gap = Number((time_prev - time_curr) / (1000 * 60)); // gives gap in minutes
       // if gap < 5 mins or gap > 5 mins and no new log in was made
       if (gap < 5) {
         totalTime += gap;
         totActivity += gap;
+        coreTime(coreTimeObj, date_curr.getHours(), gap);
       }
     } else {
       result.push({
@@ -215,7 +216,6 @@ function makeTimeSlots(ogVidData, result_timeSlots, timeRange, liveData) {
     withoutTime(date_prev) - convertDaysToMs(timeRange - 1)
   );
   for (let entry of ogVidData) {
-    // console.log(entry);
     const date_curr = new Date(entry.Date);
     // const date_curr = liveData
     //   ? new Date(Object.keys(data)[i].WatchTime)
@@ -229,7 +229,6 @@ function makeTimeSlots(ogVidData, result_timeSlots, timeRange, liveData) {
     const time_curr = date_curr.getTime();
     // const entryHrCurr = date_curr.getHours();
     const timeOfDay_curr = getTimeOfDay(date_curr.getHours());
-    coreTime(coreTimeObj, date_curr.getHours());
     if (
       checkDatesEqual(date_prev, date_curr) &&
       timeOfDay_prev === timeOfDay_curr
@@ -240,6 +239,7 @@ function makeTimeSlots(ogVidData, result_timeSlots, timeRange, liveData) {
         // || (gap > 2 && !checkNewLogin(date_prev, date_curr))) {
         totalTime += gap;
         totActivity += gap;
+        coreTime(coreTimeObj, date_curr.getHours(), gap);
       }
     } else {
       // if (liveData) {
@@ -268,6 +268,7 @@ function makeTimeSlots(ogVidData, result_timeSlots, timeRange, liveData) {
   });
 
   // below is an array of most common hours user used TikTok
+  console.log(coreTimeObj);
   const coreTimeArray = getCoreTime(coreTimeObj);
   return [result_timeSlots, totActivity, coreTimeArray];
 }
@@ -301,6 +302,15 @@ function getNumAppOpen(ogLoginData, timeRange) {
   return total;
 }
 
+// converts times to hours + mins if the times are over 60 mins, input is in mins
+function convertTime(totMins) {
+  if (totMins < 60) return `${totMins} min.`;
+  const mins = totMins % 60;
+  const hrs = Math.floor(totMins / 60);
+
+  return `${hrs}h ${mins.toFixed(0)}m`;
+}
+
 export function arrangeDataVizOne(typeOfGraph, timeRange) {
   // If we want to show bars that break up days into different time slots
   const ogVidData = biggestData.Activity["Video Browsing History"].VideoList;
@@ -311,12 +321,13 @@ export function arrangeDataVizOne(typeOfGraph, timeRange) {
   let totActivity;
   let coreTimeArray;
 
-  if (typeOfGraph === "timeSlots") {
+  if (typeOfGraph === "timeslots") {
     [result, totActivity, coreTimeArray] = makeTimeSlots(
       ogVidData,
       result,
       timeRange
     );
+    console.log(coreTimeArray);
 
     // [totActivity, coreTimeArray] = addTimeSlots(
     //   ogTikTokLiveData,
@@ -333,22 +344,16 @@ export function arrangeDataVizOne(typeOfGraph, timeRange) {
       timeRange
     );
   }
-
-  const avgMinsPerDay = totActivity / timeRange;
+  let avgMinsPerDay = totActivity / timeRange;
   const numAppOpen = getNumAppOpen(ogLoginData, timeRange);
-  // const coreTimeString =
-  //   coreTimeArray.length > 1 ? `${coreTimeArray}` : `${coreTimeArray[0]}`;
+  const coreTimeString =
+    coreTimeArray.length > 1 ? `${coreTimeArray}` : `${coreTimeArray[0]}`;
 
   // make totActivity & avgMinsPerDay into hour if > 60 mins
-  // totActivity > 60 && (totActivity /= 60);
-  // avgMinsPerDay > 60 && (avgMinsPerDay /= 60);
-  return [
-    // totActivity.toFixed(0),
-    // avgMinsPerDay.toFixed(0),
-    // numAppOpen,
-    // coreTimeString,
-    result,
-  ];
+  totActivity = convertTime(totActivity);
+  avgMinsPerDay = convertTime(avgMinsPerDay);
+  console.log(typeof totActivity, typeof avgMinsPerDay);
+  return [totActivity, avgMinsPerDay, numAppOpen, coreTimeString, result];
   // console.log(videoData);
 }
 

@@ -6,9 +6,7 @@ import VizOneBoxes from "./VizBoxes";
 import VizOneDropDown from "./VizOneDropDown";
 import VizOneToggleButtons from "./VizOneToggleButtons";
 import React from "react";
-
 import addTooltips from "../utils/tooltips";
-import { geoStereographic } from "d3";
 
 function rangeOfTime(timeofday) {
   if (timeofday === "Morgens") return "6:00 - 11:59";
@@ -23,13 +21,12 @@ function VizOne() {
   const toggleRef = useRef();
   // store whether or not user clicked on button to show time slots (default unclicked)
   // timeSlotsFunc = () => false;
-  let typeOfGraph = "watchtime";
-  let totActivity = null;
-  let avgMinsPerDay = null;
-  let numAppOpen = null;
-  let coreTimeString = null;
+  let typeOfGraph = "timeslots";
+  // let totActivity = null;
+  // let avgMinsPerDay = null;
+  // let numAppOpen = null;
+  // let coreTimeString = null;
 
-  // have to input 6, 29, or 89 days to get proper amount of days
   const rangeOptions = [
     { option: "letzte 7 Tage", value: 7 },
     { option: "letzte 30 Tage", value: 30 },
@@ -39,79 +36,22 @@ function VizOne() {
 
   const graphOptions = [
     { option: "solid bars, watch activity", value: "default" },
-    { option: "time slot bars, watch activity", value: "timeSlot" },
+    { option: "time slot bars, watch activity", value: "timeslots" },
     { option: "percentage bars, watchtime", value: "watchtime" },
   ];
   const [graph, setGraph] = useState(graphOptions[0]);
-  const [videoData] = arrangeDataVizOne(
-    graphOptions[2].value,
-    rangeOptions[1].value
-  );
   // const [totActivity, avgMinsPerDay, numAppOpen, coreTimeString, videoData] =
-  //   React.useMemo(
-  //     () => arrangeDataVizOne(graph.value, range.value),
-  //     [graph.value, range.value]
-  //   );
+  //   arrangeDataVizOne(graphOptions[1].value, rangeOptions[1].value);
+
+  const [totActivity, avgMinsPerDay, numAppOpen, coreTimeString, videoData] =
+    React.useMemo(
+      () => arrangeDataVizOne(typeOfGraph, range.value),
+      [typeOfGraph, range.value]
+    );
 
   //   useEffect(() => {
   //     d3.csv("/gistemp.csv", d3.autoType).then(setData);
   //   }, []);
-
-  // useEffect(() => {
-  //   if (videoData === undefined) return;
-  //   const chart = addTooltips(
-  //     Plot.plot({
-  //       width: 2000,
-  //       marginBottom: 75,
-  //       marginTop: 60,
-  //       height: 500,
-  //       marginLeft: 60,
-  //       marginRight: 60,
-  //       style: {
-  //         background: "transparent",
-  //       },
-  //       x: {
-  //         tickFormat: (d) =>
-  //           `${d.getDate()}.${
-  //             d.getMonth() === 0 ? 12 : d.getMonth() + 1
-  //           }.${d.getFullYear()}`,
-  //         tickRotate: -90,
-  //         label: "Zeitverlauf",
-  //       },
-  //       y: {
-  //         grid: true,
-  //         label: "Minuten",
-  //       },
-  //       color: {
-  //         legend: true,
-  //         range: ["#330010", "#990030", "#ff0050", "#ff99b9"],
-  //       },
-  //       //   color: {
-  //       //     type: "diverging",
-  //       //     scheme: "burd",
-  //       //   },
-  //       // scale: --> `${date_prev.getDate()}.${date_prev.getMonth() === 0 ? 12 : date_prev.getMonth() + 1}`
-  //       marks: [
-  //         Plot.barY(
-  //           videoData,
-  //           Plot.stackY({
-  //             x: "Date",
-  //             y: "TotalTime",
-  //             title: (d) => `${d.TimeOfDay}: ${rangeOfTime(d.TimeOfDay)}`,
-  //             reverse: true,
-  //             fill: typeOfGraph === "timeSlots" ? "TimeOfDay" : "black",
-  //           })
-  //         ),
-  //         Plot.ruleY([0]),
-  //       ],
-  //     })
-  //   );
-  //   // headerRef.current.append(chart);
-  //   toggleRef.current.append(chart);
-  //   // toggleRef.current.append(chart);
-  //   return () => chart.remove();
-  // }, [videoData]);
-  // console.log(videoData);
 
   useEffect(() => {
     if (videoData === undefined) return;
@@ -136,11 +76,11 @@ function VizOne() {
         },
         y: {
           grid: true,
-          label: "Number of Videos",
+          label: "Minuten",
         },
         color: {
           legend: true,
-          range: ["#00f2ea", "#008f8a"],
+          range: ["#330010", "#990030", "#ff0050", "#ff99b9"],
         },
         //   color: {
         //     type: "diverging",
@@ -150,17 +90,13 @@ function VizOne() {
         marks: [
           Plot.barY(
             videoData,
-            Plot.groupX(
-              {
-                y: "count",
-              },
-              { x: "Date", fill: "GapLabel" }
-              // {
-              //   y: "sum",
-              // },
-              // { x: "Date", y: "GapLength", fill: "GapLabel" }
-              // title: (d) => `${d.TimeOfDay}: ${rangeOfTime(d.TimeOfDay)}`,
-            )
+            Plot.stackY({
+              x: "Date",
+              y: "TotalTime",
+              title: (d) => `${d.TimeOfDay}: ${rangeOfTime(d.TimeOfDay)}`,
+              reverse: true,
+              fill: typeOfGraph === "timeslots" ? "TimeOfDay" : "black",
+            })
           ),
           Plot.ruleY([0]),
         ],
@@ -171,6 +107,66 @@ function VizOne() {
     // toggleRef.current.append(chart);
     return () => chart.remove();
   }, [videoData]);
+  console.log(videoData);
+
+  // useEffect(() => {
+  //   if (videoData === undefined) return;
+  //   const chart = addTooltips(
+  //     Plot.plot({
+  //       width: 2000,
+  //       marginBottom: 75,
+  //       marginTop: 60,
+  //       height: 500,
+  //       marginLeft: 60,
+  //       marginRight: 60,
+  //       style: {
+  //         background: "transparent",
+  //       },
+  //       x: {
+  //         tickFormat: (d) =>
+  //           `${d.getDate()}.${
+  //             d.getMonth() === 0 ? 12 : d.getMonth() + 1
+  //           }.${d.getFullYear()}`,
+  //         tickRotate: -90,
+  //         label: "Zeitverlauf",
+  //       },
+  //       y: {
+  //         grid: true,
+  //         label: "Number of Videos",
+  //       },
+  //       color: {
+  //         legend: true,
+  //         range: ["#00f2ea", "#008f8a"],
+  //       },
+  //       //   color: {
+  //       //     type: "diverging",
+  //       //     scheme: "burd",
+  //       //   },
+  //       // scale: --> `${date_prev.getDate()}.${date_prev.getMonth() === 0 ? 12 : date_prev.getMonth() + 1}`
+  //       marks: [
+  //         Plot.barY(
+  //           videoData,
+  //           Plot.groupX(
+  //             {
+  //               y: "count",
+  //             },
+  //             { x: "Date", fill: "GapLabel" }
+  //             // {
+  //             //   y: "sum",
+  //             // },
+  //             // { x: "Date", y: "GapLength", fill: "GapLabel" }
+  //             // title: (d) => `${d.TimeOfDay}: ${rangeOfTime(d.TimeOfDay)}`,
+  //           )
+  //         ),
+  //         Plot.ruleY([0]),
+  //       ],
+  //     })
+  //   );
+  //   // headerRef.current.append(chart);
+  //   toggleRef.current.append(chart);
+  //   // toggleRef.current.append(chart);
+  //   return () => chart.remove();
+  // }, [videoData]);
 
   return (
     <div className="App">
@@ -186,16 +182,10 @@ function VizOne() {
       </header>
       <div className="ui-container-stats">
         <div className="box1">
-          <VizOneBoxes
-            statistic={`${totActivity} min.`}
-            statisticText="Activität"
-          />
+          <VizOneBoxes statistic={totActivity} statisticText="Activität" />
         </div>
         <div className="box2">
-          <VizOneBoxes
-            statistic={`${avgMinsPerDay} min.`}
-            statisticText="pro Tag"
-          />
+          <VizOneBoxes statistic={avgMinsPerDay} statisticText="pro Tag" />
         </div>
         <div className="box3">
           <VizOneBoxes
@@ -219,18 +209,38 @@ function VizOne() {
           selected={graph}
         /> */}
         <VizOneToggleButtons
-          onClick={(e) => {
-            setGraph(e);
-          }}
-          selected={graph}
-          toggleColor="pink-toggle"
-          classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
-          textLabel="Tageszeiten"
+          // onClick={(e) => {
+          //   setGraph(e);
+          // }}
+          // selected={graph}
+          // toggleColor="pink-toggle"
+          // classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
+          // textLabel="Tageszeiten"
+          defClicked={true}
+          label="Activity"
         />
         <VizOneToggleButtons
-          toggleColor="aqua-toggle"
-          classname1="w-11 h-6 bg-aqua-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-aqua-light dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-aqua-dark"
-          textLabel="Watchtime in %"
+          // onClick={(e) => {
+          //   setGraph(e);
+          // }}
+          // selected={graph}
+          // toggleColor="pink-toggle"
+          // classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
+          // textLabel="Tageszeiten"
+          id="tageszeiten"
+          defClicked={false}
+          label="Tageszeiten"
+        />
+        <VizOneToggleButtons
+          // onClick={(e) => {
+          //   setGraph(e);
+          // }}
+          // selected={graph}
+          // toggleColor="pink-toggle"
+          // classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
+          id="watchtime"
+          defClicked={false}
+          label="Watchtime"
         />
       </div>
       <div ref={toggleRef}></div>
