@@ -15,6 +15,9 @@ module.exports = {
           900: "#005451",
         },
       },
+      boxShadow: {
+        flat: "10px 10px 0 0 #EEEEEE",
+      },
     },
   },
 };

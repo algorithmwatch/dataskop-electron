@@ -85,17 +85,3 @@ export const Slide = ({ children }: { children: React.ReactNode }) => {
 };
 
 Slide.displayName = "Slide";
-
-/*
-    background-color: rgba(255, 255, 255, 0.5);
-    width: 9px;
-    height: 9px;
-    padding: 0;
-    border-radius: 50%;
-    border: 2px solid transparent;
-    transition: all 300ms ease-in-out;
-    cursor: pointer;
-    line-height: 0;
-    box-shadow: 0 0.25em 0.5em 0 rgb(0 0 0 / 10%);
-    margin: 0 0.25em;
-    */
