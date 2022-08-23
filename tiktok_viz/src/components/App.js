@@ -1,7 +1,11 @@
 import "../App.css";
+import data000 from "../data/000-peter.json";
+import biggestData from "../data/001_redacted.json";
+import small from "../data/small_modified_peter.json";
 import VizOne from "./VizOne";
 import VizTwo from "./VizTwo";
 import VizOneDropDown from "./VizOneDropDown";
+import peterScrapedData from "../data/videometa.json";
 import { breakFrequency, twoOrLessVids } from "../utils/viz_one_utilities";
 import { shortenGdprData, shortenMetadata } from "../utils/shorten_data";
 
@@ -21,6 +25,9 @@ function App() {
 
   // const [viz, setViz] = useState(selectVizOptions[0]);
   // const [data, setData] = useState(selectDataOptions[0]);
+  let [videodata, logindata, tiktokLiveVids, likedVids, sharedVids, savedVids] =
+    shortenGdprData(biggestData);
+  peterScrapedData = shortenMetadata(peterScrapedData);
 
   return (
     <div className="visualizations">
@@ -38,6 +45,7 @@ function App() {
       <h2>
         Select data{" "}
         <VizOneDropDown
+
         // selected={data}
         // options={selectDataOptions}
         // onChange={(e) => {
@@ -45,8 +53,14 @@ function App() {
         // }}
         />
       </h2>
-      {/* <VizTwo /> */}
-      <VizOne />
+
+      <VizOne
+        vidData={videodata}
+        loginData={logindata}
+        liveData={tiktokLiveVids}
+      />
+      {/* <VizTwo metadata={peterScrapedData} gdprData={videoData}/> */}
+      {/* <VizThree metadata={peterScrapedData} likedVids={likedVids} sharedVids={sharedVids} savedVids={savedVids} */}
     </div>
   );
 }

@@ -314,13 +314,18 @@ function convertTime(totMins) {
   return `${hrs}h ${mins.toFixed(0)}m`;
 }
 
-export function arrangeDataVizOne(typeOfGraph, timeRange) {
+export function arrangeDataVizOne(
+  typeOfGraph,
+  timeRange,
+  ogVidData,
+  ogLoginData,
+  ogTikTokLiveData
+) {
   console.log(typeOfGraph);
-  // If we want to show bars that break up days into different time slots
-  const ogVidData = biggestData.Activity["Video Browsing History"].VideoList;
-  const ogLoginData = biggestData.Activity["Login History"].LoginHistoryList;
-  const ogTikTokLiveData =
-    med["Tiktok Live"]["Watch Live History"].WatchLiveMap;
+  // const ogVidData = biggestData.Activity["Video Browsing History"].VideoList;
+  // const ogLoginData = biggestData.Activity["Login History"].LoginHistoryList;
+  // const ogTikTokLiveData =
+  //   med["Tiktok Live"]["Watch Live History"].WatchLiveMap;
   let result = [];
   let totActivity;
   let coreTimeArray;
@@ -351,7 +356,6 @@ export function arrangeDataVizOne(typeOfGraph, timeRange) {
       result,
       timeRange
     );
-    console.log("hi");
   }
   let avgMinsPerDay = totActivity / timeRange;
   const numAppOpen = getNumAppOpen(ogLoginData, timeRange);
@@ -363,7 +367,6 @@ export function arrangeDataVizOne(typeOfGraph, timeRange) {
   avgMinsPerDay = convertTime(avgMinsPerDay);
   console.log(typeof totActivity, typeof avgMinsPerDay);
   return [totActivity, avgMinsPerDay, numAppOpen, coreTimeString, result];
-  // console.log(videoData);
 }
 
 /**

@@ -15,7 +15,7 @@ function rangeOfTime(timeofday) {
   if (timeofday === "Nachts") return "22:00 - 5:59";
 }
 
-function VizOne() {
+function VizOne(props) {
   const toggleRef = useRef();
 
   const rangeOptions = [
@@ -34,7 +34,14 @@ function VizOne() {
 
   const [totActivity, avgMinsPerDay, numAppOpen, coreTimeString, videoData] =
     React.useMemo(
-      () => arrangeDataVizOne(graph, range.value),
+      () =>
+        arrangeDataVizOne(
+          graph,
+          range.value,
+          props.vidData,
+          props.loginData,
+          props.liveData
+        ),
       [graph, range.value]
     );
 
