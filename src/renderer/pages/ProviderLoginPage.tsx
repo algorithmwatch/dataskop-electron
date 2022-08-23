@@ -25,6 +25,7 @@ export default function ProviderLoginPage(): JSX.Element {
     center: [
       <Button
         key="1"
+        theme="text"
         startIcon={faAngleLeft}
         onClick={() => {
           dispatch({ type: "set-visible-window", visibleWindow: false });

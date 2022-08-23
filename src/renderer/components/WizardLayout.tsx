@@ -17,8 +17,8 @@ export default function WizardLayout({
 }) {
   return (
     <>
-      <div className="grow min-h-0 h-full mx-auto flex flex-col justify-center">
-        <div className={clsx("max-w-prose", className)}>{children}</div>
+      <div className="grow min-h-0 h-full max-w-full mx-auto flex flex-col justify-center">
+        <div className={clsx("px-6", className)}>{children}</div>
       </div>
       {footerSlots && (
         <nav className="h-24 shrink-0 px-6 grid grid-cols-3">

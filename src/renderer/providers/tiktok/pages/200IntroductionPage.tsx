@@ -38,7 +38,7 @@ export default function IntroductionPage(): JSX.Element {
   };
 
   return (
-    <WizardLayout className="text-center" footerSlots={footerSlots}>
+    <WizardLayout className="text-center max-w-prose" footerSlots={footerSlots}>
       <h1 className="hl-4xl mb-20">Willkommen bei DataSkop 👋</h1>
       <div className="space-y-4">
         <p>

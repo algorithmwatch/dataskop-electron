@@ -4,7 +4,7 @@
  * @module
  */
 
-import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
+import { faAngleRight } from "@fortawesome/pro-solid-svg-icons";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
@@ -21,12 +21,9 @@ export default function ProviderLoginSuccessPage(): JSX.Element {
 
   const footerSlots: FooterSlots = {
     center: [
-      <Button key="1" startIcon={faAngleLeft} disabled>
-        Zurück
-      </Button>,
       <Button
         key="2"
-        startIcon={faAngleRight}
+        endIcon={faAngleRight}
         onClick={() => {
           history.push(getNextPage("path"));
         }}

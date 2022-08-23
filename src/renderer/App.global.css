@@ -123,13 +123,4 @@
 }
 
 /* GlideJS */
-
-@import "@glidejs/glide/dist/css/glide.core.min.css";
-
-.glide--swipeable {
-  cursor: grab;
-}
-
-.glide--dragging {
-  cursor: grabbing;
-}
+@import "components/Carousel/theme.scss";
