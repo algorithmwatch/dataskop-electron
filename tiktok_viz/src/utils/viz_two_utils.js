@@ -15,7 +15,11 @@ function buildHashtagArray(url, hashtags) {
       let tagName = tagInfo.title.toLowerCase();
 
       // igonore "fyp"s
-      if (tagName.indexOf("fyp") !== -1 || tagName.indexOf("stitch") !== -1)
+      if (
+        tagName.indexOf("fyp") !== -1 ||
+        tagName.indexOf("stitch") !== -1 ||
+        tagName.indexOf("foryou") !== -1
+      )
         continue;
       // console.log(tagName);
       tagName in hashtags ? (hashtags[tagName] += 1) : (hashtags[tagName] = 1);

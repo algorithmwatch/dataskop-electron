@@ -23,10 +23,12 @@ export default function Example(props) {
     <div className="flex gap-10">
       {/* <Radio id="html" name="type" label="HTML" /> */}
       <Radio
+        className="bg-pink-dark"
         id={props.id}
         name="type"
         label={props.label}
-        defaultChecked={props.defClicked}
+        checked={props.checked}
+        onChange={props.onChange}
       />
     </div>
   );

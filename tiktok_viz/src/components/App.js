@@ -3,6 +3,7 @@ import VizOne from "./VizOne";
 import VizTwo from "./VizTwo";
 import VizOneDropDown from "./VizOneDropDown";
 import { breakFrequency, twoOrLessVids } from "../utils/viz_one_utilities";
+import { shortenGdprData, shortenMetadata } from "../utils/shorten_data";
 
 function App() {
   // const selectVizOptions = [

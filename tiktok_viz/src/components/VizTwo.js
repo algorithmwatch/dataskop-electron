@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { getTopData } from "../utils/viz_two_utils";
 import VizBoxes from "./VizBoxes";
 import VizOneDropDown from "./VizOneDropDown";
-import VizOneToggleButtons from "./VizOneToggleButtons";
+import VizOneButtons from "./VizOneButtons";
 import React from "react";
 import addTooltips from "../utils/tooltips";
 

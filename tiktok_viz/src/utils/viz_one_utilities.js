@@ -1,5 +1,3 @@
-import React from "react";
-import ReactDOM from "react-dom";
 import data000 from "../data/000-peter.json";
 import biggestData from "../data/001_redacted.json";
 import small from "../data/small_modified_peter.json";
@@ -61,7 +59,7 @@ function addTimeOfDay(ogVidData, result, timeRange) {
 
   // compute date you want to stop looping
   const dateToStop = new Date(
-    withoutTime(date_prev) - convertDaysToMs(timeRange)
+    withoutTime(date_prev) - convertDaysToMs(timeRange - 1)
   );
 
   for (let entry of ogVidData) {
@@ -74,7 +72,7 @@ function addTimeOfDay(ogVidData, result, timeRange) {
 
     const time_curr = date_curr.getTime();
 
-    if (withoutTime(date_prev) === withoutTime(date_curr)) {
+    if (checkDatesEqual(date_prev, date_curr)) {
       let gap = Number((time_prev - time_curr) / (1000 * 60)); // gives gap in minutes
       // if gap < 5 mins or gap > 5 mins and no new log in was made
       if (gap < 5) {
@@ -103,7 +101,7 @@ function addTimeOfDay(ogVidData, result, timeRange) {
   //   data.map((entry) => {Date: withoutTime(entry.Date), Length: })
   // }
 
-  // below is an array of most common hours user used TikTok
+  // below is an array of most common hour(s) user used TikTok
   const coreTimeArray = getCoreTime(coreTimeObj);
   return [result, totActivity, coreTimeArray];
 }
@@ -144,6 +142,8 @@ function addLiveData(result, date_prev, timeOfDay_prev, totalTime) {
 }
 
 function makeWatchtimeData(ogVidData, result, timeRange) {
+  let totActivity = 0;
+  let coreTimeObj = {};
   let date_prev = new Date(ogVidData[0].Date);
   let time_prev = date_prev.getTime();
 
@@ -167,6 +167,8 @@ function makeWatchtimeData(ogVidData, result, timeRange) {
     let gap = Number((time_prev - time_curr) / 1000); // gives gap in secs
     // if gap > 2 sec and < 5 mins
     if (gap < 300) {
+      totActivity += gap;
+      coreTime(coreTimeObj, date_curr.getHours(), gap);
       result.push({
         Date: withoutTime(date_prev),
         GapLabel: gap > 2 ? "over 2 secs" : "under 2 secs",
@@ -194,8 +196,8 @@ function makeWatchtimeData(ogVidData, result, timeRange) {
   // });
 
   // below is an array of most common hours user used TikTok
-  // const coreTimeArray = getCoreTime(coreTimeObj);
-  return [result];
+  const coreTimeArray = getCoreTime(coreTimeObj);
+  return [result, totActivity, coreTimeArray];
 }
 
 // for bars split into time slots
@@ -278,7 +280,8 @@ function makeTimeSlots(ogVidData, result_timeSlots, timeRange, liveData) {
 function getNumAppOpen(ogLoginData, timeRange) {
   let total = 0;
 
-  let date_prev = new Date(ogLoginData[0].Date);
+  let date_prev = new Date(ogLoginData[0].Date.replace(" UTC", ""));
+  console.log(date_prev);
 
   // compute date you want to stop looping
   const dateToStop = new Date(
@@ -286,7 +289,7 @@ function getNumAppOpen(ogLoginData, timeRange) {
   );
 
   for (let entry of ogLoginData) {
-    let date_curr = new Date(entry.Date);
+    let date_curr = new Date(entry.Date.replace(" UTC", ""));
 
     // stop looping when you reach end of 7, 30, or 90 days
     if (date_curr < dateToStop) {
@@ -312,6 +315,7 @@ function convertTime(totMins) {
 }
 
 export function arrangeDataVizOne(typeOfGraph, timeRange) {
+  console.log(typeOfGraph);
   // If we want to show bars that break up days into different time slots
   const ogVidData = biggestData.Activity["Video Browsing History"].VideoList;
   const ogLoginData = biggestData.Activity["Login History"].LoginHistoryList;
@@ -336,13 +340,18 @@ export function arrangeDataVizOne(typeOfGraph, timeRange) {
     //   true
     // );
   } else if (typeOfGraph === "watchtime") {
-    [result] = makeWatchtimeData(ogVidData, result, timeRange);
+    [result, totActivity, coreTimeArray] = makeWatchtimeData(
+      ogVidData,
+      result,
+      timeRange
+    );
   } else if (typeOfGraph === "default") {
     [result, totActivity, coreTimeArray] = addTimeOfDay(
       ogVidData,
       result,
       timeRange
     );
+    console.log("hi");
   }
   let avgMinsPerDay = totActivity / timeRange;
   const numAppOpen = getNumAppOpen(ogLoginData, timeRange);
