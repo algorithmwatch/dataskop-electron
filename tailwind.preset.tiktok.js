@@ -18,6 +18,10 @@ module.exports = {
       boxShadow: {
         flat: "10px 10px 0 0 #EEEEEE",
       },
+      borderRadius: {
+        "4xl": "1.75rem",
+        "5xl": "2.25rem",
+      },
     },
   },
 };

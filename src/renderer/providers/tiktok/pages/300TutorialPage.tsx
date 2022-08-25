@@ -27,12 +27,12 @@ const themes = {
   tiktok: {
     parent: "bg-gradient-to-r from-[#00C6C0] via-black to-[#FF004F]",
     child: "bg-white text-black",
-    icon: "text-black w-[5rem] h-[5rem] w-full",
+    icon: "text-black w-[5rem] h-[5rem]",
   },
   alert: {
     parent: "bg-[#FFC077] text-[#904E00]",
     child: "bg-[#FFF4E7]",
-    icon: "text-[#FFC077] w-[5rem] h-[5rem] w-full",
+    icon: "text-[#FFC077] w-[5rem] h-[5rem]",
   },
 };
 
@@ -50,13 +50,13 @@ const TutorialSlide = ({
   return (
     <div
       className={clsx(
-        "w-[55rem] mx-auto rounded-[2.250rem] p-2 mb-3 shadow-flat",
+        "w-[55rem] mx-auto rounded-5xl p-2 mb-3 shadow-flat",
         themes[theme].parent,
       )}
     >
       <div
         className={clsx(
-          "flex flex-col items-center justify-center rounded-[1.75rem] h-full w-full",
+          "flex flex-col items-center justify-center rounded-4xl h-full w-full",
           themes[theme].child,
         )}
       >
@@ -64,7 +64,7 @@ const TutorialSlide = ({
           icon={icon}
           className={clsx("mt-24", themes[theme].icon)}
         />
-        <h2 className="hl-3xl mt-8 mb-8 text-black">{title}</h2>
+        <h2 className="hl-3xl mt-8 mb-8">{title}</h2>
         <div className="text-xl max-w-prose min-h-[190px] px-10">
           {children}
         </div>

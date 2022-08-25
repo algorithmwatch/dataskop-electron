@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { ReactNode } from "react";
 
 const themes = {
-  gray: "bg-neutral-200/80 rounded-3xl",
+  gray: "bg-neutral-200/75 rounded-5xl",
 };
 
 export default function Content({
