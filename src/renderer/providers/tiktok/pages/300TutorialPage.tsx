@@ -30,9 +30,9 @@ const themes = {
     icon: "text-black w-[5rem] h-[5rem] w-full",
   },
   alert: {
-    parent: "bg-[#FFC27B] text-[#9E5500]",
+    parent: "bg-[#FFC077] text-[#904E00]",
     child: "bg-[#FFF4E7]",
-    icon: "text-[#FFC27B] w-[5rem] h-[5rem] w-full",
+    icon: "text-[#FFC077] w-[5rem] h-[5rem] w-full",
   },
 };
 
@@ -64,8 +64,10 @@ const TutorialSlide = ({
           icon={icon}
           className={clsx("mt-24", themes[theme].icon)}
         />
-        <h2 className="hl-4xl mt-10 mb-9 text-black">{title}</h2>
-        <div className="text-2xl min-h-[190px] px-8">{children}</div>
+        <h2 className="hl-3xl mt-8 mb-8 text-black">{title}</h2>
+        <div className="text-xl max-w-prose min-h-[190px] px-10">
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -75,6 +77,14 @@ export default function TutorialPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
   const carouselRef = useRef<Glide.Properties>(null);
+
+  const handleNextClick = () => {
+    if (carouselRef.current?.index === 3) {
+      history.push(getNextPage("path"));
+    } else {
+      carouselRef.current?.go(">");
+    }
+  };
 
   const footerSlots: FooterSlots = {
     start: [
@@ -99,13 +109,7 @@ export default function TutorialPage(): JSX.Element {
       >
         Überspringen
       </Button>,
-      <Button
-        key="3"
-        endIcon={faAngleRight}
-        onClick={() => {
-          carouselRef.current?.go(">");
-        }}
-      >
+      <Button key="3" endIcon={faAngleRight} onClick={handleNextClick}>
         Weiter
       </Button>,
     ],
@@ -113,7 +117,7 @@ export default function TutorialPage(): JSX.Element {
 
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>
-      <h1 className="text-3xl font-medium mb-5">So funktioniert&apos;s</h1>
+      <h1 className="text-3xl font-semibold mb-5">So funktioniert&apos;s</h1>
       <Carousel
         ref={carouselRef}
         showBullets
@@ -122,7 +126,7 @@ export default function TutorialPage(): JSX.Element {
           rewind: false,
         }}
       >
-        <Slide key="1">
+        <Slide>
           <TutorialSlide title="Anmelden" icon={faCircleUser}>
             <p>
               Zuerst meldest du dich mit deinem TikTok-Konto an. Wir speichern
@@ -130,14 +134,14 @@ export default function TutorialPage(): JSX.Element {
             </p>
           </TutorialSlide>
         </Slide>
-        <Slide key="2">
+        <Slide>
           <TutorialSlide title="Download" icon={faLoader}>
             Als nächstes beantragt die DataSkop-App deine DSGVO-Daten. Sobald
             TikTok diese Daten bereitstellt, lädt die App sie im Hintergrund
             automatisch herunter und verarbeitet sie.
           </TutorialSlide>
         </Slide>
-        <Slide key="3">
+        <Slide>
           <TutorialSlide
             title="Wichtig"
             icon={faTriangleExclamation}
@@ -149,7 +153,7 @@ export default function TutorialPage(): JSX.Element {
             Benachrichtigung, sobald es weitergehen kann.
           </TutorialSlide>
         </Slide>
-        <Slide key="4">
+        <Slide>
           <TutorialSlide title="Visualisierungen" icon={faChartScatterBubble}>
             Wenn die DataSkop-App die Daten heruntergeladen und verarbeitet hat,
             werden dir verschiedene interaktive Grafiken präsentiert, die dein

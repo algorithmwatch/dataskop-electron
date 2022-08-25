@@ -38,9 +38,9 @@ export default function IntroductionPage(): JSX.Element {
   };
 
   return (
-    <WizardLayout className="text-center max-w-prose" footerSlots={footerSlots}>
-      <h1 className="hl-4xl mb-20">Willkommen bei DataSkop 👋</h1>
-      <div className="space-y-4">
+    <WizardLayout className="text-center" footerSlots={footerSlots}>
+      <h1 className="hl-4xl mb-20 max-w-prose">Willkommen bei DataSkop 👋</h1>
+      <div className="space-y-4 text-xl max-w-prose">
         <p>
           TikTok sammelt viele Daten über dich, aber weißt du auch welche?
           Sogenannte “personenbezogene Daten” lassen Rückschlüsse auf deine
