@@ -7,6 +7,7 @@ import { faCircleUser } from "@fortawesome/pro-light-svg-icons";
 import { faAngleLeft } from "@fortawesome/pro-solid-svg-icons";
 import { useState } from "react";
 import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
 import { Button } from "renderer/components/Button";
 import Modal from "renderer/components/Modal";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
@@ -35,7 +36,7 @@ export default function BeforeLoginPage(): JSX.Element {
       <Button
         key="2"
         onClick={() => {
-          history.push(getNextPage("path"));
+          history.push("/provider_login");
         }}
       >
         Anmelden
@@ -86,7 +87,14 @@ export default function BeforeLoginPage(): JSX.Element {
               Was geschieht mit meinen Daten?
             </HelpButton>
           </div>
-          {/* <Link to="/tiktok/upload_data_export">Upload data export</Link> */}
+          <div className="mt-auto">
+            <Link
+              to="/tiktok/upload_data_export"
+              className="text-turquoise-700 font-semibold hover:underline text-base"
+            >
+              Ich habe bereits meine DSGVO-Daten.
+            </Link>
+          </div>
         </Content>
       </WizardLayout>
     </>

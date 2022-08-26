@@ -20,6 +20,10 @@ const ttDefault: NavigationState = {
       sectionKey: null,
     },
     {
+      path: "/tiktok/upload_data_export",
+      sectionKey: null,
+    },
+    {
       path: "/provider_login",
       sectionKey: null,
     },

@@ -77,7 +77,13 @@ export default function TutorialPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
   const carouselRef = useRef<Glide.Properties>(null);
-
+  const handlePrevClick = () => {
+    if (carouselRef.current?.index === 0) {
+      history.push(getPreviousPage("path"));
+    } else {
+      carouselRef.current?.go("<");
+    }
+  };
   const handleNextClick = () => {
     if (carouselRef.current?.index === 3) {
       history.push(getNextPage("path"));
@@ -87,19 +93,21 @@ export default function TutorialPage(): JSX.Element {
   };
 
   const footerSlots: FooterSlots = {
-    start: [
+    center: [
       <Button
         key="1"
         startIcon={faAngleLeft}
         theme="text"
-        onClick={() => {
-          history.push(getPreviousPage("path"));
-        }}
+        onClick={handlePrevClick}
       >
         Zurück
       </Button>,
+
+      <Button key="3" endIcon={faAngleRight} onClick={handleNextClick}>
+        Weiter
+      </Button>,
     ],
-    center: [
+    end: [
       <Button
         key="2"
         theme="text"
@@ -108,9 +116,6 @@ export default function TutorialPage(): JSX.Element {
         }}
       >
         Überspringen
-      </Button>,
-      <Button key="3" endIcon={faAngleRight} onClick={handleNextClick}>
-        Weiter
       </Button>,
     ],
   };

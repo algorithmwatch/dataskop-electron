@@ -86,8 +86,6 @@ export default function ProviderLoginPage(): JSX.Element {
         >
           Reset storage
         </Button>
-
-        {/* <DropFile /> */}
       </div>
     </WizardLayout>
   );
