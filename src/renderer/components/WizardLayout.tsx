@@ -26,14 +26,14 @@ export default function WizardLayout({
         {children}
       </div>
       {footerSlots && (
-        <nav className="h-24 shrink-0 px-6 grid grid-cols-3">
-          <div className="flex items-start justify-start space-x-2">
+        <nav className="h-28 shrink-0 px-6 grid grid-cols-3">
+          <div className="flex items-start justify-start space-x-4">
             {footerSlots.start}
           </div>
-          <div className="flex items-start justify-center space-x-2">
+          <div className="flex items-start justify-center space-x-4">
             {footerSlots.center}
           </div>
-          <div className="flex items-start justify-end space-x-2">
+          <div className="flex items-start justify-end space-x-4">
             {footerSlots.end}
           </div>
         </nav>

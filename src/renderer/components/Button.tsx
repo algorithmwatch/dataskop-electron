@@ -17,14 +17,19 @@ const themes = {
     text-cyan-500
     hover:text-cyan-500/80
   `,
+  outline: `
+    text-cyan-500
+    hover:text-cyan-500/80
+    border-2 border-cyan-500
+  `,
   // bg-clip-text text-transparent bg-gradient-to-r from-turquoise-600 to-sky-600
 };
 
 const sizes = {
-  xs: "px-3 py-2.5 text-xs rounded",
-  sm: "px-3.5 py-3 text-sm rounded-md",
-  md: "px-5 py-4 text-xl rounded-md",
-  lg: "px-6 py-5 text-2xl rounded-lg",
+  xs: "px-3 h-8 text-xs rounded",
+  sm: "px-3.5 h-10 text-sm rounded-md",
+  md: "px-5 h-[3.75rem] text-xl rounded-md",
+  lg: "px-6 h-16 text-2xl rounded-lg",
 };
 
 const iconSizes = {

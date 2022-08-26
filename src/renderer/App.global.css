@@ -124,3 +124,61 @@
 
 /* GlideJS */
 @import "components/Carousel/theme.scss";
+
+/* Tiktok animated gradient background */
+.animated-gradient-tiktok-light {
+  background: linear-gradient(
+    -45deg,
+    #fff,
+    #ff89ae,
+    #6afffa,
+    #ff89ae,
+    #6afffa,
+    #fff
+  );
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  height: 100vh;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+/*
+.fade-element-1 {
+  pos
+  animation-name: fade;
+  animation-fill-mode: both;
+  animation-iteration-count: infinite;
+  animation-duration: 4s;
+  animation-direction: normal;
+}
+
+.fade-element-2 {
+  animation-name: fade;
+  animation-fill-mode: both;
+  animation-iteration-count: infinite;
+  animation-delay: 4s;
+  animation-duration: 4s;
+  animation-direction: normal;
+} */
+
+/* @keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+} */

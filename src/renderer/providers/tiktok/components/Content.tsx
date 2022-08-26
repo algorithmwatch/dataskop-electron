@@ -4,7 +4,9 @@ import clsx from "clsx";
 import { ReactNode } from "react";
 
 const themes = {
-  gray: "bg-neutral-200/75 rounded-5xl",
+  gray: "rounded-5xl bg-neutral-200/75",
+  tiktokAnimated: "rounded-5xl animated-gradient-tiktok-light",
+  tiktokLight: "rounded-5xl bg-gradient-to-br from-[#B5FFFD] to-[#FFB8CE]",
   transparent: "",
 };
 
@@ -26,12 +28,14 @@ const sizes = {
 export default function Content({
   title,
   icon,
+  iconSpinning = false,
   theme = "gray",
   size = "md",
   children,
 }: {
   title: string;
   icon: IconDefinition;
+  iconSpinning?: boolean;
   size?: keyof typeof sizes;
   theme?: keyof typeof themes;
   children: ReactNode;
@@ -44,7 +48,11 @@ export default function Content({
         sizes[size].parent,
       )}
     >
-      <FontAwesomeIcon icon={icon} className={sizes[size].icon} />
+      <FontAwesomeIcon
+        icon={icon}
+        className={sizes[size].icon}
+        spin={iconSpinning}
+      />
       <h1 className={sizes[size].title}>{title}</h1>
       <div
         className={clsx("max-w-prose grow flex flex-col", sizes[size].content)}

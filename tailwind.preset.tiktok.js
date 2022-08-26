@@ -22,6 +22,16 @@ module.exports = {
         "4xl": "1.75rem",
         "5xl": "2.25rem",
       },
+      keyframes: {
+        fade: {
+          "0%,50%": { opacity: 0 },
+          "100%": { opacity: 1 },
+        },
+      },
+      animation: {
+        fade1: "fade 6s infinite alternate-reverse both",
+        fade2: "fade 6s infinite alternate both",
+      },
     },
   },
 };

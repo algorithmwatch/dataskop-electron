@@ -3,10 +3,12 @@
  *
  * @module
  */
-import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
+import { faFileHeart } from "@fortawesome/pro-light-svg-icons";
+import { faAngleLeft } from "@fortawesome/pro-solid-svg-icons";
 import { useHistory } from "react-router";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
+import Content from "renderer/providers/tiktok/components/Content";
 import { useNavigation } from "../../../contexts";
 
 export default function DonationChoicePage(): JSX.Element {
@@ -14,7 +16,7 @@ export default function DonationChoicePage(): JSX.Element {
   const history = useHistory();
 
   const footerSlots: FooterSlots = {
-    center: [
+    start: [
       <Button
         key="1"
         theme="text"
@@ -25,24 +27,44 @@ export default function DonationChoicePage(): JSX.Element {
       >
         Zurück
       </Button>,
+    ],
+    center: [
       <Button
-        key="2"
-        endIcon={faAngleRight}
+        key="1"
+        className="min-w-[6rem]"
         onClick={() => {
-          history.push(getNextPage("path"));
+          history.push("/tiktok/donation_form");
         }}
       >
-        Weiter
+        Ja
+      </Button>,
+      <Button
+        key="2"
+        className="min-w-[6rem]"
+        theme="outline"
+        onClick={() => {
+          history.push("/tiktok/newsletter_choice");
+        }}
+      >
+        Nein
       </Button>,
     ],
   };
 
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>
-      <h1 className="hl-4xl mb-20">Donation Choice Page</h1>
-      <div className="space-y-4">
-        <p>This is the content</p>
-      </div>
+      <Content
+        title="Möchtest du deine Daten spenden?"
+        theme="gray"
+        icon={faFileHeart}
+      >
+        <p>
+          Deine Daten werden anonymisiert und ausschließlich mit
+          DataSkop-Partnern geteilt. Sie helfen uns, TikTok besser zu verstehen.
+          Du behältst nach der Spende die Kontrolle über deine Daten und kannst
+          sie jederzeit löschen.
+        </p>
+      </Content>
     </WizardLayout>
   );
 }

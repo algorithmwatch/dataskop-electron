@@ -39,7 +39,7 @@ export default function VizThreePage(): JSX.Element {
 
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>
-      <h1 className="hl-4xl mb-20">Waiting Three Page</h1>
+      <h1 className="hl-4xl mb-20">Viz Three Page</h1>
       <div className="space-y-4">
         <p>This is the content</p>
       </div>

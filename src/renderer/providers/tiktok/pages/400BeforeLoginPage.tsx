@@ -16,7 +16,7 @@ import HelpButton from "renderer/providers/tiktok/components/HelpButton";
 import { useNavigation } from "../../../contexts";
 
 export default function BeforeLoginPage(): JSX.Element {
-  const { getNextPage, getPreviousPage } = useNavigation();
+  const { getPreviousPage } = useNavigation();
   const [modal1IsOpen, setModal1IsOpen] = useState(false);
   const [modal2IsOpen, setModal2IsOpen] = useState(false);
   const history = useHistory();
