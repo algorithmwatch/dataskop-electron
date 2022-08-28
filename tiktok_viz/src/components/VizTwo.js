@@ -8,127 +8,145 @@ import VizOneButtons from "./VizOneButtons";
 import React from "react";
 import addTooltips from "../utils/tooltips";
 
-function VizOne() {
-  const headerRef = useRef();
-  const boxesRef = useRef();
-  const toggleRef = useRef();
+function VizTwo() {
+  const soundRef = useRef();
+  const hashtagsRef = useRef();
+  const diverseRef = useRef();
 
   let totActivity = null;
   let avgMinsPerDay = null;
   let numAppOpen = null;
   let coreTimeString = null;
   const rangeOptions = [
-    { option: "letzte 7 Tage", value: 7 },
-    { option: "letzte 30 Tage", value: 30 },
     { option: "letzte 90 Tage", value: 90 },
+    { option: "letzte 180 Tage", value: 180 },
+    { option: "letzte 365 Tage", value: 365 },
   ];
   const [range, setRange] = useState(rangeOptions[0]);
-  // const [totActivity, avgMinsPerDay, numAppOpen, coreTimeString, videoData] =
-  //   React.useMemo(
-  //     () => arrangeDataVizOne(timeSlots, range.value),
-  //     [timeSlots, range.value]
-  //   );
 
-  const [hashtagData, soundData, diverseLabelData] = getTopData(7, 20);
-  console.log(hashtagData);
+  const [hashtagData, soundData, diverseLabelData] = React.useMemo(
+    () => getTopData(7, range.value),
+    [7, range.value]
+  );
 
-  //   useEffect(() => {
-  //     d3.csv("/gistemp.csv", d3.autoType).then(setData);
-  //   }, []);
+  // const [hashtagData, soundData, diverseLabelData] = getTopData(7, 365);
 
-  // useEffect(() => {
-  //   if (hashtagData === undefined) return;
-  //   const chart = addTooltips(
-  //     Plot.plot({
-  //       width: 1000,
-  //       marginBottom: 75,
-  //       marginTop: 60,
-  //       height: 500,
-  //       marginLeft: 60,
-  //       marginRight: 60,
-  //       style: {
-  //         background: "transparent",
-  //       },
-  //       x: {
-  //         tickFormat: (d) =>
-  //           `${d.getDate()}.${
-  //             d.getMonth() === 0 ? 12 : d.getMonth() + 1
-  //           }.${d.getFullYear()}`,
-  //         tickRotate: -90,
-  //         label: "Zeitverlauf",
-  //       },
-  //       y: {
-  //         grid: true,
-  //         label: "Frequency of Hashtags",
-  //       },
-  //       color: {
-  //         type: "categorical",
-  //         scheme: "accent",
-  //         legend: true,
-  //       },
-  //       marks: [
-  //         Plot.ruleY([0]),
-  //         Plot.dot(hashtagData, {
-  //           x: "DateStart",
-  //           y: "Count",
-  //           stroke: "Name",
-  //         }),
-  //       ],
-  //     })
-  //   );
-  //   // headerRef.current.append(chart);
-  //   toggleRef.current.append(chart);
-  //   // toggleRef.current.append(chart);
-  //   return () => chart.remove();
-  // }, [hashtagData]);
+  useEffect(() => {
+    if (hashtagData === undefined) return;
+    const chart = addTooltips(
+      Plot.plot({
+        width: 1000,
+        marginBottom: 200,
+        marginTop: 60,
+        height: 500,
+        marginLeft: 60,
+        marginRight: 60,
+        style: {
+          background: "transparent",
+        },
+        x: {
+          tickFormat: (d) =>
+            `${d.getDate()}.${
+              d.getMonth() === 0 ? 12 : d.getMonth() + 1
+            }.${d.getFullYear()}`,
+          tickRotate: -90,
+          label: "Zeitverlauf",
+        },
+        y: {
+          grid: true,
+          label: "Frequency of Hashtags",
+        },
+        color: {
+          type: "categorical",
+          scheme: "set2",
+          legend: true,
+        },
+        marks: [
+          Plot.ruleY([0]),
+          Plot.line(hashtagData, {
+            x: "DateStart",
+            y: "Count",
+            z: "Name",
+            strokeWidth: 1.5,
+            stroke: "Name",
+          }),
+          Plot.dot(hashtagData, {
+            x: "DateStart",
+            y: "Count",
+            title: (d) => `${d.Name}`,
+            stroke: "currentColor",
+            r: 7,
+            fill: "Name",
+          }),
+        ],
+      })
+    );
+    // headerRef.current.append(chart);
+    hashtagsRef.current.append(chart);
+    // toggleRef.current.append(chart);
+    return () => chart.remove();
+  }, [hashtagData]);
 
-  // useEffect(() => {
-  //   if (soundData === undefined) return;
-  //   const chart = addTooltips(
-  //     Plot.plot({
-  //       width: 1000,
-  //       marginBottom: 75,
-  //       marginTop: 60,
-  //       height: 500,
-  //       marginLeft: 60,
-  //       marginRight: 60,
-  //       style: {
-  //         background: "transparent",
-  //       },
-  //       x: {
-  //         tickFormat: (d) =>
-  //           `${d.getDate()}.${
-  //             d.getMonth() === 0 ? 12 : d.getMonth() + 1
-  //           }.${d.getFullYear()}`,
-  //         tickRotate: -90,
-  //         label: "Zeitverlauf",
-  //       },
-  //       y: {
-  //         grid: true,
-  //         label: "Frequency of Sounds",
-  //       },
-  //       color: {
-  //         type: "categorical",
-  //         scheme: "accent",
-  //         legend: true,
-  //       },
-  //       marks: [
-  //         Plot.ruleY([0]),
-  //         Plot.dot(soundData, {
-  //           x: "DateStart",
-  //           y: "Count",
-  //           stroke: "Name",
-  //         }),
-  //       ],
-  //     })
-  //   );
+  useEffect(() => {
+    if (soundData === undefined) return;
+    const chart = addTooltips(
+      Plot.plot({
+        width: 1000,
+        marginBottom: 200,
+        marginTop: 60,
+        height: 500,
+        marginLeft: 60,
+        marginRight: 60,
+        style: {
+          background: "transparent",
+        },
+        x: {
+          tickFormat: (d) =>
+            `${d.getDate()}.${
+              d.getMonth() === 0 ? 12 : d.getMonth() + 1
+            }.${d.getFullYear()}`,
+          tickRotate: -90,
+          label: "Zeitverlauf",
+        },
+        y: {
+          grid: true,
+          label: "Frequency of Sounds",
+        },
+        color: {
+          type: "categorical",
+          scheme: "set2",
+          legend: true,
+        },
+        marks: [
+          Plot.ruleY([0]),
+          Plot.line(soundData, {
+            x: "DateStart",
+            y: "Count",
+            z: "Name",
+            strokeWidth: 1.5,
+            stroke: "Name",
+          }),
+          Plot.dot(soundData, {
+            x: "DateStart",
+            y: "Count",
+            title: (d) => `${d.Name}`,
+            stroke: "currentColor",
+            r: 7,
+            fill: "Name",
+          }),
+        ],
+      })
+    );
+    soundRef.current.append(chart);
+    return () => chart.remove();
+  }, [diverseLabelData]);
 
   useEffect(() => {
     if (diverseLabelData === undefined) return;
     const chart = addTooltips(
       Plot.plot({
         width: 1000,
-        marginBottom: 75,
+        marginBottom: 200,
         marginTop: 60,
         height: 500,
         marginLeft: 60,
@@ -150,31 +168,38 @@ function VizOne() {
         },
         color: {
           type: "categorical",
-          scheme: "accent",
+          scheme: "set2",
           legend: true,
         },
         marks: [
           Plot.ruleY([0]),
+          Plot.line(diverseLabelData, {
+            x: "DateStart",
+            y: "Count",
+            z: "Name",
+            strokeWidth: 1.5,
+            stroke: "Name",
+          }),
           Plot.dot(diverseLabelData, {
             x: "DateStart",
             y: "Count",
             title: (d) => `${d.Name}`,
-            stroke: "Name",
+            stroke: "currentColor",
+            r: 7,
+            fill: "Name",
           }),
         ],
       })
     );
 
-    // headerRef.current.append(chart);
-    toggleRef.current.append(chart);
-    // toggleRef.current.append(chart);
+    diverseRef.current.append(chart);
     return () => chart.remove();
   }, [diverseLabelData]);
 
   return (
     <div className="App">
-      <header className="VizOne-header" ref={headerRef}>
-        Deine Nutzungszeit{" "}
+      <header className="VizOne-header flex">
+        Your Sounds, Hashtags, and Video Categories in the{" "}
         <VizOneDropDown
           options={rangeOptions}
           onChange={(e) => {
@@ -187,19 +212,19 @@ function VizOne() {
         <div className="box1">
           <VizBoxes
             statistic={`${totActivity} min.`}
-            statisticText="Activität"
+            statisticText="Most Frequent Hashtag OAT"
           />
         </div>
         <div className="box2">
           <VizBoxes
             statistic={`${avgMinsPerDay} min.`}
-            statisticText="pro Tag"
+            statisticText="Most Frequent Sound OAT"
           />
         </div>
         <div className="box3">
           <VizBoxes
             statistic={`${numAppOpen} x`}
-            statisticText="App geöffnet"
+            statisticText="Most Frequent Category OAT"
           />
         </div>
         <div className="box4">
@@ -209,9 +234,16 @@ function VizOne() {
           />
         </div>
       </div>
-      <div ref={toggleRef}></div>
+      <h2>Sounds</h2>
+      <div ref={soundRef}></div>
+
+      <h2>Hashtags</h2>
+      <div ref={hashtagsRef}></div>
+
+      <h2>Diversification Labels</h2>
+      <div ref={diverseRef}></div>
     </div>
   );
 }
 
-export default VizOne;
+export default VizTwo;

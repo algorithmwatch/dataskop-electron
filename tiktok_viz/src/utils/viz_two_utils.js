@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import peterScrapedData from "../data/videometa.json";
 import data000 from "../data/000-peter.json";
 import { withoutTime, convertDaysToMs } from "./viz_one_utilities";
+import * as d3 from "d3";
 
 let numOfTopItems = 5;
 
@@ -17,8 +18,10 @@ function buildHashtagArray(url, hashtags) {
       // igonore "fyp"s
       if (
         tagName.indexOf("fyp") !== -1 ||
+        tagName.indexOf("fy") !== -1 ||
         tagName.indexOf("stitch") !== -1 ||
-        tagName.indexOf("foryou") !== -1
+        tagName.indexOf("foryou") !== -1 ||
+        tagName.indexOf("viral") !== -1
       )
         continue;
       // console.log(tagName);
@@ -46,6 +49,8 @@ function buildDiversificationLabelsArray(url, divlabels) {
     let labels = url.meta.results.diversificationLabels;
 
     for (let label of labels) {
+      if (label === "Others") continue;
+      // if (label === "Science") console.log("Science");
       label in divlabels ? (divlabels[label] += 1) : (divlabels[label] = 1);
     }
   }
@@ -53,21 +58,40 @@ function buildDiversificationLabelsArray(url, divlabels) {
 
 // helper function that gets the top (X) entries with the highest counts, numOfTopItems can be an input by user
 function getTop(obj, array, numOfTopItems, date_start, lastDayOfTick) {
-  const sortedVals = Object.values(obj).sort((first, second) => {
-    return second - first;
-  });
-  sortedVals.splice(0, numOfTopItems);
-  for (let val of sortedVals) {
-    let itemNames = Object.keys(obj).filter((key) => obj[key] === val);
+  for (let i = 0; i < numOfTopItems; i++) {
+    let counts = Object.values(obj);
+    // get top item
+    let maxVal = d3.max(counts);
+    // console.log("before deleting", obj);
+    // add top item
+    // topItems.push();
 
-    itemNames.forEach((itemName) =>
+    let itemNames = Object.keys(obj).filter((key) => obj[key] === maxVal);
+
+    // add entry to data array
+    // itemNames.length > 1
+    // ?
+    itemNames.forEach((itemName) => {
       array.push({
         DateStart: date_start,
         DateEnd: lastDayOfTick,
         Name: itemName,
-        Count: val,
-      })
-    );
+        Count: maxVal,
+      });
+      delete obj[itemNames];
+    });
+
+    // : {array.push({
+    //     DateStart: date_start,
+    //     DateEnd: lastDayOfTick,
+    //     Name: itemNames,
+    //     Count: maxVal,
+    //   });
+    //   delete obj.itemNames;
+    // }
+
+    // delete entry in object
+    // console.log("after deleting", obj);
   }
 }
 
@@ -109,11 +133,10 @@ export function getTopData(tickLength, timeRange) {
 
     if (date_curr < lastDayOfTick) {
       getTop(hashtags, hashtagData, numOfTopItems, date_start, lastDayOfTick);
-      // addTopToArray(hashtagData);
 
       getTop(sounds, soundData, numOfTopItems, date_start, lastDayOfTick);
-      // addTopToArray(soundData);
 
+      // console.log(divlabels);
       getTop(
         divlabels,
         diverseLabelData,
@@ -121,10 +144,9 @@ export function getTopData(tickLength, timeRange) {
         date_start,
         lastDayOfTick
       );
-      // addTopToArray(diverseLabelData);
 
       // reset everything
-      date_start = lastDayOfTick;
+      date_start = date_curr;
       lastDayOfTick = new Date(
         withoutTime(date_start) - convertDaysToMs(tickLength - 1)
       );
@@ -141,6 +163,6 @@ export function getTopData(tickLength, timeRange) {
       buildDiversificationLabelsArray(url, divlabels);
     }
   }
-  console.log(hashtagData);
+  // console.log(diverseLabelData);
   return [hashtagData, soundData, diverseLabelData];
 }

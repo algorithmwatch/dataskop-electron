@@ -20,21 +20,26 @@ export function shortenGdprData(data) {
 }
 
 export function shortenMetadata(data) {
-  data = data.map((url) => ({
-    url: url,
-    desc: url.meta.results.desc,
-    createTime: url.meta.results.createTime,
-    duration: url.meta.results.video.duration,
-    author: url.meta.results.author,
-    soundTitle: url.meta.results.music.title,
-    soundAuthor: url.meta.results.music.authorName,
-    soundId: url.meta.results.music.id,
-    hashtagInfo: url.meta.results.challenges,
-    stats: url.meta.results.stats,
-    diversificationLabels: url.meta.results.diversificationLabels,
-    authorThumbnail: url.meta.results.avatarThumb,
-  }));
+  let result = {};
+  for (let url of Object.keys(data)) {
+    // console.log(url);
+    if (data.url === undefined || data.url.meta === undefined) continue;
+    result.url = {
+      desc: data.url.meta.results.desc,
+      createTime: data.url.meta.results.createTime,
+      duration: data.url.meta.results.video.duration,
+      author: data.url.meta.results.author,
+      soundTitle: data.url.meta.results.music.title,
+      soundAuthor: data.url.meta.results.music.authorName,
+      soundId: data.url.meta.results.music.id,
+      hashtagInfo: data.url.meta.results.challenges,
+      stats: data.url.meta.results.stats,
+      diversificationLabels: data.url.meta.results.diversificationLabels,
+      authorThumbnail: data.url.meta.results.avatarThumb,
+    };
+  }
+  //data = data.map((url) => ());
 
-  return data;
+  return result;
   // data.map((entry) => {Date: withoutTime(entry.Date), Length: })
 }

@@ -1,4 +1,5 @@
 import "../App.css";
+import { useState } from "react";
 import data000 from "../data/000-peter.json";
 import biggestData from "../data/001_redacted.json";
 import small from "../data/small_modified_peter.json";
@@ -10,11 +11,11 @@ import { breakFrequency, twoOrLessVids } from "../utils/viz_one_utilities";
 import { shortenGdprData, shortenMetadata } from "../utils/shorten_data";
 
 function App() {
-  // const selectVizOptions = [
-  //   { option: "Viz 1" },
-  //   { option: "Viz 2" },
-  //   { option: "Viz 3" },
-  // ];
+  const selectVizOptions = [
+    { option: "Viz 1" },
+    { option: "Viz 2" },
+    { option: "Viz 3" },
+  ];
 
   // const selectDataOptions = [
   //   { option: "biggest" },
@@ -23,22 +24,24 @@ function App() {
   //   { option: "small" },
   // ];
 
-  // const [viz, setViz] = useState(selectVizOptions[0]);
+  const [viz, setViz] = useState(selectVizOptions[0]);
   // const [data, setData] = useState(selectDataOptions[0]);
   let [videodata, logindata, tiktokLiveVids, likedVids, sharedVids, savedVids] =
     shortenGdprData(biggestData);
-  peterScrapedData = shortenMetadata(peterScrapedData);
+
+  // set to new variable or reassign?
+  let peterScrapedDataShort = shortenMetadata(peterScrapedData);
 
   return (
     <div className="visualizations">
-      <header>
-        Select a Visualization{" "}
+      <header className="selectVizAndData flex">
+        <div>Select a Visualization </div>
         <VizOneDropDown
-        // selected={viz}
-        // options={selectVizOptions}
-        // onChange={(e) => {
-        //   setViz(e);
-        // }}
+          options={selectVizOptions}
+          onChange={(e) => {
+            setViz(e);
+          }}
+          selected={viz}
         />
       </header>
 
@@ -54,12 +57,12 @@ function App() {
         />
       </h2>
 
-      <VizOne
+      {/* <VizOne
         vidData={videodata}
         loginData={logindata}
         liveData={tiktokLiveVids}
-      />
-      {/* <VizTwo metadata={peterScrapedData} gdprData={videoData}/> */}
+      /> */}
+      <VizTwo metadata={peterScrapedDataShort} gdprData={videodata} />
       {/* <VizThree metadata={peterScrapedData} likedVids={likedVids} sharedVids={sharedVids} savedVids={savedVids} */}
     </div>
   );
