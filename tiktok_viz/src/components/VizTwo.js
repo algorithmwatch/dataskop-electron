@@ -24,10 +24,25 @@ function VizTwo() {
   ];
   const [range, setRange] = useState(rangeOptions[0]);
 
-  const [hashtagData, soundData, diverseLabelData] = React.useMemo(
-    () => getTopData(7, range.value),
-    [7, range.value]
+  const topNumOptions = [
+    { option: "3", value: 3 },
+    { option: "5", value: 5 },
+    { option: "10", value: 10 },
+  ];
+  const [topNum, setTopNum] = useState(topNumOptions[0]);
+
+  const [
+    hashtagData,
+    soundData,
+    diverseLabelData,
+    topHashtag,
+    topSound,
+    topDivLabel,
+  ] = React.useMemo(
+    () => getTopData(topNum.value, 7, range.value),
+    [topNum.value, 7, range.value]
   );
+  // console.log(topHashtag, topSound, topDivLabel);
 
   // const [hashtagData, soundData, diverseLabelData] = getTopData(7, 365);
 
@@ -199,7 +214,15 @@ function VizTwo() {
   return (
     <div className="App">
       <header className="VizOne-header flex">
-        Your Sounds, Hashtags, and Video Categories in the{" "}
+        Show your top
+        <VizOneDropDown
+          options={topNumOptions}
+          onChange={(e) => {
+            setTopNum(e);
+          }}
+          selected={topNum}
+        />
+        sounds, hashtags, and video categories in the{" "}
         <VizOneDropDown
           options={rangeOptions}
           onChange={(e) => {
@@ -211,19 +234,19 @@ function VizTwo() {
       <div className="ui-container-stats">
         <div className="box1">
           <VizBoxes
-            statistic={`${totActivity} min.`}
+            statistic={`#${Object.keys(topHashtag)}`}
             statisticText="Most Frequent Hashtag OAT"
           />
         </div>
         <div className="box2">
           <VizBoxes
-            statistic={`${avgMinsPerDay} min.`}
+            statistic={`${Object.keys(topSound)}`}
             statisticText="Most Frequent Sound OAT"
           />
         </div>
         <div className="box3">
           <VizBoxes
-            statistic={`${numAppOpen} x`}
+            statistic={`${Object.keys(topDivLabel)}s`}
             statisticText="Most Frequent Category OAT"
           />
         </div>
