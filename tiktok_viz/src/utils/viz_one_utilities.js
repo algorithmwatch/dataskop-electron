@@ -25,6 +25,34 @@ import * as d3 from "d3";
  * @returns
  */
 
+export function getDayOfWeek(d) {
+  let day;
+  switch (d.getDay()) {
+    case 0:
+      day = "So";
+      break;
+    case 1:
+      day = "Mo";
+      break;
+    case 2:
+      day = "Di";
+      break;
+    case 3:
+      day = "Mi";
+      break;
+    case 4:
+      day = "Do";
+      break;
+    case 5:
+      day = "Fr";
+      break;
+    case 6:
+      day = "Sa";
+      break;
+  }
+  return day;
+}
+
 // helper function to check if dates are equal
 const checkDatesEqual = (date1, date2) =>
   date1.getFullYear() === date2.getFullYear() &&

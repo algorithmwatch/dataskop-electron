@@ -2,6 +2,7 @@ import * as Plot from "@observablehq/plot";
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
 import { arrangeDataVizOne } from "../utils/viz_one_utilities";
+import { getDayOfWeek } from "../utils/viz_one_utilities";
 import VizOneBoxes from "./VizBoxes";
 import VizOneDropDown from "./VizOneDropDown";
 import VizOneToggleButtons from "./VizOneButtons";
@@ -59,8 +60,12 @@ function VizOne(props) {
       tickFormat: (d) =>
         `${d.getDate()}.${
           d.getMonth() === 0 ? 12 : d.getMonth() + 1
-        }.${d.getFullYear()}`,
-      tickRotate: -90,
+        }\n${getDayOfWeek(d)}`,
+      // tickFormat: (d) =>
+      //   `${d.getDate()}.${
+      //     d.getMonth() === 0 ? 12 : d.getMonth() + 1
+      //   }.${d.getFullYear()}`,
+      // tickRotate: -90,
       label: "Zeitverlauf",
     },
   };

@@ -5,7 +5,7 @@ import data000 from "../data/000-peter.json";
 import { withoutTime, convertDaysToMs } from "./viz_one_utilities";
 import * as d3 from "d3";
 
-let numOfTopItems = 5;
+// let numOfTopItems = 5;
 
 // helper for setting up hashtag data
 function buildHashtagArray(url, hashtags) {
@@ -32,7 +32,11 @@ function buildHashtagArray(url, hashtags) {
 
 // helper for setting up sound data
 function buildSoundArray(url, sounds) {
-  if (url.meta !== undefined && url.meta.results !== undefined) {
+  if (
+    url.meta !== undefined &&
+    url.meta.results !== undefined &&
+    !url.meta.results.music.original
+  ) {
     let soundTitle = url.meta.results.music.title;
     soundTitle in sounds ? (sounds[soundTitle] += 1) : (sounds[soundTitle] = 1);
   }
@@ -56,15 +60,38 @@ function buildDiversificationLabelsArray(url, divlabels) {
   }
 }
 
+// helper for getting ultimate top item
+function getHighestItem(topItem, i, obj) {
+  let maxCount = d3.max(Object.values(obj));
+  if (i === 0 || maxCount > Object.values(topItem)[0]) {
+    let topItemNames = Object.keys(obj).filter((key) => obj[key] === maxCount);
+    // reset topItem object
+    let tempTopItem = {};
+    topItemNames.forEach((topName) => {
+      tempTopItem[topName] = maxCount;
+    });
+    // console.log(tempTopItem);
+    return tempTopItem;
+  }
+  return topItem;
+}
+
 // helper function that gets the top (X) entries with the highest counts, numOfTopItems can be an input by user
-function getTop(obj, array, numOfTopItems, date_start, lastDayOfTick) {
+function getTop(
+  i,
+  obj,
+  array,
+  topItem,
+  numOfTopItems,
+  date_start,
+  lastDayOfTick
+) {
+  topItem = getHighestItem(topItem, i, obj);
+  const dotRadius = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
   for (let i = 0; i < numOfTopItems; i++) {
     let counts = Object.values(obj);
     // get top item
     let maxVal = d3.max(counts);
-    // console.log("before deleting", obj);
-    // add top item
-    // topItems.push();
 
     let itemNames = Object.keys(obj).filter((key) => obj[key] === maxVal);
 
@@ -77,22 +104,12 @@ function getTop(obj, array, numOfTopItems, date_start, lastDayOfTick) {
         DateEnd: lastDayOfTick,
         Name: itemName,
         Count: maxVal,
+        Num: dotRadius[i],
       });
       delete obj[itemNames];
     });
-
-    // : {array.push({
-    //     DateStart: date_start,
-    //     DateEnd: lastDayOfTick,
-    //     Name: itemNames,
-    //     Count: maxVal,
-    //   });
-    //   delete obj.itemNames;
-    // }
-
-    // delete entry in object
-    // console.log("after deleting", obj);
   }
+  return topItem;
 }
 
 // helper for reseting objects
@@ -103,11 +120,15 @@ function reset(hashtags, sounds, divlabels) {
 }
 
 // tickLength will be the range of time contained per tick (i.e. 7 days, 30 days, 90 days)
-export function getTopData(tickLength, timeRange) {
+export function getTopData(numOfTopItems, tickLength, timeRange) {
   // create empty object of hashtags to keep counts of them
   let hashtags = {};
   let sounds = {};
   let divlabels = {};
+
+  let topHashtag = {};
+  let topSound = {};
+  let topDivLabel = {};
 
   let hashtagData = [];
   let soundData = [];
@@ -123,6 +144,7 @@ export function getTopData(tickLength, timeRange) {
     withoutTime(date_start) - convertDaysToMs(tickLength - 1)
   );
 
+  let i = 0;
   // loop through all video data
   for (let vid of vidData) {
     let date_curr = withoutTime(new Date(vid.Date));
@@ -132,14 +154,31 @@ export function getTopData(tickLength, timeRange) {
     }
 
     if (date_curr < lastDayOfTick) {
-      getTop(hashtags, hashtagData, numOfTopItems, date_start, lastDayOfTick);
+      topHashtag = getTop(
+        i,
+        hashtags,
+        hashtagData,
+        topHashtag,
+        numOfTopItems,
+        date_start,
+        lastDayOfTick
+      );
 
-      getTop(sounds, soundData, numOfTopItems, date_start, lastDayOfTick);
+      topSound = getTop(
+        i,
+        sounds,
+        soundData,
+        topSound,
+        numOfTopItems,
+        date_start,
+        lastDayOfTick
+      );
 
-      // console.log(divlabels);
-      getTop(
+      topDivLabel = getTop(
+        i,
         divlabels,
         diverseLabelData,
+        topDivLabel,
         numOfTopItems,
         date_start,
         lastDayOfTick
@@ -151,6 +190,7 @@ export function getTopData(tickLength, timeRange) {
         withoutTime(date_start) - convertDaysToMs(tickLength - 1)
       );
       reset(hashtags, sounds, divlabels);
+      i++;
     } else {
       let vidUrl = vid.VideoLink;
 
@@ -164,5 +204,12 @@ export function getTopData(tickLength, timeRange) {
     }
   }
   // console.log(diverseLabelData);
-  return [hashtagData, soundData, diverseLabelData];
+  return [
+    hashtagData,
+    soundData,
+    diverseLabelData,
+    topHashtag,
+    topSound,
+    topDivLabel,
+  ];
 }

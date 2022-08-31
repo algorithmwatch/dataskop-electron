@@ -1,7 +1,12 @@
 import * as d3 from "d3";
 import { html } from "htl";
 
-const addTooltips = (chart, hover_styles = { opacity: 0.9 }) => {
+const addTooltips = (
+  chart,
+  onMouseMove = null,
+  onMouseOut = null,
+  hover_styles = { opacity: 0.9 }
+) => {
   // Add a unique id to the chart for styling
   const id = id_generator();
   // Add the event listeners
@@ -24,9 +29,14 @@ const addTooltips = (chart, hover_styles = { opacity: 0.9 }) => {
           const pointer = d3.pointer(event);
           if (text) hover(pointer, text.split("\n"), chart);
           else d3.selectAll(".dataskop-tooltip").remove();
+
+          if (onMouseMove) {
+            onMouseMove(text);
+          }
         })
         .on("mouseout", (event) => {
           d3.selectAll(".dataskop-tooltip").remove();
+          if (onMouseOut) onMouseOut();
         });
     });
 
