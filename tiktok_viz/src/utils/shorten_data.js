@@ -22,21 +22,28 @@ export function shortenGdprData(data) {
 export function shortenMetadata(data) {
   let result = {};
   for (let url of Object.keys(data)) {
-    // console.log(url);
-    if (data.url === undefined || data.url.meta === undefined) continue;
-    result.url = {
-      desc: data.url.meta.results.desc,
-      createTime: data.url.meta.results.createTime,
-      duration: data.url.meta.results.video.duration,
-      author: data.url.meta.results.author,
-      soundTitle: data.url.meta.results.music.title,
-      soundAuthor: data.url.meta.results.music.authorName,
-      soundId: data.url.meta.results.music.id,
-      hashtagInfo: data.url.meta.results.challenges,
-      stats: data.url.meta.results.stats,
-      diversificationLabels: data.url.meta.results.diversificationLabels,
-      authorThumbnail: data.url.meta.results.avatarThumb,
-    };
+    console.log(typeof url);
+
+    if (
+      data[url]["meta"] !== undefined &&
+      data[url]["meta"]["results"] !== undefined
+    ) {
+      result[url] = {
+        Desc: data[url]["meta"]["results"]["desc"],
+        CreateTime: data[url]["meta"]["results"]["createTime"],
+        Duration: data[url]["meta"]["results"]["video"]["duration"],
+        Author: data[url]["meta"]["results"]["author"],
+        SoundTitle: data[url]["meta"]["results"]["music"]["title"],
+        SoundOriginal: data[url]["meta"]["results"]["music"]["original"],
+        SoundAuthor: data[url]["meta"]["results"]["music"]["authorName"],
+        SoundId: data[url]["meta"]["results"]["music"]["id"],
+        HashtagInfo: data[url]["meta"]["results"]["challenges"],
+        Stats: data[url]["meta"]["results"]["stats"],
+        DiversificationLabels:
+          data[url]["meta"]["results"]["diversificationLabels"],
+        AuthorThumbnail: data[url]["meta"]["results"]["avatarThumb"],
+      };
+    }
   }
   //data = data.map((url) => ());
 

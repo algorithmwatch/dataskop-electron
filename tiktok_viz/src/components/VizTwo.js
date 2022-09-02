@@ -9,7 +9,7 @@ import VizOneButtons from "./VizOneButtons";
 import React from "react";
 import addTooltips from "../utils/tooltips";
 
-function VizTwo() {
+function VizTwo(props) {
   // const soundRef = useRef();
   // const hashtagsRef = useRef();
   // const diverseRef = useRef();
@@ -38,9 +38,12 @@ function VizTwo() {
     topSound,
     topDivLabel,
   ] = React.useMemo(
-    () => getTopData(topNum.value, 7, range.value),
+    () =>
+      getTopData(topNum.value, 7, range.value, props.metadata, props.gdprData),
     [topNum.value, 7, range.value]
   );
+
+  // console.log("hashtagdata", hashtagData);
   const [highlighted, setHighlight] = useState(null);
 
   const graphOptions = [
@@ -50,11 +53,9 @@ function VizTwo() {
   ];
   const [graph, setGraph] = useState(graphOptions[0].value);
 
-  // console.log(hashtagData);
-
   const commonProps = {
     width: 1500,
-    marginBottom: 200,
+    marginBottom: 60,
     marginTop: 60,
     height: 600,
     marginLeft: 60,
@@ -63,6 +64,7 @@ function VizTwo() {
       background: "transparent",
     },
     x: {
+      type: "point",
       tickFormat: (d) =>
         `${d.getDate()}.${d.getMonth() === 0 ? 12 : d.getMonth() + 1}`,
       // tickFormat: (d) =>

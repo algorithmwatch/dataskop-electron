@@ -1,56 +1,57 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import peterScrapedData from "../data/videometa.json";
-import data000 from "../data/000-peter.json";
+// import peterScrapedData from "../data/videometa.json";
+// import data000 from "../data/000-peter.json";
 import { withoutTime, convertDaysToMs } from "./viz_one_utilities";
 import * as d3 from "d3";
 
 // let numOfTopItems = 5;
 
 // helper for setting up hashtag data
-function buildHashtagArray(url, hashtags) {
-  if (url.meta !== undefined && url.meta.results !== undefined) {
-    let vidTagsInfo = url.meta.results.challenges;
+function buildHashtagArray(urlInfo, hashtags) {
+  let vidTagsInfo = urlInfo.HashtagInfo;
+  if (vidTagsInfo.length !== 0) {
     // loop through all hashtags and collect them in an object
     for (let tagInfo of vidTagsInfo) {
       let tagName = tagInfo.title.toLowerCase();
 
-      // igonore "fyp"s
+      // ignore "fyp"s
       if (
         tagName.indexOf("fyp") !== -1 ||
         tagName.indexOf("fy") !== -1 ||
         tagName.indexOf("stitch") !== -1 ||
         tagName.indexOf("foryou") !== -1 ||
+        tagName.indexOf("foryoupage") !== -1 ||
+        tagName.indexOf("fürdich") !== -1 ||
+        tagName.indexOf("trending") !== -1 ||
         tagName.indexOf("viral") !== -1
       )
         continue;
-      // console.log(tagName);
       tagName in hashtags ? (hashtags[tagName] += 1) : (hashtags[tagName] = 1);
     }
   }
 }
 
 // helper for setting up sound data
-function buildSoundArray(url, sounds) {
+function buildSoundArray(urlInfo, sounds) {
   if (
-    url.meta !== undefined &&
-    url.meta.results !== undefined &&
-    !url.meta.results.music.original
+    // url.meta !== undefined &&
+    // url.meta.results !== undefined &&
+    !urlInfo.SoundOriginal
   ) {
-    let soundTitle = url.meta.results.music.title;
+    let soundTitle = urlInfo.SoundTitle;
     soundTitle in sounds ? (sounds[soundTitle] += 1) : (sounds[soundTitle] = 1);
   }
 }
 
 // helper for setting up diversification labels
-function buildDiversificationLabelsArray(url, divlabels) {
+function buildDiversificationLabelsArray(urlInfo, divlabels) {
   if (
-    url.meta !== undefined &&
-    url.meta.results !== undefined &&
-    url.meta.results.diversificationLabels !== undefined
+    // url.meta !== undefined &&
+    // url.meta.results !== undefined &&
+    urlInfo.DiversificationLabels !== undefined
   ) {
-    // console.log(url.meta.results.diversificationLabels);
-    let labels = url.meta.results.diversificationLabels;
+    let labels = urlInfo.DiversificationLabels;
 
     for (let label of labels) {
       if (label === "Others") continue;
@@ -113,14 +114,18 @@ function getTop(
 }
 
 // helper for reseting objects
-function reset(hashtags, sounds, divlabels) {
-  hashtags = {};
-  sounds = {};
-  divlabels = {};
-}
+// function reset(hashtags, sounds, divlabels) {
+
+// }
 
 // tickLength will be the range of time contained per tick (i.e. 7 days, 30 days, 90 days)
-export function getTopData(numOfTopItems, tickLength, timeRange) {
+export function getTopData(
+  numOfTopItems,
+  tickLength,
+  timeRange,
+  metadata,
+  gdprVidData
+) {
   // create empty object of hashtags to keep counts of them
   let hashtags = {};
   let sounds = {};
@@ -134,8 +139,8 @@ export function getTopData(numOfTopItems, tickLength, timeRange) {
   let soundData = [];
   let diverseLabelData = [];
 
-  const vidData = data000.Activity["Video Browsing History"].VideoList;
-  let date_start = withoutTime(new Date(vidData[0].Date));
+  // const vidData = .Activity["Video Browsing History"].VideoList;
+  let date_start = withoutTime(new Date(gdprVidData[0].Date));
   const dateToStop = new Date(
     withoutTime(date_start) - convertDaysToMs(timeRange - 1)
   );
@@ -145,8 +150,9 @@ export function getTopData(numOfTopItems, tickLength, timeRange) {
   );
 
   let i = 0;
+
   // loop through all video data
-  for (let vid of vidData) {
+  for (let vid of gdprVidData) {
     let date_curr = withoutTime(new Date(vid.Date));
     // stop looping when you reach end of [timeRange] days
     if (date_curr < dateToStop) {
@@ -189,21 +195,27 @@ export function getTopData(numOfTopItems, tickLength, timeRange) {
       lastDayOfTick = new Date(
         withoutTime(date_start) - convertDaysToMs(tickLength - 1)
       );
-      reset(hashtags, sounds, divlabels);
+
+      // reset objects
+      hashtags = {};
+      sounds = {};
+      divlabels = {};
+      // console.log("empty objs", hashtags, sounds, divlabels);
       i++;
     } else {
       let vidUrl = vid.VideoLink;
 
       // find vid url within scraped data
-      let url = peterScrapedData[vidUrl];
-      if (url === undefined) continue;
+      // console.log(metadata[vidUrl]);
+      let urlInfo = metadata[vidUrl];
 
-      buildHashtagArray(url, hashtags);
-      buildSoundArray(url, sounds);
-      buildDiversificationLabelsArray(url, divlabels);
+      if (urlInfo === undefined) continue;
+      buildHashtagArray(urlInfo, hashtags);
+      buildSoundArray(urlInfo, sounds);
+      buildDiversificationLabelsArray(urlInfo, divlabels);
     }
   }
-  // console.log(diverseLabelData);
+
   return [
     hashtagData,
     soundData,

@@ -7,6 +7,7 @@ import VizOne from "./VizOne";
 import VizTwo from "./VizTwo";
 import VizOneDropDown from "./VizOneDropDown";
 import peterScrapedData from "../data/videometa.json";
+import smallTestingMetadata from "../data/smallTestingMetadata.json";
 import { breakFrequency, twoOrLessVids } from "../utils/viz_one_utilities";
 import { shortenGdprData, shortenMetadata } from "../utils/shorten_data";
 
@@ -27,10 +28,10 @@ function App() {
   const [viz, setViz] = useState(selectVizOptions[0]);
   // const [data, setData] = useState(selectDataOptions[0]);
   let [videodata, logindata, tiktokLiveVids, likedVids, sharedVids, savedVids] =
-    shortenGdprData(biggestData);
+    shortenGdprData(data000);
 
   // set to new variable or reassign?
-  let peterScrapedDataShort = shortenMetadata(peterScrapedData);
+  let shortenedSmallMetadata = shortenMetadata(peterScrapedData);
 
   return (
     <div className="visualizations">
@@ -62,7 +63,7 @@ function App() {
         loginData={logindata}
         liveData={tiktokLiveVids}
       /> */}
-      <VizTwo metadata={peterScrapedDataShort} gdprData={videodata} />
+      <VizTwo metadata={shortenedSmallMetadata} gdprData={videodata} />
       {/* <VizThree metadata={peterScrapedData} likedVids={likedVids} sharedVids={sharedVids} savedVids={savedVids} */}
     </div>
   );
