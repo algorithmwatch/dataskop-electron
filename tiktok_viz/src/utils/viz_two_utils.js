@@ -102,13 +102,15 @@ function getTop(
     itemNames.forEach((itemName) => {
       array.push({
         DateStart: date_start,
-        DateEnd: lastDayOfTick,
+        // DateEnd: lastDayOfTick,
         Name: itemName,
         Count: maxVal,
         Num: dotRadius[i],
       });
       delete obj[itemNames];
     });
+
+    if (Object.keys(obj).length === 0) break;
   }
   return topItem;
 }
@@ -160,6 +162,7 @@ export function getTopData(
     }
 
     if (date_curr < lastDayOfTick) {
+      console.log(hashtags);
       topHashtag = getTop(
         i,
         hashtags,

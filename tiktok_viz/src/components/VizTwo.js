@@ -8,6 +8,7 @@ import VizOneDropDown from "./VizOneDropDown";
 import VizOneButtons from "./VizOneButtons";
 import React from "react";
 import addTooltips from "../utils/tooltips";
+import { convertDaysToMs } from "../utils/viz_one_utilities";
 
 function VizTwo(props) {
   // const soundRef = useRef();
@@ -43,7 +44,7 @@ function VizTwo(props) {
     [topNum.value, 7, range.value]
   );
 
-  // console.log("hashtagdata", hashtagData);
+  console.log("hashtagdata", hashtagData);
   const [highlighted, setHighlight] = useState(null);
 
   const graphOptions = [
@@ -52,6 +53,13 @@ function VizTwo(props) {
     { option: "divlabels", value: "divlabels" },
   ];
   const [graph, setGraph] = useState(graphOptions[0].value);
+
+  function getRightFormat(d) {
+    let enddate = new Date(d - convertDaysToMs(7 - 1));
+    return `${enddate.getDate()}.${
+      enddate.getMonth() === 0 ? 12 : enddate.getMonth() + 1
+    } - ${d.getDate()}.${d.getMonth() === 0 ? 12 : d.getMonth() + 1}`;
+  }
 
   const commonProps = {
     width: 1500,
@@ -65,8 +73,8 @@ function VizTwo(props) {
     },
     x: {
       type: "point",
-      tickFormat: (d) =>
-        `${d.getDate()}.${d.getMonth() === 0 ? 12 : d.getMonth() + 1}`,
+      tickFormat: (d) => getRightFormat(d),
+
       // tickFormat: (d) =>
       //   `${d.getDate()}.${
       //     d.getMonth() === 0 ? 12 : d.getMonth() + 1
@@ -151,6 +159,7 @@ function VizTwo(props) {
           ),
         ],
       }),
+      // console.log,
       (e) => setHighlight(e.match(/(.*):.*/)[1]),
       () => setHighlight(null)
     );

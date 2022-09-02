@@ -31,7 +31,7 @@ function App() {
     shortenGdprData(data000);
 
   // set to new variable or reassign?
-  let shortenedSmallMetadata = shortenMetadata(peterScrapedData);
+  let shortenedSmallMetadata = shortenMetadata(smallTestingMetadata);
 
   return (
     <div className="visualizations">
