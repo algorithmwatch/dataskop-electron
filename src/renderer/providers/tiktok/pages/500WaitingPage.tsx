@@ -94,7 +94,7 @@ export default function WaitingPage(): JSX.Element {
               Was kommt danach?
             </HelpButton>
           </div>
-          <div className="mt-24 mb-14 text-base font-medium relative">
+          <div className="mt-24 text-base font-medium relative">
             <span className="absolute inset-0 animate-fade1 flex items-center justify-center">
               <div className="rounded-full bg-white/30 px-5 py-4">
                 Du erhältst eine Benachrichtigung, sobald es weitergehen kann.
