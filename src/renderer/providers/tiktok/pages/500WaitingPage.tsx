@@ -94,13 +94,17 @@ export default function WaitingPage(): JSX.Element {
               Was kommt danach?
             </HelpButton>
           </div>
-          <div className="mt-24 mb-14 text-base relative">
-            <span className="absolute inset-x-0 top-0 animate-fade1">
-              Du erhältst eine Benachrichtigung, sobald es weitergehen kann.
+          <div className="mt-24 mb-14 text-base font-medium relative">
+            <span className="absolute inset-0 animate-fade1 flex items-center justify-center">
+              <div className="rounded-full bg-white/30 px-5 py-4">
+                Du erhältst eine Benachrichtigung, sobald es weitergehen kann.
+              </div>
             </span>
-            <span className="absolute inset-x-0 top-0 animate-fade2">
-              Du kannst die App schließen, aber sie muss im Hintergrund geöffnet
-              bleiben.
+            <span className="absolute inset-0 animate-fade2 flex items-center justify-center">
+              <div className="rounded-full bg-white/30 px-5 py-4">
+                Du kannst die App schließen, aber sie muss im Hintergrund
+                geöffnet bleiben.
+              </div>
             </span>
           </div>
         </Content>
