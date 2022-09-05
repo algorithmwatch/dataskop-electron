@@ -19,8 +19,8 @@ const sizes = {
   },
   md: {
     parent: "p-6",
-    icon: "w-[4rem] h-[4rem] lg:w-[5rem] lg:h-[5rem] -mt-10",
-    title: "hl-4xl my-7 lg:hl-5xl",
+    icon: "w-[4rem] h-[4rem] xl:w-[5rem] xl:h-[5rem] -mt-10",
+    title: "hl-4xl my-7 xl:hl-5xl",
     content: "text-xl",
   },
 };
