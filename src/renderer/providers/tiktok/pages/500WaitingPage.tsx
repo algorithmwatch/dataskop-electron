@@ -55,8 +55,8 @@ export default function WaitingPage(): JSX.Element {
           <h1 className="hl-2xl mb-4">Wie lange dauert das?</h1>
           <p className="">
             Es kann bis zu vier Tage dauern, bis TikTok die DSGVO-Daten
-            bereitstellt. Es ist deshalb wichtig, dass du die DataSkop-App im
-            Hintergrund geöffnet hältst und nicht schließt. Du erhältst eine
+            bereitstellt. Es ist deshalb wichtig, dass du die DataSkop-App nicht
+            schließt und sie im Hintergrund geöffnet bleibt. Du erhältst eine
             Benachrichtigung, sobald es weitergehen kann.
           </p>
         </div>
@@ -94,7 +94,7 @@ export default function WaitingPage(): JSX.Element {
               Was kommt danach?
             </HelpButton>
           </div>
-          <div className="mt-auto mb-14 text-base relative">
+          <div className="mt-24 mb-14 text-base relative">
             <span className="absolute inset-x-0 top-0 animate-fade1">
               Du erhältst eine Benachrichtigung, sobald es weitergehen kann.
             </span>

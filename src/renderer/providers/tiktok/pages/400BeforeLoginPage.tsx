@@ -79,7 +79,7 @@ export default function BeforeLoginPage(): JSX.Element {
             beantragen und verarbeiten. Du erhältst eine Benachrichtigung,
             sobald alles fertig ist.
           </p>
-          <div className="mt-14 space-x-6">
+          <div className="mt-14 space-y-4 lg:space-y-0 lg:space-x-6">
             <HelpButton onClick={() => setModal1IsOpen(true)}>
               Was sind DSGVO-Daten?
             </HelpButton>
@@ -87,12 +87,12 @@ export default function BeforeLoginPage(): JSX.Element {
               Was geschieht mit meinen Daten?
             </HelpButton>
           </div>
-          <div className="mt-auto">
+          <div className="mt-24">
             <Link
               to="/tiktok/upload_data_export"
-              className="text-turquoise-700 font-semibold hover:underline text-base"
+              className="text-east-blue-800 font-semibold hover:underline text-base"
             >
-              Ich habe bereits meine DSGVO-Daten.
+              Ich habe die DSGVO-Daten bereits.
             </Link>
           </div>
         </Content>

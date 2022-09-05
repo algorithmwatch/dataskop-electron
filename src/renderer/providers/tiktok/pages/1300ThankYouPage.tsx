@@ -64,20 +64,15 @@ export default function ThankYouPage(): JSX.Element {
       >
         {hasDonation ? (
           <p>
-            Du hilfst uns mit deiner Spende TikTok besser zu verstehen. Und tust
-            gleichzeitig noch etwas Gutes für die Wissenschaft.
+            Du hilfst uns mit deiner Spende, TikTok besser zu verstehen. Damit
+            tust du etwas Gutes für die Wissenschaft.
           </p>
         ) : (
-          <p>
-            Auch wenn du dich gegen eine Datenspende entschieden hast, sind wir
-            froh, dass du Teil von DataSkop warst.{" "}
-          </p>
+          <p>Wir sind froh, dass du ein Teil von DataSkop warst.</p>
         )}
 
         <h2 className="hl-2xl mt-16 mb-3">Sag es weiter</h2>
-        <p className="text-base">
-          Wir würden uns freuen, wenn du anderen von DataSkop erzählst.
-        </p>
+        <p>Wir würden uns freuen, wenn du anderen von DataSkop erzählst.</p>
         <div className="flex items-center justify-center space-x-4 mt-8">
           <ShareButton
             title="Teilen"
@@ -92,7 +87,7 @@ export default function ThankYouPage(): JSX.Element {
           <ShareButton
             title="E-Mail versenden"
             icon={faEnvelope}
-            className="text-turquoise-700 focus:ring-turquoise-600/60"
+            className="text-east-blue-700 focus:ring-east-blue-600/60"
           />
         </div>
       </Content>

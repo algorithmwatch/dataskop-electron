@@ -141,7 +141,7 @@ export default function TutorialPage(): JSX.Element {
         </Slide>
         <Slide>
           <TutorialSlide title="Download" icon={faLoader}>
-            Als nächstes beantragt die DataSkop-App deine DSGVO-Daten. Sobald
+            Als Nächstes beantragt die DataSkop-App deine DSGVO-Daten. Sobald
             TikTok diese Daten bereitstellt, lädt die App sie im Hintergrund
             automatisch herunter und verarbeitet sie.
           </TutorialSlide>
@@ -153,8 +153,8 @@ export default function TutorialPage(): JSX.Element {
             theme="alert"
           >
             Es kann bis zu vier Tage dauern, bis TikTok die DSGVO-Daten
-            bereitstellt. Es ist deshalb wichtig, dass du die DataSkop-App im
-            Hintergrund geöffnet hältst und nicht schließt. Du erhältst eine
+            bereitstellt. Es ist deshalb wichtig, dass du die DataSkop-App nicht
+            schließt und sie im Hintergrund geöffnet bleibt. Du erhältst eine
             Benachrichtigung, sobald es weitergehen kann.
           </TutorialSlide>
         </Slide>
