@@ -34,7 +34,7 @@ export default function Content({
   children,
 }: {
   title: string;
-  icon: IconDefinition;
+  icon?: IconDefinition;
   iconSpinning?: boolean;
   size?: keyof typeof sizes;
   theme?: keyof typeof themes;
@@ -48,11 +48,13 @@ export default function Content({
         sizes[size].parent,
       )}
     >
-      <FontAwesomeIcon
-        icon={icon}
-        className={sizes[size].icon}
-        spin={iconSpinning}
-      />
+      {icon && (
+        <FontAwesomeIcon
+          icon={icon}
+          className={sizes[size].icon}
+          spin={iconSpinning}
+        />
+      )}
       <h1 className={sizes[size].title}>{title}</h1>
       <div className={clsx("max-w-prose flex flex-col", sizes[size].content)}>
         {children}
