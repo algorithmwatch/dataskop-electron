@@ -30,7 +30,7 @@ export default function WaitingDonePage(): JSX.Element {
         </Button>
       ) : (
         <div>
-          <div className="font-bold mb-2 text-lg -mt-8">
+          <div className="font-bold mb-4 text-xl -mt-10">
             Möchtest du deine Daten spenden?
           </div>
           <div className="flex items-center justify-center space-x-4">
@@ -44,7 +44,7 @@ export default function WaitingDonePage(): JSX.Element {
             </Button>
             <Button
               className="min-w-[6rem]"
-              theme="text"
+              theme="outline"
               onClick={() => {
                 history.push("/tiktok/newsletter_choice");
               }}
@@ -66,9 +66,8 @@ export default function WaitingDonePage(): JSX.Element {
       >
         {hasData ? (
           <p>
-            Du hast es geschafft! Die DataSkop-App hat deine TikTok-Daten
-            untersucht und für dich drei Visualisierungen erstellt. Schau sie
-            dir an!
+            Geschafft! Die DataSkop-App hat deine TikTok-Daten untersucht und
+            für dich drei Visualisierungen erstellt. Schau sie dir an!
           </p>
         ) : (
           <>
@@ -78,7 +77,9 @@ export default function WaitingDonePage(): JSX.Element {
             </p>
             <p>
               Du kannst uns trotzdem helfen und deine Daten spenden. Sie werden
-              ausschließlich für Forschungszwecke verwendet und bleiben anonym.
+              ausschließlich für Forschungszwecke verwendet und pseudonymisiert
+              versandt. Bei der Auswertung der Daten findet keine Zuordnung zur
+              Identität der TikTok-Nutzer*innen statt.
             </p>
           </>
         )}

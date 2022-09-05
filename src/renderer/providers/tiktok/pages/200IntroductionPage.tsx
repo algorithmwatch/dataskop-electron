@@ -7,6 +7,7 @@ import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
 import { useHistory } from "react-router";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
+import Content from "renderer/providers/tiktok/components/Content";
 import { useNavigation } from "../../../contexts";
 
 export default function IntroductionPage(): JSX.Element {
@@ -39,25 +40,27 @@ export default function IntroductionPage(): JSX.Element {
 
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>
-      <h1 className="hl-4xl mb-20 max-w-prose">Willkommen bei DataSkop 👋</h1>
-      <div className="space-y-4 text-xl max-w-prose">
-        <p>
-          TikTok sammelt viele Daten über dich, aber weißt du auch welche?
-          Sogenannte “personenbezogene Daten” lassen Rückschlüsse auf deine
-          Persönlichkeit oder Lebensführung zu, aber sind nicht oder nur schwer
-          zugänglich.
-        </p>
+      <Content title="Willkommen bei DataSkop 👋" theme="transparent">
+        <div className="space-y-6 text-xl max-w-prose">
+          <p>
+            TikTok sammelt viele Daten über dich. Weißt du auch welche? <br />
+            Sogenannte „personenbezogene Daten“ lassen Rückschlüsse auf die
+            Persönlichkeit oder Lebensführung zu. Doch den Nutzer*innen großer
+            Plattformen wie TikTok ist oft unklar, welche Daten das sind.
+          </p>
 
-        <p>
-          Mit der DataSkop-App wollen wir gemeinsam mit dir dein TikTok-Profil
-          untersuchen und ordnen diese Daten ein.
-        </p>
+          <p>
+            Mit der DataSkop-App wollen wir gemeinsam mit dir untersuchen,
+            welche Daten TikTok über dich erhebt.
+          </p>
 
-        <p>
-          Darüberhinaus tust du noch etwas Gutes für die Wissenschaft, wenn du
-          deine Daten am Ende spendest (darüber würden wir uns sehr freuen!)
-        </p>
-      </div>
+          <p>
+            Am Ende hast du die Möglichkeit, diese Daten an uns zu spenden.
+            Darüber würden wir uns sehr freuen, denn mit deiner Datenspende tust
+            du etwas Gutes für die Wissenschaft.
+          </p>
+        </div>
+      </Content>
     </WizardLayout>
   );
 }

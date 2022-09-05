@@ -41,17 +41,17 @@ export default function DonationFormPage(): JSX.Element {
 
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>
-      <Content title="Daten spenden" theme="gray" icon={faFileHeart}>
+      <Content title="Daten spenden" theme="transparent" icon={faFileHeart}>
         <p>
           Prima! Bitte gib deine E-Mail-Adresse ein. Über diese E-Mail-Adresse
-          kannst du zu jederzeit auf deine Daten zugreifen und sie
-          gegebenenfalls löschen.
+          kannst du jederzeit auf deine Daten zugreifen und sie gegebenenfalls
+          löschen.
         </p>
         <div className="mt-12">
           <input
             type="email"
             placeholder="Deine E-Mail-Adresse"
-            className="px-4 py-2 max-w-md w-full text-xl bg-white appearance-none border-2 border-black rounded ring-8 ring-cyan-100 focus:outline-none focus:ring-cyan-300"
+            className="px-4 py-2 max-w-md w-full text-xl bg-white appearance-none border-2 border-black rounded ring-8 ring-east-blue-100 focus:outline-none focus:ring-east-blue-300"
           />
         </div>
       </Content>

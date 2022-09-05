@@ -45,23 +45,24 @@ export default function UploadDataExportPage(): JSX.Element {
       <Content
         title="Wähle deine DSGVO-Daten aus"
         icon={faFileImport}
-        size="sm"
         theme="transparent"
       >
         <p className="mb-8">
           Wenn du die DSGVO-Daten auf TikTok bereits beantragt und den
-          Daten-Export heruntergeladen hast, kannst du ihn hier einfügen. Die
+          Datenexport heruntergeladen hast, kannst du ihn hier einfügen. Die
           DSGVO-Daten werden dann nicht erneut beantragt.
         </p>
-        <DropFile>
-          <p className="text-base max-w-lg">
-            Hier klicken, um eine Datei auszuwählen. Oder die Datei mit der Maus
-            in dieses Feld ziehen.
-          </p>
-          <p className="text-sm text-gray-500 mt-1">
-            Die Datei muss eine JSON-Datei sein.
-          </p>
-        </DropFile>
+        <div className="flex min-h-[16rem]">
+          <DropFile>
+            <p className="max-w-lg">
+              Hier klicken, um die Datei auszuwählen, oder die Datei mit dem
+              Cursor in dieses Feld ziehen.
+            </p>
+            <p className="text-base text-gray-500 mt-1">
+              Die Datei muss das JSON-Format haben.
+            </p>
+          </DropFile>
+        </div>
       </Content>
     </WizardLayout>
   );

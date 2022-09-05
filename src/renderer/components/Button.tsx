@@ -14,13 +14,13 @@ const themes = {
     hover:from-turquoise-600/90 hover:to-sky-600/90
     `,
   text: `
-    text-cyan-500
-    hover:text-cyan-500/80
+    text-east-blue-700
+    hover:text-east-blue-700/80
   `,
   outline: `
-    text-cyan-500
-    hover:text-cyan-500/80
-    border-2 border-cyan-500
+    text-east-blue-700
+    hover:text-east-blue-700/80
+    border-2 border-east-blue-700
   `,
   // bg-clip-text text-transparent bg-gradient-to-r from-turquoise-600 to-sky-600
 };

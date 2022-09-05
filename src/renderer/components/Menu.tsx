@@ -51,7 +51,7 @@ export const Menu = ({
     //   },
     // },
     {
-      label: "Datenspendevertrag",
+      label: "Datenspende-Vertrag",
       icon: faFileContract, // faFileSignatur
       onClick: () => {
         // dispatchModal({

@@ -14,7 +14,7 @@ export default function HelpButton({
     <button
       type="button"
       className={clsx(
-        "inline-flex items-center justify-center p-4 text-lg font-medium rounded-full text-turquoise-700 bg-white shadow-sm focus:ring focus:ring-turquoise-600/60",
+        "inline-flex items-center justify-center p-4 text-lg font-semibold rounded-full text-east-blue-800 bg-white shadow focus:ring focus:ring-east-blue-700/80",
         className,
       )}
       {...rest}
