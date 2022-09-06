@@ -26,7 +26,7 @@ export default function WizardLayout({
         {children}
       </div>
       {footerSlots && (
-        <nav className="h-28 shrink-0 px-6 grid grid-cols-3">
+        <nav className="z-10 h-28 shrink-0 px-6 grid grid-cols-3">
           <div className="flex items-start justify-start space-x-4">
             {footerSlots.start}
           </div>

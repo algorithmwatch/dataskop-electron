@@ -5,6 +5,7 @@
  */
 import { faFileImport } from "@fortawesome/pro-light-svg-icons";
 import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
+import { useState } from "react";
 import { useHistory } from "react-router";
 import { Button } from "renderer/components/Button";
 import DropFile from "renderer/components/DropFile";
@@ -15,6 +16,17 @@ import { useNavigation } from "../../../contexts";
 export default function UploadDataExportPage(): JSX.Element {
   const { getNextPage } = useNavigation();
   const history = useHistory();
+  const [importIsValid, setImportIsValid] = useState(false);
+  const handleFiles = async (files: File[]) => {
+    const response = await window.electron.ipc.invoke(
+      "import-files",
+      files.map(({ path }) => path),
+    );
+
+    if (response === true) {
+      setImportIsValid(true);
+    }
+  };
 
   const footerSlots: FooterSlots = {
     center: [
@@ -31,6 +43,7 @@ export default function UploadDataExportPage(): JSX.Element {
       <Button
         key="2"
         endIcon={faAngleRight}
+        disabled={!importIsValid}
         onClick={() => {
           history.push(getNextPage("path"));
         }}
@@ -53,14 +66,20 @@ export default function UploadDataExportPage(): JSX.Element {
           DSGVO-Daten werden dann nicht erneut beantragt.
         </p>
         <div className="flex min-h-[16rem]">
-          <DropFile>
-            <p className="max-w-lg">
-              Hier klicken, um die Datei auszuwählen, oder die Datei mit dem
-              Cursor in dieses Feld ziehen.
-            </p>
-            <p className="text-base text-gray-500 mt-1">
-              Die Datei muss das JSON-Format haben.
-            </p>
+          <DropFile handleFiles={handleFiles} dropDone={importIsValid}>
+            {!importIsValid ? (
+              <>
+                <p className="max-w-lg">
+                  Hier klicken, um die Datei auszuwählen, oder die Datei mit dem
+                  Cursor in dieses Feld ziehen.
+                </p>
+                <p className="text-base text-gray-500 mt-1">
+                  Die Datei muss das JSON-Format haben.
+                </p>
+              </>
+            ) : (
+              <div>Klicke auf Weiter, um fortzufahren.</div>
+            )}
           </DropFile>
         </div>
       </Content>

@@ -14,7 +14,7 @@ import { useNavigation } from "../../../contexts";
 export default function WaitingDonePage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
-  const hasData = true;
+  const hasData = false;
 
   const footerSlots: FooterSlots = {
     center: [
@@ -29,8 +29,8 @@ export default function WaitingDonePage(): JSX.Element {
           Weiter
         </Button>
       ) : (
-        <div>
-          <div className="font-bold mb-4 text-xl -mt-10">
+        <div key="1">
+          <div className="font-bold mb-4 text-xl -mt-10 text-center">
             Möchtest du deine Daten spenden?
           </div>
           <div className="flex items-center justify-center space-x-4">

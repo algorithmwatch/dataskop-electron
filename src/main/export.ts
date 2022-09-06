@@ -137,6 +137,7 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
   addMainHandler("import-files", async (_e: any, paths: string[]) => {
     console.log(paths);
     const dir = path.join(app.getPath("userData"), "downloads", getNowString());
+
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
@@ -147,5 +148,7 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
       fs.copyFileSync(p, dest);
       await postDownloadFileProcessing(dest);
     }
+
+    return true;
   });
 }
