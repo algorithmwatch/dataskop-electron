@@ -87,7 +87,7 @@ export default function BeforeLoginPage(): JSX.Element {
               Was geschieht mit meinen Daten?
             </HelpButton>
           </div>
-          <div className="mt-24">
+          <div className="absolute bottom-4 inset-x-4">
             <Link
               to="/tiktok/upload_data_export"
               className="text-east-blue-800 font-semibold hover:underline text-base"

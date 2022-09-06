@@ -43,7 +43,7 @@ export default function Content({
   return (
     <div
       className={clsx(
-        "grow max-h-[75vh] w-5/6 overflow-hidden flex flex-col items-center justify-center",
+        "grow relative max-h-[75vh] w-5/6 overflow-hidden flex flex-col items-center justify-center",
         themes[theme],
         sizes[size].parent,
       )}
