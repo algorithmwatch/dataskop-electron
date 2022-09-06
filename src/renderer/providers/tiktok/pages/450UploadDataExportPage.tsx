@@ -4,7 +4,9 @@
  * @module
  */
 import { faFileImport } from "@fortawesome/pro-light-svg-icons";
+import { faCircleCheck } from "@fortawesome/pro-regular-svg-icons";
 import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useHistory } from "react-router";
 import { Button } from "renderer/components/Button";
@@ -78,7 +80,15 @@ export default function UploadDataExportPage(): JSX.Element {
                 </p>
               </>
             ) : (
-              <div>Klicke auf Weiter, um fortzufahren.</div>
+              <div className="flex items-center justify-center space-x-3">
+                <FontAwesomeIcon
+                  icon={faCircleCheck}
+                  className="text-emerald-500 text-3xl"
+                />
+                <div>
+                  Das hat geklappt. Klicke auf „Weiter“, um fortzufahren.
+                </div>
+              </div>
             )}
           </DropFile>
         </div>
