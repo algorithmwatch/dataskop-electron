@@ -4,8 +4,10 @@ import clsx from "clsx";
 import { ReactNode } from "react";
 
 const themes = {
-  gray: "rounded-5xl bg-neutral-200/70",
-  tiktokAnimated: "rounded-5xl animated-gradient-tiktok-light",
+  gray: "rounded-5xl bg-gradient-to-br from-neutral-200/60 to-neutral-200",
+  tiktokAnimated:
+    "rounded-5xl h-[100vh] animate-gradient bg-[linear-gradient(-45deg,#fff,#ffb8ce,#b5fffd,#ffb8ce,#b5fffd,#fff)] bg-[length:400%_400%]",
+  // tiktokLight: "rounded-5xl bg-gradient-to-br from-green-200 to-green-500",
   tiktokLight: "rounded-5xl bg-gradient-to-br from-[#B5FFFD] to-[#FFB8CE]",
   transparent: "",
 };

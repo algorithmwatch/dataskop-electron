@@ -39,10 +39,16 @@ module.exports = {
           "0%,50%": { opacity: 0 },
           "100%": { opacity: 1 },
         },
+        gradient: {
+          "0%": { "background-position": "0% 50%" },
+          "50%": { "background-position": "100% 50%" },
+          "100%": { "background-position": "0% 50%" },
+        },
       },
       animation: {
         fade1: "fade 6s infinite alternate-reverse both",
         fade2: "fade 6s infinite alternate both",
+        gradient: "gradient 15s ease infinite",
       },
     },
   },
