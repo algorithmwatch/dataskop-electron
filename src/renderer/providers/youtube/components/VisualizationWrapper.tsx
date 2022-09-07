@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useScraping } from "../../../contexts";
-import { getLookups, getScrapingResultsBySession } from "../../../lib/db";
+import { getScrapingResultsBySession } from "../../../lib/db";
 import AutoplayChain from "./visualizations/AutoplayChain";
 import MyData from "./visualizations/MyData";
 import NewsTop5 from "./visualizations/NewsTop5";
@@ -32,7 +32,7 @@ export default function VisualizationWrapper({ name }: { name: string }) {
         } else setData(demoData.data);
       } else if (sessionId) {
         const results = await getScrapingResultsBySession(sessionId);
-        const lookups = await getLookups();
+        const lookups = await window.electron.ipc.invoke("db-get-lookups");
         setData({ results, lookups });
       }
     };

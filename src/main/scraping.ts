@@ -6,13 +6,21 @@ import crypto from "crypto";
 import { app, BrowserView, BrowserWindow, session } from "electron";
 import log from "electron-log";
 import fs from "fs";
-import { range } from "lodash";
+import _ from "lodash";
 import path from "path";
 import unzipper from "unzipper";
 import { postLoadUrlYoutube } from "./providers/youtube";
-import { addMainHandler, delay, getNowString, stripNonAscii } from "./utils";
+import {
+  addMainHandler,
+  delay,
+  getFileList,
+  getNowString,
+  stripNonAscii,
+} from "./utils";
 
 let scrapingView: BrowserView | null = null;
+
+const DOWNLOADS_FOLDER = path.join(app.getPath("userData"), "downloads");
 
 export const postDownloadFileProcessing = async (filePath: string) => {
   let filePathExtracted = "";
@@ -227,7 +235,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       // try 5 times and then give up
 
       // eslint-disable-next-line no-restricted-syntax
-      for (const i of range(5)) {
+      for (const i of _.range(5)) {
         // await loadUrl(..) causes somethimes strange errors.
         try {
           await view.webContents.loadURL(url, {
@@ -385,4 +393,22 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     fs.writeFileSync(path.join(userFolderHtml, fn), html);
     return { html, hash };
   });
+
+  addMainHandler(
+    "scraping-get-download",
+    (_event: any, picks: string[] = []) => {
+      const allJsons = getFileList(DOWNLOADS_FOLDER).filter(
+        (x) => path.extname(x) === ".json",
+      );
+
+      if (allJsons.length) {
+        const data = JSON.parse(
+          fs.readFileSync(path.join(DOWNLOADS_FOLDER, allJsons[0]), "utf-8"),
+        );
+        if (picks.length) return _.pick(data, picks);
+        return data;
+      }
+      return null;
+    },
+  );
 }

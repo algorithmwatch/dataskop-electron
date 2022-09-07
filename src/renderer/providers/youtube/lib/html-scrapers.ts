@@ -2,15 +2,11 @@
 
 import { parseVideoNoJs } from "@algorithmwatch/harke";
 import _ from "lodash";
-import { addLookups, getLookups } from "renderer/lib/db";
 import { currentDelay } from "renderer/lib/delay";
 import { submitConfirmForm } from "./actions/confirm-cookies";
 
-async function lookupOrScrapeVideos(
-  videoIds: string[],
-  enableLogging: boolean = false,
-) {
-  let items = await getLookups({ deleteOld: true, ids: videoIds });
+async function lookupOrScrapeVideos(videoIds: string[], enableLogging = false) {
+  const items = await window.electron.ipc.invoke("db-get-lookups", videoIds);
 
   const readyIds = new Set(Object.keys(items));
 
@@ -55,7 +51,7 @@ async function lookupOrScrapeVideos(
     })),
   );
 
-  await addLookups(parsed);
+  await window.electron.ipc.invoke("db-set-lookups", parsed);
 
   if (enableLogging) {
     window.electron.log.info(
@@ -65,7 +61,7 @@ async function lookupOrScrapeVideos(
 
   await window.electron.ipc.invoke("scraping-background-close");
 
-  return getLookups({ deleteOld: false, ids: videoIds });
+  return window.electron.ipc.invoke("db-get-lookups", videoIds);
 }
 
 export { lookupOrScrapeVideos };

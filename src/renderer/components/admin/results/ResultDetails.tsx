@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import {
   getScrapingResultsBySession,
   getSessions,
-  getStatisticsForSession,
   ScrapingSession,
-} from "../../../lib/db";
+} from "renderer/lib/db";
+import { getStatisticsForSession } from "renderer/lib/db/stats";
 import DetailsTable from "./DetailsTable";
 import Stats from "./Stats";
 

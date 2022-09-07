@@ -25,14 +25,8 @@ interface ScrapingSession {
 }
 
 // A lookup is used to cache a computation
-interface LookupItem {
-  data: any;
-  createdAt: number;
-  provider: "youtube";
-}
-
 interface LookupMap {
-  [key: string]: LookupItem;
+  [key: string]: any;
 }
 
 export { ScrapingResult, ScrapingResultSaved, ScrapingSession, LookupMap };

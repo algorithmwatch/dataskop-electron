@@ -4,11 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { RouteComponentProps, useHistory } from "react-router-dom";
 import { useConfig, useNavigation, useScraping } from "renderer/contexts";
-import {
-  getLookups,
-  getScrapingResultsBySession,
-  getSessionById,
-} from "renderer/lib/db";
+import { getScrapingResultsBySession, getSessionById } from "renderer/lib/db";
 import Button from "renderer/providers/youtube/components/Button";
 import FooterNav, {
   FooterNavItem,
@@ -70,7 +66,10 @@ export default function DonationPage2(): JSX.Element {
       return;
     }
 
-    const redactedResults = redactWatchHistory(results, await getLookups());
+    const redactedResults = redactWatchHistory(
+      results,
+      await window.electron.ipc.invoke("db-get-lookups"),
+    );
 
     const resp = await postDonation(
       version,

@@ -29,6 +29,7 @@ const scrapingChannels = [
   "scraping-submit-form",
   "scraping-element-exists",
   "scraping-log-html",
+  "scraping-get-download",
 ];
 
 // background-scraping.ts
@@ -51,7 +52,15 @@ const exportChannels = [
 ];
 
 // db.ts
-const dbChannels = ["db-read", "db-write", "db-get-config", "db-set-config"];
+const dbChannels = [
+  "db-read",
+  "db-write",
+  "db-get-config",
+  "db-set-config",
+  "db-get-lookups",
+  "db-set-lookups",
+  "db-clear-lookups",
+];
 
 const youtubeChannels = [
   "youtube-results-export-images",
