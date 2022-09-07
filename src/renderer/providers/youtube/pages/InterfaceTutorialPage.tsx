@@ -39,7 +39,7 @@ export default function InterfaceTutorialPage(): JSX.Element {
   useEffect(() => {
     // start scraping
     if (isUserLoggedIn && !isScrapingStarted) {
-      dispatch({ type: "set-scraping-started", started: true });
+      dispatch({ type: "start-scraping" });
     }
   }, []);
 

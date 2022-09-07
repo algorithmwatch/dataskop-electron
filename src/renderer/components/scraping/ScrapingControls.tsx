@@ -56,7 +56,7 @@ export default function ScrapingControls({
   };
 
   const startScraping = () => {
-    dispatch({ type: "set-scraping-started", started: true });
+    dispatch({ type: "start-scraping" });
   };
 
   return (

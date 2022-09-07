@@ -5,7 +5,11 @@ const defaultConfig: TikTokScrapingConfig = {
   provider: "tiktok",
   navigation: "tt-default",
   version: 1,
-  steps: [{ type: "action", slug: "tt-data-export" }],
+  steps: [
+    { type: "action", slug: "tt-data-export-monitoring" },
+    { type: "scraping", slug: "tt-scrape-watched-videos", max: 200 },
+    { type: "scraping", slug: "tt-scrape-all-videos-for-time-frame", max: 200 },
+  ],
   demoData: [],
 };
 

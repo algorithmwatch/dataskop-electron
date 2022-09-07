@@ -51,6 +51,7 @@ export default function ScrapingManager({
       scrapingProgress,
       sessionId,
       isScrapingStarted,
+      filterSteps,
       stepGenerator,
       isUserLoggedIn,
     },
@@ -168,8 +169,11 @@ export default function ScrapingManager({
       // create a uuid every time you hit start scraping
       const sId = uuidv4();
 
+      const { config } = campaign;
+      if (filterSteps) config.steps = config.steps.filter(filterSteps);
+
       const gen = createScrapingGenerator(
-        campaign.config,
+        config,
         provider.deserializeConfigMapping,
         makeGetHtml(userConfig.logHtml),
         getHtmlLazy,
@@ -190,7 +194,7 @@ export default function ScrapingManager({
     };
 
     if (isScrapingStarted) startScraping();
-  }, [isScrapingStarted]);
+  }, [isScrapingStarted, filterSteps]);
 
   // gets triggered when e.g. the progress bar is updated (via `frac`)
   useEffect(() => {
