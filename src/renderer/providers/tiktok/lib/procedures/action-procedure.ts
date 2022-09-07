@@ -7,6 +7,49 @@ import {
   GetHtmlLazyFunction,
 } from "renderer/providers/types";
 
+/*
+  Status:
+  - monitoring-pending
+    - TikTok data was requested and TikTok is busy
+    - It didn't fail yet
+  - monitoring-download-available
+    - Data is ready to be downloaded
+  - monitoring-download-expired
+    - Time to download data has expired
+  - monitoring-captcha
+    - Monitoring interrupted by captcha
+    - Should prompt user to fill out captcha form
+  - monitoring-nothing-found
+    -
+*/
+
+const STATUS_TEXTS = {
+  "monitoring-pending": {
+    title: "Warte auf Datenexport",
+    body: "Der Datenexport wird gerade erzeugt...",
+  },
+  "monitoring-download-available": {
+    title: "Download verfügbar",
+    body: "Der Datenexport steht zum Download bereit",
+  },
+  "monitoring-download-expired": {
+    title: "Download abgelaufen",
+    body: "Der Datenexport muss erneut beantragt werden.",
+  },
+  "monitoring-captcha": {
+    title: "Captcha erforderlich",
+    body: "Wir konnten den Status der Datenspende aufgrund eines Captchas nicht überprüfen.",
+  },
+  "monitoring-error-nothing-found": {
+    title: "Fehler",
+    body: "Der Datenexport muss erneut beantragt werden.",
+  },
+  "monitoring-error-tab-not-found": {
+    title: "Fehler",
+    body: "Der Datenexport muss erneut beantragt werden.",
+  },
+};
+
 const isCaptcha = ($html: cheerio.Root) => {
   return !!$html(
     ".captcha_verify_container, #captcha_container, .captcha_verify_bar, .captcha_verify_action",
@@ -123,57 +166,35 @@ const requestData = async (getCurrentHtml: GetCurrentHtml) => {
 // the lang paramater is important because we are filtering by text later on
 const GET_DATA_URL = "https://www.tiktok.com/setting?activeTab=dyd&lang=en";
 
-const notify = (title: string, body: string) => {
-  return window.electron.ipc.invoke("show-notification", title, body);
-};
-
 const monitorDataExport = async (getHtml: GetHtmlFunction) => {
   window.electron.log.info("Started monitor data export");
 
   // the lang paramater is important because we are filtering by text later on
   const getCurrentHtml = await getHtml(GET_DATA_URL);
+  let status: keyof typeof STATUS_TEXTS = "monitoring-error-nothing-found";
 
   if (await isDumpCreationPending(getCurrentHtml)) {
-    notify("Warte auf Datenexport", "Der Datenexport wird gerade erzeugt...");
-    return { status: "monitoring-pending" };
+    status = "monitoring-pending";
   }
 
   const successClickTab = await clickOnDownloadTab(getCurrentHtml);
+
   if (!successClickTab) {
-    throw new Error("Failed to find 'Download data' tab");
+    status = "monitoring-error-tab-not-found";
+  } else if (await isDumpCreationPending(getCurrentHtml)) {
+    status = "monitoring-pending";
+  } else if (await checkDownloadButton(getCurrentHtml, false)) {
+    status = "monitoring-download-available";
+  } else if (await isDownloadExpired(getCurrentHtml)) {
+    status = "monitoring-download-expired";
+  } else if (isCaptcha(cheerio.load((await getCurrentHtml()).html))) {
+    status = "monitoring-captcha";
   }
 
-  if (await isDumpCreationPending(getCurrentHtml)) {
-    notify("Warte auf Datenexport", "Der Datenexport wird gerade erzeugt...");
-    return { status: "monitoring-pending" };
-  }
+  const { title, body } = STATUS_TEXTS[status];
+  window.electron.ipc.invoke("show-notification", title, body);
 
-  if (await checkDownloadButton(getCurrentHtml, false)) {
-    notify("Download verfügbar", "Der Datenexport steht zum Download bereit");
-    return { status: "monitoring-download-available" };
-  }
-
-  if (await isDownloadExpired(getCurrentHtml)) {
-    notify(
-      "Download abgelaufen",
-      "Der Datenexport muss erneut beantragt werden.",
-    );
-    return { status: "monitoring-download-expired" };
-  }
-
-  if (isCaptcha(cheerio.load((await getCurrentHtml()).html))) {
-    notify(
-      "Captcha erforderlich",
-      "Wir konnten den Status der Datenspende aufgrund eines Captchas nicht überprüfen.",
-    );
-    return { status: "monitoring-captcha" };
-  }
-
-  notify(
-    "Download abgelaufen",
-    "Der Datenexport muss erneut beantragt werden.",
-  );
-  return { status: "monitoring-nothing-found" };
+  return { status };
 };
 
 // browser needs to store session data
@@ -242,7 +263,7 @@ const getDataExport = async (getHtml: GetHtmlFunction) => {
     // Request a new dump
     try {
       await requestData(getCurrentHtml);
-      return [false, { status: "data-requested" }];
+      return { status: "data-requested" };
     } catch (error) {
       throw new Error(`Could not request new export:${error}`);
     }
@@ -275,4 +296,4 @@ async function* actionProcedure(
   return [1, null];
 }
 
-export { actionProcedure };
+export { actionProcedure, STATUS_TEXTS };

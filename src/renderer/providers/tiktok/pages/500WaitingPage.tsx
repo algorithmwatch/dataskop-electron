@@ -3,6 +3,16 @@
  *
  * @module
  */
+
+/*
+
+  Hook "useStatus":
+  - currentStatus
+  -
+
+
+*/
+
 import { faLoader } from "@fortawesome/pro-duotone-svg-icons";
 import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
 import { useState } from "react";
@@ -19,6 +29,8 @@ export default function WaitingPage(): JSX.Element {
   const history = useHistory();
   const [modal1IsOpen, setModal1IsOpen] = useState(false);
   const [modal2IsOpen, setModal2IsOpen] = useState(false);
+
+  // const { currentStatus } = useStatus;
 
   const footerSlots: FooterSlots = {
     center: [
