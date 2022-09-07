@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import ResultsDetails from "../../components/admin/results/ResultDetails";
 import { useScraping } from "../../contexts";
-import { getLookups, getScrapingResultsBySession } from "../../lib/db";
+import { getScrapingResultsBySession } from "../../lib/db";
 import Button from "../../providers/youtube/components/Button";
 import { filterLookupBySession } from "../../providers/youtube/lib/utils";
 
@@ -17,7 +17,10 @@ export default function ResultsDetailsPage() {
       "YYYY-MM-DD-HH-mm-s",
     )}.json`;
     const results = await getScrapingResultsBySession(sessionId);
-    const lookups = filterLookupBySession(results, await getLookups());
+    const lookups = filterLookupBySession(
+      results,
+      await window.electron.ipc.invoke("db-get-lookups"),
+    );
     window.electron.ipc.invoke(
       "results-export",
       JSON.stringify({ results, lookups }),

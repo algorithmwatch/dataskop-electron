@@ -17,7 +17,19 @@ const dataStore = new Store({
   name: "data",
   cwd: dbFolder,
   encryptionKey: "DaTaSk0p",
-  defaults: { data: null },
+  defaults: { data: null, lookupsToUploads: [] },
+  schema: {
+    data: {},
+    lookupsToUploads: {
+      type: "array",
+      items: { type: "string" },
+    },
+  },
+});
+
+const lookupStore = new Store({
+  name: "lookup",
+  cwd: dbFolder,
 });
 
 const configStore = new Store({
@@ -39,6 +51,22 @@ configStore.onDidChange("openAtLogin", (newValue) =>
   setOpenAtLogin(!!newValue),
 );
 
+const addLookups = (lookups: any) => {
+  lookupStore.set(lookups);
+};
+
+const getLookups = (keys: string[]) => {
+  return keys.map((x) => [x, lookupStore.get(x, null)]);
+};
+
+const clearLookups = () => lookupStore.reset();
+
+const addLookupsToUpload = (keys: string[]) =>
+  dataStore.set(
+    "lookupsToUploads",
+    (dataStore.get("lookupsToUploads") as string[]).push(...keys),
+  );
+
 export default async function registerDbHandlers() {
   addMainHandler("db-write", (_e: any, data: any) => {
     dataStore.set("data", data);
@@ -47,6 +75,17 @@ export default async function registerDbHandlers() {
   addMainHandler("db-read", () => {
     return dataStore.get("data");
   });
+
+  addMainHandler("db-set-lookups", (_e: any, lookups: any) => {
+    return addLookups(lookups);
+  });
+
+  addMainHandler("db-get-lookups", (_e: any, keys: string[] | null) => {
+    if (keys === null) return lookupStore.store;
+    return Object.fromEntries(getLookups(keys));
+  });
+
+  addMainHandler("db-clear-lookups", clearLookups);
 
   addMainHandler("db-set-config", (_e: any, object: any) => {
     return configStore.set(object);
@@ -58,4 +97,4 @@ export default async function registerDbHandlers() {
   });
 }
 
-export { configStore, dbFolder };
+export { configStore, dbFolder, getLookups, addLookups, addLookupsToUpload };

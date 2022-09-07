@@ -31,7 +31,8 @@ import registerBackgroundScrapingHandlers from "./background-scraping";
 import registerDbHandlers, { configStore } from "./db";
 import registerExportHandlers from "./export";
 import { buildMenu } from "./menu";
-import registerYoutubeHanderls from "./providers/youtube";
+import registerTiktokHandlers from "./providers/tiktok";
+import registerYoutubeHandlers from "./providers/youtube";
 import registerScrapingHandlers from "./scraping";
 import { buildTray } from "./tray";
 import { resolveHtmlPath } from "./utils";
@@ -229,7 +230,8 @@ const createWindow = async (monitoring = false) => {
   registerDbHandlers();
 
   // Register provider specific handlers
-  registerYoutubeHanderls(mainWindow);
+  registerYoutubeHandlers(mainWindow);
+  registerTiktokHandlers(mainWindow);
 };
 
 /**

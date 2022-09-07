@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /**
  * Store, load and wrangle data.
  *
@@ -20,15 +21,12 @@ import _ from "lodash";
 import { Low } from "lowdb";
 import PQueue from "p-queue";
 import { Campaign, ScrapingConfig } from "../../providers/types";
-import dayjs from "../dayjs";
-import { statsForArray } from "../utils/math";
-import { LookupMap, ScrapingResultSaved, ScrapingSession } from "./types";
+import { ScrapingResultSaved, ScrapingSession } from "./types";
 
 type Data = {
   scrapingSessions: ScrapingSession[];
   scrapingResults: ScrapingResultSaved[];
   campaigns: Campaign[];
-  lookup: { oldest: number; items: LookupMap } | null;
 };
 
 let db: Low<Data> | null = null;
@@ -61,7 +59,6 @@ const setUpDb = async () => {
     scrapingSessions: [],
     scrapingResults: [],
     campaigns: [],
-    lookup: null,
   };
   return db.data;
 };
@@ -210,61 +207,6 @@ const getLocalCampaigns = async () => {
   return data.campaigns || [];
 };
 
-// lookup table for e.g. additional background scraping
-
-const getLookups = async (
-  options: { deleteOld: boolean; ids: null | string[] } = {
-    deleteOld: false,
-    ids: null,
-  },
-): Promise<LookupMap> => {
-  const KEEP_LOOKUPS_MAX_DAYS = 7;
-
-  const lookup = (await setUpDb()).lookup;
-
-  if (lookup == null) return {};
-
-  // If the first entry (the oldest one) is older than the max value,
-  // clear all lookups and get fresh data.
-  if (
-    options.deleteOld &&
-    dayjs().diff(dayjs(lookup.oldest), "day") > KEEP_LOOKUPS_MAX_DAYS
-  ) {
-    await clearLookups();
-    return {};
-  }
-
-  if (options.ids) {
-    return _.pick(lookup.items, options.ids);
-  }
-
-  return lookup.items;
-};
-
-const addLookups = async (newItems: LookupMap) => {
-  if (_.isEmpty(newItems)) return;
-
-  await setUpDb();
-
-  if (db === null || db.data === null) throw Error("db is not initialized");
-
-  if (db.data.lookup == null) {
-    db.data.lookup = { items: newItems, oldest: Date.now() };
-  } else {
-    db.data.lookup.items = _.merge(db.data.lookup.items, newItems);
-  }
-  return db.write();
-};
-
-const clearLookups = async () => {
-  await setUpDb();
-
-  if (db === null || db.data === null) throw Error("db is not initialized");
-
-  db.data.lookup = null;
-  return db.write();
-};
-
 // some utils
 
 const getAllData = async () => {
@@ -280,7 +222,6 @@ const clearData = async () => {
     scrapingSessions: [],
     scrapingResults: [],
     campaigns: db.data.campaigns,
-    lookup: null,
   };
   await db.write();
 };
@@ -315,68 +256,7 @@ const importSessionRows = async (rows: ScrapingSession[]): Promise<number> => {
   return sum.length - old.length;
 };
 
-// some math utils
-
-const getStatisticsForSession = async (sessiondId: string) => {
-  const data = await setUpDb();
-
-  const allTasks = data.scrapingResults.filter(
-    (x) => x.sessionId === sessiondId,
-  );
-
-  allTasks.sort((a, b) => a.scrapedAt - b.scrapedAt);
-
-  const firstResult = data.scrapingSessions.filter(
-    (x) => x.sessionId === sessiondId,
-  )[0];
-
-  if (!firstResult) return {};
-
-  const { startedAt } = firstResult;
-  const allTimesSlug = new Map();
-  const allTimesStep = new Map();
-  let previousTime = startedAt;
-
-  for (let i = 0; i < allTasks.length; i += 1) {
-    const { slug, scrapedAt, step } = allTasks[i];
-    const duration = scrapedAt - previousTime;
-
-    if (allTimesSlug.has(slug)) {
-      const oldTimes = allTimesSlug.get(slug);
-      const newTimes = oldTimes.concat([duration]);
-      allTimesSlug.set(slug, newTimes);
-    } else {
-      allTimesSlug.set(slug, [duration]);
-    }
-
-    if (allTimesStep.has(step)) {
-      const oldTimes = allTimesStep.get(step);
-      const newTimes = oldTimes.concat([duration]);
-      allTimesStep.set(step, newTimes);
-    } else {
-      allTimesStep.set(step, [duration]);
-    }
-
-    previousTime = scrapedAt;
-  }
-
-  const resultSlug: { [key: string]: any } = {};
-  allTimesSlug.forEach((value, key: string) => {
-    resultSlug[key] = statsForArray(value);
-  });
-
-  const resultStep: { [key: string]: any } = {};
-  allTimesStep.forEach((value, key: string) => {
-    resultStep[key] = statsForArray(value);
-  });
-
-  return { steps: resultStep, slugs: resultSlug };
-};
-
 export {
-  getLookups,
-  addLookups,
-  clearLookups,
   getAllData,
   addScrapingResult,
   importResultRows,
@@ -387,7 +267,7 @@ export {
   getSessions,
   getScrapingResultsBySession,
   addNewSession,
-  getStatisticsForSession,
+  setUpDb,
   modifyLocalCampaigns,
   getLocalCampaigns,
   setSessionFinishedAt,

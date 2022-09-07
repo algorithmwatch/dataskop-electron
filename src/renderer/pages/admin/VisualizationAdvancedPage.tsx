@@ -5,7 +5,7 @@ import AutoplayChain from "renderer/providers/youtube/components/visualizations/
 import NewsTop5 from "renderer/providers/youtube/components/visualizations/NewsTop5";
 import SearchResultsCompare from "renderer/providers/youtube/components/visualizations/SearchResultsCompare";
 import { useConfig } from "../../contexts/config";
-import { getLookups, getScrapingResultsBySession } from "../../lib/db";
+import { getScrapingResultsBySession } from "../../lib/db";
 import Button from "../../providers/youtube/components/Button";
 import MyData from "../../providers/youtube/components/visualizations/MyData";
 import Profile from "../../providers/youtube/components/visualizations/profile";
@@ -31,7 +31,7 @@ export default function VisualizationAdvancedPage() {
   useEffect(() => {
     const loadData = async () => {
       const results = await getScrapingResultsBySession(sessionId);
-      const lookups = await getLookups();
+      const lookups = await window.electron.ipc.invoke("db-get-lookups");
       setData({ results, lookups });
     };
     loadData();

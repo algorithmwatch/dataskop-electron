@@ -1,6 +1,7 @@
 /* eslint import/prefer-default-export: off */
 import dayjs from "dayjs";
 import { ipcMain } from "electron";
+import fs from "fs";
 import path from "path";
 import { URL } from "url";
 
@@ -31,3 +32,20 @@ export const delay = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
 export const getNowString = () => dayjs().format("YYYY-MM-DD-HH-mm-ss");
+
+// Files
+
+export const getFileList = (dirName: string): string[] => {
+  let files: string[] = [];
+  const items = fs.readdirSync(dirName, { withFileTypes: true });
+
+  for (const item of items) {
+    if (item.isDirectory()) {
+      files = [...files, ...getFileList(`${dirName}/${item.name}`)];
+    } else {
+      files.push(`${dirName}/${item.name}`);
+    }
+  }
+
+  return files;
+};

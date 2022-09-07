@@ -5,7 +5,6 @@ import ConfirmDialog from "../../components/admin/ConfirmDialog";
 import OverviewTable from "../../components/admin/results/OverviewTable";
 import {
   clearData,
-  clearLookups,
   getAllData,
   getScrapingResults,
   getSessions,
@@ -80,7 +79,7 @@ export default function ResultsPage(): JSX.Element {
           <ConfirmDialog
             title="clear lookup table"
             text="you sure?"
-            handleConfirm={clearLookups}
+            handleConfirm={() => window.electron.ipc.invoke("db-clear-lookups")}
           />
           <Button onClick={async () => invokeExport()}>export data</Button>
           <Button onClick={async () => invokeImport(importRowCb)}>
