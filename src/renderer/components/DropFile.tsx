@@ -7,11 +7,11 @@ import { useDropArea } from "react-use";
 
 const DropFile = ({
   handleFiles,
-  dropDone,
+  isDoppable,
   children,
 }: {
   handleFiles: (files: File[]) => void;
-  dropDone: boolean;
+  isDoppable: boolean;
   children: ReactNode;
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
@@ -19,11 +19,11 @@ const DropFile = ({
     onFiles: handleFiles,
   });
   const handleDragEnter = () => {
-    if (dropDone) return;
+    if (isDoppable) return;
     setIsDragOver(true);
   };
   const handleDragLeave = (event: React.DragEvent<HTMLLabelElement>) => {
-    if (dropDone) return;
+    if (isDoppable) return;
     event.preventDefault();
     event.stopPropagation();
 
@@ -43,11 +43,11 @@ const DropFile = ({
           isDragOver
             ? "border-east-blue-700 bg-neutral-100"
             : "border-neutral-300 hover:border-neutral-200",
-          !dropDone && "cursor-pointer",
+          !isDoppable && "cursor-pointer",
         )}
       >
         {children}
-        {!dropDone && (
+        {!isDoppable && (
           <input
             type="file"
             name="file_upload"

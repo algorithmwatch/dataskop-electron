@@ -13,21 +13,19 @@ import { Button } from "renderer/components/Button";
 import DropFile from "renderer/components/DropFile";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import Content from "renderer/providers/tiktok/components/Content";
-import { useNavigation } from "../../../contexts";
 
 export default function UploadDataExportPage(): JSX.Element {
-  const { getNextPage } = useNavigation();
   const history = useHistory();
   const [importIsValid, setImportIsValid] = useState(false);
+  const [inputTouched, setInputTouched] = useState(false);
   const handleFiles = async (files: File[]) => {
     const response = await window.electron.ipc.invoke(
       "import-files",
       files.map(({ path }) => path),
     );
 
-    if (response === true) {
-      setImportIsValid(true);
-    }
+    setImportIsValid(response === true);
+    if (!inputTouched) setInputTouched(true);
   };
 
   const footerSlots: FooterSlots = {
@@ -47,7 +45,7 @@ export default function UploadDataExportPage(): JSX.Element {
         endIcon={faAngleRight}
         disabled={!importIsValid}
         onClick={() => {
-          history.push(getNextPage("path"));
+          history.push("/tiktok/waiting");
         }}
       >
         Weiter
@@ -68,8 +66,8 @@ export default function UploadDataExportPage(): JSX.Element {
           DSGVO-Daten werden dann nicht erneut beantragt.
         </p>
         <div className="flex min-h-[16rem]">
-          <DropFile handleFiles={handleFiles} dropDone={importIsValid}>
-            {!importIsValid ? (
+          <DropFile handleFiles={handleFiles} isDoppable={importIsValid}>
+            {!inputTouched && !importIsValid && (
               <>
                 <p className="max-w-lg">
                   Hier klicken, um die Datei auszuwählen, oder die Datei mit dem
@@ -79,7 +77,9 @@ export default function UploadDataExportPage(): JSX.Element {
                   Die Datei muss das JSON-Format haben.
                 </p>
               </>
-            ) : (
+            )}
+
+            {inputTouched && importIsValid && (
               <div className="flex items-center justify-center space-x-3">
                 <FontAwesomeIcon
                   icon={faCircleCheck}
@@ -88,6 +88,13 @@ export default function UploadDataExportPage(): JSX.Element {
                 <div>
                   Das hat geklappt. Klicke auf „Weiter“, um fortzufahren.
                 </div>
+              </div>
+            )}
+
+            {inputTouched && !importIsValid && (
+              <div className="flex items-center justify-center text-red-500">
+                Wir können die Datei leider nicht verarbeiten. Ist sie im
+                JSON-Format?
               </div>
             )}
           </DropFile>
