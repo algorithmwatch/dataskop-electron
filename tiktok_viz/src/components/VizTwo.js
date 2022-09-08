@@ -44,7 +44,7 @@ function VizTwo(props) {
     [topNum.value, 7, range.value]
   );
 
-  console.log("hashtagdata", hashtagData);
+  // console.log("hashtagdata", hashtagData);
   const [highlighted, setHighlight] = useState(null);
 
   const graphOptions = [
@@ -118,11 +118,11 @@ function VizTwo(props) {
     title: (d) => `${d.Name}: ${d.Count}`,
     stroke: "currentColor",
     strokeOpacity:
-      highlighted === null ? 1 : (d) => (d.Name === highlighted ? 1 : 0.3),
+      highlighted === null ? 1 : (d) => (d.Name === highlighted ? 1 : 0.2),
     r: 7,
     fill: "Name",
     fillOpacity:
-      highlighted === null ? 1 : (d) => (d.Name === highlighted ? 1 : 0.3),
+      highlighted === null ? 1 : (d) => (d.Name === highlighted ? 1 : 0.2),
   };
 
   useEffect(() => {
@@ -198,19 +198,19 @@ function VizTwo(props) {
       <div className="ui-container-stats">
         <div className="box1">
           <VizBoxes
-            statistic={`#${Object.keys(topHashtag)}`}
+            statistic={`#${topHashtag}`}
             statisticText="Most Frequent Hashtag OAT"
           />
         </div>
         <div className="box2">
           <VizBoxes
-            statistic={`${Object.keys(topSound)}`}
+            statistic={`${topSound}`}
             statisticText="Most Frequent Sound OAT"
           />
         </div>
         <div className="box3">
           <VizBoxes
-            statistic={`${Object.keys(topDivLabel)}s`}
+            statistic={`${topDivLabel}`}
             statisticText="Most Frequent Category OAT"
           />
         </div>

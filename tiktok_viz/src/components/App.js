@@ -7,7 +7,7 @@ import VizOne from "./VizOne";
 import VizTwo from "./VizTwo";
 import VizOneDropDown from "./VizOneDropDown";
 import peterScrapedData from "../data/videometa.json";
-import smallTestingMetadata from "../data/smallTestingMetadata.json";
+// import smallTestingMetadata from "../data/smallTestingMetadata.json";
 import { breakFrequency, twoOrLessVids } from "../utils/viz_one_utilities";
 import { shortenGdprData, shortenMetadata } from "../utils/shorten_data";
 
@@ -31,7 +31,7 @@ function App() {
     shortenGdprData(data000);
 
   // set to new variable or reassign?
-  let shortenedSmallMetadata = shortenMetadata(smallTestingMetadata);
+  let shortenedSmallMetadata = shortenMetadata(peterScrapedData);
 
   return (
     <div className="visualizations">
