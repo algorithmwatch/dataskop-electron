@@ -12,9 +12,12 @@ import { useHistory } from "react-router";
 import { Button } from "renderer/components/Button";
 import DropFile from "renderer/components/DropFile";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
+import { useScraping } from "renderer/contexts";
+import { currentDelay } from "renderer/lib/delay";
 import Content from "renderer/providers/tiktok/components/Content";
 
 export default function UploadDataExportPage(): JSX.Element {
+  const { dispatch } = useScraping();
   const history = useHistory();
   const [importIsValid, setImportIsValid] = useState(false);
   const [inputTouched, setInputTouched] = useState(false);
@@ -44,8 +47,14 @@ export default function UploadDataExportPage(): JSX.Element {
         key="2"
         endIcon={faAngleRight}
         disabled={!importIsValid}
-        onClick={() => {
-          // TODO: start scraping?
+        onClick={async () => {
+          dispatch({ type: "set-attached", attached: true, visible: false });
+          await currentDelay();
+          dispatch({
+            type: "start-scraping",
+            filterSteps: (x) => x.slug.includes("scraping"),
+          });
+
           history.push("/tiktok/waiting");
         }}
       >
