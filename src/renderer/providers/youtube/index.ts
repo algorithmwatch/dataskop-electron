@@ -11,7 +11,7 @@ const youtubeInfo: ProviderInformation = {
   disableInputAfterLogin: true,
   navigation: ytNavigation,
   confirmCookie: confirmCockieForm,
-  deserializeConfigMapping: deserializeMapping,
+  deserializeMapping,
 };
 
 export * from "./lib";

@@ -169,7 +169,7 @@ const addScrapingResult = (sessionId: string, step: number, data: any) => {
   return queue.add(() => queuedAddScrapingResult(obj));
 };
 
-const getScrapingResults = async () => {
+const getScrapingResults = async (): Promise<ScrapingResultSaved[]> => {
   const data = await setUpDb();
   return _.orderBy(data.scrapingResults, "scrapedAt");
 };
@@ -186,6 +186,11 @@ const getScrapingResultsBySession = async (
       (slug == null || x.slug === slug) &&
       (step == null || x.step === step),
   );
+};
+
+const getLastResult = async (): Promise<ScrapingResultSaved> => {
+  const data = await getScrapingResults();
+  return data[data.length - 1];
 };
 
 // scraping config
@@ -267,6 +272,7 @@ export {
   getSessions,
   getScrapingResultsBySession,
   addNewSession,
+  getLastResult,
   setUpDb,
   modifyLocalCampaigns,
   getLocalCampaigns,
