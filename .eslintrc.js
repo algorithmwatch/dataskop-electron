@@ -20,6 +20,7 @@ module.exports = {
     "no-continue": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "react/jsx-props-no-spreading": "off",
+    "consistent-return": "off",
   },
   parserOptions: {
     ecmaVersion: 2020,
