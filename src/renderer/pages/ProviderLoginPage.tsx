@@ -29,7 +29,7 @@ export default function ProviderLoginPage(): JSX.Element {
         startIcon={faAngleLeft}
         onClick={() => {
           dispatch({ type: "set-visible-window", visibleWindow: false });
-          history.push(getPreviousPage("path"));
+          history.goBack();
         }}
       >
         Zurück

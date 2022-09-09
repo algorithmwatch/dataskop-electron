@@ -14,7 +14,7 @@ import { useNavigation } from "../../../contexts";
 export default function WaitingDonePage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
-  const hasData = false;
+  const hasData = false; // TODO: to be implemented
 
   const footerSlots: FooterSlots = {
     center: [

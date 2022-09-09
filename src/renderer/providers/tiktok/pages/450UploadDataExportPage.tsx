@@ -45,6 +45,7 @@ export default function UploadDataExportPage(): JSX.Element {
         endIcon={faAngleRight}
         disabled={!importIsValid}
         onClick={() => {
+          // TODO: start scraping?
           history.push("/tiktok/waiting");
         }}
       >

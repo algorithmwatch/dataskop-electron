@@ -14,47 +14,75 @@
 */
 
 import { faLoader } from "@fortawesome/pro-duotone-svg-icons";
-import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
-import { useState } from "react";
+import { faAngleRight } from "@fortawesome/pro-solid-svg-icons";
+import { Transition } from "@headlessui/react";
+import { useMemo, useState } from "react";
 import { useHistory } from "react-router";
 import { Button } from "renderer/components/Button";
 import Modal from "renderer/components/Modal";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import Content from "renderer/providers/tiktok/components/Content";
 import HelpButton from "renderer/providers/tiktok/components/HelpButton";
-import { useNavigation } from "../../../contexts";
 
 export default function WaitingPage(): JSX.Element {
-  const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
+  const [footerButtonsAreVisible, setFooterButtonsAreVisible] = useState(true);
   const [modal1IsOpen, setModal1IsOpen] = useState(false);
   const [modal2IsOpen, setModal2IsOpen] = useState(false);
+  const openSurvey = () => {
+    // TODO: to be implemented
+  };
 
   // const { currentStatus } = useStatus;
 
-  const footerSlots: FooterSlots = {
-    center: [
-      <Button
-        key="1"
-        theme="text"
-        startIcon={faAngleLeft}
-        onClick={() => {
-          history.push(getPreviousPage("path"));
-        }}
-      >
-        Zurück
-      </Button>,
-      <Button
-        key="2"
-        endIcon={faAngleRight}
-        onClick={() => {
-          history.push(getNextPage("path"));
-        }}
-      >
-        Weiter
-      </Button>,
-    ],
-  };
+  const footerSlots: FooterSlots = useMemo(
+    () => ({
+      center: [
+        <Transition
+          key="1"
+          show={footerButtonsAreVisible}
+          appear
+          enter="transition-opacity duration-1000"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity duration-300"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="font-bold mb-4 text-xl -mt-8 text-center">
+            Dürfen wir dir ein paar Fragen stellen?
+          </div>
+          <div className="flex items-center justify-center space-x-4">
+            <Button className="min-w-[6rem]" onClick={openSurvey}>
+              Ja
+            </Button>
+            <Button
+              className="min-w-[6rem]"
+              theme="outline"
+              onClick={() => setFooterButtonsAreVisible(false)}
+            >
+              Nein
+            </Button>
+          </div>
+        </Transition>,
+      ],
+      end: [
+        process.env.NODE_ENV === "development" && (
+          <Button
+            key="1"
+            theme="text"
+            endIcon={faAngleRight}
+            onClick={() => {
+              history.push("/tiktok/waiting_done");
+            }}
+          >
+            Weiter
+          </Button>
+        ),
+      ],
+    }),
+    [footerButtonsAreVisible],
+  );
 
   return (
     <>

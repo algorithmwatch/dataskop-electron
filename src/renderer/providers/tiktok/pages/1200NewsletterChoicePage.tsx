@@ -9,32 +9,20 @@ import { ChangeEvent, Fragment, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
-import { useNavigation } from "renderer/contexts";
 import Content from "renderer/providers/tiktok/components/Content";
 
 export default function NewsletterChoicePage(): JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [formIsVisible, setFormIsVisible] = useState(false);
-  const [emailInputValue, setEmailInputValue] = useState<string>("");
+  const [emailInputValue, setEmailInputValue] = useState<string>(""); // TODO: insert initial state value, when user entered email address in donation form already
   const [inputIsValid, setInputIsValid] = useState(false);
+  const [formIsVisible, setFormIsVisible] = useState(false);
   const history = useHistory();
-  const { getPreviousPage } = useNavigation();
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputIsValid(event.target.checkValidity());
     setEmailInputValue(event.target.value);
   };
-  const handleBackClick = () => {
-    // Die Seite nach Klick auf "Zurück" kann unterschiedlich sein.
-    // 1. Wenn genug Daten vorhanden waren und Visualisierungen gezeigt werden konnten:
-    // --> /tiktok/donation_choice
-    // 2. Wenn nicht genug Daten vorhanden waren, sind User von dieser Seite gekommen:
-    // --> /tiktok/waiting_done
-
-    // Todo:
-    history.push(getPreviousPage("path"));
-  };
   const signUpForNewsletter = () => {
-    // to be implemented
+    // TODO: to be implemented
   };
 
   const footerSlots: FooterSlots = useMemo(
@@ -44,7 +32,7 @@ export default function NewsletterChoicePage(): JSX.Element {
           key="1"
           theme="text"
           startIcon={faAngleLeft}
-          onClick={handleBackClick}
+          onClick={() => history.goBack()}
         >
           Zurück
         </Button>,

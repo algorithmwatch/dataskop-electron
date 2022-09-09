@@ -5,6 +5,7 @@
  */
 import { faFileHeart } from "@fortawesome/pro-light-svg-icons";
 import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
+import { ChangeEvent, useRef, useState } from "react";
 import { useHistory } from "react-router";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
@@ -12,10 +13,17 @@ import Content from "renderer/providers/tiktok/components/Content";
 import { useNavigation } from "../../../contexts";
 
 export default function DonationFormPage(): JSX.Element {
-  const { getNextPage, getPreviousPage } = useNavigation();
+  const { getNextPage } = useNavigation();
   const history = useHistory();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [emailInputValue, setEmailInputValue] = useState<string>(""); // TODO: insert initial state value when user came back to this form
+  const [inputIsValid, setInputIsValid] = useState(false);
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setInputIsValid(event.target.checkValidity());
+    setEmailInputValue(event.target.value);
+  };
   const saveDonationEmail = () => {
-    // to be implemented
+    // TODO: to be implemented
   };
 
   const footerSlots: FooterSlots = {
@@ -24,26 +32,19 @@ export default function DonationFormPage(): JSX.Element {
         key="1"
         theme="text"
         startIcon={faAngleLeft}
-        onClick={() => {
-          // Die Seite nach Klick auf "Zurück" kann unterschiedlich sein.
-          // 1. Wenn genug Daten vorhanden waren und Visualisierungen gezeigt werden konnten:
-          // --> /tiktok/donation_choice
-          // 2. Wenn nicht genug Daten vorhanden waren, sind User von dieser Seite gekommen:
-          // --> /tiktok/waiting_done
-
-          // Todo:
-          history.push(getPreviousPage("path"));
-        }}
+        onClick={() => history.goBack()}
       >
         Zurück
       </Button>,
       <Button
         key="2"
         endIcon={faAngleRight}
+        disabled={!inputIsValid}
         onClick={() => {
-          history.push(getNextPage("path"));
+          if (!inputIsValid) return;
 
           saveDonationEmail();
+          history.push(getNextPage("path"));
         }}
       >
         Weiter
@@ -61,9 +62,13 @@ export default function DonationFormPage(): JSX.Element {
         </p>
         <div className="mt-12">
           <input
+            ref={inputRef}
             type="email"
+            required
             placeholder="Deine E-Mail-Adresse"
             className="px-4 py-2 max-w-md w-full text-xl bg-white appearance-none border-2 border-black rounded ring-8 ring-east-blue-100 focus:outline-none focus:ring-east-blue-300"
+            value={emailInputValue}
+            onChange={handleInputChange}
           />
         </div>
       </Content>
