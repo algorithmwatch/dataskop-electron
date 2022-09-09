@@ -1,6 +1,7 @@
 /* eslint import/prefer-default-export: off */
 import dayjs from "dayjs";
 import { ipcMain } from "electron";
+import log from "electron-log";
 import fs from "fs";
 import path from "path";
 import { URL } from "url";
@@ -22,6 +23,18 @@ export function resolveHtmlPath(htmlFileName: string) {
 export const addMainHandler = (channel: string, fun: any) => {
   ipcMain.removeHandler(channel);
   ipcMain.handle(channel, fun);
+};
+
+export const isFromLocalhost = (event: any) => {
+  const parsedUrl = new URL(event.senderFrame.url);
+  const fromLocal =
+    parsedUrl.protocol === "http:" &&
+    parsedUrl.hostname === "localhost" &&
+    parsedUrl.port === "1212";
+  if (!fromLocal) {
+    log.warn("Event was not sent from localhost");
+  }
+  return fromLocal;
 };
 
 // Duplicate from `renderer` to have a clear seperation.
