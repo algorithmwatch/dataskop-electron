@@ -46,7 +46,7 @@ export default function ProviderLoginSuccessPage(): JSX.Element {
     // if (isUserLoggedIn && !isScrapingStarted) {
 
     // start scraping
-    dispatch({ type: "set-scraping-started", started: true });
+    dispatch({ type: "start-scraping" });
     // }
   }, []);
 

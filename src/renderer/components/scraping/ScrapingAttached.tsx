@@ -33,10 +33,11 @@ export default function ScrapingAttached() {
     (async () => {
       if (userConfig && userConfig.monitoring && !isScrapingStarted) {
         dispatch({ type: "set-attached", attached: true, visible: false });
-        console.log("now1");
         await currentDelay();
-        console.log("now2");
-        dispatch({ type: "set-scraping-started", started: true });
+        dispatch({
+          type: "start-scraping",
+          filterSteps: (x) => x.slug.includes("monitoring"),
+        });
 
         // Attach
         // Check if loggend in, then act

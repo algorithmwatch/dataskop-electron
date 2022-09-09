@@ -22,6 +22,8 @@ export type Bounds = {
   y: number;
 };
 
+type FilterSteps = (arg0: any) => boolean;
+
 type Action =
   | { type: "set-attached"; attached: boolean; visible: boolean }
   | {
@@ -37,7 +39,7 @@ type Action =
       scrapingProgress: ScrapingProgress;
     }
   | { type: "set-user-logged-in"; loggedIn: boolean }
-  | { type: "set-scraping-started"; started: boolean }
+  | { type: "start-scraping"; filterSteps?: FilterSteps }
   | { type: "set-scraping-paused"; paused: boolean }
   | { type: "scraping-has-finished" }
   | { type: "set-muted"; muted: boolean }
@@ -69,6 +71,7 @@ type State = {
   scrapingProgress: ScrapingProgress;
   isUserLoggedIn: boolean;
   isScrapingStarted: boolean;
+  filterSteps: null | FilterSteps;
   isScrapingPaused: boolean;
   isScrapingFinished: boolean;
   scrapingError: Error | null;
@@ -103,6 +106,7 @@ const initialState: State = {
   },
   isUserLoggedIn: false,
   isScrapingStarted: false,
+  filterSteps: null,
   isScrapingPaused: false,
   isScrapingFinished: false,
   scrapingError: null,
@@ -150,10 +154,11 @@ const scrapingReducer = (state: State, action: Action): State => {
       return { ...state, isUserLoggedIn: action.loggedIn };
     }
 
-    case "set-scraping-started": {
+    case "start-scraping": {
       return {
         ...state,
-        isScrapingStarted: action.started,
+        isScrapingStarted: true,
+        filterSteps: action.filterSteps ? action.filterSteps : null,
       };
     }
 
@@ -207,6 +212,7 @@ const scrapingReducer = (state: State, action: Action): State => {
         isScrapingFinished: true,
         isScrapingPaused: true,
         isScrapingStarted: false,
+        filterSteps: null,
         scrapingProgress: {
           isActive: false,
           value: 1,
