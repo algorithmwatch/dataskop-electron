@@ -4,42 +4,105 @@
  * @module
  */
 import { faEnvelopeOpenText } from "@fortawesome/pro-light-svg-icons";
+import { faAngleLeft } from "@fortawesome/pro-solid-svg-icons";
+import { ChangeEvent, Fragment, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
+import { useNavigation } from "renderer/contexts";
 import Content from "renderer/providers/tiktok/components/Content";
 
 export default function NewsletterChoicePage(): JSX.Element {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [formIsVisible, setFormIsVisible] = useState(false);
+  const [emailInputValue, setEmailInputValue] = useState<string>("");
+  const [inputIsValid, setInputIsValid] = useState(false);
   const history = useHistory();
-
-  const footerSlots: FooterSlots = {
-    center: [
-      <div key="1">
-        <div className="font-bold mb-4 text-xl -mt-10 text-center whitespace-nowrap">
-          Möchtest du unseren Newsletter abonnieren?
-        </div>
-        <div className="flex items-center justify-center space-x-4">
-          <Button
-            className="min-w-[6rem]"
-            onClick={() => {
-              history.push("/tiktok/thank_you");
-            }}
-          >
-            Ja
-          </Button>
-          <Button
-            className="min-w-[6rem]"
-            theme="outline"
-            onClick={() => {
-              history.push("/tiktok/thank_you");
-            }}
-          >
-            Nein
-          </Button>
-        </div>
-      </div>,
-    ],
+  const { getPreviousPage } = useNavigation();
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setInputIsValid(event.target.checkValidity());
+    setEmailInputValue(event.target.value);
   };
+  const handleBackClick = () => {
+    // Die Seite nach Klick auf "Zurück" kann unterschiedlich sein.
+    // 1. Wenn genug Daten vorhanden waren und Visualisierungen gezeigt werden konnten:
+    // --> /tiktok/donation_choice
+    // 2. Wenn nicht genug Daten vorhanden waren, sind User von dieser Seite gekommen:
+    // --> /tiktok/waiting_done
+
+    // Todo:
+    history.push(getPreviousPage("path"));
+  };
+  const signUpForNewsletter = () => {
+    // to be implemented
+  };
+
+  const footerSlots: FooterSlots = useMemo(
+    () => ({
+      start: [
+        <Button
+          key="1"
+          theme="text"
+          startIcon={faAngleLeft}
+          onClick={handleBackClick}
+        >
+          Zurück
+        </Button>,
+      ],
+      center: [
+        !formIsVisible ? (
+          <Fragment key="1">
+            <Button
+              key="1"
+              className="min-w-[6rem]"
+              onClick={() => {
+                setFormIsVisible(true);
+              }}
+            >
+              Ja, ich will den Newsletter
+            </Button>
+            <Button
+              key="2"
+              className="min-w-[6rem]"
+              theme="outline"
+              onClick={() => {
+                history.push("/tiktok/thank_you");
+              }}
+            >
+              Nein, danke
+            </Button>
+          </Fragment>
+        ) : (
+          <Fragment key="1">
+            <Button
+              key="1"
+              className="min-w-[6rem]"
+              disabled={!inputIsValid}
+              onClick={() => {
+                if (!inputIsValid) return;
+
+                signUpForNewsletter();
+                history.push("/tiktok/thank_you");
+              }}
+            >
+              Newsletter abonnieren
+            </Button>
+            <Button
+              key="2"
+              className="min-w-[6rem]"
+              theme="outline"
+              onClick={() => {
+                setFormIsVisible(false);
+              }}
+            >
+              Abbrechen
+            </Button>
+          </Fragment>
+        ),
+      ],
+    }),
+    [formIsVisible, emailInputValue, inputIsValid],
+  );
 
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>
@@ -48,36 +111,47 @@ export default function NewsletterChoicePage(): JSX.Element {
         theme="transparent"
         icon={faEnvelopeOpenText}
       >
-        <p>
-          Möchtest du unseren Newsletter abonnieren? Mit dem Newsletter von
-          AlgorithmWatch erfährst du von weiteren Datenspende-Aktionen,
-          Forschungsprojekten und Recherchen. Die Mailings erscheinen monatlich.
-          Du kannst dich jederzeit wieder abmelden.
-        </p>
-        <div className="mt-10">
-          <input
-            type="email"
-            placeholder="Deine E-Mail-Adresse"
-            className="px-4 py-2 max-w-lg w-full text-xl bg-white appearance-none border-2 border-black rounded ring-8 ring-east-blue-100 focus:outline-none focus:ring-east-blue-300"
-          />
-          <div className="mt-4 text-neutral-500 text-sm">
-            Trage deine E-Mail-Adresse hier ein, wenn du den Newsletter
-            abonnieren möchtest.
+        {!formIsVisible && (
+          <div className="space-y-8">
+            <p>
+              Mit dem Newsletter von AlgorithmWatch erfährst du von weiteren
+              Datenspende-Aktionen, Forschungsprojekten und Recherchen. Die
+              Mailings erscheinen monatlich. Du kannst dich jederzeit wieder
+              abmelden.
+            </p>
+            <p className="font-bold">
+              Möchtest du unseren Newsletter abonnieren?
+            </p>
           </div>
-        </div>
-        <p className="mt-8 text-neutral-500 text-base max-w-prose mx-auto">
-          Vergiss nicht, auf den Bestätigungslink zu klicken, den du im
-          Anschluss in einer E-Mail von uns erhältst.{" "}
-          <a
-            href="https://dataskop.net/datenschutzerklaerung/"
-            target="_blank"
-            rel="noreferrer"
-            className="underline hover:no-underline"
-          >
-            Hier
-          </a>{" "}
-          geht's zu den Datenschutzbestimmungen.
-        </p>
+        )}
+
+        {formIsVisible && (
+          <div className="space-y-8">
+            <p>An welche E-Mail-Adresse sollen wir den Newsletter schicken?</p>
+            <input
+              ref={inputRef}
+              type="email"
+              required
+              placeholder="Deine E-Mail-Adresse"
+              className="px-4 py-2 max-w-lg w-full max-auto text-xl bg-white appearance-none border-2 border-black rounded ring-8 ring-east-blue-100 focus:outline-none focus:ring-east-blue-300"
+              value={emailInputValue}
+              onChange={handleInputChange}
+            />
+            <p className="text-neutral-500 text-base max-w-prose mx-auto">
+              Vergiss nicht, auf den Bestätigungslink zu klicken, den du im
+              Anschluss in einer E-Mail von uns erhältst.{" "}
+              <a
+                href="https://dataskop.net/datenschutzerklaerung/"
+                target="_blank"
+                rel="noreferrer"
+                className="underline hover:no-underline"
+              >
+                Hier
+              </a>{" "}
+              geht&apos;s zu den Datenschutzbestimmungen.
+            </p>
+          </div>
+        )}
       </Content>
     </WizardLayout>
   );

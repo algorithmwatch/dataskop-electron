@@ -93,9 +93,7 @@ export const Button = forwardRef(
             className="shrink-0"
           />
         )}
-        {children && (
-          <span className="max-w-xs truncate sm:max-w-[260px]">{children}</span>
-        )}
+        {children && <span className="max-w-lg truncate">{children}</span>}
         {endIcon && (
           <FontAwesomeIcon
             icon={endIcon}

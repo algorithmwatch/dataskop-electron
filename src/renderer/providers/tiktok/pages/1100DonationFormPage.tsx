@@ -14,6 +14,9 @@ import { useNavigation } from "../../../contexts";
 export default function DonationFormPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
+  const saveDonationEmail = () => {
+    // to be implemented
+  };
 
   const footerSlots: FooterSlots = {
     center: [
@@ -22,6 +25,13 @@ export default function DonationFormPage(): JSX.Element {
         theme="text"
         startIcon={faAngleLeft}
         onClick={() => {
+          // Die Seite nach Klick auf "Zurück" kann unterschiedlich sein.
+          // 1. Wenn genug Daten vorhanden waren und Visualisierungen gezeigt werden konnten:
+          // --> /tiktok/donation_choice
+          // 2. Wenn nicht genug Daten vorhanden waren, sind User von dieser Seite gekommen:
+          // --> /tiktok/waiting_done
+
+          // Todo:
           history.push(getPreviousPage("path"));
         }}
       >
@@ -32,6 +42,8 @@ export default function DonationFormPage(): JSX.Element {
         endIcon={faAngleRight}
         onClick={() => {
           history.push(getNextPage("path"));
+
+          saveDonationEmail();
         }}
       >
         Weiter

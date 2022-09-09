@@ -59,7 +59,7 @@ export default function DonationChoicePage(): JSX.Element {
         icon={faFileHeart}
       >
         <p>
-          Deine Daten werden pseudonymisiert ausschließlich mit
+          Deine Daten werden pseudonymisiert und ausschließlich mit
           DataSkop-Partnern geteilt. Sie helfen uns, TikTok besser zu verstehen.
           Du behältst nach der Spende die Kontrolle über deine Daten und kannst
           sie jederzeit löschen.
