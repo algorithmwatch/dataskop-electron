@@ -1,13 +1,17 @@
 import { GetHtmlFunction, GetHtmlLazyFunction } from "renderer/providers/types";
+import { getMostRecentWatchVideos } from "../data-wrangling";
 
-const scrapeWatchedVideos = async (config) => {
+const scrapeWatchedVideos = async (config: any): Promise<string> => {
   const dump = await window.electron.ipc.invoke("scraping-get-download");
-  return "done";
+  const ids = getMostRecentWatchVideos(dump, config.max);
+  await window.electron.ipc.invoke("tiktok-get-lookups", ids, true);
+  return "scraping-done";
 };
 
-const scrapeVideosTimeFrame = async (config) => {
-  const dump = await window.electron.ipc.invoke("scraping-get-download");
-  return "done";
+const scrapeVideosTimeFrame = async (config: any): Promise<string> => {
+  return scrapeVideosTimeFrame(config);
+  // const dump = await window.electron.ipc.invoke("scraping-get-download");
+  // return "scraping-done";
 };
 
 // eslint-disable-next-line require-yield

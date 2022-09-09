@@ -19,7 +19,7 @@ export type ProviderInformation = {
   disableInputAfterLogin: boolean;
   navigation: { [key: string]: NavigationState };
   confirmCookie: () => void;
-  deserializeConfigMapping: any;
+  deserializeMapping: any;
 };
 
 export type DemoData = {

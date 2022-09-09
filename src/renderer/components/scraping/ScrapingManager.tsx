@@ -174,7 +174,7 @@ export default function ScrapingManager({
 
       const gen = createScrapingGenerator(
         config,
-        provider.deserializeConfigMapping,
+        provider.deserializeMapping,
         makeGetHtml(userConfig.logHtml),
         getHtmlLazy,
         {

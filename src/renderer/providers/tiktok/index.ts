@@ -10,7 +10,7 @@ const tiktokInfo: ProviderInformation = {
   disableInputAfterLogin: false,
   navigation: ttNavigation,
   confirmCookie: () => void 0,
-  deserializeConfigMapping: deserializeMapping,
+  deserializeMapping,
 };
 
 export * from "./lib";

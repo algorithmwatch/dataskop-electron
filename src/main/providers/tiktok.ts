@@ -13,7 +13,12 @@ import { addMainHandler } from "../utils";
 export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
   addMainHandler(
     "tiktok-get-lookups",
-    async (_event: any, ids: string[], max: null | number = null) => {
+    async (
+      _event: any,
+      ids: string[],
+      onlyScrape = false,
+      max: null | number = null,
+    ): Promise<any> => {
       // check local lookups
       const [existings, missing] = _.partition(
         getLookups(ids),
@@ -51,7 +56,7 @@ export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
       addLookups(scrapedDone);
       // save keys to upload them later
       addLookupsToUpload(_.keys(scrapedDone));
-
+      if (onlyScrape) return {};
       return _.merge(Object.fromEntries(existings), backendDone, scrapedDone);
     },
   );
