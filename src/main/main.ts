@@ -35,7 +35,7 @@ import registerTiktokHandlers from "./providers/tiktok";
 import registerYoutubeHandlers from "./providers/youtube";
 import registerScrapingHandlers from "./scraping";
 import { buildTray } from "./tray";
-import { resolveHtmlPath } from "./utils";
+import { isFromLocalhost, resolveHtmlPath } from "./utils";
 
 // read .env files for development
 require("dotenv").config();
@@ -287,17 +287,18 @@ ipcMain.handle("get-version-number", () => {
   return app.getVersion();
 });
 
-ipcMain.handle("get-env", () => {
+ipcMain.handle("get-env", (e) => {
   // Expose configs done via .env to the renderer. The keys have to explicitly
   // specified as follows (right now).
-  return {
-    NODE_ENV: process.env.NODE_ENV,
-    DEBUG_PROD: process.env.DEBUG_PROD,
-    PLATFORM_URL: process.env.PLATFORM_URL,
-    TRACK_EVENTS: process.env.TRACK_EVENTS,
-    SERIOUS_PROTECTION: process.env.SERIOUS_PROTECTION,
-    AUTO_SELECT_CAMPAIGN: process.env.AUTO_SELECT_CAMPAIGN,
-  };
+  if (isFromLocalhost(e))
+    return {
+      NODE_ENV: process.env.NODE_ENV,
+      DEBUG_PROD: process.env.DEBUG_PROD,
+      PLATFORM_URL: process.env.PLATFORM_URL,
+      TRACK_EVENTS: process.env.TRACK_EVENTS,
+      SERIOUS_PROTECTION: process.env.SERIOUS_PROTECTION,
+      AUTO_SELECT_CAMPAIGN: process.env.AUTO_SELECT_CAMPAIGN,
+    };
 });
 
 // Handle notifications from the renderer
