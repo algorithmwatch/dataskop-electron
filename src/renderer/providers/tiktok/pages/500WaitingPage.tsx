@@ -13,16 +13,39 @@
 
 */
 
-import { faLoader } from "@fortawesome/pro-duotone-svg-icons";
+import { faLoader } from "@fortawesome/pro-regular-svg-icons";
 import { faAngleRight } from "@fortawesome/pro-solid-svg-icons";
 import { Transition } from "@headlessui/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useHistory } from "react-router";
 import { Button } from "renderer/components/Button";
 import Modal from "renderer/components/Modal";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
+import { useScraping } from "renderer/contexts";
 import Content from "renderer/providers/tiktok/components/Content";
 import HelpButton from "renderer/providers/tiktok/components/HelpButton";
+import { STATUS } from "renderer/providers/tiktok/lib/procedures/action-procedure";
+import { getStatus } from "renderer/providers/tiktok/lib/status";
+
+const getStatusTexts = (statusKey: keyof typeof STATUS): string[] | void => {
+  switch (statusKey) {
+    case "monitoring-pending":
+    case "data-requested":
+      return [
+        "DSGVO-Daten angefordert",
+        "Es kann eine Weile dauern, bis TikTok die Daten bereitstellt.",
+      ];
+
+    case "data-downloaded":
+      return [
+        "DSGVO-Daten werden verarbeitet",
+        "Die DataSkop-App hat deine DSGVO-Daten heruntergeladen und verarbeitet sie nun.",
+      ];
+
+    default:
+      break;
+  }
+};
 
 export default function WaitingPage(): JSX.Element {
   const history = useHistory();
@@ -32,8 +55,17 @@ export default function WaitingPage(): JSX.Element {
   const openSurvey = () => {
     // TODO: to be implemented
   };
+  const [statusKey, setStatusKey] = useState<string | null>(null);
+  const {
+    state: { scrapingProgress },
+  } = useScraping();
 
-  // const { currentStatus } = useStatus;
+  useEffect(() => {
+    (async () => {
+      const newStatus = await getStatus();
+      setStatusKey(newStatus);
+    })();
+  }, [scrapingProgress.value]);
 
   const footerSlots: FooterSlots = useMemo(
     () => ({
@@ -136,12 +168,12 @@ export default function WaitingPage(): JSX.Element {
           </div>
           <div className="mt-24 text-base font-medium relative">
             <span className="absolute inset-0 animate-fade1 flex items-center justify-center">
-              <div className="rounded-full bg-white/30 px-5 py-4">
+              <div className="rounded-full bg-white/50 px-5 py-4">
                 Du erhältst eine Benachrichtigung, sobald es weitergehen kann.
               </div>
             </span>
             <span className="absolute inset-0 animate-fade2 flex items-center justify-center">
-              <div className="rounded-full bg-white/30 px-5 py-4">
+              <div className="rounded-full bg-white/50 px-5 py-4">
                 Du kannst die App schließen, aber sie muss im Hintergrund
                 geöffnet bleiben.
               </div>

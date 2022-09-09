@@ -1,6 +1,7 @@
 import cheerio from "cheerio";
 import { currentDelay } from "renderer/lib/delay";
 import { clickOnElement, getReadyHtml } from "renderer/lib/scraping";
+import { STATUS } from "renderer/providers/tiktok/lib/status";
 import {
   GetCurrentHtml,
   GetHtmlFunction,
@@ -22,33 +23,6 @@ import {
   - monitoring-nothing-found
     -
 */
-
-const STATUS_TEXTS = {
-  "monitoring-pending": {
-    title: "Warte auf Datenexport",
-    body: "Der Datenexport wird gerade erzeugt...",
-  },
-  "monitoring-download-available": {
-    title: "Download verfügbar",
-    body: "Der Datenexport steht zum Download bereit",
-  },
-  "monitoring-download-expired": {
-    title: "Download abgelaufen",
-    body: "Der Datenexport muss erneut beantragt werden.",
-  },
-  "monitoring-captcha": {
-    title: "Captcha erforderlich",
-    body: "Wir konnten den Status der Datenspende aufgrund eines Captchas nicht überprüfen.",
-  },
-  "monitoring-error-nothing-found": {
-    title: "Fehler",
-    body: "Der Datenexport muss erneut beantragt werden.",
-  },
-  "monitoring-error-tab-not-found": {
-    title: "Fehler",
-    body: "Der Datenexport muss erneut beantragt werden.",
-  },
-};
 
 const isCaptcha = ($html: cheerio.Root) => {
   return !!$html(
@@ -171,7 +145,7 @@ const monitorDataExport = async (getHtml: GetHtmlFunction) => {
 
   // the lang paramater is important because we are filtering by text later on
   const getCurrentHtml = await getHtml(GET_DATA_URL);
-  let status: keyof typeof STATUS_TEXTS = "monitoring-error-nothing-found";
+  let status: keyof typeof STATUS = "monitoring-error-nothing-found";
 
   if (await isDumpCreationPending(getCurrentHtml)) {
     status = "monitoring-pending";
@@ -191,7 +165,9 @@ const monitorDataExport = async (getHtml: GetHtmlFunction) => {
     status = "monitoring-captcha";
   }
 
-  const { title, body } = STATUS_TEXTS[status];
+  const {
+    notification: { title, body },
+  } = STATUS[status];
   window.electron.ipc.invoke("show-notification", title, body);
 
   return { status };
@@ -296,4 +272,4 @@ async function* actionProcedure(
   return [1, null];
 }
 
-export { actionProcedure, STATUS_TEXTS };
+export { actionProcedure, STATUS };
