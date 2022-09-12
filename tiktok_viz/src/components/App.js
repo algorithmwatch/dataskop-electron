@@ -3,6 +3,7 @@ import { useState } from "react";
 import data000 from "../data/000-peter.json";
 import biggestData from "../data/001_redacted.json";
 import small from "../data/small_modified_peter.json";
+import med from "../data/med_modified_peter.json";
 import VizOne from "./VizOne";
 import VizTwo from "./VizTwo";
 import VizOneDropDown from "./VizOneDropDown";
@@ -27,8 +28,17 @@ function App() {
 
   const [viz, setViz] = useState(selectVizOptions[0]);
   // const [data, setData] = useState(selectDataOptions[0]);
-  let [videodata, logindata, tiktokLiveVids, likedVids, sharedVids, savedVids] =
-    shortenGdprData(data000);
+  let [
+    videodata,
+    logindata,
+    loginObj,
+    tiktokLiveVids,
+    likedVids,
+    sharedVids,
+    savedVids,
+  ] = shortenGdprData(biggestData);
+
+  console.log("login data", loginObj);
 
   // set to new variable or reassign?
   let shortenedSmallMetadata = shortenMetadata(peterScrapedData);
@@ -45,7 +55,6 @@ function App() {
           selected={viz}
         />
       </header>
-
       <h2>
         Select data{" "}
         <VizOneDropDown
@@ -57,14 +66,15 @@ function App() {
         // }}
         />
       </h2>
-
-      {/* <VizOne
+      <VizOne
         vidData={videodata}
         loginData={logindata}
+        loginObj={loginObj}
         liveData={tiktokLiveVids}
-      /> */}
-      <VizTwo metadata={shortenedSmallMetadata} gdprData={videodata} />
-      {/* <VizThree metadata={peterScrapedData} likedVids={likedVids} sharedVids={sharedVids} savedVids={savedVids} */}
+      />
+      {/* <VizTwo metadata={shortenedSmallMetadata} gdprData={videodata} /> */}
+      {/* <VizThree metadata={peterScrapedData} likedVids={likedVids} sharedVids={sharedVids} savedVids={savedVids} */}{" "}
+      {/* */}
     </div>
   );
 }

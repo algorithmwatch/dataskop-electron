@@ -1,3 +1,24 @@
+import { withoutTime } from "./viz_one_utilities";
+
+function makeLoginObj(array) {
+  let obj = {};
+  for (let loginEntry of array) {
+    // extract date (without time)
+    // console.log(loginEntry);
+    let dateTime = new Date(loginEntry.Date.replace(" UTC", ""));
+    let dateNoTime = withoutTime(dateTime);
+
+    // check if date is already a key, add date (w/out time) as a key and the entire loginEntry (with time) as a value
+    if (dateNoTime in obj) {
+      obj[dateNoTime].push(dateTime);
+    } else {
+      obj[dateNoTime] = [];
+      obj[dateNoTime].push(dateTime);
+    }
+  }
+  return obj;
+}
+
 export function shortenGdprData(data) {
   // for viz 1 & 2
   let videodata = data.Activity["Video Browsing History"].VideoList;
@@ -9,9 +30,13 @@ export function shortenGdprData(data) {
   let sharedVids = data.Activity["Share History"].ShareHistoryList;
   let savedVids = data.Activity["Favorite Videos"].FavoriteVideoList;
 
+  // For viz 1: modify login data to facilitate checking for whether a new login was made
+  let loginObj = makeLoginObj(logindata);
+
   return [
     videodata,
     logindata,
+    loginObj,
     tiktokLiveVids,
     likedVids,
     sharedVids,
@@ -22,8 +47,6 @@ export function shortenGdprData(data) {
 export function shortenMetadata(data) {
   let result = {};
   for (let url of Object.keys(data)) {
-    console.log(typeof url);
-
     if (
       data[url]["meta"] !== undefined &&
       data[url]["meta"]["results"] !== undefined
@@ -48,5 +71,4 @@ export function shortenMetadata(data) {
   //data = data.map((url) => ());
 
   return result;
-  // data.map((entry) => {Date: withoutTime(entry.Date), Length: })
 }

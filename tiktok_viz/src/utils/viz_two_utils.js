@@ -55,7 +55,6 @@ function buildDiversificationLabelsArray(urlInfo, divlabels, divlabelsAll) {
     let labels = urlInfo.DiversificationLabels;
     for (let label of labels) {
       if (label === "Others") continue;
-      // if (label === "Science") console.log("Science");
       label in divlabels ? (divlabels[label] += 1) : (divlabels[label] = 1);
       label in divlabelsAll
         ? (divlabelsAll[label] += 1)
@@ -63,21 +62,7 @@ function buildDiversificationLabelsArray(urlInfo, divlabels, divlabelsAll) {
     }
   }
 }
-// helper for getting ultimate top item
-// function getHighestItem(topItem, i, obj) {
-//   let maxCount = d3.max(Object.values(obj));
-//   if (i === 0 || maxCount > Object.values(topItem)[0]) {
-//     let topItemNames = Object.keys(obj).filter((key) => obj[key] === maxCount);
-//     // reset topItem object
-//     let tempTopItem = {};
-//     topItemNames.forEach((topName) => {
-//       tempTopItem[topName] = maxCount;
-//     });
-//     // console.log(tempTopItem);
-//     return tempTopItem;
-//   }
-//   return topItem;
-// }
+
 // helper function that gets the top (X) entries with the highest counts, numOfTopItems can be an input by user
 function getTop(i, obj, array, numOfTopItems, date_start, lastDayOfTick) {
   // topItem = getHighestItem(topItem, i, obj);
@@ -164,7 +149,6 @@ export function getTopData(
       break;
     }
     if (date_curr < lastDayOfTick) {
-      console.log(hashtags);
       getTop(
         i,
         hashtags,
@@ -204,7 +188,7 @@ export function getTopData(
       buildDiversificationLabelsArray(urlInfo, divlabels, divlabelsAll);
     }
   }
-  console.log("all hashtags", hashtagsAll);
+  // console.log("all hashtags", hashtagsAll);
   const topHashtag = getTopOverallItems(hashtagsAll);
   const topSound = getTopOverallItems(soundsAll);
   const topDivLabel = getTopOverallItems(divlabelsAll);

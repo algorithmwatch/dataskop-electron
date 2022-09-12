@@ -41,7 +41,7 @@ function VizOne(props) {
           range.value,
           props.vidData,
           props.loginData,
-          props.liveData
+          props.loginObj
         ),
       [graph, range.value]
     );
