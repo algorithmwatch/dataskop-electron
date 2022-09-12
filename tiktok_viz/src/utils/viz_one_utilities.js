@@ -188,7 +188,7 @@ function makeWatchtimeData(ogVidData, timeRange, loginObj) {
     // if gap between videos < 5 mins or no new login was made, add gap to total, to coreTime calculation, && add data entry to array
     if (gap < 300 || !checkForLogin(loginObj, date_prev, date_curr)) {
       // remove login check (3): ^^^ delete "|| !checkForLogin(loginObj, date_prev, date_curr)"
-      totActivity += gap / 60; // watchtime boxes fix (1): can change this to be "totActivity += gap / 60" to make boxes show time activity rather than number of vids watched
+      totActivity += 1; // watchtime boxes fix (1): can change this to be "totActivity += gap / 60" to make boxes show time activity rather than number of vids watched
       coreTime(coreTimeObj, date_curr.getHours(), gap);
       result.push({
         Date: withoutTime(date_prev),
@@ -300,7 +300,7 @@ function getNumAppOpen(ogLoginData, timeRange) {
 
 // converts times to hours + mins if the times are over 60 mins, input is in mins
 function convertTime(tot, typeOfGraph) {
-  // if (typeOfGraph === "watchtime") return `${tot} vids`; // watchtime boxes fix (2): delete this line of code
+  if (typeOfGraph === "watchtime") return `${tot} vids`; // watchtime boxes fix (2): delete this line of code
   if (tot < 60) return `${tot.toFixed(0)}m`;
   const mins = tot % 60;
   const hrs = Math.floor(tot / 60);
