@@ -402,9 +402,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       );
 
       if (allJsons.length) {
-        const data = JSON.parse(
-          fs.readFileSync(path.join(DOWNLOADS_FOLDER, allJsons[0]), "utf-8"),
-        );
+        const data = JSON.parse(fs.readFileSync(allJsons[0], "utf-8"));
         if (picks.length) return _.pick(data, picks);
         return data;
       }
