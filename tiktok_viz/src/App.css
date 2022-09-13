@@ -1,0 +1,86 @@
+.App {
+  text-align: center;
+  background-color: white;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.VizOne-header {
+  background-color: white;
+  /* min-height: 3vh;
+  margin-top: 3vh; */
+  margin-bottom: 2vh;
+  /* display: flex;
+  flex-direction: column; */
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 1vmin);
+  color: rgb(0, 0, 0);
+  z-index: 1;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.ui-container-stats {
+  /* height: 5vh; */
+  /* display: flex; */
+  /* flex-direction: column; */
+  align-items: center;
+  font-size: calc(10px + 1vmin);
+  margin: auto;
+  color: black;
+}
+
+.vizOne {
+  margin: auto;
+}
+
+.box1 {
+  /* flex: 2.5 */
+  display: inline-block;
+  width: 25%;
+}
+
+.box2 {
+  /* flex: 2.5 */
+  display: inline-block;
+  width:25%;
+}
+
+.box3 {
+  /* flex: 2.5 */
+  display: inline-block;
+  width: 25%
+}
+
+.box4 {
+  /* flex:2.5 */
+  display: inline-block;
+  width:25%;
+}
+
+.toggle-button {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  z-index: 2;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
