@@ -1,14 +1,8 @@
 import "../App.css";
 import { useState } from "react";
-import data000 from "../data/000-peter.json";
-import biggestData from "../data/001_redacted.json";
-import small from "../data/small_modified_peter.json";
-import med from "../data/med_modified_peter.json";
 import VizOne from "./VizOne";
 import VizTwo from "./VizTwo";
 import VizOneDropDown from "./VizOneDropDown";
-import peterScrapedData from "../data/videometa.json";
-// import smallTestingMetadata from "../data/smallTestingMetadata.json";
 import { breakFrequency, twoOrLessVids } from "../utils/viz_one_utilities";
 import { shortenGdprData, shortenMetadata } from "../utils/shorten_data";
 

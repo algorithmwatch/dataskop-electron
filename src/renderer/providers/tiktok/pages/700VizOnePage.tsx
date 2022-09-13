@@ -8,10 +8,14 @@ import { useHistory } from "react-router";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { useNavigation } from "../../../contexts";
+import VizOne from "../components/visualizations/components/VizOne";
+import { useData } from "../lib/hooks";
 
 export default function VizOnePage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
+
+  const { dump } = useData();
 
   const footerSlots: FooterSlots = {
     center: [
@@ -39,10 +43,7 @@ export default function VizOnePage(): JSX.Element {
 
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>
-      <h1 className="hl-4xl mb-20">Viz One Page</h1>
-      <div className="space-y-4">
-        <p>This is the content</p>
-      </div>
+      {dump && <VizOne gdprData={dump} />}
     </WizardLayout>
   );
 }

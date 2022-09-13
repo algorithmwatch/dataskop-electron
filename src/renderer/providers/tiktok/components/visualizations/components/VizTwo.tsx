@@ -1,14 +1,12 @@
 import * as Plot from "@observablehq/plot";
 import * as d3 from "d3";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { getTopData } from "../utils/viz_two_utils";
-import { getDayOfWeek } from "../utils/viz_one_utilities";
+import { getDayOfWeek, convertDaysToMs } from "../utils/viz_one_utilities";
 import VizBoxes from "./VizBoxes";
 import VizOneDropDown from "./VizOneDropDown";
 import VizOneButtons from "./VizOneButtons";
-import React from "react";
 import addTooltips from "../utils/tooltips";
-import { convertDaysToMs } from "../utils/viz_one_utilities";
 
 function VizTwo(props) {
   // const soundRef = useRef();
@@ -16,7 +14,7 @@ function VizTwo(props) {
   // const diverseRef = useRef();
   const toggleRef = useRef();
 
-  let coreTimeString = null;
+  const coreTimeString = null;
   const rangeOptions = [
     { option: "letzte 90 Tage", value: 90 },
     { option: "letzte 180 Tage", value: 180 },
@@ -41,7 +39,7 @@ function VizTwo(props) {
   ] = React.useMemo(
     () =>
       getTopData(topNum.value, 7, range.value, props.metadata, props.gdprData),
-    [topNum.value, 7, range.value]
+    [topNum.value, 7, range.value],
   );
 
   // console.log("hashtagdata", hashtagData);
@@ -55,7 +53,7 @@ function VizTwo(props) {
   const [graph, setGraph] = useState(graphOptions[0].value);
 
   function getRightFormat(d) {
-    let enddate = new Date(d - convertDaysToMs(7 - 1));
+    const enddate = new Date(d - convertDaysToMs(7 - 1));
     return `${enddate.getDate()}.${
       enddate.getMonth() === 0 ? 12 : enddate.getMonth() + 1
     } - ${d.getDate()}.${d.getMonth() === 0 ? 12 : d.getMonth() + 1}`;
@@ -147,7 +145,7 @@ function VizTwo(props) {
               : graph === "hashtags"
               ? hashtagData
               : diverseLabelData,
-            { ...commonLineProps }
+            { ...commonLineProps },
           ),
           Plot.dot(
             graph === "default"
@@ -155,13 +153,13 @@ function VizTwo(props) {
               : graph === "hashtags"
               ? hashtagData
               : diverseLabelData,
-            { ...commonDotProps }
+            { ...commonDotProps },
           ),
         ],
       }),
       // console.log,
       (e) => setHighlight(e.match(/(.*):.*/)[1]),
-      () => setHighlight(null)
+      () => setHighlight(null),
     );
     toggleRef.current.append(chart);
 

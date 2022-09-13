@@ -96,7 +96,7 @@ function addTimeOfDay(ogVidData, timeRange, loginObj) {
 
   // compute date you want to stop looping
   const dateToStop = new Date(
-    withoutTime(date_prev) - convertDaysToMs(timeRange - 1)
+    withoutTime(date_prev) - convertDaysToMs(timeRange - 1),
   );
 
   for (let entry of ogVidData) {
@@ -172,7 +172,7 @@ function makeWatchtimeData(ogVidData, timeRange, loginObj) {
 
   // compute date you want to stop looping
   const dateToStop = new Date(
-    withoutTime(date_prev) - convertDaysToMs(timeRange - 1)
+    withoutTime(date_prev) - convertDaysToMs(timeRange - 1),
   );
   for (let entry of ogVidData) {
     let date_curr = new Date(entry.Date);
@@ -219,7 +219,7 @@ function makeTimeSlots(ogVidData, timeRange, loginObj) {
 
   // compute date you want to stop looping
   const dateToStop = new Date(
-    withoutTime(date_prev) - convertDaysToMs(timeRange - 1)
+    withoutTime(date_prev) - convertDaysToMs(timeRange - 1),
   );
   for (let entry of ogVidData) {
     const date_curr = new Date(entry.Date);
@@ -278,7 +278,7 @@ function getNumAppOpen(ogLoginData, timeRange) {
 
   // compute date you want to stop looping
   const dateToStop = new Date(
-    withoutTime(date_prev) - convertDaysToMs(timeRange - 1)
+    withoutTime(date_prev) - convertDaysToMs(timeRange - 1),
   );
 
   for (let entry of ogLoginData) {
@@ -313,7 +313,7 @@ export function arrangeDataVizOne(
   timeRange,
   ogVidData,
   ogLoginData,
-  loginObj
+  loginObj,
 ) {
   let totActivity;
   let coreTimeArray;
@@ -323,19 +323,19 @@ export function arrangeDataVizOne(
     [result, totActivity, coreTimeArray] = makeTimeSlots(
       ogVidData,
       timeRange,
-      loginObj
+      loginObj,
     );
   } else if (typeOfGraph === "watchtime") {
     [result, totActivity, coreTimeArray] = makeWatchtimeData(
       ogVidData,
       timeRange,
-      loginObj
+      loginObj,
     );
   } else if (typeOfGraph === "default") {
     [result, totActivity, coreTimeArray] = addTimeOfDay(
       ogVidData,
       timeRange,
-      loginObj
+      loginObj,
     );
   }
   let avgMinsPerDay = totActivity / timeRange;
@@ -347,7 +347,7 @@ export function arrangeDataVizOne(
   totActivity = convertTime(totActivity, typeOfGraph);
   avgMinsPerDay = convertTime(
     typeOfGraph === "watchtime" ? avgMinsPerDay.toFixed(1) : avgMinsPerDay,
-    typeOfGraph
+    typeOfGraph,
   );
   return [totActivity, avgMinsPerDay, numAppOpen, coreTimeString, result];
 }
@@ -359,7 +359,7 @@ export function arrangeDataVizOne(
  * @returns
  */
 
-// helper function --- general average
+// // helper function --- general average
 // function makeArrayBreakTimesGen(data) {
 //   let time_prev = null;
 //   let breakTimes = [];
@@ -420,7 +420,7 @@ export function arrangeDataVizOne(
 
 //   const averagePerDay = makeArrayAvgPerDay(data);
 
-//   //get length of breakTimes
+//   // get length of breakTimes
 //   const breakArrayLength = breakTimes.length;
 
 //   // count how many values < 5, < 10, < 2 there are and

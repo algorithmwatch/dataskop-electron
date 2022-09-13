@@ -1,13 +1,11 @@
 import * as Plot from "@observablehq/plot";
-import * as d3 from "d3";
-import { useEffect, useRef, useState } from "react";
-import { arrangeDataVizOne } from "../utils/viz_one_utilities";
-import { getDayOfWeek } from "../utils/viz_one_utilities";
-import VizOneBoxes from "./VizBoxes";
-import VizOneDropDown from "./VizOneDropDown";
-import VizOneToggleButtons from "./VizOneButtons";
-import React from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { shortenGdprData } from "../utils/shorten_data";
 import addTooltips from "../utils/tooltips";
+import { arrangeDataVizOne, getDayOfWeek } from "../utils/viz_one_utilities";
+import VizOneBoxes from "./VizBoxes";
+import VizOneToggleButtons from "./VizOneButtons";
+import VizOneDropDown from "./VizOneDropDown";
 
 function rangeOfTime(timeofday) {
   if (timeofday === "Morgens") return "6:00 - 11:59";
@@ -16,8 +14,18 @@ function rangeOfTime(timeofday) {
   if (timeofday === "Nachts") return "22:00 - 5:59";
 }
 
-function VizOne(props) {
-  const toggleRef = useRef();
+function VizOne({ gdprData }) {
+  const toggleRef = useRef<null | HTMLDivElement>(null);
+
+  const [
+    videodata,
+    logindata,
+    loginObj,
+    tiktokLiveVids,
+    likedVids,
+    sharedVids,
+    savedVids,
+  ] = useMemo(() => shortenGdprData(gdprData), [gdprData]);
 
   const rangeOptions = [
     { option: "letzte 7 Tage", value: 7 },
@@ -36,14 +44,8 @@ function VizOne(props) {
   const [totActivity, avgMinsPerDay, numAppOpen, coreTimeString, videoData] =
     React.useMemo(
       () =>
-        arrangeDataVizOne(
-          graph,
-          range.value,
-          props.vidData,
-          props.loginData,
-          props.loginObj
-        ),
-      [graph, range.value]
+        arrangeDataVizOne(graph, range.value, videodata, logindata, loginObj),
+      [graph, range.value],
     );
 
   const commonProps = {
@@ -93,7 +95,7 @@ function VizOne(props) {
               : (d) => `${d.TotalTime.toFixed(0)} min.`,
           reverse: true,
           fill: graph === "timeslots" ? "TimeOfDay" : "#9999ff",
-        })
+        }),
       ),
       Plot.ruleY([0]),
     ],
@@ -120,8 +122,8 @@ function VizOne(props) {
             x: "Date",
             fill: "GapLabel",
             title: (d) => `Number of vids: `,
-          }
-        )
+          },
+        ),
       ),
 
       Plot.ruleY([0]),
@@ -134,10 +136,10 @@ function VizOne(props) {
       Plot.plot(
         graph === "default" || graph === "timeslots"
           ? timeslotsAndSingleColorBarsPlot
-          : watchtimePlot
-      )
+          : watchtimePlot,
+      ),
     );
-    toggleRef.current.append(chart);
+    if (toggleRef.current) toggleRef.current.append(chart);
     return () => chart.remove();
   }, [videoData, graph]);
 
@@ -208,7 +210,7 @@ function VizOne(props) {
           />
         </div>
       </div>
-      <div ref={toggleRef}></div>
+      <div ref={toggleRef} />
     </div>
   );
 }

@@ -1,14 +1,38 @@
 import * as d3 from "d3";
 import { html } from "htl";
 
+// To generate a unique ID for each chart so that they styles only apply to that chart
+const idGenerator = () => {
+  const S4 = () => {
+    // eslint-disable-next-line no-bitwise
+    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+  };
+  return `a${S4()}${S4()}`;
+};
+
+// Function to position the tooltip
+const hover = (pos, text, chart) => {
+  if (!d3.select(".dataskop-tooltip").empty()) return;
+
+  const bbox = chart.getBoundingClientRect();
+
+  const left = pos[0] + bbox.x;
+  const top = pos[1] + bbox.y;
+  d3.select("body")
+    .append("div")
+    .attr("class", "dataskop-tooltip")
+    .text(text)
+    .attr("style", `position: absolute; top:${top}px; left: ${left}px;`);
+};
+
 const addTooltips = (
   chart,
   onMouseMove = null,
   onMouseOut = null,
-  hover_styles = { opacity: 0.9 }
+  hover_styles = { opacity: 0.9 },
 ) => {
   // Add a unique id to the chart for styling
-  const id = id_generator();
+  const id = idGenerator();
   // Add the event listeners
   d3.select(chart)
     .attr("id", id)
@@ -41,7 +65,7 @@ const addTooltips = (
     });
 
   // Add styles
-  const style_string = Object.keys(hover_styles)
+  const styleString = Object.keys(hover_styles)
     .map((d) => {
       return `${d}:${hover_styles[d]};`;
     })
@@ -54,34 +78,11 @@ const addTooltips = (
        pointer-events: all;
       }
       #${id} .has-title:hover {
-        ${style_string}
+        ${styleString}
     }
   </style>`;
   chart.appendChild(style);
   return chart;
-};
-
-// Function to position the tooltip
-const hover = (pos, text, chart) => {
-  if (!d3.select(".dataskop-tooltip").empty()) return;
-
-  const bbox = chart.getBoundingClientRect();
-
-  const left = pos[0] + bbox.x;
-  const top = pos[1] + bbox.y;
-  d3.select("body")
-    .append("div")
-    .attr("class", "dataskop-tooltip")
-    .text(text)
-    .attr("style", `position: absolute; top:${top}px; left: ${left}px;`);
-};
-
-// To generate a unique ID for each chart so that they styles only apply to that chart
-const id_generator = () => {
-  var S4 = function () {
-    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-  };
-  return "a" + S4() + S4();
 };
 
 export default addTooltips;

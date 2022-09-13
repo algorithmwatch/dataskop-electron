@@ -1,17 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
-// import peterScrapedData from "../data/videometa.json";
-// import data000 from "../data/000-peter.json";
-import { withoutTime, convertDaysToMs } from "./viz_one_utilities";
 import * as d3 from "d3";
+import { withoutTime, convertDaysToMs } from "./viz_one_utilities";
+
 // let numOfTopItems = 5;
 // helper for setting up hashtag data
 function buildHashtagArray(urlInfo, hashtags, hashtagsAll) {
-  let vidTagsInfo = urlInfo.HashtagInfo;
+  const vidTagsInfo = urlInfo.HashtagInfo;
   if (vidTagsInfo.length !== 0) {
     // loop through all hashtags and collect them in an object
-    for (let tagInfo of vidTagsInfo) {
-      let tagName = tagInfo.title.toLowerCase();
+    for (const tagInfo of vidTagsInfo) {
+      const tagName = tagInfo.title.toLowerCase();
       // ignore "fyp"s
       if (
         tagName.indexOf("fyp") !== -1 ||
@@ -38,7 +37,7 @@ function buildSoundArray(urlInfo, sounds, soundsAll) {
     // url.meta.results !== undefined &&
     !urlInfo.SoundOriginal
   ) {
-    let soundTitle = urlInfo.SoundTitle;
+    const soundTitle = urlInfo.SoundTitle;
     soundTitle in sounds ? (sounds[soundTitle] += 1) : (sounds[soundTitle] = 1);
     soundTitle in soundsAll
       ? (soundsAll[soundTitle] += 1)
@@ -52,8 +51,8 @@ function buildDiversificationLabelsArray(urlInfo, divlabels, divlabelsAll) {
     // url.meta.results !== undefined &&
     urlInfo.DiversificationLabels !== undefined
   ) {
-    let labels = urlInfo.DiversificationLabels;
-    for (let label of labels) {
+    const labels = urlInfo.DiversificationLabels;
+    for (const label of labels) {
       if (label === "Others") continue;
       label in divlabels ? (divlabels[label] += 1) : (divlabels[label] = 1);
       label in divlabelsAll
@@ -68,10 +67,10 @@ function getTop(i, obj, array, numOfTopItems, date_start, lastDayOfTick) {
   // topItem = getHighestItem(topItem, i, obj);
   const dotRadius = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
   for (let i = 0; i < numOfTopItems; i++) {
-    let counts = Object.values(obj);
+    const counts = Object.values(obj);
     // get top item
-    let maxVal = d3.max(counts);
-    let itemNames = Object.keys(obj).filter((key) => obj[key] === maxVal);
+    const maxVal = d3.max(counts);
+    const itemNames = Object.keys(obj).filter((key) => obj[key] === maxVal);
     // add entry to data array
     // itemNames.length > 1
     // ?
@@ -101,9 +100,9 @@ function getTop(i, obj, array, numOfTopItems, date_start, lastDayOfTick) {
 // }
 // helper for getting the top hashtag, sound, and div label
 function getTopOverallItems(obj) {
-  let maxCount = d3.max(Object.values(obj));
-  let topItemNames = Object.keys(obj).filter((key) => obj[key] === maxCount);
-  //findTopItemsInObj(obj, maxCount);
+  const maxCount = d3.max(Object.values(obj));
+  const topItemNames = Object.keys(obj).filter((key) => obj[key] === maxCount);
+  // findTopItemsInObj(obj, maxCount);
   //
   return topItemNames;
 }
@@ -114,36 +113,36 @@ export function getTopData(
   tickLength,
   timeRange,
   metadata,
-  gdprVidData
+  gdprVidData,
 ) {
   // empty objects of items to keep counts of them
   let hashtags = {};
   let sounds = {};
   let divlabels = {};
   // empty objects of each item to keep counts of them for entire range of graph
-  let hashtagsAll = {};
-  let soundsAll = {};
-  let divlabelsAll = {};
+  const hashtagsAll = {};
+  const soundsAll = {};
+  const divlabelsAll = {};
   // empty objects of top items for a week
   // let topHashtag = {};
   // let topSound = {};
   // let topDivLabel = {};
   // empty arrays that will be fed into observable plot
-  let hashtagData = [];
-  let soundData = [];
-  let diverseLabelData = [];
+  const hashtagData = [];
+  const soundData = [];
+  const diverseLabelData = [];
   // const vidData = .Activity["Video Browsing History"].VideoList;
   let date_start = withoutTime(new Date(gdprVidData[0].Date));
   const dateToStop = new Date(
-    withoutTime(date_start) - convertDaysToMs(timeRange - 1)
+    withoutTime(date_start) - convertDaysToMs(timeRange - 1),
   );
   let lastDayOfTick = new Date(
-    withoutTime(date_start) - convertDaysToMs(tickLength - 1)
+    withoutTime(date_start) - convertDaysToMs(tickLength - 1),
   );
   let i = 0;
   // loop through all video data
-  for (let vid of gdprVidData) {
-    let date_curr = withoutTime(new Date(vid.Date));
+  for (const vid of gdprVidData) {
+    const date_curr = withoutTime(new Date(vid.Date));
     // stop looping when you reach end of [timeRange] days
     if (date_curr < dateToStop) {
       break;
@@ -155,7 +154,7 @@ export function getTopData(
         hashtagData,
         numOfTopItems,
         date_start,
-        lastDayOfTick
+        lastDayOfTick,
       );
       getTop(i, sounds, soundData, numOfTopItems, date_start, lastDayOfTick);
       getTop(
@@ -164,12 +163,12 @@ export function getTopData(
         diverseLabelData,
         numOfTopItems,
         date_start,
-        lastDayOfTick
+        lastDayOfTick,
       );
       // reset everything
       date_start = date_curr;
       lastDayOfTick = new Date(
-        withoutTime(date_start) - convertDaysToMs(tickLength - 1)
+        withoutTime(date_start) - convertDaysToMs(tickLength - 1),
       );
       // reset objects
       hashtags = {};
@@ -178,10 +177,10 @@ export function getTopData(
       // console.log("empty objs", hashtags, sounds, divlabels);
       i++;
     } else {
-      let vidUrl = vid.VideoLink;
+      const vidUrl = vid.VideoLink;
       // find vid url within scraped data
       // console.log(metadata[vidUrl]);
-      let urlInfo = metadata[vidUrl];
+      const urlInfo = metadata[vidUrl];
       if (urlInfo === undefined) continue;
       buildHashtagArray(urlInfo, hashtags, hashtagsAll);
       buildSoundArray(urlInfo, sounds, soundsAll);
