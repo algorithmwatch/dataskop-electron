@@ -52,7 +52,7 @@ export default function UploadDataExportPage(): JSX.Element {
           await currentDelay();
           dispatch({
             type: "start-scraping",
-            filterSteps: (x) => x.slug.includes("scraping"),
+            filterSteps: (x) => x.type === "scraping",
           });
 
           history.push("/tiktok/waiting");

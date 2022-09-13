@@ -3,12 +3,15 @@
  */
 
 import { b } from "@algorithmwatch/schaufel-ab";
-import { getTiktokVideoMeta } from "@algorithmwatch/schaufel-core";
+import {
+  getTiktokVideoMeta,
+  idToTiktokUrl,
+} from "@algorithmwatch/schaufel-core";
 import { BrowserWindow } from "electron";
-import fetch from "electron-fetch";
+import log from "electron-log";
 import _ from "lodash";
 import { addLookups, addLookupsToUpload, getLookups } from "../db";
-import { addMainHandler } from "../utils";
+import { addMainHandler, fetchBackend } from "../utils";
 
 export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
   addMainHandler(
@@ -24,20 +27,31 @@ export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
         getLookups(ids),
         (x) => x[1] !== null,
       );
+      log.info(
+        `${existings.length} existing lookups and ${missing.length} missing`,
+      );
+
       const missingKeys = missing.map(_.head) as string[];
 
       // check backend lookups
+      const BACKEND_CHUNK_SIZE = 50;
       const backendDone = {};
       const todo: string[] = [];
-      for (const chunk of _.chunk(missingKeys, 50)) {
-        const res: any[] = await (
-          await fetch(
-            `${process.env.PLATFORM_URL}/api/lookups?${chunk
-              .map((x) => `l=${x}`)
-              .join("&")}`,
-          )
-        ).json();
-        const [chunkDone, chunkMissing] = _.partition(res, "data");
+      for (const chunk of _.chunk(missingKeys, BACKEND_CHUNK_SIZE)) {
+        const chunkDone: any[] = await fetchBackend(
+          `${process.env.PLATFORM_URL}/api/lookups?${chunk
+            .map((x) => `l=${x}`)
+            .join("&")}`,
+        );
+        const chunkMissing = _.difference(
+          chunk,
+          chunkDone.map(_.head),
+        ) as string[];
+
+        log.info(
+          `chunk: ${chunkDone.length} existing lookups from backups and ${chunkMissing.length} missing`,
+        );
+
         _.merge(
           backendDone,
           Object.fromEntries(chunkDone.map((x) => [x.id, b(x.data)])),
@@ -48,13 +62,24 @@ export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
 
       const todoLimited = max ? todo.slice(0, max) : todo;
       // scrape new lookups
-      const newDone = _.zip(
-        todoLimited,
-        await getTiktokVideoMeta(todoLimited, true, false, false, 0),
+
+      const fetched = await getTiktokVideoMeta(
+        todoLimited.map(idToTiktokUrl),
+        true,
+        false,
+        false,
+        false,
+        0,
       );
+
+      log.info(`Fetched ${fetched.length} for ${todoLimited.length}`);
+
+      const newDone = _.zip(todoLimited, fetched);
+
       const scrapedDone = Object.fromEntries(newDone);
       addLookups(scrapedDone);
       // save keys to upload them later
+      console.log(_.keys(scrapedDone));
       addLookupsToUpload(_.keys(scrapedDone));
       if (onlyScrape) return {};
       return _.merge(Object.fromEntries(existings), backendDone, scrapedDone);

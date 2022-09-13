@@ -3,9 +3,12 @@
  *
  * @module
  */
-import base64 from "base-64";
 import { ScrapingSession } from "renderer/lib/db";
 import { Campaign } from "renderer/providers/types";
+
+const toBase64 = (str: string) => {
+  return Buffer.from(str, "utf-8").toString("base64");
+};
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const postJson = (
@@ -18,7 +21,7 @@ const postJson = (
     body: JSON.stringify(body),
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Basic ${base64.encode(`user:${seriousProtection}`)}`,
+      Authorization: `Basic ${toBase64(`user:${seriousProtection}`)}`,
     },
   });
 };
@@ -32,7 +35,7 @@ const getActiveCampaigns = async (
   const activeCampaigns = await (
     await fetch(url, {
       headers: {
-        Authorization: `Basic ${base64.encode(`user:${seriousProtection}`)}`,
+        Authorization: `Basic ${toBase64(`user:${seriousProtection}`)}`,
       },
     })
   ).json();

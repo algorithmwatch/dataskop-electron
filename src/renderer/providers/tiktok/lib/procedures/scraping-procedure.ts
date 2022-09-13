@@ -9,7 +9,7 @@ const scrapeWatchedVideos = async (config: any): Promise<string> => {
 };
 
 const scrapeVideosTimeFrame = async (config: any): Promise<string> => {
-  return scrapeVideosTimeFrame(config);
+  return scrapeWatchedVideos(config);
   // const dump = await window.electron.ipc.invoke("scraping-get-download");
   // return "scraping-done";
 };
