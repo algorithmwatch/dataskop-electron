@@ -3,7 +3,7 @@ import { useState } from "react";
 import VizOne from "./VizOne";
 import VizTwo from "./VizTwo";
 import VizOneDropDown from "./VizOneDropDown";
-import { breakFrequency, twoOrLessVids } from "../utils/viz_one_utilities";
+import { breakFrequency, twoOrLessVids } from "../utils/viz-utils";
 import { shortenGdprData, shortenMetadata } from "../utils/shorten_data";
 
 function App() {

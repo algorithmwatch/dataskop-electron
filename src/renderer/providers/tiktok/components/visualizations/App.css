@@ -55,26 +55,26 @@
 .box2 {
   /* flex: 2.5 */
   display: inline-block;
-  width:25%;
+  width: 25%;
 }
 
 .box3 {
   /* flex: 2.5 */
   display: inline-block;
-  width: 25%
+  width: 25%;
 }
 
 .box4 {
   /* flex:2.5 */
   display: inline-block;
-  width:25%;
+  width: 25%;
 }
 
-.toggle-button {
+/* .toggle-button {
   margin-top: 3rem;
   margin-bottom: 3rem;
   z-index: 2;
-}
+} */
 
 @keyframes App-logo-spin {
   from {

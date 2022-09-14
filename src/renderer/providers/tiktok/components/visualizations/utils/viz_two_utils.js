@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import * as d3 from "d3";
-import { withoutTime, convertDaysToMs } from "./viz_one_utilities";
+import { withoutTime, convertDaysToMs } from "./viz-utils";
 
 // let numOfTopItems = 5;
 // helper for setting up hashtag data

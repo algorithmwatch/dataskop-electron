@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { withoutTime } from "./viz_one_utilities";
+import { withoutTime } from "./viz-utils";
 
 export default function getTopHashtags(peterScrapedData) {
   // create empty object that will contain author details (avatar link and account name)

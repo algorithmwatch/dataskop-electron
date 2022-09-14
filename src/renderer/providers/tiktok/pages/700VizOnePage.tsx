@@ -8,7 +8,7 @@ import { useHistory } from "react-router";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { useNavigation } from "../../../contexts";
-import VizOne from "../components/visualizations/components/VizOne";
+import VizOne from "../components/visualizations/VizOne";
 import { useData } from "../lib/hooks";
 
 export default function VizOnePage(): JSX.Element {
@@ -43,7 +43,9 @@ export default function VizOnePage(): JSX.Element {
 
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>
-      {dump && <VizOne gdprData={dump} />}
+      <div className="mt-12 flex flex-col">
+        {dump && <VizOne gdprData={dump} />}
+      </div>
     </WizardLayout>
   );
 }

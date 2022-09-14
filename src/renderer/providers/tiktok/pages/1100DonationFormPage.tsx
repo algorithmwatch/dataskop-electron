@@ -22,7 +22,7 @@ export default function DonationFormPage(): JSX.Element {
     setInputIsValid(event.target.checkValidity());
     setEmailInputValue(event.target.value);
   };
-  const saveDonationEmail = () => {
+  const saveDonationEmail = (value: string) => {
     // TODO: to be implemented
   };
 
@@ -43,7 +43,7 @@ export default function DonationFormPage(): JSX.Element {
         onClick={() => {
           if (!inputIsValid) return;
 
-          saveDonationEmail();
+          saveDonationEmail(emailInputValue);
           history.push(getNextPage("path"));
         }}
       >

@@ -1,12 +1,11 @@
 import * as Plot from "@observablehq/plot";
-import * as d3 from "d3";
 import React, { useEffect, useRef, useState } from "react";
-import { getTopData } from "../utils/viz_two_utils";
-import { getDayOfWeek, convertDaysToMs } from "../utils/viz_one_utilities";
-import VizBoxes from "./VizBoxes";
-import VizOneDropDown from "./VizOneDropDown";
-import VizOneButtons from "./VizOneButtons";
 import addTooltips from "../utils/tooltips";
+import { convertDaysToMs } from "../utils/viz-utils";
+import { getTopData } from "../utils/viz_two_utils";
+import VizBoxes from "../VizBox";
+import VizOneButtons from "./VizOneButtons";
+import VizOneDropDown from "./VizOneDropDown";
 
 function VizTwo(props) {
   // const soundRef = useRef();

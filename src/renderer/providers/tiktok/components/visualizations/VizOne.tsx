@@ -1,20 +1,65 @@
+import { faPenToSquare } from "@fortawesome/pro-regular-svg-icons";
 import * as Plot from "@observablehq/plot";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { shortenGdprData } from "../utils/shorten_data";
-import addTooltips from "../utils/tooltips";
-import { arrangeDataVizOne, getDayOfWeek } from "../utils/viz_one_utilities";
-import VizOneBoxes from "./VizBoxes";
-import VizOneToggleButtons from "./VizOneButtons";
-import VizOneDropDown from "./VizOneDropDown";
+import { SelectInput } from "renderer/providers/tiktok/components/visualizations/SelectInput";
+import VizOneToggleButtons from "./components/VizOneButtons";
+import { shortenGdprData } from "./utils/shorten_data";
+import addTooltips from "./utils/tooltips";
+import { arrangeDataVizOne, getDayOfWeek } from "./utils/viz-utils";
+import { VizBox } from "./VizBox";
 
-function rangeOfTime(timeofday) {
-  if (timeofday === "Morgens") return "6:00 - 11:59";
-  if (timeofday === "Mittags") return "12:00 - 17:59";
-  if (timeofday === "Abends") return "18:00 - 21:59";
-  if (timeofday === "Nachts") return "22:00 - 5:59";
+function rangeOfTime(timeofday: string) {
+  switch (timeofday) {
+    case "Morgens":
+      return "6:00 - 11:59";
+    case "Mittags":
+      return "12:00 - 17:59";
+    case "Abends":
+      return "18:00 - 21:59";
+    case "Nachts":
+      return "22:00 - 5:59";
+    default:
+      throw new Error("Unexpected value for timeofday");
+  }
 }
 
-function VizOne({ gdprData }) {
+const commonProps = {
+  width: 2000,
+  marginBottom: 75,
+  marginTop: 60,
+  height: 500,
+  marginLeft: 60,
+  marginRight: 60,
+  style: {
+    background: "transparent",
+  },
+  x: {
+    tickFormat: (d) =>
+      `${d.getDate()}.${
+        d.getMonth() === 0 ? 12 : d.getMonth() + 1
+      }\n${getDayOfWeek(d)}`,
+    // tickFormat: (d) =>
+    //   `${d.getDate()}.${
+    //     d.getMonth() === 0 ? 12 : d.getMonth() + 1
+    //   }.${d.getFullYear()}`,
+    // tickRotate: -90,
+    label: "Zeitverlauf",
+  },
+};
+
+const rangeOptions = [
+  { id: "1", label: "letzte 7 Tage", value: 7 },
+  { id: "2", label: "letzte 30 Tage", value: 30 },
+  { id: "3", label: "letzte 90 Tage", value: 90 },
+];
+
+const graphOptions = [
+  { option: "solid bars, watch activity", value: "default" },
+  { option: "time slot bars, watch activity", value: "timeslots" },
+  { option: "percentage bars, watchtime", value: "watchtime" },
+];
+
+function VizOne({ gdprData }: { gdprData: any }) {
   const toggleRef = useRef<null | HTMLDivElement>(null);
 
   const [
@@ -26,19 +71,7 @@ function VizOne({ gdprData }) {
     sharedVids,
     savedVids,
   ] = useMemo(() => shortenGdprData(gdprData), [gdprData]);
-
-  const rangeOptions = [
-    { option: "letzte 7 Tage", value: 7 },
-    { option: "letzte 30 Tage", value: 30 },
-    { option: "letzte 90 Tage", value: 90 },
-  ];
   const [range, setRange] = useState(rangeOptions[0]);
-
-  const graphOptions = [
-    { option: "solid bars, watch activity", value: "default" },
-    { option: "time slot bars, watch activity", value: "timeslots" },
-    { option: "percentage bars, watchtime", value: "watchtime" },
-  ];
   const [graph, setGraph] = useState(graphOptions[0].value);
 
   const [totActivity, avgMinsPerDay, numAppOpen, coreTimeString, videoData] =
@@ -47,30 +80,6 @@ function VizOne({ gdprData }) {
         arrangeDataVizOne(graph, range.value, videodata, logindata, loginObj),
       [graph, range.value],
     );
-
-  const commonProps = {
-    width: 2000,
-    marginBottom: 75,
-    marginTop: 60,
-    height: 500,
-    marginLeft: 60,
-    marginRight: 60,
-    style: {
-      background: "transparent",
-    },
-    x: {
-      tickFormat: (d) =>
-        `${d.getDate()}.${
-          d.getMonth() === 0 ? 12 : d.getMonth() + 1
-        }\n${getDayOfWeek(d)}`,
-      // tickFormat: (d) =>
-      //   `${d.getDate()}.${
-      //     d.getMonth() === 0 ? 12 : d.getMonth() + 1
-      //   }.${d.getFullYear()}`,
-      // tickRotate: -90,
-      label: "Zeitverlauf",
-    },
-  };
 
   const timeslotsAndSingleColorBarsPlot = {
     ...commonProps,
@@ -144,38 +153,26 @@ function VizOne({ gdprData }) {
   }, [videoData, graph]);
 
   return (
-    <div className="App">
-      <header className="VizOne-header flex">
-        <div>Deine Nutzungszeit </div>
-        <VizOneDropDown
-          options={rangeOptions}
-          onChange={(e) => {
-            setRange(e);
-          }}
-          selected={range}
-        />
-      </header>
-      <div className="ui-container-stats">
-        <div className="box1">
-          <VizOneBoxes statistic={totActivity} statisticText="Activität" />
-        </div>
-        <div className="box2">
-          <VizOneBoxes statistic={avgMinsPerDay} statisticText="pro Tag" />
-        </div>
-        <div className="box3">
-          <VizOneBoxes
-            statistic={`${numAppOpen} x`}
-            statisticText="App geöffnet"
-          />
-        </div>
-        <div className="box4">
-          <VizOneBoxes
-            statistic={`${coreTimeString} h`}
-            statisticText="Kernzeit"
+    <>
+      <div className="mx-auto flex items-center text-xl">
+        <div className="">Deine Nutzungszeit</div>
+        <div>
+          <SelectInput
+            options={rangeOptions}
+            selectedOption={range}
+            onUpdate={setRange}
+            buttonIcon={faPenToSquare}
           />
         </div>
       </div>
-      <div className="toggle-button" ref={toggleRef}>
+
+      <div>
+        <VizBox head={totActivity} label="Activität" />
+        <VizBox head={avgMinsPerDay} label="pro Tag" />
+        <VizBox head={`${numAppOpen} x`} label="App geöffnet" />
+        <VizBox head={`${coreTimeString} h`} label="Kernzeit" />
+      </div>
+      <div>
         <div className="flex">
           <VizOneToggleButtons
             // toggleColor="pink-toggle"
@@ -211,7 +208,7 @@ function VizOne({ gdprData }) {
         </div>
       </div>
       <div ref={toggleRef} />
-    </div>
+    </>
   );
 }
 
