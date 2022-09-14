@@ -43,6 +43,8 @@ const createScrapingGenerator = (
       }
       i += 1;
     }
+    window.electron.log.warn("Could not deserialze config");
+
     // should never happen
     return [1, 0, null];
   }

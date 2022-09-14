@@ -67,6 +67,8 @@ const youtubeChannels = [
   "youtube-scraping-background-videos",
 ];
 
+const tiktokChannels = ["tiktok-scrape-videos"];
+
 // whitelist certain channels for certain action
 const validInvokeChannels = mainChannels.concat(
   scrapingChannels,
@@ -74,6 +76,7 @@ const validInvokeChannels = mainChannels.concat(
   exportChannels,
   dbChannels,
   youtubeChannels,
+  tiktokChannels,
 );
 const validOnChannels = [
   "scraping-navigation-happened",

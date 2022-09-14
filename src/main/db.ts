@@ -61,11 +61,11 @@ const getLookups = (keys: string[]) => {
 
 const clearLookups = () => lookupStore.reset();
 
-const addLookupsToUpload = (keys: string[]) =>
-  dataStore.set(
-    "lookupsToUploads",
-    (dataStore.get("lookupsToUploads") as string[]).push(...keys),
-  );
+const addLookupsToUpload = (keys: string[]) => {
+  const newValues = dataStore.get("lookupsToUploads", []) as string[];
+  newValues.push(...keys);
+  dataStore.set("lookupsToUploads", newValues);
+};
 
 export default async function registerDbHandlers() {
   addMainHandler("db-write", (_e: any, data: any) => {

@@ -1,6 +1,7 @@
 /* eslint import/prefer-default-export: off */
 import dayjs from "dayjs";
 import { ipcMain } from "electron";
+import fetch from "electron-fetch";
 import log from "electron-log";
 import fs from "fs";
 import path from "path";
@@ -62,3 +63,22 @@ export const getFileList = (dirName: string): string[] => {
 
   return files;
 };
+
+// base64
+
+const toBase64 = (str: string) => {
+  return Buffer.from(str, "utf-8").toString("base64");
+};
+
+// Networking
+
+export const fetchBackend = async (url: string) =>
+  (
+    await fetch(url, {
+      headers: {
+        Authorization: `Basic ${toBase64(
+          `user:${process.env.SERIOUS_PROTECTION}`,
+        )}`,
+      },
+    })
+  ).json();

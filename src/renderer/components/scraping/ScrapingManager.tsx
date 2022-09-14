@@ -164,13 +164,12 @@ export default function ScrapingManager({
   // start scraping when `isScrapingStarted` was set to true
   useEffect(() => {
     const startScraping = async () => {
-      window.electron.log.info("Start scraping", campaign.config);
-
       // create a uuid every time you hit start scraping
-      const sId = uuidv4();
-
       const { config } = campaign;
       if (filterSteps) config.steps = config.steps.filter(filterSteps);
+      window.electron.log.info("Start scraping", config);
+
+      const sId = uuidv4();
 
       const gen = createScrapingGenerator(
         config,
@@ -216,6 +215,7 @@ export default function ScrapingManager({
         if (result === null || !result.success) {
           window.electron.log.info(
             "The scraping result was marked as unsuccessful. However, we continue.",
+            step,
             result,
           );
           sendEvent(campaign, "scraping error", result);
