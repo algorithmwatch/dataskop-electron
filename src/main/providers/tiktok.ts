@@ -74,6 +74,7 @@ export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
         false,
         false,
         0,
+        log.scope("schaufel").info,
       );
       log.info(`Fetched: ${fetched.length} videos`);
 

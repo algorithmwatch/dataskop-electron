@@ -64,7 +64,6 @@ const clearLookups = () => lookupStore.reset();
 const addLookupsToUpload = (keys: string[]) => {
   const newValues = dataStore.get("lookupsToUploads", []) as string[];
   newValues.push(...keys);
-  console.log(newValues);
   dataStore.set("lookupsToUploads", newValues);
 };
 
