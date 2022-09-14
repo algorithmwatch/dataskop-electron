@@ -1,5 +1,5 @@
 /**
- * Youtube specific code for main.
+ * Tiktok specific code for main.
  */
 
 import { b } from "@algorithmwatch/schaufel-ab";
@@ -13,9 +13,13 @@ import _ from "lodash";
 import { addLookups, addLookupsToUpload, getLookups } from "../db";
 import { addMainHandler, fetchBackend } from "../utils";
 
+const isResultSane = (x: any) => {
+  return x.error === null || x.error !== "Parsing error";
+};
+
 export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
   addMainHandler(
-    "tiktok-get-lookups",
+    "tiktok-scrape-videos",
     async (
       _event: any,
       ids: string[],
@@ -25,10 +29,10 @@ export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
       // check local lookups
       const [existings, missing] = _.partition(
         getLookups(ids),
-        (x) => x[1] !== null,
+        (x) => x[1] !== null && isResultSane(x[1]),
       );
       log.info(
-        `${existings.length} existing lookups and ${missing.length} missing`,
+        `Scraping Tiktok videos: ${existings.length} existing lookups and ${missing.length} missing`,
       );
 
       const missingKeys = missing.map(_.head) as string[];
@@ -49,7 +53,7 @@ export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
         ) as string[];
 
         log.info(
-          `chunk: ${chunkDone.length} existing lookups from backups and ${chunkMissing.length} missing`,
+          `Scraping chunk: ${chunkDone.length} existing lookups from backend and ${chunkMissing.length} missing`,
         );
 
         _.merge(
@@ -61,8 +65,8 @@ export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
       addLookups(backendDone);
 
       const todoLimited = max ? todo.slice(0, max) : todo;
-      // scrape new lookups
 
+      log.info(`Scraping: ${todoLimited.length} videos`);
       const fetched = await getTiktokVideoMeta(
         todoLimited.map(idToTiktokUrl),
         true,
@@ -71,16 +75,18 @@ export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
         false,
         0,
       );
+      log.info(`Fetched: ${fetched.length} videos`);
 
-      log.info(`Fetched ${fetched.length} for ${todoLimited.length}`);
-
-      const newDone = _.zip(todoLimited, fetched);
+      const newDone: any[] = _.zip(todoLimited, fetched).filter((x: any[]) =>
+        isResultSane(x[1]),
+      );
 
       const scrapedDone = Object.fromEntries(newDone);
       addLookups(scrapedDone);
+
       // save keys to upload them later
-      console.log(_.keys(scrapedDone));
       addLookupsToUpload(_.keys(scrapedDone));
+
       if (onlyScrape) return {};
       return _.merge(Object.fromEntries(existings), backendDone, scrapedDone);
     },

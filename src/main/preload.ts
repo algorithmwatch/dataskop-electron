@@ -67,7 +67,7 @@ const youtubeChannels = [
   "youtube-scraping-background-videos",
 ];
 
-const tiktokChannels = ["tiktok-get-lookups"];
+const tiktokChannels = ["tiktok-scrape-videos"];
 
 // whitelist certain channels for certain action
 const validInvokeChannels = mainChannels.concat(

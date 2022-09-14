@@ -4,7 +4,7 @@ import { getMostRecentWatchVideos } from "../data-wrangling";
 const scrapeWatchedVideos = async (config: any): Promise<string> => {
   const dump = await window.electron.ipc.invoke("scraping-get-download");
   const ids = getMostRecentWatchVideos(dump, config.max);
-  await window.electron.ipc.invoke("tiktok-get-lookups", ids, true);
+  await window.electron.ipc.invoke("tiktok-scrape-videos", ids, true);
   return "scraping-done";
 };
 
