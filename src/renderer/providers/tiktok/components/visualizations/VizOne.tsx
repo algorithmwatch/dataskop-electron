@@ -1,8 +1,8 @@
 import { faPenToSquare } from "@fortawesome/pro-regular-svg-icons";
 import * as Plot from "@observablehq/plot";
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import Switch from "renderer/components/Switch";
 import { SelectInput } from "renderer/providers/tiktok/components/visualizations/SelectInput";
-import VizOneToggleButtons from "./components/VizOneButtons";
 import { shortenGdprData } from "./utils/shorten_data";
 import addTooltips from "./utils/tooltips";
 import { arrangeDataVizOne, getDayOfWeek } from "./utils/viz-utils";
@@ -23,30 +23,6 @@ function rangeOfTime(timeofday: string) {
   }
 }
 
-const commonProps = {
-  width: 2000,
-  marginBottom: 75,
-  marginTop: 60,
-  height: 500,
-  marginLeft: 60,
-  marginRight: 60,
-  style: {
-    background: "transparent",
-  },
-  x: {
-    tickFormat: (d) =>
-      `${d.getDate()}.${
-        d.getMonth() === 0 ? 12 : d.getMonth() + 1
-      }\n${getDayOfWeek(d)}`,
-    // tickFormat: (d) =>
-    //   `${d.getDate()}.${
-    //     d.getMonth() === 0 ? 12 : d.getMonth() + 1
-    //   }.${d.getFullYear()}`,
-    // tickRotate: -90,
-    label: "Zeitverlauf",
-  },
-};
-
 const rangeOptions = [
   { id: "1", label: "letzte 7 Tage", value: 7 },
   { id: "2", label: "letzte 30 Tage", value: 30 },
@@ -61,7 +37,8 @@ const graphOptions = [
 
 function VizOne({ gdprData }: { gdprData: any }) {
   const toggleRef = useRef<null | HTMLDivElement>(null);
-
+  const [range, setRange] = useState(rangeOptions[0]);
+  const [graph, setGraph] = useState(graphOptions[0].value);
   const [
     videodata,
     logindata,
@@ -71,15 +48,39 @@ function VizOne({ gdprData }: { gdprData: any }) {
     sharedVids,
     savedVids,
   ] = useMemo(() => shortenGdprData(gdprData), [gdprData]);
-  const [range, setRange] = useState(rangeOptions[0]);
-  const [graph, setGraph] = useState(graphOptions[0].value);
-
   const [totActivity, avgMinsPerDay, numAppOpen, coreTimeString, videoData] =
     React.useMemo(
       () =>
         arrangeDataVizOne(graph, range.value, videodata, logindata, loginObj),
       [graph, range.value],
     );
+
+  const chartWidth = Math.round((window.outerWidth * 90) / 100);
+  const commonProps = {
+    width: chartWidth,
+    marginBottom: 75,
+    marginTop: 60,
+    height: 500,
+    marginLeft: 60,
+    marginRight: 60,
+    style: {
+      background: "transparent",
+      fontSize: "16px",
+    },
+    x: {
+      type: "band",
+      tickFormat: (d) =>
+        `${d.getDate()}.${
+          d.getMonth() === 0 ? 12 : d.getMonth() + 1
+        }\n${getDayOfWeek(d)}`,
+      // tickFormat: (d) =>
+      //   `${d.getDate()}.${
+      //     d.getMonth() === 0 ? 12 : d.getMonth() + 1
+      //   }.${d.getFullYear()}`,
+      // tickRotate: -90,
+      label: "Zeitverlauf",
+    },
+  };
 
   const timeslotsAndSingleColorBarsPlot = {
     ...commonProps,
@@ -114,7 +115,7 @@ function VizOne({ gdprData }: { gdprData: any }) {
     ...commonProps,
     y: {
       grid: true,
-      label: "Number of Videos",
+      label: "Nr. Videos",
     },
     color: {
       legend: true,
@@ -130,7 +131,7 @@ function VizOne({ gdprData }: { gdprData: any }) {
           {
             x: "Date",
             fill: "GapLabel",
-            title: (d) => `Number of vids: `,
+            title: (d) => `Nr. Videos: `,
           },
         ),
       ),
@@ -154,7 +155,7 @@ function VizOne({ gdprData }: { gdprData: any }) {
 
   return (
     <>
-      <div className="mx-auto flex items-center text-xl">
+      <div className="mx-auto flex items-center text-2xl mb-6">
         <div className="">Deine Nutzungszeit</div>
         <div>
           <SelectInput
@@ -166,48 +167,39 @@ function VizOne({ gdprData }: { gdprData: any }) {
         </div>
       </div>
 
-      <div>
-        <VizBox head={totActivity} label="Activität" />
+      <div className="flex mx-auto space-x-4 mb-6">
+        <VizBox head={totActivity} label="Aktivität" />
         <VizBox head={avgMinsPerDay} label="pro Tag" />
         <VizBox head={`${numAppOpen} x`} label="App geöffnet" />
         <VizBox head={`${coreTimeString} h`} label="Kernzeit" />
       </div>
-      <div>
-        <div className="flex">
-          <VizOneToggleButtons
-            // toggleColor="pink-toggle"
-            // classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
-            id="activity"
-            label="Activity"
-            checked={graph === "default"}
-            onChange={(e) => {
-              setGraph("default");
-            }}
-          />
-          <VizOneToggleButtons
-            // toggleColor="pink-toggle"
-            // classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
-            // textLabel="Tageszeiten"
-            id="tageszeiten"
-            label="Tageszeiten"
-            checked={graph === "timeslots"}
-            onChange={(e) => {
-              setGraph("timeslots");
-            }}
-          />
-          <VizOneToggleButtons
-            // toggleColor="pink-toggle"
-            // classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
-            id="watchtime"
-            label="Watchtime"
-            checked={graph === "watchtime"}
-            onChange={(e) => {
-              setGraph("watchtime");
-            }}
-          />
-        </div>
+
+      <div className="flex mx-auto space-x-4">
+        <Switch
+          label="Aktivität"
+          checked={graph === "default"}
+          onChange={(e) => {
+            setGraph("default");
+          }}
+        />
+        <Switch
+          label="Tageszeiten"
+          checked={graph === "timeslots"}
+          onChange={(e) => {
+            setGraph("timeslots");
+          }}
+        />
+        <Switch
+          label="Watchtime"
+          checked={graph === "watchtime"}
+          onChange={(e) => {
+            setGraph("watchtime");
+          }}
+        />
       </div>
-      <div ref={toggleRef} />
+
+      {/* Chart wrapper */}
+      <div ref={toggleRef} className="w-full min-h-[50vh]" />
     </>
   );
 }

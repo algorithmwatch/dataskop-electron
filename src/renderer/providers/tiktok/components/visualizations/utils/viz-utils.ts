@@ -51,6 +51,10 @@ export function getDayOfWeek(d: Date) {
   return day;
 }
 
+const formatNumber = (number: number) => {
+  return Math.round(number).toLocaleString("de-DE");
+};
+
 // helper function to check if dates are equal
 const checkDatesEqual = (date1: Date, date2: Date) =>
   date1.getFullYear() === date2.getFullYear() &&
@@ -324,12 +328,12 @@ function getNumAppOpen(ogLoginData: any, timeRange: number) {
 // TODO: create typeOfGraph type
 // converts times to hours + mins if the times are over 60 mins, input is in mins
 function convertTime(tot: number, typeOfGraph: string) {
-  if (typeOfGraph === "watchtime") return `${tot} vids`; // watchtime boxes fix (2): delete this line of code
-  if (tot < 60) return `${tot.toFixed(0)}m`;
+  if (typeOfGraph === "watchtime") return `${formatNumber(tot)} Videos`; // watchtime boxes fix (2): delete this line of code
+  if (tot < 60) return `${Math.round(tot)}m`;
   const mins = tot % 60;
   const hrs = Math.floor(tot / 60);
 
-  return `${hrs}h ${mins.toFixed(0)}m`;
+  return `${hrs}h ${Math.round(mins)}m`;
 }
 
 export const arrangeDataVizOne = (
@@ -389,8 +393,8 @@ export const arrangeDataVizOne = (
   // make totActivity & avgMinsPerDay into hour if > 60 mins
   const totActivityString = convertTime(totActivity, typeOfGraph);
   const avgMinsPerDayString = convertTime(
-    typeOfGraph === "watchtime" ? avgMinsPerDay : avgMinsPerDay,
-    // typeOfGraph === "watchtime" ? avgMinsPerDay.toFixed(1) : avgMinsPerDay,
+    // typeOfGraph === "watchtime" ? avgMinsPerDay : avgMinsPerDay,
+    typeOfGraph === "watchtime" ? Math.round(avgMinsPerDay) : avgMinsPerDay,
     typeOfGraph,
   );
   return [

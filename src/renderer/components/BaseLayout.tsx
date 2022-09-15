@@ -25,7 +25,7 @@ export default function BaseLayout({
       )}
 
       {/* "relative" + "z-index": header is fixed and body starts from upper border. make body overlap header */}
-      <main className="relative min-h-full flex flex-col z-10">{children}</main>
+      <main className="relative min-h-full flex flex-col">{children}</main>
     </>
   );
 }

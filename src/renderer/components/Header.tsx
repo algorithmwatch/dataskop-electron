@@ -8,7 +8,7 @@ import logo from "renderer/providers/tiktok/static/images/bildmarke.svg";
 
 const ToggleMenuButton = ({ toggle }: { toggle: () => void }) => {
   return (
-    <button type="button" className="mr-2" onClick={toggle}>
+    <button type="button" className="mr-2 pointer-events-auto" onClick={toggle}>
       <FontAwesomeIcon icon={faBars} size="2x" />
     </button>
   );
@@ -22,13 +22,13 @@ export default function Header({ toggleMenu }: { toggleMenu: () => void }) {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 p-4 flex justify-between items-center">
+      <header className="fixed z-10 pointer-events-none inset-x-0 top-0 p-4 flex justify-between items-center">
         {/* Logo */}
         <div className="relative">
           <img
             src={logo}
             alt="Dataskop Logo"
-            className="w-[52px]"
+            className="w-[52px] pointer-events-auto"
             onClick={() =>
               process.env.NODE_ENV === "development"
                 ? history.push("/")
