@@ -53,7 +53,7 @@ jobs:
           echo "PLATFORM_URL=${{ secrets.BETA_PLATFORM_URL }}" >> .env && echo "SERIOUS_PROTECTION=${{ secrets.BETA_SERIOUS_PROTECTION }}" >> .env;
           else echo "PLATFORM_URL=${{ secrets.PLATFORM_URL }}" >> .env && echo "SERIOUS_PROTECTION=${{ secrets.SERIOUS_PROTECTION }}" >> .env; fi &&
           echo "TRACK_EVENTS=${{ secrets.TRACK_EVENTS }}" >> .env &&
-          if [[ $GITHUB_TAG_VERSION == *"alpha"* ]]; then echo "UPDATE_FEED_URL=${{ secrets.INTERNAL_UPDATE_FEED_URL }}" >> .env else echo "UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }}" >> .env; fi
+          if [[ $GITHUB_TAG_VERSION == *"alpha"* ]]; then echo "UPDATE_FEED_URL=${{ secrets.INTERNAL_UPDATE_FEED_URL }}" >> .env else echo "UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }}" >> .env; fi &&
           if [[ $GITHUB_TAG_VERSION == *"beta"* || $GITHUB_TAG_VERSION == *"alpha"* ]]; then echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env; else echo "SENTRY_DSN=" >> .env; fi
 
       - name: Make `package.json` internal for alpha releases

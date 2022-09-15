@@ -57,6 +57,7 @@ AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY
 UPDATE_FEED_URL             Custom URL to make auto-update work
 INTERNAL_BUCKET             Bucket name for internal releases
+INTERNAL_UPDATE_FEED_URL
 
 PLATFORM_URL                Backend URL
 SERIOUS_PROTECTION          Password for Basic Auth
