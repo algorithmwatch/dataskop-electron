@@ -60,7 +60,7 @@ jobs:
         shell: bash
         run: >
           if [[ $GITHUB_TAG_VERSION == *"alpha"* ]]; then
-          node ./scripts/make_internal.js ${{ secrets.INTERNAL_BUCKET }} fi
+          node ./scripts/make_internal.js ${{ secrets.INTERNAL_BUCKET }} ; fi
 
       - name: Publish releases
         shell: bash
