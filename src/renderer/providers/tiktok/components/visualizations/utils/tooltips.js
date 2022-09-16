@@ -12,12 +12,20 @@ const idGenerator = () => {
 
 // Function to position the tooltip
 const hover = (pos, text, chart) => {
-  if (!d3.select(".dataskop-tooltip").empty()) return;
+  // add offset for tooltip
+  const left = pos[0] + 100;
+  const top = pos[1];
 
-  const bbox = chart.getBoundingClientRect();
-
-  const left = pos[0] + bbox.x;
-  const top = pos[1] + bbox.y;
+  const toolTipEle = d3.select(".dataskop-tooltip");
+  if (!toolTipEle.empty()) {
+    // update location of tooltip
+    toolTipEle.attr(
+      "style",
+      `position: absolute; top:${top}px; left: ${left}px;`,
+    );
+    return;
+  }
+  // add new tooltip
   d3.select("body")
     .append("div")
     .attr("class", "dataskop-tooltip")
@@ -31,6 +39,8 @@ const addTooltips = (
   onMouseOut = null,
   hover_styles = { opacity: 0.9 },
 ) => {
+  const body = d3.select("body");
+
   // Add a unique id to the chart for styling
   const id = idGenerator();
   // Add the event listeners
@@ -50,7 +60,7 @@ const addTooltips = (
       parent
         .on("mousemove", function (event) {
           const text = d3.select(this).attr("__title");
-          const pointer = d3.pointer(event);
+          const pointer = d3.pointer(event, body);
           if (text) hover(pointer, text.split("\n"), chart);
           else d3.selectAll(".dataskop-tooltip").remove();
 
