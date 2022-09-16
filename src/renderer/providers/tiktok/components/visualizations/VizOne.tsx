@@ -56,11 +56,12 @@ function VizOne({ gdprData }: { gdprData: any }) {
     );
 
   const chartWidth = Math.round((window.outerWidth * 90) / 100);
+  const chartHeight = Math.round((window.outerHeight * 40) / 100);
   const commonProps = {
     width: chartWidth,
+    height: chartHeight,
     marginBottom: 75,
     marginTop: 60,
-    height: 500,
     marginLeft: 60,
     marginRight: 60,
     style: {
@@ -84,6 +85,12 @@ function VizOne({ gdprData }: { gdprData: any }) {
 
   const timeslotsAndSingleColorBarsPlot = {
     ...commonProps,
+    x: {
+      ...commonProps.x,
+      ticks: videoData
+        .filter((_x: any, i: number) => i % 3 === 0)
+        .map((x) => x.Date),
+    },
     y: {
       grid: true,
       label: "Minuten",
