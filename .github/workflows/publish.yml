@@ -45,20 +45,22 @@ jobs:
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
-      # further below, we set ENV values for renderer + main
-      # (maybe this can be fixed to always use this .env files)
-      - name: Setup dotenv files (for renderer)
+      - name: Setup dotenv files
         shell: bash
         run: >
           echo $GITHUB_TAG_VERSION &&
-          if [[ $GITHUB_TAG_VERSION == *"beta"* ]]; then
-          echo "PLATFORM_URL=${{ secrets.BETA_PLATFORM_URL }}" >> .env; else echo "PLATFORM_URL=${{ secrets.PLATFORM_URL }}" >> .env; fi &&
-          echo "SERIOUS_PROTECTION=${{ secrets.SERIOUS_PROTECTION }}" >> .env &&
+          if [[ $GITHUB_TAG_VERSION == *"beta"* || $GITHUB_TAG_VERSION == *"alpha"* ]]; then
+          echo "PLATFORM_URL=${{ secrets.BETA_PLATFORM_URL }}" >> .env && echo "SERIOUS_PROTECTION=${{ secrets.BETA_SERIOUS_PROTECTION }}" >> .env;
+          else echo "PLATFORM_URL=${{ secrets.PLATFORM_URL }}" >> .env && echo "SERIOUS_PROTECTION=${{ secrets.SERIOUS_PROTECTION }}" >> .env; fi &&
           echo "TRACK_EVENTS=${{ secrets.TRACK_EVENTS }}" >> .env &&
-          echo "UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }}" >> .env &&
-          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
-        # If you only want to enable sentry for beta releases, adapt the line above.
-        # if [[ $GITHUB_TAG_VERSION == *"beta"* ]]; then echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env; else echo "SENTRY_DSN=" >> .env; fi
+          if [[ $GITHUB_TAG_VERSION == *"alpha"* ]]; then echo "UPDATE_FEED_URL=${{ secrets.INTERNAL_UPDATE_FEED_URL }}" >> .env else echo "UPDATE_FEED_URL=${{ secrets.UPDATE_FEED_URL }}" >> .env; fi &&
+          if [[ $GITHUB_TAG_VERSION == *"beta"* || $GITHUB_TAG_VERSION == *"alpha"* ]]; then echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env; else echo "SENTRY_DSN=" >> .env; fi
+
+      - name: Make `package.json` internal for alpha releases
+        shell: bash
+        run: >
+          if [[ $GITHUB_TAG_VERSION == *"alpha"* ]]; then
+          node ./scripts/make_internal.js ${{ secrets.INTERNAL_BUCKET }} ; fi
 
       - name: Publish releases
         shell: bash
@@ -72,9 +74,6 @@ jobs:
           WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
           WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
 
-          # Required when pushing releases to GitHub
-          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
           # Push to S3-compliant Object Storage
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -87,7 +86,7 @@ jobs:
         shell: bash
         run: >
           curl -X POST ${{ secrets.KEYBASE_WEBHOOK }} -H 'Content-Type: application/json'
-          -d '{"msg": "The new version ${{ github.ref_name }} for ${{ runner.os }} has been released. 🎉"}'
+          -d '{"msg": "${{ github.ref_name }} for ${{ runner.os }} has been released."}'
 
       - name: Archive npm logs
         uses: actions/upload-artifact@v2

@@ -1,6 +1,6 @@
 {
   "name": "dataskop-electron",
-  "version": "0.4.11",
+  "version": "0.5.0-alpha.2",
   "description": "DataSkop Electron App: The Personal Data Dashboard (PeDD) of DataSkop",
   "main": "./src/main/main.ts",
   "scripts": {
@@ -20,9 +20,12 @@
     "cross-env": "cross-env",
     "format": "prettier --write .",
     "schema": "./scripts/create_schema.sh",
-    "version:pre": "cd release/app && npm version prerelease --no-git-tag-version --preid beta && cd ../.. && npm version prerelease --no-git-tag-version --preid beta",
-    "version:preminor": "cd release/app && npm version preminor --no-git-tag-version --preid beta && cd ../.. && npm version preminor --no-git-tag-version --preid beta",
-    "version:prepatch": "cd release/app && npm version prepatch --no-git-tag-version --preid beta && cd ../.. && npm version prepatch --no-git-tag-version --preid beta",
+    "version:beta:pre": "cd release/app && npm version prerelease --no-git-tag-version --preid beta && cd ../.. && npm version prerelease --no-git-tag-version --preid beta",
+    "version:beta:preminor": "cd release/app && npm version preminor --no-git-tag-version --preid beta && cd ../.. && npm version preminor --no-git-tag-version --preid beta",
+    "version:beta:prepatch": "cd release/app && npm version prepatch --no-git-tag-version --preid beta && cd ../.. && npm version prepatch --no-git-tag-version --preid beta",
+    "version:alpha:pre": "cd release/app && npm version prerelease --no-git-tag-version --preid alpha && cd ../.. && npm version prerelease --no-git-tag-version --preid alpha",
+    "version:alpha:preminor": "cd release/app && npm version preminor --no-git-tag-version --preid alpha && cd ../.. && npm version preminor --no-git-tag-version --preid alpha",
+    "version:alpha:prepatch": "cd release/app && npm version prepatch --no-git-tag-version --preid alpha && cd ../.. && npm version prepatch --no-git-tag-version --preid alpha",
     "version:minor": "cd release/app && npm version minor --no-git-tag-version && cd ../.. && npm version minor --no-git-tag-version",
     "version:patch": "cd release/app && npm version patch --no-git-tag-version && cd ../.. && npm version patch --no-git-tag-version",
     "postversion": "./scripts/postversion.sh $npm_package_version",
