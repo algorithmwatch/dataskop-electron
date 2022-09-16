@@ -13,24 +13,27 @@ const idGenerator = () => {
 // Function to position the tooltip
 const hover = (pos, text, chart) => {
   // add offset for tooltip
-  const left = pos[0] + 100;
+  const left = pos[0] + 30;
   const top = pos[1];
+  const foundTooltip = d3.select(".dataskop-tooltip");
 
-  const toolTipEle = d3.select(".dataskop-tooltip");
-  if (!toolTipEle.empty()) {
+  if (foundTooltip.empty()) {
+    // create tooyltip
+    d3.select("body")
+      .append("div")
+      .attr(
+        "class",
+        "dataskop-tooltip py-2 px-3 rounded shadow bg-white border-2 border-east-blue-200",
+      )
+      .text(text)
+      .attr("style", `position: absolute; top:${top}px; left: ${left}px;`);
+  } else {
     // update location of tooltip
-    toolTipEle.attr(
+    foundTooltip.attr(
       "style",
       `position: absolute; top:${top}px; left: ${left}px;`,
     );
-    return;
   }
-  // add new tooltip
-  d3.select("body")
-    .append("div")
-    .attr("class", "dataskop-tooltip")
-    .text(text)
-    .attr("style", `position: absolute; top:${top}px; left: ${left}px;`);
 };
 
 const addTooltips = (
@@ -92,6 +95,7 @@ const addTooltips = (
     }
   </style>`;
   chart.appendChild(style);
+
   return chart;
 };
 
