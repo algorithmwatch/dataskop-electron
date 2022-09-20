@@ -5,6 +5,7 @@ import {
   faUserSecret,
 } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import AdvancedMenu from "renderer/components/admin/AdvancedMenu";
 import Drawer from "renderer/components/Drawer";
 import { useConfig } from "renderer/contexts";
 
@@ -16,7 +17,7 @@ export const Menu = ({
   setIsOpen: (val: boolean) => void;
 }) => {
   const {
-    state: { version },
+    state: { version, showAdvancedMenu },
   } = useConfig();
 
   const menuItems = [
@@ -107,6 +108,27 @@ export const Menu = ({
 
         {/* footer menu */}
         <div className="pl-8 mb-4 relative">
+          {showAdvancedMenu && (
+            <div className="absolute right-8 bottom-0">
+              <AdvancedMenu
+                onItemClicked={() => setIsOpen(false)}
+                menuItems={[
+                  { label: "start", to: "/yt/start" },
+                  {
+                    label: "advanced scraping",
+                    to: "/admin/scraping/advanced",
+                  },
+                  {
+                    label: "scraping config editor",
+                    to: "/admin/scraping/editor",
+                  },
+                  { label: "results", to: "/admin/results" },
+                  { label: "settings", to: "/admin/settings" },
+                ]}
+              />
+            </div>
+          )}
+
           <div className="text-sm text-gray-600">
             DataSkop
             <br />
