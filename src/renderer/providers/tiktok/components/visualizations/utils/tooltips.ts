@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import { html } from "htl";
 
 // To generate a unique ID for each chart so that they styles only apply to that chart
 const idGenerator = () => {
@@ -11,7 +10,7 @@ const idGenerator = () => {
 };
 
 // Function to position the tooltip
-const hover = (pos, text, chart) => {
+const hover = (pos: [number, number], text: string) => {
   // add offset for tooltip
   const left = pos[0] + 30;
   const top = pos[1];
@@ -23,9 +22,9 @@ const hover = (pos, text, chart) => {
       .append("div")
       .attr(
         "class",
-        "dataskop-tooltip py-2 px-3 rounded shadow bg-white border-2 border-east-blue-200",
+        "dataskop-tooltip py-2 px-3 rounded shadow bg-white border-2 border-east-blue-200 whitespace-normal",
       )
-      .text(text)
+      .html(text)
       .attr("style", `position: absolute; top:${top}px; left: ${left}px;`);
   } else {
     // update location of tooltip
@@ -36,12 +35,7 @@ const hover = (pos, text, chart) => {
   }
 };
 
-const addTooltips = (
-  chart,
-  onMouseMove = null,
-  onMouseOut = null,
-  hover_styles = { opacity: 0.9 },
-) => {
+const addTooltips = (chart: any, onMouseMove = null, onMouseOut = null) => {
   const body = d3.select("body");
 
   // Add a unique id to the chart for styling
@@ -56,15 +50,18 @@ const addTooltips = (
       const parent = d3.select(this.parentNode); // visual mark on the screen
       const t = title.text();
       if (t) {
-        parent.attr("__title", t).classed("has-title", true);
+        parent
+          .attr("__title", t)
+          .classed("cursor-pointer pointer-events-auto hover:opacity-90", true);
         title.remove();
       }
       // Mouse events
       parent
         .on("mousemove", function (event) {
           const text = d3.select(this).attr("__title");
+          console.warn("text", text);
           const pointer = d3.pointer(event, body);
-          if (text) hover(pointer, text.split("\n"), chart);
+          if (text) hover(pointer, text.split("\n"));
           else d3.selectAll(".dataskop-tooltip").remove();
 
           if (onMouseMove) {
@@ -76,25 +73,6 @@ const addTooltips = (
           if (onMouseOut) onMouseOut();
         });
     });
-
-  // Add styles
-  const styleString = Object.keys(hover_styles)
-    .map((d) => {
-      return `${d}:${hover_styles[d]};`;
-    })
-    .join("");
-
-  // Define the styles
-  const style = html`<style>
-      #${id} .has-title {
-       cursor: pointer;
-       pointer-events: all;
-      }
-      #${id} .has-title:hover {
-        ${styleString}
-    }
-  </style>`;
-  chart.appendChild(style);
 
   return chart;
 };

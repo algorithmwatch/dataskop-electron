@@ -5,7 +5,7 @@ import Switch from "renderer/components/Switch";
 import { SelectInput } from "renderer/providers/tiktok/components/visualizations/SelectInput";
 import { shortenGdprData } from "./utils/shorten_data";
 import addTooltips from "./utils/tooltips";
-import { arrangeDataVizOne, getDayOfWeek } from "./utils/viz-utils";
+import { arrangeDataVizOne } from "./utils/viz-utils";
 import { VizBox } from "./VizBox";
 
 function rangeOfTime(timeofday: string) {
@@ -71,9 +71,7 @@ function VizOne({ gdprData }: { gdprData: any }) {
     x: {
       type: "band",
       tickFormat: (d) =>
-        `${d.getDate()}.${
-          d.getMonth() === 0 ? 12 : d.getMonth() + 1
-        }\n${getDayOfWeek(d)}`,
+        `${d.getDate()}.${d.getMonth() === 0 ? 12 : d.getMonth() + 1}`,
       // tickFormat: (d) =>
       //   `${d.getDate()}.${
       //     d.getMonth() === 0 ? 12 : d.getMonth() + 1
@@ -108,8 +106,24 @@ function VizOne({ gdprData }: { gdprData: any }) {
           y: "TotalTime",
           title:
             graph === "timeslots"
-              ? (d) => `${d.TimeOfDay}: ${rangeOfTime(d.TimeOfDay)}`
-              : (d) => `${d.TotalTime.toFixed(0)} min.`,
+              ? (d) =>
+                  `<strong>${d.TimeOfDay}</strong> (${rangeOfTime(
+                    d.TimeOfDay,
+                  )}) aktiv, am ${d.Date.getDate()}. ${d.Date.toLocaleString(
+                    "default",
+                    {
+                      month: "long",
+                    },
+                  )}`
+              : (d) =>
+                  `<strong>${d.TotalTime.toFixed(
+                    0,
+                  )} Min.</strong> aktiv am ${d.Date.getDate()}. ${d.Date.toLocaleString(
+                    "default",
+                    {
+                      month: "long",
+                    },
+                  )}`,
           reverse: true,
           fill: graph === "timeslots" ? "TimeOfDay" : "#9999ff",
         }),
