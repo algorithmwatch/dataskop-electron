@@ -50,6 +50,7 @@ export const STATUS = {
 
 const getStatus = async (): Promise<string> => {
   const row = await getLastResult();
+  if (!row) return "status-not-available";
   return _.get(row.fields, "status", "status-not-available") as string;
 };
 
