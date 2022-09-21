@@ -13,6 +13,13 @@ import { postEvent } from "renderer/lib/networking";
 import { isNumeric } from "renderer/lib/utils/math";
 import { Campaign } from "renderer/providers/types";
 
+export type UserConfig = {
+  htmlLogging: boolean;
+  debugLogging: boolean;
+  monitoring: boolean;
+  openAtLogin: boolean;
+};
+
 type Action =
   | {
       type: "set-config";
@@ -23,7 +30,7 @@ type Action =
       trackEvents: boolean;
       seriousProtection: string;
       autoSelectCampaign: number | null;
-      userConfig: any;
+      userConfig: UserConfig;
     }
   | { type: "show-advanced-menu" }
   | { type: "set-debug"; isDebug: boolean }
@@ -37,7 +44,7 @@ type State = {
   trackEvents: boolean;
   seriousProtection: string | null;
   autoSelectCampaign: number | null;
-  userConfig: any;
+  userConfig: null | UserConfig;
 };
 type ConfigProviderProps = { children: React.ReactNode };
 
@@ -94,9 +101,7 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
     (async () => {
       // in devopment, this returns the electron version instead of the app version.
       const version = await window.electron.ipc.invoke("get-version-number");
-
       const userConfig = await window.electron.ipc.invoke("db-get-config");
-
       const env = await window.electron.ipc.invoke("get-env");
 
       if (!env) {

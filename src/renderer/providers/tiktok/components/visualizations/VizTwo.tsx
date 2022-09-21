@@ -1,17 +1,29 @@
+/* eslint-disable no-nested-ternary */
 import * as Plot from "@observablehq/plot";
-import React, { useEffect, useRef, useState } from "react";
-import addTooltips from "../utils/tooltips";
-import { convertDaysToMs } from "../utils/viz-utils";
-import { getTopData } from "../utils/viz_two_utils";
-import VizBoxes from "../VizBox";
-import VizOneButtons from "./VizOneButtons";
-import VizOneDropDown from "./VizOneDropDown";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import VizOneButtons from "./components/VizOneButtons";
+import VizOneDropDown from "./components/VizOneDropDown";
+import { shortenGdprData } from "./utils/shorten_data";
+import addTooltips from "./utils/tooltips";
+import { convertDaysToMs } from "./utils/viz-utils";
+import { getTopData } from "./utils/viz_two_utils";
+import { VizBox } from "./VizBox";
 
-function VizTwo(props) {
+function VizTwo({ metadata, gdprData }: { gdprData: any; metadata: any }) {
+  const [
+    videodata,
+    logindata,
+    loginObj,
+    tiktokLiveVids,
+    likedVids,
+    sharedVids,
+    savedVids,
+  ] = useMemo(() => shortenGdprData(gdprData), [gdprData]);
+
   // const soundRef = useRef();
   // const hashtagsRef = useRef();
   // const diverseRef = useRef();
-  const toggleRef = useRef();
+  const toggleRef = useRef(null);
 
   const coreTimeString = null;
   const rangeOptions = [
@@ -36,8 +48,7 @@ function VizTwo(props) {
     topSound,
     topDivLabel,
   ] = React.useMemo(
-    () =>
-      getTopData(topNum.value, 7, range.value, props.metadata, props.gdprData),
+    () => getTopData(topNum.value, 7, range.value, metadata, videodata),
     [topNum.value, 7, range.value],
   );
 
@@ -70,7 +81,7 @@ function VizTwo(props) {
     },
     x: {
       type: "point",
-      tickFormat: (d) => getRightFormat(d),
+      tickFormat: (d: any) => getRightFormat(d),
 
       // tickFormat: (d) =>
       //   `${d.getDate()}.${
@@ -100,19 +111,19 @@ function VizTwo(props) {
     x: "DateStart",
     y: "Count",
     z: "Name",
-    title: (d) => `${d.Name}: ${d.Count}`,
+    title: (d: any) => `${d.Name}: ${d.Count}`,
     strokeOpacity:
       highlighted === null ? 1 : (d) => (d.Name === highlighted ? 1 : 0.5),
     strokeWidth:
       highlighted === null ? 3 : (d) => (d.Name === highlighted ? 4 : 2),
     stroke: "Name",
-    sort: (d) => highlighted === null || d.Name === highlighted,
+    sort: (d: any) => highlighted === null || d.Name === highlighted,
   };
 
   const commonDotProps = {
     x: "DateStart",
     y: "Count",
-    title: (d) => `${d.Name}: ${d.Count}`,
+    title: (d: any) => `${d.Name}: ${d.Count}`,
     stroke: "currentColor",
     strokeOpacity:
       highlighted === null ? 1 : (d) => (d.Name === highlighted ? 1 : 0.2),
@@ -156,8 +167,7 @@ function VizTwo(props) {
           ),
         ],
       }),
-      // console.log,
-      (e) => setHighlight(e.match(/(.*):.*/)[1]),
+      (e: any) => setHighlight(e.match(/(.*):.*/)[1]),
       () => setHighlight(null),
     );
     toggleRef.current.append(chart);
@@ -194,22 +204,13 @@ function VizTwo(props) {
       </header>
       <div className="ui-container-stats">
         <div className="box1">
-          <VizBoxes
-            statistic={`#${topHashtag}`}
-            statisticText="Most Frequent Hashtag OAT"
-          />
+          <VizBox head={`#${topHashtag}`} label="Most Frequent Hashtag OAT" />
         </div>
         <div className="box2">
-          <VizBoxes
-            statistic={`${topSound}`}
-            statisticText="Most Frequent Sound OAT"
-          />
+          <VizBox head={`${topSound}`} label="Most Frequent Sound OAT" />
         </div>
         <div className="box3">
-          <VizBoxes
-            statistic={`${topDivLabel}`}
-            statisticText="Most Frequent Category OAT"
-          />
+          <VizBox head={`${topDivLabel}`} label="Most Frequent Category OAT" />
         </div>
       </div>
       <div className="toggle-button" ref={toggleRef}>
@@ -217,10 +218,10 @@ function VizTwo(props) {
           <VizOneButtons
             // toggleColor="pink-toggle"
             // classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
-            id="sounds"
+            // id="sounds"
             label="Sounds/Music"
             checked={graph === "default"}
-            onChange={(e) => {
+            onChange={() => {
               setGraph("default");
             }}
           />
@@ -228,20 +229,20 @@ function VizTwo(props) {
             // toggleColor="pink-toggle"
             // classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
             // textLabel="Tageszeiten"
-            id="hashtags"
+            // id="hashtags"
             label="Hashtags"
             checked={graph === "hashtags"}
-            onChange={(e) => {
+            onChange={() => {
               setGraph("hashtags");
             }}
           />
           <VizOneButtons
             // toggleColor="pink-toggle"
             // classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
-            id="divlabels"
+            // id="divlabels"
             label="Diversification Labels/Categories"
             checked={graph === "divlabels"}
-            onChange={(e) => {
+            onChange={() => {
               setGraph("divlabels");
             }}
           />

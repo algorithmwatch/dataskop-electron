@@ -307,6 +307,13 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
   );
 
   const getCurrentHtml = async () => {
+    // wait until the browser is idle, wait at most 10 seconds
+    // see: https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback
+    await scrapingView?.webContents.executeJavaScript(
+      `new Promise(function(resolve, reject) { requestIdleCallback(() => resolve(true), { timeout: 10000 }) });`,
+      true,
+    );
+
     const html = await scrapingView?.webContents.executeJavaScript(
       "document.documentElement.outerHTML",
     );

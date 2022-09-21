@@ -99,17 +99,6 @@ To deploy a new version:
 
 [Read more on how to publish releases for production](./docs/publishing.md)
 
-## Logging
-
-Using [electron-log](https://www.npmjs.com/package/electron-log) to store logs on a user's computer.
-
-```bash
-# on macOS
-less ~/Library/Logs/DataSkop/renderer.log
-```
-
-Optionally using <https://sentry.io> to catch bugs in the wild.
-
 ## License
 
 MIT

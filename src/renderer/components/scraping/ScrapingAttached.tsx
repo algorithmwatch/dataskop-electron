@@ -66,7 +66,13 @@ export default function ScrapingAttached() {
   }, [userConfig?.monitoring, isScrapingFinished]);
 
   // Only render scraping manger when the campaign is set to avoid tedious guard clauses.
-  if (isAttached && campaign)
-    return <ScrapingManager disableInput={disableInput} campaign={campaign} />;
+  if (isAttached && campaign && userConfig)
+    return (
+      <ScrapingManager
+        disableInput={disableInput}
+        campaign={campaign}
+        userConfig={userConfig}
+      />
+    );
   return null;
 }

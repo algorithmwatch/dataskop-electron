@@ -18,6 +18,9 @@ const createScrapingGenerator = (
   getHtmlLazy: GetHtmlLazyFunction,
   procedureArgs: any,
 ) => {
+  window.electron.log.info(
+    `Called createScrapingGenerator with ${JSON.stringify(procedureArgs)}`,
+  );
   const genMakers = deserializeConfigSteps(scrapingConfig, mapping);
 
   async function* gen() {

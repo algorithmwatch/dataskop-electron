@@ -10,7 +10,6 @@ export default function AdvancedMenu({
   onItemClicked: any;
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
-
   const history = useHistory();
 
   const handleClick = (event: { currentTarget: any }) => {
