@@ -113,7 +113,8 @@ export const Menu = ({
               <AdvancedMenu
                 onItemClicked={() => setIsOpen(false)}
                 menuItems={[
-                  { label: "start", to: "/yt/start" },
+                  { label: "Start TikTok", to: "/tt/start" },
+                  { label: "Start YouTube", to: "/yt/start" },
                   {
                     label: "advanced scraping",
                     to: "/admin/scraping/advanced",

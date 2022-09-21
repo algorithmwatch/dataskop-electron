@@ -8,7 +8,12 @@
 import { range } from "lodash";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useConfig, useModal, useScraping } from "renderer/contexts";
+import {
+  useConfig,
+  useModal,
+  UserConfig,
+  useScraping,
+} from "renderer/contexts";
 import { currentDelay } from "renderer/lib/delay";
 import { createScrapingGenerator } from "renderer/lib/scraping";
 import { delay } from "renderer/lib/utils/time";
@@ -35,14 +40,13 @@ const CALLBACK_NAV = "scraping-navigation-happened";
 export default function ScrapingManager({
   disableInput = false,
   campaign,
+  userConfig,
 }: {
   disableInput?: boolean;
   campaign: Campaign;
+  userConfig: UserConfig;
 }): JSX.Element {
-  const {
-    state: { userConfig },
-    sendEvent,
-  } = useConfig();
+  const { sendEvent } = useConfig();
 
   const {
     state: {
@@ -169,16 +173,17 @@ export default function ScrapingManager({
       if (filterSteps) config.steps = config.steps.filter(filterSteps);
       window.electron.log.info("Start scraping", config);
 
-      const sId = uuidv4();
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      const sessionId = uuidv4();
 
       const gen = createScrapingGenerator(
         config,
         provider.deserializeMapping,
-        makeGetHtml(userConfig.logHtml),
+        makeGetHtml(userConfig.htmlLogging),
         getHtmlLazy,
         {
-          sessionId: sId,
-          logHtml: userConfig.logHtml,
+          sessionId,
+          htmlLogging: userConfig.htmlLogging,
           monitoring: userConfig.monitoring,
         },
       );
@@ -186,10 +191,10 @@ export default function ScrapingManager({
       dispatch({
         type: "scraping-has-started",
         stepGenerator: gen,
-        sessionId: sId,
+        sessionId,
       });
 
-      await addNewSession(sId, campaign.config, campaign);
+      await addNewSession(sessionId, campaign);
     };
 
     if (isScrapingStarted) startScraping();

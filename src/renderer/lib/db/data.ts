@@ -20,7 +20,7 @@
 import _ from "lodash";
 import { Low } from "lowdb";
 import PQueue from "p-queue";
-import { Campaign, ScrapingConfig } from "../../providers/types";
+import { Campaign } from "../../providers/types";
 import { ScrapingResultSaved, ScrapingSession } from "./types";
 
 type Data = {
@@ -65,11 +65,8 @@ const setUpDb = async () => {
 
 // sessions
 
-const addNewSession = async (
-  sessionId: string,
-  scrapingConfig: ScrapingConfig,
-  campaign: Campaign | null,
-) => {
+const addNewSession = async (sessionId: string, campaign: Campaign) => {
+  const scrapingConfig = campaign.config;
   const obj = {
     sessionId,
     startedAt: Date.now(),

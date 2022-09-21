@@ -12,10 +12,10 @@ const goToUrl = (url: string, options = {}): Promise<string> => {
 
 const clearStorage = () => window.electron.ipc.invoke("scraping-clear-storage");
 
-const makeGetHtml = (logHtml: boolean): GetHtmlFunction => {
+const makeGetHtml = (htmlLogging: boolean): GetHtmlFunction => {
   const getHtml = async (url: string): Promise<GetCurrentHtml> => {
     await goToUrl(url);
-    if (logHtml)
+    if (htmlLogging)
       return () => window.electron.ipc.invoke("scraping-log-html", url);
     return extractHtml;
   };
