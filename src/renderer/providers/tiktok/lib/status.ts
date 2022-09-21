@@ -1,51 +1,70 @@
 import _ from "lodash";
 import { getLastResult } from "renderer/lib/db";
 
-export const STATUS = {
+export const STATUS: {
+  [key: string]: { notification?: { title: string; body: string } };
+} = {
+  // TikTok data was requested and TikTok is busy, It didn't fail yet
   "monitoring-pending": {
     notification: {
       title: "DSGVO-Daten angefordert",
       body: "Es kann eine Weile dauern, bis TikTok die Daten bereitstellt.",
     },
   },
-  "monitoring-download-available": {
+  // The download could not happen in the background, we need action from the user
+  "monitoring-download-action-required": {
     notification: {
       title: "Download verfügbar",
       body: "Der Datenexport steht zum Download bereit",
     },
   },
+  "monitoring-download-sucess": {},
+  "monitoring-download-error": {},
+  "monitoring-download-error-timeout": {},
+  // Time to download data has expired
   "monitoring-download-expired": {
     notification: {
       title: "Download abgelaufen",
       body: "Der Datenexport muss erneut beantragt werden.",
     },
   },
+  // monitoring-captcha
+  // Monitoring interrupted by captcha
+  // Should prompt user to fill out captcha form
   "monitoring-captcha": {
     notification: {
       title: "Captcha erforderlich",
       body: "Wir konnten den Status der Datenspende aufgrund eines Captchas nicht überprüfen.",
     },
   },
+  // Error, the HTML may have changed
   "monitoring-error-nothing-found": {
     notification: {
       title: "Fehler",
-      body: "Der Datenexport muss erneut beantragt werden.",
+      body: "Es ist ein Fehler aufgetreten.",
     },
   },
+  // Error, the HTML may have changed
   "monitoring-error-tab-not-found": {
     notification: {
       title: "Fehler",
-      body: "Der Datenexport muss erneut beantragt werden.",
+      body: "Es ist ein Fehler aufgetreten.",
     },
   },
-  "scraping-done": {
-    notification: {
-      title: "Die Daten sind da",
-      body: "Öffne die DataSkop-App, um fortzufahren.",
-    },
-  },
-  "data-requested": {},
-  "data-downloaded": {},
+  // Error, the HTML may have changed
+  "data-error-tab-not-found": {},
+  // Waiting until TikTok created the dump
+  "data-pending": {},
+  // successfully requested a new GDPR dump
+  "data-request-success": {},
+  // There were errors when requesting a new GDPR dump
+  "data-error-reqeust": {},
+  "download-action-required": {},
+  "download-sucess": {},
+  "download-error": {},
+  "download-error-timeout": {},
+  // A scraping step was finished
+  "scraping-done": {},
 };
 
 const getStatus = async (): Promise<string> => {
