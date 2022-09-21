@@ -10,6 +10,8 @@ const getIdFromUrl = (url: string): string => url.match(/\/(\d*)\/$/)[1];
 const getWatchedVideos = (dump: any) =>
   dump.Activity["Video Browsing History"].VideoList;
 
+const getLookupId = (x: any) => prependTiktokSuffix(getIdFromUrl(x.VideoLink));
+
 const getLookupIdsFromDump = (videoList: any[]) => {
   const videoUrls = videoList.map((x) => x.VideoLink);
   const videoIds = _.uniq(videoUrls).map(getIdFromUrl).map(prependTiktokSuffix);
@@ -23,4 +25,4 @@ const getMostRecentWatchVideos = (dump: any, max: number) => {
   return _.uniq(lookupIds).slice(-max);
 };
 
-export { getMostRecentWatchVideos };
+export { getMostRecentWatchVideos, getLookupId };

@@ -1,16 +1,19 @@
-import React from "react";
-import ReactDOM from "react-dom";
 import * as d3 from "d3";
 import { withoutTime, convertDaysToMs } from "./viz-utils";
+import { getLookupId } from "../../../lib/data-wrangling";
+
+// TODO:
+// const BLACK_LIST =
 
 // let numOfTopItems = 5;
 // helper for setting up hashtag data
 function buildHashtagArray(urlInfo, hashtags, hashtagsAll) {
-  const vidTagsInfo = urlInfo.HashtagInfo;
-  if (vidTagsInfo.length !== 0) {
+  const vidTagsInfo = urlInfo.desc.match(/#[\p{L}]+/giu);
+  console.log(vidTagsInfo);
+  if (vidTagsInfo != null && vidTagsInfo.length !== 0) {
     // loop through all hashtags and collect them in an object
     for (const tagInfo of vidTagsInfo) {
-      const tagName = tagInfo.title.toLowerCase();
+      const tagName = tagInfo.toLowerCase();
       // ignore "fyp"s
       if (
         tagName.indexOf("fyp") !== -1 ||
@@ -35,9 +38,9 @@ function buildSoundArray(urlInfo, sounds, soundsAll) {
   if (
     // url.meta !== undefined &&
     // url.meta.results !== undefined &&
-    !urlInfo.SoundOriginal
+    !urlInfo.music.original
   ) {
-    const soundTitle = urlInfo.SoundTitle;
+    const soundTitle = urlInfo.music.title;
     soundTitle in sounds ? (sounds[soundTitle] += 1) : (sounds[soundTitle] = 1);
     soundTitle in soundsAll
       ? (soundsAll[soundTitle] += 1)
@@ -49,9 +52,9 @@ function buildDiversificationLabelsArray(urlInfo, divlabels, divlabelsAll) {
   if (
     // url.meta !== undefined &&
     // url.meta.results !== undefined &&
-    urlInfo.DiversificationLabels !== undefined
+    urlInfo.diversificationLabels !== undefined
   ) {
-    const labels = urlInfo.DiversificationLabels;
+    const labels = urlInfo.diversificationLabels;
     for (const label of labels) {
       if (label === "Others") continue;
       label in divlabels ? (divlabels[label] += 1) : (divlabels[label] = 1);
@@ -175,16 +178,21 @@ export function getTopData(
       sounds = {};
       divlabels = {};
       // console.log("empty objs", hashtags, sounds, divlabels);
-      i++;
+      i += 1;
     } else {
       const vidUrl = vid.VideoLink;
       // find vid url within scraped data
       // console.log(metadata[vidUrl]);
-      const urlInfo = metadata[vidUrl];
-      if (urlInfo === undefined) continue;
-      buildHashtagArray(urlInfo, hashtags, hashtagsAll);
-      buildSoundArray(urlInfo, sounds, soundsAll);
-      buildDiversificationLabelsArray(urlInfo, divlabels, divlabelsAll);
+      console.log(vidUrl, metadata);
+      let vidInfo = metadata[getLookupId(vid)];
+      if (vidInfo === undefined) continue;
+
+      if (vidInfo.error != null) continue;
+      vidInfo = vidInfo.result;
+
+      buildHashtagArray(vidInfo, hashtags, hashtagsAll);
+      buildSoundArray(vidInfo, sounds, soundsAll);
+      buildDiversificationLabelsArray(vidInfo, divlabels, divlabelsAll);
     }
   }
   // console.log("all hashtags", hashtagsAll);
