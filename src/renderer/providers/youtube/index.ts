@@ -10,7 +10,7 @@ const youtubeInfo: ProviderInformation = {
   persistScrapingBrowser: false,
   disableInputAfterLogin: true,
   navigation: ytNavigation,
-  confirmCookie: confirmCockieForm,
+  confirmCookies: confirmCockieForm,
   deserializeMapping,
 };
 

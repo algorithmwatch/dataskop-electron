@@ -33,9 +33,18 @@ const extractHtml = async (view: BrowserView): Promise<string> => {
   return htmlArr.map((x) => x.replace(/\s\s+/g, " ").trim()).join("\n\n");
 };
 
-const elementExists = async (view: BrowserView, selector: any) => {
+const elementExists = async (
+  view: BrowserView,
+  selector: any,
+  shadowSelector: null | string = null,
+) => {
+  if (shadowSelector === null)
+    return view.webContents.executeJavaScript(
+      `document.querySelector("${selector}") !== null`,
+    );
+
   return view.webContents.executeJavaScript(
-    `document.querySelector("${selector}") !== null`,
+    `document.querySelector("${selector}").shadowRoot.querySelector("${shadowSelector}") !== null`,
   );
 };
 
@@ -43,7 +52,13 @@ const clickElement = async (
   view: BrowserView,
   selector: string,
   docIndex = 0,
+  shadowSelector: null | string = null,
 ) => {
+  if (shadowSelector !== null)
+    return view.webContents.executeJavaScript(
+      `document.querySelector("${selector}").shadowRoot.querySelector("${shadowSelector}").click()`,
+    );
+
   if (docIndex === 0) {
     await view.webContents.executeJavaScript(
       `document.querySelector("${selector}").click()`,

@@ -160,8 +160,6 @@ export default function ScrapingManager({
     if (loggedIn && provider.disableInputAfterLogin)
       dispatch({ type: "set-disable-input", disableInput: true });
 
-    if (!loggedIn) provider.confirmCookie();
-
     return loggedIn;
   };
 
@@ -250,7 +248,7 @@ export default function ScrapingManager({
 
   // Initialize & clean up
 
-  const initScraper = async (): Promise<string | null> => {
+  const initScraper = async (): Promise<void> => {
     await window.electron.ipc.invoke("scraping-init-view", {
       muted: isMuted,
       allowInput: !disableInput,
@@ -262,9 +260,12 @@ export default function ScrapingManager({
 
     // manually check if a user is logged in to proceed immediately
     if (await checkLoginCb()) {
-      return null;
+      return;
     }
-    return goToUrl(provider.loginUrl);
+
+    await goToUrl(provider.loginUrl);
+
+    return provider.confirmCookies();
   };
 
   const cleanUpScraper = () => {
@@ -273,7 +274,6 @@ export default function ScrapingManager({
   };
 
   useEffect(() => {
-    // initScraper();
     return cleanUpScraper;
   }, []);
 

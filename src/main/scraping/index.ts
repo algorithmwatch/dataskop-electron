@@ -59,7 +59,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
   addMainHandler(
     "scraping-init-view",
-    (
+    async (
       _eventInit: any,
       { muted = true, allowInput = true, persist = false }: any,
     ) => {
@@ -71,6 +71,8 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         allowInput,
         persist,
       );
+
+      let loaded = false;
 
       if (scrapingView !== null) {
         try {
@@ -103,8 +105,8 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
       mainWindow?.setBrowserView(newView);
 
-      // Open the debug console in dev
-      newView.webContents.openDevTools();
+      // Uncomment to open the debug console in the scraping window
+      // newView.webContents.openDevTools();
 
       if (muted) newView.webContents?.setAudioMuted(true);
 
@@ -119,11 +121,14 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
         // Not sure if this is necessary but better to disable user input asap (before did-finish-load fires)
         newView.webContents.on("did-finish-load", () => {
+          loaded = true;
           newView.webContents.on("before-input-event", (event) =>
             event.preventDefault(),
           );
           newView.webContents.insertCSS(preventInputCss);
         });
+      } else {
+        loaded = true;
       }
 
       // Download items to user data directory
@@ -180,7 +185,13 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         },
       );
 
-      scrapingView = newView;
+      while (true) {
+        await delay(1000);
+        if (loaded) {
+          scrapingView = newView;
+          break;
+        }
+      }
     },
   );
 
@@ -337,15 +348,26 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
   addMainHandler(
     "scraping-element-exists",
-    async (_event: any, selector: any) => {
-      if (scrapingView) return elementExists(scrapingView, selector);
+    async (
+      _event: any,
+      selector: string,
+      shadowSelector: string | null = null,
+    ) => {
+      if (scrapingView)
+        return elementExists(scrapingView, selector, shadowSelector);
     },
   );
 
   addMainHandler(
     "scraping-click-element",
-    async (_event: any, selector: any, docIndex = 0) => {
-      if (scrapingView) return clickElement(scrapingView, selector, docIndex);
+    async (
+      _event: any,
+      selector: any,
+      docIndex = 0,
+      shadowSelector: null | string = null,
+    ) => {
+      if (scrapingView)
+        return clickElement(scrapingView, selector, docIndex, shadowSelector);
     },
   );
 
