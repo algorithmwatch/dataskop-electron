@@ -1,3 +1,4 @@
+import { ProcedureArgs } from "renderer/lib/scraping";
 import { GetHtmlFunction, GetHtmlLazyFunction } from "renderer/providers/types";
 import { getMostRecentWatchVideos } from "../data-wrangling";
 
@@ -20,7 +21,7 @@ async function* scrapingProcedure(
   _getHtmlLazy: GetHtmlLazyFunction,
   config: any,
   _scrapingConfig: any,
-  procedureArgs: any,
+  procedureArgs: ProcedureArgs,
 ) {
   const funs = {
     "tt-scrape-watched-videos": scrapeWatchedVideos,

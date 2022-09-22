@@ -11,12 +11,18 @@ const deserializeConfigSteps = (config: ScrapingConfig, mapping: any) => {
   });
 };
 
+type ProcedureArgs = {
+  sessionId: string;
+  htmlLogging: boolean;
+  monitoring: boolean;
+};
+
 const createScrapingGenerator = (
   scrapingConfig: ScrapingConfig,
   mapping: any,
   getHtml: GetHtmlFunction,
   getHtmlLazy: GetHtmlLazyFunction,
-  procedureArgs: any,
+  procedureArgs: ProcedureArgs,
 ) => {
   window.electron.log.info(
     `Called createScrapingGenerator with ${JSON.stringify(procedureArgs)}`,
@@ -54,4 +60,4 @@ const createScrapingGenerator = (
   return gen();
 };
 
-export { createScrapingGenerator };
+export { createScrapingGenerator, ProcedureArgs };

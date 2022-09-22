@@ -28,7 +28,6 @@ const scrapingChannels = [
   "scraping-click-element",
   "scraping-submit-form",
   "scraping-element-exists",
-  "scraping-log-html",
   "scraping-get-download",
 ];
 
