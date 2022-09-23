@@ -6,6 +6,7 @@ const confirmCookies = async () => {
   const exists = await window.electron.ipc.invoke(
     "scraping-element-exists",
     "tiktok-cookie-banner",
+    "button:nth-of-type(2)",
   );
   if (exists) {
     window.electron.log.info("Cookie banner is present, accepting terms");

@@ -345,6 +345,8 @@ async function* actionProcedure(
         window.electron.ipc.invoke("show-notification", title, body);
       }
 
+      window.electron.log.info(`Step ended with the status: ${data.status}`);
+
       if ((data.status as string).includes("error")) {
         const errors = [data.status, data.errorMessage];
         return [1, { success: false, slug, fields: { ...data }, errors }];
