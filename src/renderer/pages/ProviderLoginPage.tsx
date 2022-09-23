@@ -59,33 +59,19 @@ export default function ProviderLoginPage(): JSX.Element {
     }
   }, [isUserLoggedIn]);
 
+  useEffect(() => {
+    dispatch({
+      type: "set-attached",
+      attached: true,
+      visible: true,
+    });
+    sendEvent(campaign, "clicked start scraping");
+  }, []);
+
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>
       <h1 className="hl-4xl mb-20">Login bei Provider</h1>
-      <div className="flex flex-col space-y-4">
-        <Button
-          onClick={() => {
-            dispatch({
-              type: "set-attached",
-              attached: true,
-              visible: true,
-            });
-            sendEvent(campaign, "clicked start scraping");
-          }}
-        >
-          Anmelden
-        </Button>
-        {isDebug && (
-          <Button
-            onClick={() => {
-              window.electron.ipc.invoke("scraping-clear-storage");
-              dispatch({ type: "reset-scraping" });
-            }}
-          >
-            DEBUG ONLY: Reset storage
-          </Button>
-        )}
-      </div>
+      <div className="flex flex-col space-y-4"></div>
     </WizardLayout>
   );
 }

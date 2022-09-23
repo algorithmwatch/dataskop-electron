@@ -80,6 +80,7 @@ type State = {
   isMuted: boolean;
   fixedWindow: boolean;
   visibleWindow: boolean;
+  closeableWindow: boolean;
   bounds: Bounds;
   disableInput: boolean;
   demoMode: boolean;
@@ -114,6 +115,7 @@ const initialState: State = {
   isMuted: true,
   fixedWindow: false,
   visibleWindow: false,
+  closeableWindow: false,
   bounds: { width: 100, height: 100, x: 100, y: 100 },
   disableInput: false,
   demoMode: false,

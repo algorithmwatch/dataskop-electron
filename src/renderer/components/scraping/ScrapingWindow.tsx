@@ -26,7 +26,7 @@ export default function ScrapingWindow({
   const margin = 30;
 
   const {
-    state: { isMuted, fixedWindow, bounds, visibleWindow },
+    state: { isMuted, fixedWindow, bounds, visibleWindow, closeableWindow },
     dispatch,
   } = useScraping();
 
@@ -105,22 +105,27 @@ export default function ScrapingWindow({
           });
         }}
       />
-      <div
-        onClick={() => {
-          dispatch({ type: "set-visible-window", visibleWindow: false });
-        }}
-        className="flex items-center justify-center cursor-pointer bg-gray-300 hover:bg-gray-200"
-        style={{
-          width: 30,
-          height: 30,
-          position: "fixed",
-          left: bounds.x + bounds.width - 30,
-          top: bounds.y,
-          color: "white",
-        }}
-      >
-        <FontAwesomeIcon icon={faTimes} className="text-yellow-1500 text-xl" />
-      </div>
+      {closeableWindow && (
+        <div
+          onClick={() => {
+            dispatch({ type: "set-visible-window", visibleWindow: false });
+          }}
+          className="flex items-center justify-center cursor-pointer bg-gray-300 hover:bg-gray-200"
+          style={{
+            width: 30,
+            height: 30,
+            position: "fixed",
+            left: bounds.x + bounds.width - 30,
+            top: bounds.y,
+            color: "white",
+          }}
+        >
+          <FontAwesomeIcon
+            icon={faTimes}
+            className="text-yellow-1500 text-xl"
+          />
+        </div>
+      )}
     </div>
   );
 }
