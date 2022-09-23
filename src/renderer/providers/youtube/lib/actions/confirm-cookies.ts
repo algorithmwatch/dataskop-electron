@@ -23,7 +23,7 @@ const onlySubmitConsentForm = async (html: string) => {
     await currentDelay();
   } else {
     const selectorPath = getUniquePath($hmtl(theForm[0][0]), $hmtl);
-    submitFormScraping(selectorPath);
+    return submitFormScraping(selectorPath);
   }
 };
 
@@ -35,7 +35,7 @@ const confirmCockieForm = async () => {
     url.startsWith("https://consent.youtube.com") &&
     url.includes("account")
   ) {
-    onlySubmitConsentForm((await extractHtml()).html);
+    return onlySubmitConsentForm((await extractHtml()).html);
   }
 };
 
@@ -45,9 +45,9 @@ const submitConfirmForm = async (
 ) => {
   const getCurrentHtml = await getHtml(rootUrl);
   // try 10 times and then give up
-  const maxSteps = 10;
+  const MAX_STEPS = 10;
 
-  for (let step = 0; step < maxSteps; step += 1) {
+  for (let step = 0; step < MAX_STEPS; step += 1) {
     const { html } = await getCurrentHtml();
     const $hmtl = cheerio.load(html);
 

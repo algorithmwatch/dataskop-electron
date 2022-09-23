@@ -18,7 +18,7 @@ export type ProviderInformation = {
   persistScrapingBrowser: boolean;
   disableInputAfterLogin: boolean;
   navigation: { [key: string]: NavigationState };
-  confirmCookie: () => void;
+  confirmCookies: () => Promise<void>;
   deserializeMapping: any;
 };
 

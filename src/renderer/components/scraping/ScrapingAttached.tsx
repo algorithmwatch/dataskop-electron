@@ -36,7 +36,7 @@ export default function ScrapingAttached() {
         await currentDelay();
         dispatch({
           type: "start-scraping",
-          filterSteps: (x) => x.slug.includes("monitoring"),
+          filterSteps: (x) => x.slug === "tt-data-export-monitoring",
         });
 
         // Attach

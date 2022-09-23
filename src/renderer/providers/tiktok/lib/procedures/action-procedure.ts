@@ -1,22 +1,49 @@
 import cheerio from "cheerio";
 import _ from "lodash";
 import { currentDelay } from "renderer/lib/delay";
-import { clickOnElement, getReadyHtml } from "renderer/lib/scraping";
+import {
+  clickOnElement,
+  getReadyHtml,
+  ProcedureArgs,
+} from "renderer/lib/scraping";
 import { STATUS } from "renderer/providers/tiktok/lib/status";
 import {
   GetCurrentHtml,
   GetHtmlFunction,
   GetHtmlLazyFunction,
 } from "renderer/providers/types";
+import { confirmCookies } from "../actions";
 
-type ReturnObj = {
+type ActionReturn = Promise<{
   status: keyof typeof STATUS;
   filePath?: string;
   errorMessage?: string;
-};
-type ActionReturn = Promise<ReturnObj>;
+}>;
 
 const GDPR_RESULTS_HTML_SELECTOR = "div[role=tabpanel]";
+
+/**
+ * get html from iFrame
+ * @param getCurrentHtml
+ * @returns
+ */
+const getReadyHtmlIframe = async (getCurrentHtml: GetCurrentHtml) => {
+  const html = await getReadyHtml(getCurrentHtml);
+  return html.split("\n\n")[1];
+};
+
+/**
+ * click on element in iFrame
+ * @param element
+ * @param $html
+ * @returns
+ */
+const clickOnElementIframe = (
+  element: cheerio.Cheerio,
+  $html: cheerio.Root,
+) => {
+  return clickOnElement(element, $html, 1);
+};
 
 /**
  * Check wether a TikTok captcha present on a page
@@ -31,7 +58,7 @@ const isCaptcha = ($html: cheerio.Root) => {
  * Click on the 'Download' tab.
  */
 const clickOnDownloadTab = async (getCurrentHtml: GetCurrentHtml) => {
-  const html = await getReadyHtml(getCurrentHtml);
+  const html = await getReadyHtmlIframe(getCurrentHtml);
   const $html = cheerio.load(html);
 
   const downloadDataTab = $html(
@@ -41,7 +68,7 @@ const clickOnDownloadTab = async (getCurrentHtml: GetCurrentHtml) => {
   window.electron.log.debug(downloadDataTab);
 
   if (downloadDataTab.length) {
-    await clickOnElement(downloadDataTab, $html);
+    await clickOnElementIframe(downloadDataTab, $html);
     return true;
   }
   return false;
@@ -111,7 +138,7 @@ const downloadDump = async (
  * Check if the GPDR dump is ready and download it if so
  */
 const clickDownloadButton = async (getCurrentHtml: GetCurrentHtml) => {
-  const html = await getReadyHtml(getCurrentHtml);
+  const html = await getReadyHtmlIframe(getCurrentHtml);
   const $html = cheerio.load(html);
 
   const downloadButton = $html(
@@ -123,12 +150,14 @@ const clickDownloadButton = async (getCurrentHtml: GetCurrentHtml) => {
 
   if (!buttonAvailable) return { buttonAvailable };
 
-  const data = await downloadDump(() => clickOnElement(downloadButton, $html));
+  const data = await downloadDump(() =>
+    clickOnElementIframe(downloadButton, $html),
+  );
   return { buttonAvailable, ...data };
 };
 
 const isDumpCreationPending = async (getCurrentHtml: GetCurrentHtml) => {
-  const html = await getReadyHtml(getCurrentHtml);
+  const html = await getReadyHtmlIframe(getCurrentHtml);
   const $html = cheerio.load(html);
 
   const pendingButton1 = $html(
@@ -143,7 +172,7 @@ const isDumpCreationPending = async (getCurrentHtml: GetCurrentHtml) => {
 };
 
 const isDownloadExpired = async (getCurrentHtml: GetCurrentHtml) => {
-  const html = await getReadyHtml(getCurrentHtml);
+  const html = await getReadyHtmlIframe(getCurrentHtml);
   const $html = cheerio.load(html);
 
   const expiredButton = $html(
@@ -158,30 +187,30 @@ const isDownloadExpired = async (getCurrentHtml: GetCurrentHtml) => {
 const clickOnJsonFormat = ($html: cheerio.Root) => {
   const jsonBox = $html('input[name="format"][value="json"]').first();
   window.electron.log.info(jsonBox);
-  return clickOnElement(jsonBox, $html);
+  return clickOnElementIframe(jsonBox, $html);
 };
 
 const clickOnRequestData = ($html: cheerio.Root) => {
-  const jsonBox = $html('button span:contains("Request data")').first();
+  const jsonBox = $html('button div:contains("Request data")').first();
   window.electron.log.info(jsonBox);
-  return clickOnElement(jsonBox, $html);
+  return clickOnElementIframe(jsonBox, $html);
 };
 
 const requestNewGdprDump = async (getCurrentHtml: GetCurrentHtml) => {
-  const html = await getReadyHtml(getCurrentHtml);
+  const html = await getReadyHtmlIframe(getCurrentHtml);
   const $html = cheerio.load(html);
 
   const requestDataTab = $html('button span:contains("Request data")').first();
 
   window.electron.log.info(requestDataTab);
 
-  await clickOnElement(requestDataTab, $html);
+  await clickOnElementIframe(requestDataTab, $html);
   // Work on new html (because of tab change)
-  await currentDelay();
-  const html2 = await getReadyHtml(getCurrentHtml);
+  await currentDelay("longer");
+  const html2 = await getReadyHtmlIframe(getCurrentHtml);
   const $html2 = cheerio.load(html2);
   await clickOnJsonFormat($html2);
-  await currentDelay();
+  await currentDelay("longer");
   await clickOnRequestData($html2);
 
   // check if it's actually working
@@ -205,6 +234,7 @@ const monitorDataExport = async (getHtml: GetHtmlFunction): ActionReturn => {
 
   // the lang paramater is important because we are filtering by text later on
   const getCurrentHtml = await getHtml(GET_DATA_URL);
+  await confirmCookies();
 
   if (await isDumpCreationPending(getCurrentHtml)) {
     return { status: "monitoring-pending" };
@@ -255,6 +285,7 @@ const getDataExport = async (getHtml: GetHtmlFunction): ActionReturn => {
   window.electron.log.info("Started get data export");
 
   const getCurrentHtml = await getHtml(GET_DATA_URL);
+  await confirmCookies();
 
   // Check if we have to wait (first try)
   if (await isDumpCreationPending(getCurrentHtml)) {
@@ -295,7 +326,7 @@ async function* actionProcedure(
   _getHtmlLazy: GetHtmlLazyFunction,
   config: any,
   _scrapingConfig: any,
-  procedureArgs: any,
+  procedureArgs: ProcedureArgs,
 ) {
   const { slug } = config;
 
@@ -307,12 +338,14 @@ async function* actionProcedure(
 
       // Only show notifications for a subset of status
       const status = STATUS[data.status];
-      if (status.notification) {
+      if ("notification" in status) {
         const {
           notification: { title, body },
         } = status;
         window.electron.ipc.invoke("show-notification", title, body);
       }
+
+      window.electron.log.info(`Step ended with the status: ${data.status}`);
 
       if ((data.status as string).includes("error")) {
         const errors = [data.status, data.errorMessage];
@@ -328,4 +361,4 @@ async function* actionProcedure(
   return [1, null];
 }
 
-export { actionProcedure, STATUS };
+export { actionProcedure };

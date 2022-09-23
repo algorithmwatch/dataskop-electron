@@ -1,9 +1,7 @@
 import _ from "lodash";
 import { getLastResult } from "renderer/lib/db";
 
-export const STATUS: {
-  [key: string]: { notification?: { title: string; body: string } };
-} = {
+export const STATUS = {
   // TikTok data was requested and TikTok is busy, It didn't fail yet
   "monitoring-pending": {
     notification: {
@@ -58,7 +56,7 @@ export const STATUS: {
   // successfully requested a new GDPR dump
   "data-request-success": {},
   // There were errors when requesting a new GDPR dump
-  "data-error-reqeust": {},
+  "data-error-request": {},
   "download-action-required": {},
   "download-sucess": {},
   "download-error": {},

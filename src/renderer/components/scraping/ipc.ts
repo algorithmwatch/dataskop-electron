@@ -2,8 +2,8 @@ import { GetCurrentHtml, GetHtmlFunction } from "renderer/providers/types";
 
 // commands to communicate with the browser window in the main screen
 
-const extractHtml = () => {
-  return window.electron.ipc.invoke("scraping-get-current-html");
+const extractHtml = (htmlLogging = false) => {
+  return window.electron.ipc.invoke("scraping-get-current-html", htmlLogging);
 };
 
 const goToUrl = (url: string, options = {}): Promise<string> => {
@@ -15,9 +15,7 @@ const clearStorage = () => window.electron.ipc.invoke("scraping-clear-storage");
 const makeGetHtml = (htmlLogging: boolean): GetHtmlFunction => {
   const getHtml = async (url: string): Promise<GetCurrentHtml> => {
     await goToUrl(url);
-    if (htmlLogging)
-      return () => window.electron.ipc.invoke("scraping-log-html", url);
-    return extractHtml;
+    return () => extractHtml(htmlLogging);
   };
   return getHtml;
 };

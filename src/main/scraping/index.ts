@@ -1,5 +1,5 @@
 /**
- * controlling the scraping window
+ * Controlling the scraping window
  */
 
 import crypto from "crypto";
@@ -9,18 +9,26 @@ import fs from "fs";
 import _ from "lodash";
 import path from "path";
 import unzipper from "unzipper";
-import { postLoadUrlYoutube } from "./providers/youtube";
+import { postLoadUrlYoutube } from "../providers/youtube";
 import {
   addMainHandler,
   delay,
   getFileList,
   getNowString,
   stripNonAscii,
-} from "./utils";
+} from "../utils";
+import {
+  clickElement,
+  elementExists,
+  extractHtml,
+  waitUntilIdle,
+} from "./inject";
+import { getUserAgent } from "./user-agent";
 
 let scrapingView: BrowserView | null = null;
 
 const DOWNLOADS_FOLDER = path.join(app.getPath("userData"), "downloads");
+const HTML_FOLDER = path.join(app.getPath("userData"), "html");
 
 export const postDownloadFileProcessing = async (filePath: string) => {
   let filePathExtracted = "";
@@ -45,14 +53,13 @@ export const postDownloadFileProcessing = async (filePath: string) => {
   return filePathExtracted;
 };
 
+// Register several handlers for the scraping view
 export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
   log.debug("called registerScrapingHandlers", mainWindow == null);
 
-  // register several handlers for the scraping view
-
   addMainHandler(
     "scraping-init-view",
-    (
+    async (
       _eventInit: any,
       { muted = true, allowInput = true, persist = false }: any,
     ) => {
@@ -65,12 +72,15 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         persist,
       );
 
+      let loaded = false;
+
       if (scrapingView !== null) {
         try {
           mainWindow?.removeBrowserView(scrapingView);
         } catch (error) {
-          log.error("Could not remove the scraping view from the main window");
-          log.error(error);
+          log.error(
+            `Could not remove the scraping view from the main window ${error}`,
+          );
         }
 
         try {
@@ -78,8 +88,9 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
           // Not calling it will result in errors with event handlers.
           scrapingView?.webContents.destroy();
         } catch (error) {
-          log.error("Could not destroy the scraping view");
-          log.error(error);
+          log.error(
+            `Could not remove the scraping view from the main window ${error}`,
+          );
         }
       }
 
@@ -94,7 +105,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
       mainWindow?.setBrowserView(newView);
 
-      // open the debug console in dev
+      // Uncomment to open the debug console in the scraping window
       // newView.webContents.openDevTools();
 
       if (muted) newView.webContents?.setAudioMuted(true);
@@ -110,11 +121,14 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
         // Not sure if this is necessary but better to disable user input asap (before did-finish-load fires)
         newView.webContents.on("did-finish-load", () => {
+          loaded = true;
           newView.webContents.on("before-input-event", (event) =>
             event.preventDefault(),
           );
           newView.webContents.insertCSS(preventInputCss);
         });
+      } else {
+        loaded = true;
       }
 
       // Download items to user data directory
@@ -122,13 +136,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         "will-download",
         (_eventDownload, item) => {
           // Set the save path, making Electron not to prompt a save dialog.
-
-          const filePath = path.join(
-            app.getPath("userData"),
-            "downloads",
-            item.getFilename(),
-          );
-
+          const filePath = path.join(DOWNLOADS_FOLDER, item.getFilename());
           item.setSavePath(filePath);
 
           mainWindow.webContents.send("scraping-download-started");
@@ -177,7 +185,13 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         },
       );
 
-      scrapingView = newView;
+      while (true) {
+        await delay(1000);
+        if (loaded) {
+          scrapingView = newView;
+          break;
+        }
+      }
     },
   );
 
@@ -204,42 +218,11 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         view.webContents.session.clearStorageData();
       }
 
-      // Choosing a correct user agent is important to make the login with Google.
-      // 1) Using the Electron default one will fail.
-      // 2) Choosing the user agent of the bundled chrome version will also fail.
-      // It seems that Google knows that this is a modified version of the chrome (fingerprinting?)
-      // 3) So we set to some recent Firefox user agents. This used to work from mid 2021 to Jan. 2022.
-      // 4) Now we use a recent Vivaldi user agent.
-
-      // Background:
-      // https://stackoverflow.com/a/68231284/4028896
-      // https://www.reddit.com/r/kde/comments/e7136e/google_bans_falkon_and_konqueror_browsers/faicv9g/
-      // https://www.electronjs.org/releases/stable?version=12&page=3#12.0.0
-      // https://www.whatismybrowser.com/guides/the-latest-user-agent/
-
-      let userAgent = "Mozilla/5.0";
-      if (
-        process.platform === "darwin" ||
-        process.platform === "win32" ||
-        process.platform === "linux"
-      )
-        userAgent = {
-          darwin:
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Vivaldi/4.3",
-          win32:
-            "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Vivaldi/4.3",
-          linux:
-            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Vivaldi/4.3",
-        }[process.platform];
-
       // try 5 times and then give up
-
-      // eslint-disable-next-line no-restricted-syntax
       for (const i of _.range(5)) {
-        // await loadUrl(..) causes somethimes strange errors.
         try {
           await view.webContents.loadURL(url, {
-            userAgent,
+            userAgent: getUserAgent(process.platform),
           });
         } catch (error) {
           log.log("There is an error with `.loadError`, retry...", error);
@@ -248,28 +231,19 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         }
 
         try {
-          // wait until the browser is idle, wait at most 10 seconds
-          // see: https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback
-          await view.webContents.executeJavaScript(
-            `new Promise(function(resolve, reject) { requestIdleCallback(() => resolve(true), { timeout: 10000 }) });`,
-            true,
-          );
+          await waitUntilIdle(view);
 
           if (url.includes("youtube")) {
             await postLoadUrlYoutube(view);
           }
 
           if (withHtml) {
-            const html = await view.webContents.executeJavaScript(
-              "document.documentElement.outerHTML",
-            );
-            return html;
+            return await extractHtml(view);
           }
 
           return null;
         } catch (error) {
-          log.log("strange error, retry...");
-          log.log(error);
+          log.log(`strange error, retry...${error}`);
           await delay(1000 * i);
         }
       }
@@ -280,9 +254,8 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     },
   );
 
-  addMainHandler("scraping-get-cookies", async () => {
-    const cookies = await scrapingView?.webContents.session.cookies.get({});
-    return cookies;
+  addMainHandler("scraping-get-cookies", () => {
+    return scrapingView?.webContents.session.cookies.get({});
   });
 
   addMainHandler("scraping-get-url", () => scrapingView?.webContents.getURL());
@@ -306,23 +279,27 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     },
   );
 
-  const getCurrentHtml = async () => {
-    // wait until the browser is idle, wait at most 10 seconds
-    // see: https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback
-    await scrapingView?.webContents.executeJavaScript(
-      `new Promise(function(resolve, reject) { requestIdleCallback(() => resolve(true), { timeout: 10000 }) });`,
-      true,
-    );
+  addMainHandler(
+    "scraping-get-current-html",
+    async (_event: any, htmlLogging = false) => {
+      if (scrapingView == null) throw new Error("Peter");
 
-    const html = await scrapingView?.webContents.executeJavaScript(
-      "document.documentElement.outerHTML",
-    );
-    const hash = crypto.createHash("md5").update(html).digest("hex");
+      await waitUntilIdle(scrapingView);
 
-    return { html, hash };
-  };
+      const html = await extractHtml(scrapingView);
+      const joinedHtml = html;
+      const hash = crypto.createHash("md5").update(joinedHtml).digest("hex");
 
-  addMainHandler("scraping-get-current-html", getCurrentHtml);
+      if (htmlLogging) {
+        if (!fs.existsSync(HTML_FOLDER)) fs.mkdirSync(HTML_FOLDER);
+        const url = scrapingView.webContents.getURL();
+        const fn = `${getNowString()}-${stripNonAscii(url)}-${hash}.html`;
+        fs.writeFileSync(path.join(HTML_FOLDER, fn), joinedHtml);
+      }
+
+      return { html, hash };
+    },
+  );
 
   addMainHandler("scraping-scroll-down", async () => {
     await scrapingView?.webContents.executeJavaScript(
@@ -340,8 +317,9 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     try {
       mainWindow?.removeBrowserView(scrapingView);
     } catch (error) {
-      log.error("Could not remove the scraping view from the main window");
-      log.error(error);
+      log.error(
+        `Could not remove the scraping view from the main window: ${error}`,
+      );
     }
 
     try {
@@ -349,8 +327,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       // Not calling it will result in errors with event handlers.
       scrapingView?.webContents.destroy();
     } catch (error) {
-      log.error("Could not destroy the scraping view");
-      log.error(error);
+      log.error(`Could not destroy the scraping view ${error}`);
     }
 
     scrapingView = null;
@@ -363,15 +340,6 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     },
   );
 
-  addMainHandler(
-    "scraping-click-element",
-    async (_event: any, selector: any) => {
-      await scrapingView?.webContents.executeJavaScript(
-        `document.querySelector("${selector}").click()`,
-      );
-    },
-  );
-
   addMainHandler("scraping-submit-form", async (_event: any, selector: any) => {
     await scrapingView?.webContents.executeJavaScript(
       `document.querySelector("${selector}").submit()`,
@@ -380,26 +348,28 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
   addMainHandler(
     "scraping-element-exists",
-    async (_event: any, selector: any) => {
-      return scrapingView?.webContents.executeJavaScript(
-        `document.querySelector("${selector}") !== null`,
-      );
+    async (
+      _event: any,
+      selector: string,
+      shadowSelector: string | null = null,
+    ) => {
+      if (scrapingView)
+        return elementExists(scrapingView, selector, shadowSelector);
     },
   );
 
-  addMainHandler("scraping-log-html", async (_event: any, url: string) => {
-    const { html, hash } = await getCurrentHtml();
-
-    // macOS: ~/Library/Application\ Support/Electron/html
-    const userFolder = app.getPath("userData");
-    const userFolderHtml = path.join(userFolder, "html");
-
-    if (!fs.existsSync(userFolderHtml)) fs.mkdirSync(userFolderHtml);
-
-    const fn = `${getNowString()}-${stripNonAscii(url)}-${hash}.html`;
-    fs.writeFileSync(path.join(userFolderHtml, fn), html);
-    return { html, hash };
-  });
+  addMainHandler(
+    "scraping-click-element",
+    async (
+      _event: any,
+      selector: any,
+      docIndex = 0,
+      shadowSelector: null | string = null,
+    ) => {
+      if (scrapingView)
+        return clickElement(scrapingView, selector, docIndex, shadowSelector);
+    },
+  );
 
   addMainHandler(
     "scraping-get-download",

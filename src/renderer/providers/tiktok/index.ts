@@ -1,4 +1,5 @@
 import { ProviderInformation } from "../types";
+import { confirmCookies } from "./lib/actions";
 import { ttNavigation } from "./lib/navigation";
 import { deserializeMapping } from "./lib/procedures";
 
@@ -9,7 +10,7 @@ const tiktokInfo: ProviderInformation = {
   persistScrapingBrowser: true,
   disableInputAfterLogin: false,
   navigation: ttNavigation,
-  confirmCookie: () => void 0,
+  confirmCookies,
   deserializeMapping,
 };
 

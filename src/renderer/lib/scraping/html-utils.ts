@@ -162,7 +162,7 @@ const getReadyHtml = async (getCurrentHtml: GetCurrentHtml) => {
   let result = await getCurrentHtml();
 
   while (i < maxTries) {
-    await currentDelay();
+    await currentDelay("longer");
     const newResult = await getCurrentHtml();
     if (result.hash === newResult.hash) {
       return result.html;
@@ -174,10 +174,14 @@ const getReadyHtml = async (getCurrentHtml: GetCurrentHtml) => {
   return result.html;
 };
 
-const clickOnElement = (element: cheerio.Cheerio, $html: cheerio.Root) => {
+const clickOnElement = (
+  element: cheerio.Cheerio,
+  $html: cheerio.Root,
+  docIndex = 0,
+) => {
   const path = getUniquePath(element, $html);
   window.electron.log.info(path);
-  return window.electron.ipc.invoke("scraping-click-element", path);
+  return window.electron.ipc.invoke("scraping-click-element", path, docIndex);
 };
 
 export { parseUntilDone, getReadyHtml, clickOnElement };

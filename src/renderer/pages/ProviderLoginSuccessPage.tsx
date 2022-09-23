@@ -13,7 +13,7 @@ import { useNavigation, useScraping } from "../contexts";
 
 export default function ProviderLoginSuccessPage(): JSX.Element {
   const {
-    state: { isUserLoggedIn },
+    state: { isScrapingFinished },
     dispatch,
   } = useScraping();
   const history = useHistory();
@@ -34,20 +34,17 @@ export default function ProviderLoginSuccessPage(): JSX.Element {
   };
 
   useEffect(() => {
-    if (isUserLoggedIn) {
-      // hide login window
-      // dispatch({ type: 'set-visible-window', visibleWindow: false });
-      // go to next page
-      // hist.push(getNextPage('path'));
+    if (isScrapingFinished) {
+      history.push(getNextPage("path"));
     }
-  }, [isUserLoggedIn]);
+  }, [isScrapingFinished]);
 
   useEffect(() => {
-    // if (isUserLoggedIn && !isScrapingStarted) {
-
-    // start scraping
-    dispatch({ type: "start-scraping" });
-    // }
+    // TikTok specific
+    dispatch({
+      type: "start-scraping",
+      filterSteps: (x) => x.slug === "tt-data-export-monitoring",
+    });
   }, []);
 
   return (
