@@ -17,6 +17,7 @@ export type UserConfig = {
   htmlLogging: boolean;
   debugLogging: boolean;
   monitoring: boolean;
+  monitoringInterval: boolean;
   openAtLogin: boolean;
 };
 

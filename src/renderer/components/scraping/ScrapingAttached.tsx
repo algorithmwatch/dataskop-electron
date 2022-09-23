@@ -55,7 +55,7 @@ export default function ScrapingAttached() {
         });
         dispatch({ type: "reset-scraping" });
         dispatch({ type: "set-attached", attached: false, visible: false });
-
+        window.electron.ipc.invoke("monitoring-done");
         // Disable monitoring flag
         // Process post-monitoring result
         // Notify main about finished monitoring

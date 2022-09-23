@@ -27,7 +27,7 @@ export default function SettingsPage(): JSX.Element {
       <h1 className="text-5xl">Settings</h1>
 
       {userConfig && (
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-5 gap-4">
           <div className="m-5">
             <div>Start on login: {userConfig.openAtLogin ? "yes" : "no"}</div>
             <Button
@@ -75,6 +75,12 @@ export default function SettingsPage(): JSX.Element {
           </div>
           <div className="m-5">
             <div>Monitoring: {userConfig.monitoring ? "yes" : "no"}</div>
+          </div>
+          <div className="m-5">
+            <div>
+              Monitoring Interval:{" "}
+              {userConfig.monitoringInterval ? "yes" : "no"}
+            </div>
           </div>
         </div>
       )}

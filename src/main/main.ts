@@ -35,7 +35,7 @@ import registerTiktokHandlers from "./providers/tiktok";
 import registerYoutubeHandlers from "./providers/youtube";
 import registerScrapingHandlers from "./scraping";
 import { buildTray } from "./tray";
-import { isFromLocalhost, resolveHtmlPath } from "./utils";
+import { delay, isFromLocalhost, resolveHtmlPath } from "./utils";
 
 // read .env files for development
 require("dotenv").config();
@@ -107,19 +107,40 @@ const installExtensions = async () => {
     .catch(log.error);
 };
 
-const handleTrayClick = (name: string) => {
-  if (name === "on") configStore.set("monitoring", true);
-  if (name === "off") configStore.set("monitoring", false);
+// Monitoring handling
+
+let doingMonitoring = false;
+
+const doMonitoring = async () => {
+  if (doingMonitoring) {
+    log.info("Some monitoring action has already stared. Do nothing.");
+    return;
+  }
+  log.info("Starting to do a monitoring ste.");
+  doingMonitoring = true;
+
+  configStore.set("monitoring", true);
+  await delay(1000);
 
   if (mainWindow == null) {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    createWindow(true);
+    createWindow();
   } else {
-    mainWindow.focus();
+    mainWindow.reload();
+    mainWindow.minimize();
   }
 };
 
-const createWindow = async (monitoring = false) => {
+ipcMain.handle("monitoring-done", () => {
+  log.info("Monitoring is done. Removing flags and closing main window.");
+  configStore.set("monitoring", false);
+  doingMonitoring = false;
+  if (mainWindow) mainWindow.close();
+});
+
+// Main function to initialize a window
+
+const createWindow = async () => {
   log.debug("called createWindow", mainWindow == null);
 
   if (DEBUG) {
@@ -176,7 +197,7 @@ const createWindow = async (monitoring = false) => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
-    if (process.env.START_MINIMIZED || monitoring) {
+    if (process.env.START_MINIMIZED || doingMonitoring) {
       mainWindow.minimize();
     } else {
       const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -206,7 +227,7 @@ const createWindow = async (monitoring = false) => {
   });
 
   buildMenu(mainWindow);
-  buildTray(handleTrayClick, getAssetPath("icon.png"));
+  buildTray(doMonitoring, configStore, getAssetPath("icon.png"));
 
   // Open urls in the user's browser
   mainWindow.webContents.on("new-window", (event, url) => {
