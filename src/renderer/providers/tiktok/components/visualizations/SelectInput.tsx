@@ -41,7 +41,7 @@ export const SelectInput = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md border-2 border-black bg-white py-1 text-lg shadow-lg focus:outline-none">
+          <Listbox.Options className="absolute mt-1 max-h-60 w-full min-w-[6rem] overflow-auto rounded-md border-2 border-black bg-white py-1 text-lg shadow-lg focus:outline-none">
             {options.map((option) => (
               <Listbox.Option
                 key={option.id}

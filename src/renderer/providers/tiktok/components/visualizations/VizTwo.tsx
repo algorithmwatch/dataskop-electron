@@ -1,13 +1,25 @@
 /* eslint-disable no-nested-ternary */
+import { faPenToSquare } from "@fortawesome/pro-regular-svg-icons";
 import * as Plot from "@observablehq/plot";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import VizOneButtons from "./components/VizOneButtons";
-import VizOneDropDown from "./components/VizOneDropDown";
+import Switch from "renderer/components/Switch";
+import { SelectInput } from "renderer/providers/tiktok/components/visualizations/SelectInput";
 import { shortenGdprData } from "./utils/shorten_data";
 import addTooltips from "./utils/tooltips";
 import { convertDaysToMs } from "./utils/viz-utils";
 import { getTopData } from "./utils/viz_two_utils";
 import { VizBox } from "./VizBox";
+
+const rangeOptions = [
+  { id: "1", label: "letzte 90 Tage", value: 90 },
+  { id: "2", label: "letzte 180 Tage", value: 180 },
+  { id: "3", label: "letzte 365 Tage", value: 365 },
+];
+const topNumOptions = [
+  { id: "1", label: "3", value: 3 },
+  { id: "2", label: "5", value: 5 },
+  { id: "3", label: "10", value: 10 },
+];
 
 function VizTwo({ metadata, gdprData }: { gdprData: any; metadata: any }) {
   const [
@@ -26,18 +38,7 @@ function VizTwo({ metadata, gdprData }: { gdprData: any; metadata: any }) {
   const toggleRef = useRef(null);
 
   const coreTimeString = null;
-  const rangeOptions = [
-    { option: "letzte 90 Tage", value: 90 },
-    { option: "letzte 180 Tage", value: 180 },
-    { option: "letzte 365 Tage", value: 365 },
-  ];
   const [range, setRange] = useState(rangeOptions[0]);
-
-  const topNumOptions = [
-    { option: "3", value: 3 },
-    { option: "5", value: 5 },
-    { option: "10", value: 10 },
-  ];
   const [topNum, setTopNum] = useState(topNumOptions[0]);
 
   const [
@@ -68,12 +69,13 @@ function VizTwo({ metadata, gdprData }: { gdprData: any; metadata: any }) {
       enddate.getMonth() === 0 ? 12 : enddate.getMonth() + 1
     } - ${d.getDate()}.${d.getMonth() === 0 ? 12 : d.getMonth() + 1}`;
   }
-
+  const chartWidth = Math.round((window.outerWidth * 90) / 100);
+  const chartHeight = Math.round((window.outerHeight * 40) / 100);
   const commonProps = {
-    width: 1500,
+    width: chartWidth,
+    height: chartHeight,
     marginBottom: 60,
     marginTop: 60,
-    height: 600,
     marginLeft: 60,
     marginRight: 60,
     style: {
@@ -183,71 +185,60 @@ function VizTwo({ metadata, gdprData }: { gdprData: any; metadata: any }) {
   ]);
 
   return (
-    <div className="App">
-      <header className="VizOne-header flex">
-        Show your top
-        <VizOneDropDown
-          options={topNumOptions}
-          onChange={(e) => {
-            setTopNum(e);
-          }}
-          selected={topNum}
-        />
-        sounds, hashtags, and video categories in the{" "}
-        <VizOneDropDown
-          options={rangeOptions}
-          onChange={(e) => {
-            setRange(e);
-          }}
-          selected={range}
-        />
-      </header>
-      <div className="ui-container-stats">
-        <div className="box1">
-          <VizBox head={`#${topHashtag}`} label="Most Frequent Hashtag OAT" />
-        </div>
-        <div className="box2">
-          <VizBox head={`${topSound}`} label="Most Frequent Sound OAT" />
-        </div>
-        <div className="box3">
-          <VizBox head={`${topDivLabel}`} label="Most Frequent Category OAT" />
-        </div>
-      </div>
-      <div className="toggle-button" ref={toggleRef}>
-        <div className="flex center">
-          <VizOneButtons
-            // toggleColor="pink-toggle"
-            // classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
-            // id="sounds"
-            label="Sounds/Music"
-            checked={graph === "default"}
-            onChange={() => {
-              setGraph("default");
-            }}
+    <>
+      <div className="mx-auto flex items-center text-2xl mb-6">
+        <div className="">Show your top</div>
+        <div>
+          <SelectInput
+            options={topNumOptions}
+            selectedOption={topNum}
+            onUpdate={setTopNum}
+            buttonIcon={faPenToSquare}
           />
-          <VizOneButtons
-            // toggleColor="pink-toggle"
-            // classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
-            // textLabel="Tageszeiten"
-            // id="hashtags"
-            label="Hashtags"
-            checked={graph === "hashtags"}
-            onChange={() => {
-              setGraph("hashtags");
-            }}
-          />
-          <VizOneButtons
-            // toggleColor="pink-toggle"
-            // classname1="w-11 h-6 bg-pink-light rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-pink-light dark:peer-focus:ring-pink-light peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-black after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-dark"
-            // id="divlabels"
-            label="Diversification Labels/Categories"
-            checked={graph === "divlabels"}
-            onChange={() => {
-              setGraph("divlabels");
-            }}
+        </div>
+        <div className="">sounds, hashtags, and video categories in the </div>
+        <div>
+          <SelectInput
+            options={rangeOptions}
+            selectedOption={range}
+            onUpdate={setRange}
+            buttonIcon={faPenToSquare}
           />
         </div>
       </div>
+
+      <div className="flex mx-auto space-x-4 mb-6">
+        <VizBox head={`${topHashtag}`} label="Most Frequent Hashtag OAT" />
+        <VizBox head={`${topSound}`} label="Most Frequent Sound OAT" />
+        <VizBox head={`${topDivLabel}`} label="Most Frequent Category OAT" />
+      </div>
+
+      <div className="flex mx-auto space-x-4">
+        <Switch
+          label="Sounds/Music"
+          checked={graph === "default"}
+          onChange={(e) => {
+            setGraph("default");
+          }}
+        />
+        <Switch
+          label="Hashtags"
+          checked={graph === "hashtags"}
+          onChange={(e) => {
+            setGraph("hashtags");
+          }}
+        />
+
+        <Switch
+          label="Diversification Labels/Categories"
+          checked={graph === "divlabels"}
+          onChange={() => {
+            setGraph("divlabels");
+          }}
+        />
+      </div>
+
+      <div ref={toggleRef} className="w-full min-h-[50vh]" />
       {/* <div ref={soundRef}></div>
 
       <h2>Hashtags</h2>
@@ -255,7 +246,7 @@ function VizTwo({ metadata, gdprData }: { gdprData: any; metadata: any }) {
 
       <h2>Diversification Labels</h2>
       <div ref={diverseRef}></div> */}
-    </div>
+    </>
   );
 }
 

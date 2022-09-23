@@ -42,7 +42,9 @@ export default function VizTwoPage(): JSX.Element {
 
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>
-      {dump && lookups && <VizTwo gdprData={dump} metadata={lookups} />}
+      <div className="mt-12 flex flex-col">
+        {dump && lookups && <VizTwo gdprData={dump} metadata={lookups} />}
+      </div>
     </WizardLayout>
   );
 }
