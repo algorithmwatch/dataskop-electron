@@ -40,7 +40,7 @@ async function* scrapingProcedure(
       },
     ];
   } catch (error) {
-    window.electron.log.error("Error with data export step:", error);
+    window.electron.log.error(`Error with scraping: ${error}`);
     return [1, { success: false, slug, fields: {}, errors: [error] }];
   }
 }

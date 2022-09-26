@@ -38,7 +38,8 @@ const configStore = new Store({
   encryptionKey: "DaTaSk0p",
   defaults: {
     openAtLogin: true,
-    monitoring: null,
+    monitoring: false,
+    monitoringInterval: true,
     debugLogging: false,
     htmlLogging: false,
   },

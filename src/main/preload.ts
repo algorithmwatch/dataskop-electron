@@ -10,6 +10,7 @@ const mainChannels = [
   "update-check-beta",
   "update-restart-app",
   "show-notification",
+  "monitoring-done",
 ];
 
 // scraping.ts

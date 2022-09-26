@@ -379,7 +379,13 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       );
 
       if (allJsons.length) {
-        const data = JSON.parse(fs.readFileSync(allJsons[0], "utf-8"));
+        allJsons.sort();
+        const chosenJson = _.last(allJsons);
+        log.info(`Using the following file: ${chosenJson}`);
+        if (!chosenJson) return;
+
+        const data = JSON.parse(fs.readFileSync(chosenJson, "utf-8"));
+
         if (picks.length) return _.pick(data, picks);
         return data;
       }

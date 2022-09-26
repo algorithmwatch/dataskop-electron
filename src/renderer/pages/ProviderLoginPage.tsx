@@ -12,14 +12,16 @@ import WizardLayout from "renderer/components/WizardLayout";
 import { useConfig, useNavigation, useScraping } from "../contexts";
 
 export default function ProviderLoginPage(): JSX.Element {
-  const { getNextPage, getPreviousPage } = useNavigation();
+  const { getNextPage } = useNavigation();
   const history = useHistory();
   const {
     state: { isUserLoggedIn, campaign },
     dispatch,
   } = useScraping();
-  const hist = useHistory();
-  const { sendEvent } = useConfig();
+  const {
+    sendEvent,
+    state: { isDebug },
+  } = useConfig();
 
   const footerSlots = {
     center: [
@@ -37,7 +39,7 @@ export default function ProviderLoginPage(): JSX.Element {
     ],
   };
 
-  if (process.env.NODE_ENV === "development") {
+  if (isDebug) {
     footerSlots.center.push(
       <Button
         key="2"
@@ -46,47 +48,30 @@ export default function ProviderLoginPage(): JSX.Element {
           history.push(getNextPage("path"));
         }}
       >
-        Weiter
+        DEBUG ONLY: Weiter
       </Button>,
     );
   }
 
   useEffect(() => {
     if (isUserLoggedIn) {
-      // hide login window
-
-      // dispatch({ type: 'set-visible-window', visibleWindow: false });
-
-      // go to next page
-      hist.push(getNextPage("path"));
+      history.push(getNextPage("path"));
     }
   }, [isUserLoggedIn]);
+
+  useEffect(() => {
+    dispatch({
+      type: "set-attached",
+      attached: true,
+      visible: true,
+    });
+    sendEvent(campaign, "clicked start scraping");
+  }, []);
 
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>
       <h1 className="hl-4xl mb-20">Login bei Provider</h1>
-      <div className="flex flex-col space-y-4">
-        <Button
-          onClick={() => {
-            dispatch({
-              type: "set-attached",
-              attached: true,
-              visible: true,
-            });
-            sendEvent(campaign, "clicked start scraping");
-          }}
-        >
-          Anmelden
-        </Button>
-        <Button
-          onClick={() => {
-            window.electron.ipc.invoke("scraping-clear-storage");
-            // dispatch({ type: 'reset-scraping' });
-          }}
-        >
-          Reset storage
-        </Button>
-      </div>
+      <div className="flex flex-col space-y-4"></div>
     </WizardLayout>
   );
 }

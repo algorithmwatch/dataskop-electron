@@ -7,7 +7,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AdvancedMenu from "renderer/components/admin/AdvancedMenu";
 import Drawer from "renderer/components/Drawer";
-import { useConfig } from "renderer/contexts";
+import { useConfig, useScraping } from "renderer/contexts";
 
 export const Menu = ({
   isOpen,
@@ -19,6 +19,7 @@ export const Menu = ({
   const {
     state: { version, showAdvancedMenu },
   } = useConfig();
+  const { dispatch } = useScraping();
 
   const menuItems = [
     {
@@ -116,15 +117,22 @@ export const Menu = ({
                   { label: "Start TikTok", to: "/tt/start" },
                   { label: "Start YouTube", to: "/yt/start" },
                   {
-                    label: "advanced scraping",
+                    label: "Advanced scraping",
                     to: "/admin/scraping/advanced",
                   },
                   {
-                    label: "scraping config editor",
+                    label: "Scraping config editor",
                     to: "/admin/scraping/editor",
                   },
-                  { label: "results", to: "/admin/results" },
-                  { label: "settings", to: "/admin/settings" },
+                  { label: "Results", to: "/admin/results" },
+                  { label: "Settings", to: "/admin/settings" },
+                  {
+                    label: "Reset scraping window",
+                    click: () => {
+                      window.electron.ipc.invoke("scraping-clear-storage");
+                      dispatch({ type: "reset-scraping" });
+                    },
+                  },
                 ]}
               />
             </div>

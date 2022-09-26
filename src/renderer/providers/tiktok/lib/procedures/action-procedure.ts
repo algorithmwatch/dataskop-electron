@@ -353,7 +353,7 @@ async function* actionProcedure(
       }
       return [1, { success: true, slug, fields: { ...data }, errors: [] }];
     } catch (error: any) {
-      window.electron.log.error("Error with data export step:", error);
+      window.electron.log.error(`Error with data export step: ${error}`);
       return [1, { success: false, slug, fields: {}, errors: [error.message] }];
     }
   }
