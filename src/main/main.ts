@@ -54,12 +54,16 @@ let mainWindow: BrowserWindow | null = null;
 class AppUpdater {
   constructor() {
     log.transports.file.level = DEBUG ? "debug" : "info";
+    autoUpdater.logger = log;
 
     if (process.env.UPDATE_FEED_URL) {
       autoUpdater.setFeedURL(process.env.UPDATE_FEED_URL);
     }
 
-    autoUpdater.logger = log;
+    if (app.getVersion().includes("alpha")) {
+      autoUpdater.channel = "alpha";
+    }
+
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
