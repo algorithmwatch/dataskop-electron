@@ -89,7 +89,7 @@ export default function BeforeLoginPage(): JSX.Element {
           </div>
           <div className="absolute bottom-4 inset-x-4">
             <Link
-              to="/tiktok/upload_data_export"
+              to="/tiktok/import_data_export"
               className="text-east-blue-800 font-semibold hover:underline text-base"
             >
               Ich habe die DSGVO-Daten bereits.

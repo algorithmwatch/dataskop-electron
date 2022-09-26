@@ -16,7 +16,7 @@ export const STATUS = {
       body: "Der Datenexport steht zum Download bereit",
     },
   },
-  "monitoring-download-sucess": {},
+  "monitoring-download-success": {},
   "monitoring-download-error": {},
   "monitoring-download-error-timeout": {},
   // Time to download data has expired
@@ -63,6 +63,7 @@ export const STATUS = {
   "download-error-timeout": {},
   // A scraping step was finished
   "scraping-done": {},
+  "files-imported": {},
 };
 
 const getStatus = async (): Promise<string> => {

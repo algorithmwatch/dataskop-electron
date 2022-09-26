@@ -1,6 +1,6 @@
 import ProviderLoginPage from "renderer/pages/ProviderLoginPage";
 import DonationFormPage from "renderer/providers/tiktok/pages/1100DonationFormPage";
-import UploadDataExportPage from "renderer/providers/tiktok/pages/450UploadDataExportPage";
+import ImportDataExportPage from "renderer/providers/tiktok/pages/450ImportDataExportPage";
 import {
   BeforeLoginPage,
   DonationChoicePage,
@@ -21,7 +21,7 @@ const tiktokRoutes = [
   { path: "/tiktok/intro", comp: IntroductionPage },
   { path: "/tiktok/tutorial", comp: TutorialPage },
   { path: "/tiktok/before_login", comp: BeforeLoginPage },
-  { path: "/tiktok/upload_data_export", comp: UploadDataExportPage },
+  { path: "/tiktok/import_data_export", comp: ImportDataExportPage },
   { path: "/provider_login", comp: ProviderLoginPage },
   { path: "/provider_login_success", comp: ProviderLoginPage },
   { path: "/tiktok/waiting", comp: WaitingPage },

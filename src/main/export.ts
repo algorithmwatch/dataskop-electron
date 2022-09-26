@@ -135,20 +135,22 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
   });
 
   addMainHandler("import-files", async (_e: any, paths: string[]) => {
-    console.log(paths);
     const dir = path.join(app.getPath("userData"), "downloads", getNowString());
 
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
 
+    const dests = [];
     for (const p of paths) {
       const dest = path.join(dir, path.basename(p));
 
       fs.copyFileSync(p, dest);
       await postDownloadFileProcessing(dest);
+      log.info(`Imported ${dest}`);
+      dests.push(dest);
     }
 
-    return true;
+    return { success: true, paths: dests };
   });
 }
