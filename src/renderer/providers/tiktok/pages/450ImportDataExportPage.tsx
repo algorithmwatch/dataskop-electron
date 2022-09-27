@@ -11,21 +11,30 @@ import { Button } from "renderer/components/Button";
 import DropFile from "renderer/components/DropFile";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { useScraping } from "renderer/contexts";
+import { addScrapingResult } from "renderer/lib/db";
 import { currentDelay } from "renderer/lib/delay";
 import Content from "renderer/providers/tiktok/components/Content";
 
-export default function UploadDataExportPage(): JSX.Element {
+export default function ImportDataExportPage(): JSX.Element {
   const { dispatch } = useScraping();
   const history = useHistory();
   const [importIsValid, setImportIsValid] = useState(false);
   const [inputTouched, setInputTouched] = useState(false);
+
   const handleFiles = async (files: File[]) => {
     const response = await window.electron.ipc.invoke(
       "import-files",
       files.map(({ path }) => path),
     );
 
-    setImportIsValid(response === true);
+    if (response.success) {
+      await addScrapingResult("no-session", 0, {
+        status: "files-imported",
+        paths: response.paths,
+      });
+    }
+
+    setImportIsValid(response.success);
     if (!inputTouched) setInputTouched(true);
   };
 
@@ -47,7 +56,7 @@ export default function UploadDataExportPage(): JSX.Element {
         disabled={!importIsValid}
         onClick={async () => {
           dispatch({ type: "set-attached", attached: true, visible: false });
-          await currentDelay();
+          await currentDelay("longer");
           dispatch({
             type: "start-scraping",
             filterSteps: (x) => x.type === "scraping",

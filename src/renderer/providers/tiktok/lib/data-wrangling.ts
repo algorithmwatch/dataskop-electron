@@ -7,7 +7,7 @@ const idToTiktokUrl = (id: string) =>
 
 const getIdFromUrl = (url: string): string => {
   const matches = url.match(/\/(\d*)\/$/);
-  if (matches && matches.length > 1) return matches[0];
+  if (matches && matches.length > 1) return matches[1];
   throw new Error(
     "Could not get ID from URL. Something (the JSON?) has changed.",
   );

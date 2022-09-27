@@ -5,9 +5,11 @@ import { useHistory } from "react-router-dom";
 export default function AdvancedMenu({
   menuItems,
   onItemClicked,
+  menuLabel,
 }: {
-  menuItems: any;
+  menuItems: any[];
   onItemClicked: any;
+  menuLabel?: string;
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const history = useHistory();
@@ -29,7 +31,7 @@ export default function AdvancedMenu({
         variant="outlined"
         size="small"
       >
-        Advanced
+        {menuLabel ?? "Advanced"}
       </Button>
       <Menu
         id="debug-menu"
