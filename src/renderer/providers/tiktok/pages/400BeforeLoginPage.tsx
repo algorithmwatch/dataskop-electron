@@ -51,26 +51,49 @@ export default function BeforeLoginPage(): JSX.Element {
         isOpen={modal1IsOpen}
         closeModal={() => setModal1IsOpen(false)}
       >
-        <p className="text-center">
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
-          commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus
-          et magnis dis parturient montes, nascetur ridiculus mus. Donec quam
-          felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla
-          consequat massa quis enim.
-        </p>
+        <div className="text-center">
+          <h1 className="hl-2xl mb-4">Was sind DSGVO-Daten?</h1>
+          <p>
+            DSGVO-Daten sind die Daten, die eine Plattform über Dich speichert
+            (sogenannte personenbezogene Daten). Das können z.B. Informationen
+            darüber sein, wem Du folgst, was Du likest, oder nach was Du gesucht
+            hast. Laut DSGVO (Datenschutz-Grundverordnung) hast Du ein
+            Auskunftsrecht: die Plattform muss Dir sagen, welche Daten dort über
+            Dich gespeichert oder verarbeitet werden.{" "}
+            <a
+              href="https://dataskop.net"
+              target="_blank"
+              rel="noreferrer"
+              className="text-east-blue-700 font-semibold"
+            >
+              Mehr Informationen
+            </a>
+          </p>
+        </div>
       </Modal>
       <Modal
         theme="tiktok"
         isOpen={modal2IsOpen}
         closeModal={() => setModal2IsOpen(false)}
       >
-        <p className="text-center">
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
-          commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus
-          et magnis dis parturient montes, nascetur ridiculus mus. Donec quam
-          felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla
-          consequat massa quis enim.
-        </p>
+        <div className="text-center">
+          <h1 className="hl-2xl mb-4">Was geschieht mit meinen Daten? </h1>
+          <p>
+            Bevor Du Deine Daten spendest, entfernen wir sensible und nicht für
+            die Analyse relevante Informationen. Das sind z.B. die Nutzernamen
+            deiner Follower, den Text deiner Kommentare oder Inhalte von Chats.
+            Deine bereinigten Daten werden Algorithmwatch und ggf.
+            Partnerinstitutionen als Datenspende zur Verfügung gestellt.{" "}
+            <a
+              href="https://dataskop.net"
+              target="_blank"
+              rel="noreferrer"
+              className="text-east-blue-700 font-semibold"
+            >
+              Mehr Informationen
+            </a>
+          </p>
+        </div>
       </Modal>
       <WizardLayout className="text-center" footerSlots={footerSlots}>
         <Content title="Bei TikTok anmelden" icon={faCircleUser}>
