@@ -105,6 +105,18 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
       mainWindow?.setBrowserView(newView);
 
+      // Prevent new windows and instead use the scraping window
+      newView.webContents.setWindowOpenHandler(({ url }) => {
+        log.info(
+          `Not opening a new window for ${url} and reusing scraping window instead`,
+        );
+        newView.webContents.loadURL(url, {
+          userAgent: getUserAgent(process.platform),
+        });
+
+        return { action: "deny" };
+      });
+
       // Uncomment to open the debug console in the scraping window
       // newView.webContents.openDevTools();
 
