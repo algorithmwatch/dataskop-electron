@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AdvancedMenu from "renderer/components/admin/AdvancedMenu";
 import Drawer from "renderer/components/Drawer";
 import { useConfig, useScraping } from "renderer/contexts";
+import tiktokRoutes from "renderer/providers/tiktok/lib/routes";
 
 export const Menu = ({
   isOpen,
@@ -134,6 +135,14 @@ export const Menu = ({
                     },
                   },
                 ]}
+              />
+              <AdvancedMenu
+                menuLabel="TikTok routes"
+                onItemClicked={() => setIsOpen(false)}
+                menuItems={tiktokRoutes.map(({ path }) => ({
+                  label: path,
+                  to: path,
+                }))}
               />
             </div>
           )}

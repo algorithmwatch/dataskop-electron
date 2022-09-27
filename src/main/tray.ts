@@ -14,6 +14,10 @@ const buildTray = (doMonitoring: () => any, configStore: any, icon: string) => {
   const INTERVAL_SECONDS = 60 * 60 * 1000;
 
   const handleMonitoring = (menuItem, browserWindow, event) => {
+    if (process.env.NODE_ENV === "development") {
+      log.debug("Skipping interval monitoring in development");
+      return;
+    }
     if (menuItem.checked && moniInter === null) {
       log.info("Adding interval for monitoring");
       moniInter = setInterval(doMonitoring, INTERVAL_SECONDS);
@@ -24,12 +28,6 @@ const buildTray = (doMonitoring: () => any, configStore: any, icon: string) => {
       clearInterval(moniInter);
       moniInter = null;
     }
-
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    // const item = contextMenu.getMenuItemById("monitoring");
-    // console.log(item);
-    // if (item) item.checked = true;
-    // menuItem.checked = !menuItem.checked;
   };
 
   const monitoringActive = configStore.get("monitoringInterval");

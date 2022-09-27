@@ -47,6 +47,10 @@ const getStatusTexts = (statusKey: keyof typeof STATUS): string[] | void => {
   }
 };
 
+const Pending = () => {
+  return <div></div>;
+};
+
 export default function WaitingPage(): JSX.Element {
   const history = useHistory();
   const {
@@ -169,36 +173,36 @@ export default function WaitingPage(): JSX.Element {
 
   return (
     <>
-      <Modal
-        theme="tiktok"
-        isOpen={modal1IsOpen}
-        closeModal={() => setModal1IsOpen(false)}
-      >
-        <div className="text-center">
-          <h1 className="hl-2xl mb-4">Wie lange dauert das?</h1>
-          <p className="">
-            Es kann bis zu vier Tage dauern, bis TikTok die DSGVO-Daten
-            bereitstellt. Es ist deshalb wichtig, dass du die DataSkop-App nicht
-            schließt und sie im Hintergrund geöffnet bleibt. Du erhältst eine
-            Benachrichtigung, sobald es weitergehen kann.
-          </p>
-        </div>
-      </Modal>
-      <Modal
-        theme="tiktok"
-        isOpen={modal2IsOpen}
-        closeModal={() => setModal2IsOpen(false)}
-      >
-        <div className="text-center">
-          <h1 className="hl-2xl mb-4">Was kommt danach?</h1>
-          <p className="">
-            Wenn die DataSkop-App die Daten heruntergeladen und verarbeitet hat,
-            werden dir verschiedene interaktive Grafiken präsentiert, die dein
-            Nutzungsverhalten auf TikTok visualisieren und einordnen.
-          </p>
-        </div>
-      </Modal>
       <WizardLayout className="text-center" footerSlots={footerSlots}>
+        <Modal
+          theme="tiktok"
+          isOpen={modal1IsOpen}
+          closeModal={() => setModal1IsOpen(false)}
+        >
+          <div className="text-center">
+            <h1 className="hl-2xl mb-4">Wie lange dauert das?</h1>
+            <p className="">
+              Es kann bis zu vier Tage dauern, bis TikTok die DSGVO-Daten
+              bereitstellt. Es ist deshalb wichtig, dass du die DataSkop-App
+              nicht schließt und sie im Hintergrund geöffnet bleibt. Du erhältst
+              eine Benachrichtigung, sobald es weitergehen kann.
+            </p>
+          </div>
+        </Modal>
+        <Modal
+          theme="tiktok"
+          isOpen={modal2IsOpen}
+          closeModal={() => setModal2IsOpen(false)}
+        >
+          <div className="text-center">
+            <h1 className="hl-2xl mb-4">Was kommt danach?</h1>
+            <p className="">
+              Wenn die DataSkop-App die Daten heruntergeladen und verarbeitet
+              hat, werden dir verschiedene interaktive Grafiken präsentiert, die
+              dein Nutzungsverhalten auf TikTok visualisieren und einordnen.
+            </p>
+          </div>
+        </Modal>
         <Content
           title="DSGVO-Daten angefordert"
           icon={faLoader}
