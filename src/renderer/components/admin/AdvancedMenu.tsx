@@ -40,24 +40,39 @@ export default function AdvancedMenu({
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        {menuItems.map(({ to, label }: { to: string; label: string }) => (
-          <MenuItem
-            key={label}
-            onClick={() => {
-              if (history.location.pathname !== to) {
-                history.push(to);
-              }
+        {menuItems.map(
+          ({
+            to,
+            label,
+            click,
+          }: {
+            to: string;
+            label: string;
+            click?: any;
+          }) => (
+            <MenuItem
+              key={label}
+              onClick={() => {
+                if (click != null) {
+                  click();
+                  return;
+                }
 
-              if (typeof onItemClicked === "function") {
-                onItemClicked();
-              }
+                if (history.location.pathname !== to) {
+                  history.push(to);
+                }
 
-              setAnchorEl(null);
-            }}
-          >
-            {label}
-          </MenuItem>
-        ))}
+                if (typeof onItemClicked === "function") {
+                  onItemClicked();
+                }
+
+                setAnchorEl(null);
+              }}
+            >
+              {label}
+            </MenuItem>
+          ),
+        )}
       </Menu>
     </div>
   );

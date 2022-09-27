@@ -85,7 +85,7 @@ const downloadDump = async (
 ): Promise<{
   filePath?: string;
   status:
-    | "download-sucess"
+    | "download-success"
     | "download-error"
     | "download-action-required"
     | "download-error-timeout";
@@ -120,7 +120,7 @@ const downloadDump = async (
   // eslint-disable-next-line no-constant-condition
   while (true) {
     await currentDelay();
-    if (filePath != null) return { filePath, status: "download-sucess" };
+    if (filePath != null) return { filePath, status: "download-success" };
     if (error) return { status: "download-error" };
 
     if (new Date().getTime() - lastReceived > DOWNLOAD_TIMEOUT_SECONDS * 1000) {

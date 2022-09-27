@@ -58,7 +58,7 @@ export const STATUS = {
   // There were errors when requesting a new GDPR dump
   "data-error-request": {},
   "download-action-required": {},
-  "download-sucess": {},
+  "download-success": {},
   "download-error": {},
   "download-error-timeout": {},
   // A scraping step was finished
