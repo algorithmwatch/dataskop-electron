@@ -9,7 +9,7 @@ import { getLookupId } from "../../../lib/data-wrangling";
 // helper for setting up hashtag data
 function buildHashtagArray(urlInfo, hashtags, hashtagsAll) {
   const vidTagsInfo = urlInfo.desc.match(/#[\p{L}]+/giu);
-  console.log(vidTagsInfo);
+  // console.log(vidTagsInfo);
   if (vidTagsInfo != null && vidTagsInfo.length !== 0) {
     // loop through all hashtags and collect them in an object
     for (const tagInfo of vidTagsInfo) {
@@ -144,7 +144,7 @@ export function getTopData(
   );
   let i = 0;
   // loop through all video data
-  for (const vid of gdprVidData) {
+  for (const vid of gdprVidData.slice(-500)) {
     const date_curr = withoutTime(new Date(vid.Date));
     // stop looping when you reach end of [timeRange] days
     if (date_curr < dateToStop) {
@@ -180,17 +180,21 @@ export function getTopData(
       // console.log("empty objs", hashtags, sounds, divlabels);
       i += 1;
     } else {
-      const vidUrl = vid.VideoLink;
+      // const vidUrl = vid.VideoLink;
       // find vid url within scraped data
       // console.log(metadata[vidUrl]);
-      console.log(vidUrl, metadata);
+      // console.log(vidUrl, metadata);
       let vidInfo = metadata[getLookupId(vid)];
-      if (vidInfo === undefined) continue;
-
-      if (vidInfo.error != null) continue;
+      if (!vidInfo) continue;
+      if (vidInfo.error) continue;
       vidInfo = vidInfo.result;
+      console.warn("vidInfo", vidInfo);
 
       buildHashtagArray(vidInfo, hashtags, hashtagsAll);
+      console.warn(
+        Object.keys(hashtags).length,
+        Object.keys(hashtagsAll).length,
+      );
       buildSoundArray(vidInfo, sounds, soundsAll);
       buildDiversificationLabelsArray(vidInfo, divlabels, divlabelsAll);
     }

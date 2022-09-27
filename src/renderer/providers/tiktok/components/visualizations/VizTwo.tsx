@@ -1,27 +1,77 @@
-/* eslint-disable no-nested-ternary */
-import { faPenToSquare } from "@fortawesome/pro-regular-svg-icons";
+/* eslint-disable react/no-danger */
 import * as Plot from "@observablehq/plot";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import Switch from "renderer/components/Switch";
-import { SelectInput } from "renderer/providers/tiktok/components/visualizations/SelectInput";
+import {
+  forceCollide,
+  forceSimulation,
+  forceX as d3forceX,
+  forceY as d3forceY,
+} from "d3-force";
+import { select } from "d3-selection";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { shortenGdprData } from "./utils/shorten_data";
-import addTooltips from "./utils/tooltips";
-import { convertDaysToMs } from "./utils/viz-utils";
 import { getTopData } from "./utils/viz_two_utils";
-import { VizBox } from "./VizBox";
 
-const rangeOptions = [
-  { id: "1", label: "letzte 90 Tage", value: 90 },
-  { id: "2", label: "letzte 180 Tage", value: 180 },
-  { id: "3", label: "letzte 365 Tage", value: 365 },
-];
-const topNumOptions = [
-  { id: "1", label: "3", value: 3 },
-  { id: "2", label: "5", value: 5 },
-  { id: "3", label: "10", value: 10 },
-];
+function beeswarm(
+  data,
+  { gap = 1, ticks = 50, dynamic, direction = "y", ...options },
+) {
+  const dots = Plot.dot(data, options);
+  const { render } = dots;
 
-function VizTwo({ metadata, gdprData }: { gdprData: any; metadata: any }) {
+  dots.render = function () {
+    const g = render.apply(this, arguments);
+    const circles = select(g).selectAll("circle");
+
+    const nodes = [];
+    function update() {
+      // console.log('update');
+      circles.attr(cx, (_, i) => nodes[i].x).attr(cy, (_, i) => nodes[i].y);
+    }
+    const [cx, cy, x, y, forceX, forceY] =
+      direction === "x"
+        ? ["cx", "cy", "x", "y", d3forceX, d3forceY]
+        : ["cy", "cx", "y", "x", d3forceY, d3forceX];
+    for (const c of circles) {
+      const node = {
+        x: +c.getAttribute(cx),
+        y: +c.getAttribute(cy),
+        r: +c.getAttribute("r"),
+      };
+      nodes.push(node);
+    }
+    const force = forceSimulation(nodes)
+      .force("x", forceX((d) => d[x]).strength(0.8))
+      .force("y", forceY((d) => d[y]).strength(0.05))
+      .force(
+        "collide",
+
+        forceCollide()
+          .radius((d) => d.r + gap)
+          .iterations(3),
+      )
+      .tick(ticks)
+      .stop();
+    update();
+    // if (dynamic) force.on('tick', update).restart();
+    return g;
+  };
+
+  return dots;
+}
+
+export default function VisTwo({
+  gdprData,
+  metadata,
+}: {
+  gdprData: any;
+  metadata: any;
+}) {
+  const [topNum, setTopNum] = useState({ id: "3", label: "10", value: 10 });
+  const [range, setRange] = useState({
+    id: "3",
+    label: "letzte 365 Tage",
+    value: 365,
+  });
   const [
     videodata,
     logindata,
@@ -31,16 +81,6 @@ function VizTwo({ metadata, gdprData }: { gdprData: any; metadata: any }) {
     sharedVids,
     savedVids,
   ] = useMemo(() => shortenGdprData(gdprData), [gdprData]);
-
-  // const soundRef = useRef();
-  // const hashtagsRef = useRef();
-  // const diverseRef = useRef();
-  const toggleRef = useRef(null);
-
-  const coreTimeString = null;
-  const [range, setRange] = useState(rangeOptions[0]);
-  const [topNum, setTopNum] = useState(topNumOptions[0]);
-
   const [
     hashtagData,
     soundData,
@@ -48,206 +88,111 @@ function VizTwo({ metadata, gdprData }: { gdprData: any; metadata: any }) {
     topHashtag,
     topSound,
     topDivLabel,
-  ] = React.useMemo(
+  ] = useMemo(
     () => getTopData(topNum.value, 7, range.value, metadata, videodata),
     [topNum.value, 7, range.value],
   );
 
-  // console.log("hashtagdata", hashtagData);
-  const [highlighted, setHighlight] = useState(null);
+  const beeRef = useRef(null);
+  const sumRef = useRef(null);
+  console.warn("hashtagData", hashtagData);
 
-  const graphOptions = [
-    { option: "sound", value: "default" },
-    { option: "hashtags", value: "hashtags" },
-    { option: "divlabels", value: "divlabels" },
-  ];
-  const [graph, setGraph] = useState(graphOptions[0].value);
-
-  function getRightFormat(d) {
-    const enddate = new Date(d - convertDaysToMs(7 - 1));
-    return `${enddate.getDate()}.${
-      enddate.getMonth() === 0 ? 12 : enddate.getMonth() + 1
-    } - ${d.getDate()}.${d.getMonth() === 0 ? 12 : d.getMonth() + 1}`;
-  }
+  // TODO: Make charts dimensions listen to resize event with throttle
   const chartWidth = Math.round((window.outerWidth * 90) / 100);
   const chartHeight = Math.round((window.outerHeight * 40) / 100);
-  const commonProps = {
-    width: chartWidth,
-    height: chartHeight,
-    marginBottom: 60,
-    marginTop: 60,
-    marginLeft: 60,
-    marginRight: 60,
-    style: {
-      background: "transparent",
-    },
-    x: {
-      type: "point",
-      tickFormat: (d: any) => getRightFormat(d),
-
-      // tickFormat: (d) =>
-      //   `${d.getDate()}.${
-      //     d.getMonth() === 0 ? 12 : d.getMonth() + 1
-      //   }.${d.getFullYear()}`,
-      // tickRotate: -90,
-      label: "Zeitverlauf",
-    },
-    // x: {
-    //   axis: "top",
-    // },
-    // r: {
-    //   range: [0, 20],
-    // },
-    color: {
-      type: "categorical",
-      scheme: "set2",
-      legend: true,
-      // range: ['#ff0050', '#000000', '#00f2ea']
-      // className: "top-items",
-      // swatchSize: 20,
-      // tickFormat: (hashtagData) => `#${hashtagData.Name}`,
-    },
-  };
-
-  const commonLineProps = {
-    x: "DateStart",
-    y: "Count",
-    z: "Name",
-    title: (d: any) => `${d.Name}: ${d.Count}`,
-    strokeOpacity:
-      highlighted === null ? 1 : (d) => (d.Name === highlighted ? 1 : 0.5),
-    strokeWidth:
-      highlighted === null ? 3 : (d) => (d.Name === highlighted ? 4 : 2),
-    stroke: "Name",
-    sort: (d: any) => highlighted === null || d.Name === highlighted,
-  };
-
-  const commonDotProps = {
-    x: "DateStart",
-    y: "Count",
-    title: (d: any) => `${d.Name}: ${d.Count}`,
-    stroke: "currentColor",
-    strokeOpacity:
-      highlighted === null ? 1 : (d) => (d.Name === highlighted ? 1 : 0.2),
-    r: 7,
-    fill: "Name",
-    fillOpacity:
-      highlighted === null ? 1 : (d) => (d.Name === highlighted ? 1 : 0.2),
-  };
-
-  useEffect(() => {
-    if (hashtagData === undefined) return;
-    const chart = addTooltips(
+  const beeSvg = useMemo(
+    () =>
       Plot.plot({
-        ...commonProps,
-        y: {
-          grid: true,
-          label:
-            graph === "default"
-              ? "Frequency of Sounds"
-              : graph === "hashtags"
-              ? "Frequency of Hashtags"
-              : "Frequency of Categories",
+        width: chartWidth,
+        height: chartHeight,
+        marginTop: 30,
+        marginBottom: 50,
+        marginLeft: 30,
+        style: {
+          // fontSize: '0.8em',
+          color: "#5c4d00",
         },
+        // grid: true,
+        // y: {
+        //   grid: false,
+
+        //   transforsm: (c) => `${c}`,
+        //   fill: (c) => c,
+        // },
+        y: { axis: null },
+        x: { types: "time", ticks: 15, tickRotate: -45 },
         marks: [
-          Plot.ruleY([0]),
-          Plot.line(
-            graph === "default"
-              ? soundData
-              : graph === "hashtags"
-              ? hashtagData
-              : diverseLabelData,
-            { ...commonLineProps },
-          ),
-          Plot.dot(
-            graph === "default"
-              ? soundData
-              : graph === "hashtags"
-              ? hashtagData
-              : diverseLabelData,
-            { ...commonDotProps },
-          ),
+          beeswarm(hashtagData, {
+            marginTop: 50,
+            marginLeft: 50,
+            dynamic: true,
+            title: (d) => "title",
+            x: (d) => d.DateStart,
+            y: (d) => d.Name,
+            fill: (d) => d.Name,
+            stroke: "none",
+            r: (d) => d.Count,
+            gap: 1,
+          }),
         ],
       }),
-      (e: any) => setHighlight(e.match(/(.*):.*/)[1]),
-      () => setHighlight(null),
-    );
-    toggleRef.current.append(chart);
+    [hashtagData],
+  );
 
-    return () => chart.remove();
-  }, [
-    graph === "default"
-      ? soundData
-      : graph === "hashtags"
-      ? hashtagData
-      : diverseLabelData,
-    highlighted,
-  ]);
+  const sumSvg = useMemo(
+    () =>
+      Plot.plot({
+        width: 300,
+        marginLeft: 140,
+        height: 400,
+        marginTop: 30,
+        marginBottom: 50,
+        y: {
+          label: null,
+          axis: "left",
+          //domain: d3.groupSort(watchHistory, g => -d3.sum(g, d => d.watchTime), d => d.category)
+        },
+        x: {
+          grid: false,
+          transform: (d) => d / 60,
+          // label: 'minutes watched',
+          label: null,
+        },
+        marks: [
+          Plot.barX(
+            hashtagData,
+            Plot.groupY(
+              {
+                x: "sum",
+                // title: (d) => {
+                //   return `${Math.round(
+                //     sum(d, (d) => d.watchTime) / 60,
+                //   )} minutes`;
+                // },
+                title: (d) => "title2",
+              },
+              { y: "Name", fill: (d) => d.Name, x: "Count" },
+            ),
+          ),
+          //Plot.ruleX([0])
+        ],
+      }),
+    [hashtagData],
+  );
+
+  useEffect(() => {
+    if (beeRef.current) {
+      beeRef.current.replaceChildren(beeSvg);
+    }
+    if (sumRef.current) {
+      sumRef.current.replaceChildren(sumSvg);
+    }
+  }, []);
 
   return (
-    <>
-      <div className="mx-auto flex items-center text-2xl mb-6">
-        <div className="">Show your top</div>
-        <div>
-          <SelectInput
-            options={topNumOptions}
-            selectedOption={topNum}
-            onUpdate={setTopNum}
-            buttonIcon={faPenToSquare}
-          />
-        </div>
-        <div className="">sounds, hashtags, and video categories in the </div>
-        <div>
-          <SelectInput
-            options={rangeOptions}
-            selectedOption={range}
-            onUpdate={setRange}
-            buttonIcon={faPenToSquare}
-          />
-        </div>
-      </div>
-
-      <div className="flex mx-auto space-x-4 mb-6">
-        <VizBox head={`${topHashtag}`} label="Most Frequent Hashtag OAT" />
-        <VizBox head={`${topSound}`} label="Most Frequent Sound OAT" />
-        <VizBox head={`${topDivLabel}`} label="Most Frequent Category OAT" />
-      </div>
-
-      <div className="flex mx-auto space-x-4">
-        <Switch
-          label="Sounds/Music"
-          checked={graph === "default"}
-          onChange={(e) => {
-            setGraph("default");
-          }}
-        />
-        <Switch
-          label="Hashtags"
-          checked={graph === "hashtags"}
-          onChange={(e) => {
-            setGraph("hashtags");
-          }}
-        />
-
-        <Switch
-          label="Diversification Labels/Categories"
-          checked={graph === "divlabels"}
-          onChange={() => {
-            setGraph("divlabels");
-          }}
-        />
-      </div>
-
-      <div ref={toggleRef} className="w-full min-h-[50vh]" />
-      {/* <div ref={soundRef}></div>
-
-      <h2>Hashtags</h2>
-      <div ref={hashtagsRef}></div>
-
-      <h2>Diversification Labels</h2>
-      <div ref={diverseRef}></div> */}
-    </>
+    <div className="flex flex-row">
+      <div ref={sumRef} />
+      <div ref={beeRef} />
+    </div>
   );
 }
-
-export default VizTwo;
