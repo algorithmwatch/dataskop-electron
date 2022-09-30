@@ -1,16 +1,19 @@
 import archiver from "archiver";
-import { app, BrowserWindow, dialog } from "electron";
+import { BrowserWindow, dialog } from "electron";
 import log from "electron-log";
 import fs from "fs";
 import { readdir, stat } from "fs/promises";
 import path from "path";
 import { getNowString } from "../renderer/lib/utils/time";
-import { dbFolder } from "./db";
-import { postDownloadFileProcessing } from "./scraping";
+import { DB_FOLDER } from "./db";
+import {
+  DOWNLOADS_FOLDER,
+  HTML_FOLDER,
+  postDownloadFileProcessing,
+} from "./scraping";
 import { addMainHandler } from "./utils";
 
-const logDir = path.dirname(log.default.transports.file.getFile().path);
-const htmlDir = path.join(app.getPath("userData"), "html");
+const LOG_FOLDER = path.dirname(log.default.transports.file.getFile().path);
 
 const dirSize = async (directory: string) => {
   if (!fs.existsSync(directory)) {
@@ -113,11 +116,10 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
         });
 
         archive.pipe(output);
-        archive.directory(logDir, "logs");
-        archive.directory(dbFolder, "databases");
+        archive.directory(LOG_FOLDER, "logs");
+        archive.directory(DB_FOLDER, "databases");
 
-        const htmlLogDir = htmlDir;
-        if (fs.existsSync(htmlLogDir)) archive.directory(htmlLogDir, "html");
+        if (fs.existsSync(HTML_FOLDER)) archive.directory(HTML_FOLDER, "html");
 
         archive.finalize();
       });
@@ -125,17 +127,17 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
   });
 
   addMainHandler("export-debug-size", async () => {
-    return Promise.all([htmlDir, logDir].map(dirSize));
+    return Promise.all([HTML_FOLDER, LOG_FOLDER].map(dirSize));
   });
 
   addMainHandler("export-debug-clean", async () => {
-    return [htmlDir, logDir].map((dir) =>
+    return [HTML_FOLDER, LOG_FOLDER].map((dir) =>
       fs.readdirSync(dir).forEach((f) => fs.rmSync(`${dir}/${f}`)),
     );
   });
 
   addMainHandler("import-files", async (_e: any, paths: string[]) => {
-    const dir = path.join(app.getPath("userData"), "downloads", getNowString());
+    const dir = path.join(DOWNLOADS_FOLDER, getNowString());
 
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });

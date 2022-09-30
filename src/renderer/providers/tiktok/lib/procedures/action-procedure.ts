@@ -6,16 +6,16 @@ import {
   getReadyHtml,
   ProcedureArgs,
 } from "renderer/lib/scraping";
-import { STATUS } from "renderer/providers/tiktok/lib/status";
 import {
   GetCurrentHtml,
   GetHtmlFunction,
   GetHtmlLazyFunction,
 } from "renderer/providers/types";
 import { confirmCookies } from "../actions";
+import { StatusKey } from "../status";
 
 type ActionReturn = Promise<{
-  status: keyof typeof STATUS;
+  status: StatusKey;
   filePath?: string;
   errorMessage?: string;
 }>;

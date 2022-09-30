@@ -17,7 +17,7 @@ import { useConfig, useScraping } from "renderer/contexts";
 import { currentDelay } from "renderer/lib/delay";
 import Content from "renderer/providers/tiktok/components/Content";
 import HelpButton from "renderer/providers/tiktok/components/HelpButton";
-import { getStatus, STATUS } from "renderer/providers/tiktok/lib/status";
+import { getStatus, isMonitoringPending, STATUS } from "../lib/status";
 
 const PendingContent = () => {
   const [modal1IsOpen, setModal1IsOpen] = useState(false);
@@ -117,7 +117,7 @@ const StatusContent = ({ title, body, fancyNotificationText }) => {
 export default function WaitingPage(): JSX.Element {
   const history = useHistory();
   const {
-    state: { scrapingProgress },
+    state: { isScrapingFinished },
     dispatch,
   } = useScraping();
   const {
@@ -164,6 +164,10 @@ export default function WaitingPage(): JSX.Element {
   useEffect(() => {
     (async () => {
       const newStatus = await getStatus();
+      window.electron.log.info(
+        `Setting new status in waiting page ${newStatus}`,
+      );
+
       if (newStatus === status) return;
 
       if (newStatus === "scraping-done") {
@@ -181,7 +185,7 @@ export default function WaitingPage(): JSX.Element {
 
       setStatus(newStatus);
     })();
-  }, [scrapingProgress.value]);
+  }, [isScrapingFinished]);
 
   const footerSlots: FooterSlots = useMemo(
     () => ({
@@ -251,11 +255,7 @@ export default function WaitingPage(): JSX.Element {
     <>
       <WizardLayout className="text-center" footerSlots={footerSlots}>
         {/* scraping-done: Keine Anzeige notwendig */}
-        {[
-          "data-pending",
-          "monitoring-pending",
-          "data-request-success",
-        ].includes(status) && <PendingContent />}
+        {isMonitoringPending(status) && <PendingContent />}
         {[
           "monitoring-download-action-required",
           "download-action-required",

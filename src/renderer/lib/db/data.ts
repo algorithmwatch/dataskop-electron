@@ -145,7 +145,8 @@ const getSessionById = async (
 
 // scraping results
 
-const queuedAddScrapingResult = async (obj: ScrapingResultSaved) => {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const _addScrapingResult = async (obj: ScrapingResultSaved) => {
   await setUpDb();
 
   if (db === null || db.data === null) throw Error("db is not initialized");
@@ -155,15 +156,20 @@ const queuedAddScrapingResult = async (obj: ScrapingResultSaved) => {
   return db.write();
 };
 
-const addScrapingResult = (sessionId: string, step: number, data: any) => {
+const addScrapingResult = (
+  sessionId: string,
+  step: number,
+  data: any,
+  skipQueue = false,
+) => {
   const obj = {
     sessionId,
     step,
     ...data,
     scrapedAt: Date.now(),
   };
-
-  return queue.add(() => queuedAddScrapingResult(obj));
+  if (skipQueue) _addScrapingResult(obj);
+  return queue.add(() => _addScrapingResult(obj));
 };
 
 const getScrapingResults = async (): Promise<ScrapingResultSaved[]> => {

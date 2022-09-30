@@ -116,6 +116,29 @@ const installExtensions = async () => {
 let doingMonitoring = false;
 
 const doMonitoring = async () => {
+  if (mainWindow === null) return;
+
+  const isPendingStatus: Promise<boolean> = new Promise((resolve) => {
+    if (mainWindow === null) {
+      resolve(false);
+      return;
+    }
+
+    const contents = mainWindow.webContents;
+    // Check if the current status requires monitoring.
+    contents.send("monitoring-pending");
+    ipcMain.handleOnce("monitoring-pending-reply", (_event, pending) => {
+      resolve(pending);
+    });
+  });
+
+  if (!(await isPendingStatus)) {
+    log.info(
+      `The current status does not require monitoring. Not doing monitoring.`,
+    );
+    return;
+  }
+
   if (doingMonitoring) {
     log.info("Some monitoring action has already stared. Do nothing.");
     return;
@@ -131,7 +154,6 @@ const doMonitoring = async () => {
     createWindow();
   } else {
     mainWindow.reload();
-    mainWindow.minimize();
   }
 };
 
