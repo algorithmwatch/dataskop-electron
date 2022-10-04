@@ -7,6 +7,7 @@
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
+import StatusContent from "renderer/providers/tiktok/components/StatusContent";
 import { useNavigation, useScraping } from "../contexts";
 
 export default function ProviderLoginSuccessPage(): JSX.Element {
@@ -37,10 +38,7 @@ export default function ProviderLoginSuccessPage(): JSX.Element {
 
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>
-      <h1 className="hl-4xl mb-20">Success</h1>
-      <div className="flex flex-col space-y-4">
-        <p></p>
-      </div>
+      <StatusContent title="Einen Moment bitte" body="Einen Moment bitte" />
     </WizardLayout>
   );
 }

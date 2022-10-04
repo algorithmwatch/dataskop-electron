@@ -12,7 +12,7 @@ import {
   GetHtmlLazyFunction,
 } from "renderer/providers/types";
 import { confirmCookies } from "../actions";
-import { StatusKey } from "../status";
+import { STATUS, StatusKey } from "../status";
 
 type ActionReturn = Promise<{
   status: StatusKey;
@@ -94,6 +94,8 @@ const downloadDump = async (
   let error = false;
   let filePath = null;
   const DOWNLOAD_TIMEOUT_SECONDS = 60;
+  const ACTION_REQUIRED_SECONDS = 5;
+
   let lastReceived = new Date().getTime();
 
   window.electron.ipc.on("scraping-download-started", () => {
@@ -123,10 +125,12 @@ const downloadDump = async (
     if (filePath != null) return { filePath, status: "download-success" };
     if (error) return { status: "download-error" };
 
-    if (new Date().getTime() - lastReceived > DOWNLOAD_TIMEOUT_SECONDS * 1000) {
+    if (new Date().getTime() - lastReceived > ACTION_REQUIRED_SECONDS * 1000) {
       // If the download didn't even start, TikTok requires attention
       if (!started) return { status: "download-action-required" };
+    }
 
+    if (new Date().getTime() - lastReceived > DOWNLOAD_TIMEOUT_SECONDS * 1000) {
       // The download has started but it looks like there is an error.
       // "Downloading time exceeded: no updates for over 60 seconds",
       return { status: "download-error-timeout" };

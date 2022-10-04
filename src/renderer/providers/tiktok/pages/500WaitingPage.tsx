@@ -17,6 +17,7 @@ import { useConfig, useScraping } from "renderer/contexts";
 import { currentDelay } from "renderer/lib/delay";
 import Content from "renderer/providers/tiktok/components/Content";
 import HelpButton from "renderer/providers/tiktok/components/HelpButton";
+import StatusContent from "../components/StatusContent";
 import { getStatus, isMonitoringPending, STATUS } from "../lib/status";
 
 const PendingContent = () => {
@@ -87,30 +88,6 @@ const PendingContent = () => {
         </div>
       </Content>
     </>
-  );
-};
-
-const StatusContent = ({ title, body, fancyNotificationText }) => {
-  return (
-    <Content title={title} icon={faLoader} iconSpinning theme="tiktokAnimated">
-      <p>{body}</p>
-
-      {fancyNotificationText && (
-        <div className="mt-24 text-base font-medium relative">
-          <span className="absolute inset-0 animate-fade1 flex items-center justify-center">
-            <div className="rounded-full bg-white/50 px-5 py-4">
-              Du erhältst eine Benachrichtigung, sobald es weitergehen kann.
-            </div>
-          </span>
-          {/* <span className="absolute inset-0 animate-fade2 flex items-center justify-center">
-        <div className="rounded-full bg-white/50 px-5 py-4">
-        Du kannst die App schließen, aber sie muss im Hintergrund geöffnet
-        bleiben.
-        </div>
-      </span> */}
-        </div>
-      )}
-    </Content>
   );
 };
 
