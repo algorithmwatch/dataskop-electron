@@ -27,8 +27,8 @@ import { getUserAgent } from "./user-agent";
 
 let scrapingView: BrowserView | null = null;
 
-const DOWNLOADS_FOLDER = path.join(app.getPath("userData"), "downloads");
-const HTML_FOLDER = path.join(app.getPath("userData"), "html");
+export const DOWNLOADS_FOLDER = path.join(app.getPath("userData"), "downloads");
+export const HTML_FOLDER = path.join(app.getPath("userData"), "html");
 
 export const postDownloadFileProcessing = async (filePath: string) => {
   let filePathExtracted = "";
@@ -55,7 +55,9 @@ export const postDownloadFileProcessing = async (filePath: string) => {
 
 // Register several handlers for the scraping view
 export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
-  log.debug("called registerScrapingHandlers", mainWindow == null);
+  log.debug(
+    `Called registerScrapingHandlers, mainWindow: ${mainWindow !== null}`,
+  );
 
   addMainHandler(
     "scraping-init-view",
@@ -64,12 +66,13 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       { muted = true, allowInput = true, persist = false }: any,
     ) => {
       log.debug(
-        "called scraping-init-view",
-        scrapingView == null,
-        mainWindow == null,
-        muted,
-        allowInput,
-        persist,
+        `Called scraping-init-view ${JSON.stringify({
+          scrapingView: !!scrapingView,
+          mainWindow: !!mainWindow,
+          muted,
+          allowInput,
+          persist,
+        })}`,
       );
 
       let loaded = false;
@@ -104,6 +107,18 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       });
 
       mainWindow?.setBrowserView(newView);
+
+      // Prevent new windows and instead use the scraping window
+      newView.webContents.setWindowOpenHandler(({ url }) => {
+        log.info(
+          `Not opening a new window for ${url} and reusing scraping window instead`,
+        );
+        newView.webContents.loadURL(url, {
+          userAgent: getUserAgent(process.platform),
+        });
+
+        return { action: "deny" };
+      });
 
       // Uncomment to open the debug console in the scraping window
       // newView.webContents.openDevTools();

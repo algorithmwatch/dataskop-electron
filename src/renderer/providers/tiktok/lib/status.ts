@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { getLastResult } from "renderer/lib/db";
 
-export const STATUS = {
+const STATUS = {
   // TikTok data was requested and TikTok is busy, It didn't fail yet
   "monitoring-pending": {
     notification: {
@@ -58,7 +58,7 @@ export const STATUS = {
   // There were errors when requesting a new GDPR dump
   "data-error-request": {},
   "download-action-required": {},
-  "download-sucess": {},
+  "download-success": {},
   "download-error": {},
   "download-error-timeout": {},
   // A scraping step was finished
@@ -66,10 +66,29 @@ export const STATUS = {
   "files-imported": {},
 };
 
+type StatusKey = keyof typeof STATUS;
+
 const getStatus = async (): Promise<string> => {
   const row = await getLastResult();
+  window.electron.log.info(row);
   if (!row) return "status-not-available";
   return _.get(row.fields, "status", "status-not-available") as string;
 };
 
-export { getStatus };
+const isMonitoringPending = (status: string) => {
+  return [
+    "data-pending",
+    "monitoring-pending",
+    "data-request-success",
+  ].includes(status);
+};
+
+window.electron.ipc.on("monitoring-pending", async () => {
+  const s = await getStatus();
+  window.electron.ipc.invoke(
+    "monitoring-pending-reply",
+    isMonitoringPending(s),
+  );
+});
+
+export { getStatus, isMonitoringPending, StatusKey, STATUS };

@@ -10,13 +10,11 @@ import path from "path";
 import { setOpenAtLogin } from "./tray";
 import { addMainHandler } from "./utils";
 
-const userFolder = app.getPath("userData");
-const dbFolder = path.join(userFolder, "databases");
+const DB_FOLDER = path.join(app.getPath("userData"), "databases");
 
 const dataStore = new Store({
   name: "data",
-  cwd: dbFolder,
-  encryptionKey: "DaTaSk0p",
+  cwd: DB_FOLDER,
   defaults: { data: null, lookupsToUploads: [] },
   schema: {
     data: {},
@@ -29,12 +27,12 @@ const dataStore = new Store({
 
 const lookupStore = new Store({
   name: "lookup",
-  cwd: dbFolder,
+  cwd: DB_FOLDER,
 });
 
 const configStore = new Store({
   name: "config",
-  cwd: dbFolder,
+  cwd: DB_FOLDER,
   encryptionKey: "DaTaSk0p",
   defaults: {
     openAtLogin: true,
@@ -98,4 +96,4 @@ export default async function registerDbHandlers() {
   });
 }
 
-export { configStore, dbFolder, getLookups, addLookups, addLookupsToUpload };
+export { configStore, DB_FOLDER, getLookups, addLookups, addLookupsToUpload };

@@ -28,10 +28,18 @@ export default function ImportDataExportPage(): JSX.Element {
     );
 
     if (response.success) {
-      await addScrapingResult("no-session", 0, {
-        status: "files-imported",
-        paths: response.paths,
-      });
+      await addScrapingResult(
+        "no-session",
+        0,
+        {
+          success: true,
+          fields: {
+            status: "files-imported",
+            paths: response.paths,
+          },
+        },
+        true,
+      );
     }
 
     setImportIsValid(response.success);
@@ -55,14 +63,15 @@ export default function ImportDataExportPage(): JSX.Element {
         endIcon={faAngleRight}
         disabled={!importIsValid}
         onClick={async () => {
+          // First navigate, then start scraping
+          history.push("/tiktok/waiting");
+
           dispatch({ type: "set-attached", attached: true, visible: false });
           await currentDelay("longer");
           dispatch({
             type: "start-scraping",
             filterSteps: (x) => x.type === "scraping",
           });
-
-          history.push("/tiktok/waiting");
         }}
       >
         Weiter

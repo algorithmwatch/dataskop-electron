@@ -10,8 +10,9 @@ const mainChannels = [
   "update-check-beta",
   "update-restart-app",
   "show-notification",
-  "monitoring-done",
 ];
+
+const monitoringChannels = ["monitoring-done", "monitoring-pending-reply"];
 
 // scraping.ts
 const scrapingChannels = [
@@ -71,6 +72,7 @@ const tiktokChannels = ["tiktok-scrape-videos"];
 
 // whitelist certain channels for certain action
 const validInvokeChannels = mainChannels.concat(
+  monitoringChannels,
   scrapingChannels,
   backgroundScrapingChannels,
   exportChannels,
@@ -87,6 +89,7 @@ const validOnChannels = [
   "update-available",
   "update-downloaded",
   "update-error",
+  "monitoring-pending",
 ];
 const validremoveAllChannels = [
   "update-available",
@@ -103,8 +106,7 @@ contextBridge.exposeInMainWorld("electron", {
         ipcRenderer.on(channel, (_event, ...args) => func(...args));
       } else {
         log.warn(
-          "The channel is not included in the list of valid options: ",
-          channel,
+          `The channel is not included in the list of valid options: ${channel}`,
         );
       }
     },
@@ -113,8 +115,7 @@ contextBridge.exposeInMainWorld("electron", {
         return ipcRenderer.invoke(channel, ...args);
       }
       log.warn(
-        "The channel is not included in the list of valid options: ",
-        channel,
+        `The channel is not included in the list of valid options: ${channel}`,
       );
       return null;
     },
@@ -123,8 +124,7 @@ contextBridge.exposeInMainWorld("electron", {
         return ipcRenderer.removeListener(channel, ...args);
       }
       log.warn(
-        "The channel is not included in the list of valid options: ",
-        channel,
+        `The channel is not included in the list of valid options: ${channel}`,
       );
       return null;
     },
@@ -133,8 +133,7 @@ contextBridge.exposeInMainWorld("electron", {
         return ipcRenderer.removeAllListeners(channel, ...args);
       }
       log.warn(
-        "The channel is not included in the list of valid options: ",
-        channel,
+        `The channel is not included in the list of valid options: ${channel}`,
       );
       return null;
     },
