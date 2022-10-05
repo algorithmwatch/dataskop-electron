@@ -211,7 +211,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
   );
 
   addMainHandler("scraping-clear-storage", async () => {
-    log.info("clearing storage for scraping view");
+    log.info("Clearing storage for scraping view");
     await session.fromPartition("scraping").clearStorageData();
     return session.fromPartition("persist:scraping").clearStorageData();
   });

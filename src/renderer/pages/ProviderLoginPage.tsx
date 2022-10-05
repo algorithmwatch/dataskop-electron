@@ -55,6 +55,7 @@ export default function ProviderLoginPage(): JSX.Element {
 
   useEffect(() => {
     if (isUserLoggedIn) {
+      dispatch({ type: "set-visible-window", visibleWindow: false });
       history.push(getNextPage("path"));
     }
   }, [isUserLoggedIn]);

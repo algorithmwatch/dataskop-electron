@@ -11,7 +11,6 @@ import {
   GetHtmlFunction,
   GetHtmlLazyFunction,
 } from "renderer/providers/types";
-import { confirmCookies } from "../actions";
 import { STATUS, StatusKey } from "../status";
 
 type ActionReturn = Promise<{
@@ -238,7 +237,6 @@ const monitorDataExport = async (getHtml: GetHtmlFunction): ActionReturn => {
 
   // the lang paramater is important because we are filtering by text later on
   const getCurrentHtml = await getHtml(GET_DATA_URL);
-  await confirmCookies();
 
   if (await isDumpCreationPending(getCurrentHtml)) {
     return { status: "monitoring-pending" };
@@ -289,7 +287,6 @@ const getDataExport = async (getHtml: GetHtmlFunction): ActionReturn => {
   window.electron.log.info("Started get data export");
 
   const getCurrentHtml = await getHtml(GET_DATA_URL);
-  await confirmCookies();
 
   // Check if we have to wait (first try)
   if (await isDumpCreationPending(getCurrentHtml)) {
