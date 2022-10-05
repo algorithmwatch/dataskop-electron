@@ -25,7 +25,13 @@ export type Bounds = {
 type FilterSteps = (arg0: any) => boolean;
 
 type Action =
-  | { type: "set-attached"; attached: boolean; visible: boolean }
+  | {
+      type: "set-attached";
+      attached: boolean;
+      visible: boolean;
+      fixed?: boolean;
+      initPositionWindow?: string;
+    }
   | {
       type: "set-campaign";
       campaign: Campaign | null;
@@ -81,6 +87,7 @@ type State = {
   fixedWindow: boolean;
   visibleWindow: boolean;
   closeableWindow: boolean;
+  initPositionWindow: string;
   bounds: Bounds;
   disableInput: boolean;
   demoMode: boolean;
@@ -116,6 +123,7 @@ const initialState: State = {
   fixedWindow: false,
   visibleWindow: false,
   closeableWindow: false,
+  initPositionWindow: "center",
   bounds: { width: 100, height: 100, x: 100, y: 100 },
   disableInput: false,
   demoMode: false,
@@ -131,6 +139,9 @@ const scrapingReducer = (state: State, action: Action): State => {
         ...state,
         isAttached: action.attached,
         visibleWindow: action.visible,
+        fixedWindow: action.fixed ?? initialState.fixedWindow,
+        initPositionWindow:
+          action.initPositionWindow ?? initialState.initPositionWindow,
       };
     }
 

@@ -64,6 +64,8 @@ export default function ProviderLoginPage(): JSX.Element {
       type: "set-attached",
       attached: true,
       visible: true,
+      fixed: true,
+      initPositionWindow: "center-top",
     });
     sendEvent(campaign, "clicked start scraping");
   }, []);

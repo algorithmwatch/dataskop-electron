@@ -222,6 +222,8 @@ const getAllData = async () => {
 };
 
 const clearData = async () => {
+  await setUpDb();
+
   if (db === null) throw Error("db is not initialized");
 
   if (db.data === null) return;
@@ -232,6 +234,7 @@ const clearData = async () => {
     campaigns: db.data.campaigns,
   };
   await db.write();
+  window.electron.log.info("Deleting all session and results data");
 };
 
 // import data

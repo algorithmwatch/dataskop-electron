@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AdvancedMenu from "renderer/components/admin/AdvancedMenu";
 import Drawer from "renderer/components/Drawer";
 import { useConfig, useScraping } from "renderer/contexts";
+import { clearData } from "renderer/lib/db";
 import tiktokRoutes from "renderer/providers/tiktok/lib/routes";
 
 export const Menu = ({
@@ -132,6 +133,12 @@ export const Menu = ({
                     click: () => {
                       window.electron.ipc.invoke("scraping-clear-storage");
                       dispatch({ type: "reset-scraping" });
+                    },
+                  },
+                  {
+                    label: "Clear results and sessions",
+                    click: () => {
+                      clearData();
                     },
                   },
                 ]}

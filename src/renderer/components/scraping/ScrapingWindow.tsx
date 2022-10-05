@@ -14,19 +14,23 @@ import { Bounds, useScraping } from "renderer/contexts";
 
 export default function ScrapingWindow({
   forceReload = 0,
-  initPosition = "center",
-  initSizeFactorHeight = 0.8,
-  initSizeFactorWidth = 0.6,
 }: {
   forceReload: number;
-  initPosition?: string;
-  initSizeFactorHeight?: number;
-  initSizeFactorWidth?: number;
 }) {
   const margin = 30;
 
+  const initSizeFactorHeight = 0.8;
+  const initSizeFactorWidth = 0.8;
+
   const {
-    state: { isMuted, fixedWindow, bounds, visibleWindow, closeableWindow },
+    state: {
+      isMuted,
+      fixedWindow,
+      bounds,
+      visibleWindow,
+      closeableWindow,
+      initPositionWindow,
+    },
     dispatch,
   } = useScraping();
 
@@ -67,16 +71,26 @@ export default function ScrapingWindow({
         y: round(height * leftOverSpace),
       };
 
-      if (initPosition === "center") {
+      if (initPositionWindow === "center") {
         res.x = round(width * leftOverSpaceWidth * 0.5);
         res.y = round(height * leftOverSpace * 0.5);
+      }
+
+      if (initPositionWindow === "center-top") {
+        res.x = round(width * leftOverSpaceWidth * 0.5);
+        res.y = margin;
       }
 
       return res;
     };
 
     setBounds(windowDimensions());
-  }, [initPosition, initSizeFactorHeight, forceReload, initSizeFactorWidth]);
+  }, [
+    initPositionWindow,
+    initSizeFactorHeight,
+    forceReload,
+    initSizeFactorWidth,
+  ]);
 
   if (!visibleWindow) return null;
 

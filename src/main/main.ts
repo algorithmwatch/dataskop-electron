@@ -351,7 +351,7 @@ ipcMain.handle("get-env", (e) => {
 // Handle notifications from the renderer
 
 ipcMain.handle("show-notification", (_e, title, body) => {
-  console.log(_e, title, body);
+  log.info(`Notification: ${title}, ${body}`);
   const n = new Notification({
     title,
     body,
