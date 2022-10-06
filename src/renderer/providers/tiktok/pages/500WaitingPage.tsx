@@ -4,92 +4,17 @@
  * @module
  */
 
-import { faLoader } from "@fortawesome/pro-regular-svg-icons";
 import { faAngleRight } from "@fortawesome/pro-solid-svg-icons";
 import { Transition } from "@headlessui/react";
 import { useEffect, useMemo, useState } from "react";
 import { useHistory } from "react-router";
 import AdvancedMenu from "renderer/components/admin/AdvancedMenu";
 import { Button } from "renderer/components/Button";
-import Modal from "renderer/components/Modal";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { useConfig, useScraping } from "renderer/contexts";
 import { currentDelay } from "renderer/lib/delay";
-import Content from "renderer/providers/tiktok/components/Content";
-import HelpButton from "renderer/providers/tiktok/components/HelpButton";
 import StatusContent from "../components/StatusContent";
 import { getStatus, isMonitoringPending, STATUS } from "../lib/status";
-
-const PendingContent = () => {
-  const [modal1IsOpen, setModal1IsOpen] = useState(false);
-  const [modal2IsOpen, setModal2IsOpen] = useState(false);
-
-  return (
-    <>
-      <Modal
-        theme="tiktok"
-        isOpen={modal1IsOpen}
-        closeModal={() => setModal1IsOpen(false)}
-      >
-        <div className="text-center">
-          <h1 className="hl-2xl mb-4">Wie lange dauert das?</h1>
-          <p className="">
-            Es kann bis zu vier Tage dauern, bis TikTok die DSGVO-Daten
-            bereitstellt. Es ist deshalb wichtig, dass du die DataSkop-App nicht
-            schließt und sie im Hintergrund geöffnet bleibt. Du erhältst eine
-            Benachrichtigung, sobald es weitergehen kann.
-          </p>
-        </div>
-      </Modal>
-      <Modal
-        theme="tiktok"
-        isOpen={modal2IsOpen}
-        closeModal={() => setModal2IsOpen(false)}
-      >
-        <div className="text-center">
-          <h1 className="hl-2xl mb-4">Was kommt danach?</h1>
-          <p className="">
-            Wenn die DataSkop-App die Daten heruntergeladen und verarbeitet hat,
-            werden dir verschiedene interaktive Grafiken präsentiert, die dein
-            Nutzungsverhalten auf TikTok visualisieren und einordnen.
-          </p>
-        </div>
-      </Modal>
-      <Content
-        title="DSGVO-Daten angefordert"
-        icon={faLoader}
-        iconSpinning
-        theme="tiktokAnimated"
-      >
-        <p>
-          Bitte habe noch etwas Geduld. Deine DSGVO-Daten wurden angefordert,
-          aber TikTok bietet sie noch nicht zum Download an.
-        </p>
-        <div className="mt-14 space-x-6">
-          <HelpButton onClick={() => setModal1IsOpen(true)}>
-            Wie lange dauert das?
-          </HelpButton>
-          <HelpButton onClick={() => setModal2IsOpen(true)}>
-            Was kommt danach?
-          </HelpButton>
-        </div>
-        <div className="mt-24 text-base font-medium relative">
-          <span className="absolute inset-0 animate-fade1 flex items-center justify-center">
-            <div className="rounded-full bg-white/50 px-5 py-4">
-              Du erhältst eine Benachrichtigung, sobald es weitergehen kann.
-            </div>
-          </span>
-          <span className="absolute inset-0 animate-fade2 flex items-center justify-center">
-            <div className="rounded-full bg-white/50 px-5 py-4">
-              Du kannst die App schließen, aber sie muss im Hintergrund geöffnet
-              bleiben.
-            </div>
-          </span>
-        </div>
-      </Content>
-    </>
-  );
-};
 
 export default function WaitingPage(): JSX.Element {
   const history = useHistory();
@@ -150,7 +75,7 @@ export default function WaitingPage(): JSX.Element {
       if (newStatus === status) return;
 
       if (newStatus === "scraping-done") {
-        history.push("/tiktok/waiting_done");
+        // history.push("/tiktok/waiting_done");
         return;
       }
 
@@ -234,7 +159,13 @@ export default function WaitingPage(): JSX.Element {
     <>
       <WizardLayout className="text-center" footerSlots={footerSlots}>
         {/* scraping-done: Keine Anzeige notwendig */}
-        {isMonitoringPending(status) && <PendingContent />}
+        {isMonitoringPending(status) && (
+          <StatusContent
+            title="DSGVO-Daten angefordert"
+            body="Bitte habe noch etwas Geduld. Deine DSGVO-Daten wurden angefordert, aber TikTok bietet sie noch nicht zum Download an."
+            fancyNotificationText
+          />
+        )}
         {[
           "monitoring-download-action-required",
           "download-action-required",
@@ -242,6 +173,7 @@ export default function WaitingPage(): JSX.Element {
           <StatusContent
             title="Bitte die Daten herunterladen"
             body="Ihre Hilfe ist notwendig um die Daten herunterladen."
+            helpButtons
             fancyNotificationText
           />
         )}
@@ -251,8 +183,9 @@ export default function WaitingPage(): JSX.Element {
           "files-imported",
         ].includes(status) && (
           <StatusContent
-            title="Scraping dauert an"
-            body="Scraping dauert an"
+            title="Daten werden verarbeitet"
+            body="Es dauert nicht mehr lange! Deine TikTok-Daten wurden heruntergeladen und werden nun verarbeitet."
+            helpButtons
             fancyNotificationText
           />
         )}
@@ -264,7 +197,7 @@ export default function WaitingPage(): JSX.Element {
         ].includes(status) && (
           <StatusContent
             title="Fehler beim Download"
-            body="Bitte gehe auf tiktok.com und lade dir die Daten da runter um sie anschließen zu importieren."
+            body="Wir konnten deine TikTok-Daten nicht herunterladen. Besuche alternativ  Tiktok.com in deinem Browser und lade dir deine DSGVO-Daten in deinem Benutzerkonto herunter. Anschließend kannst du sie in der Dateskop-App importieren."
             fancyNotificationText
           />
         )}
