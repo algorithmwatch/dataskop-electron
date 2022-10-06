@@ -5,7 +5,7 @@
  *
  * @module
  */
-import { faTimes } from "@fortawesome/pro-regular-svg-icons";
+import { faCog, faTimes } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { pick, round } from "lodash";
 import { useEffect } from "react";
@@ -119,6 +119,20 @@ export default function ScrapingWindow({
           });
         }}
       />
+      <div>
+        <FontAwesomeIcon
+          spin
+          icon={faCog}
+          style={{
+            width: 100,
+            height: 100,
+            position: "fixed",
+            left: bounds.x + bounds.width / 2 - 50,
+            top: bounds.y + bounds.height / 2 - 50,
+            color: "black",
+          }}
+        />
+      </div>
       {closeableWindow && (
         <div
           onClick={() => {

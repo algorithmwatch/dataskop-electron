@@ -140,6 +140,8 @@ export default function WaitingPage(): JSX.Element {
 
   useEffect(() => {
     (async () => {
+      // Wait until new status is persisted to the db
+      await currentDelay();
       const newStatus = await getStatus();
       window.electron.log.info(
         `Setting new status in waiting page ${newStatus}`,
