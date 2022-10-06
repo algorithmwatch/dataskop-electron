@@ -80,13 +80,16 @@ function VizOne({ gdprData }: { gdprData: any }) {
       label: "Zeitverlauf",
     },
   };
-
+  const tickStep =
+    videoData.length > 28 ? Math.round(videoData.length / 15) : 1;
+  console.warn("tickStep", tickStep);
+  console.warn("videoData.length", videoData.length);
   const timeslotsAndSingleColorBarsPlot = {
     ...commonProps,
     x: {
       ...commonProps.x,
       ticks: videoData
-        .filter((_x: any, i: number) => i % 3 === 0)
+        .filter((_x: any, i: number) => i % tickStep === 0)
         .map((x) => x.Date),
     },
     y: {

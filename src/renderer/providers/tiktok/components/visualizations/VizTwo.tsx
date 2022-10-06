@@ -9,7 +9,7 @@ import {
 import { select } from "d3-selection";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { shortenGdprData } from "./utils/shorten_data";
-import { getTopData } from "./utils/viz_two_utils";
+import { getTopData } from "./utils/viz-two-utils";
 
 function beeswarm(
   data,

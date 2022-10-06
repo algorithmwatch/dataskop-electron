@@ -59,7 +59,6 @@ const addTooltips = (chart: any, onMouseMove = null, onMouseOut = null) => {
       parent
         .on("mousemove", function (event) {
           const text = d3.select(this).attr("__title");
-          console.warn("text", text);
           const pointer = d3.pointer(event, body);
           if (text) hover(pointer, text.split("\n"));
           else d3.selectAll(".dataskop-tooltip").remove();

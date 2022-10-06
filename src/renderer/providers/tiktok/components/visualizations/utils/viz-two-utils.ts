@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import { withoutTime, convertDaysToMs } from "./viz-utils";
 import { getLookupId } from "../../../lib/data-wrangling";
+import { convertDaysToMs, withoutTime } from "./viz-utils";
 
 const hashtagBlocklist = new Set([
   "#fyp",
@@ -130,71 +130,69 @@ function getTopOverallItems(obj) {
 
 // tickLength will be the range of time contained per tick (i.e. 7 days, 30 days, 90 days)
 export function getTopData(
-  numOfTopItems,
-  tickLength,
-  timeRange,
-  metadata,
-  gdprVidData,
+  numOfTopItems: number,
+  tickLength: number,
+  timeRange: number,
+  metadata: any,
+  gdprVidData: any,
 ) {
   // empty objects of items to keep counts of them
   let hashtags = {};
   let sounds = {};
   let divlabels = {};
+
   // empty objects of each item to keep counts of them for entire range of graph
   const hashtagsAll = {};
   const soundsAll = {};
   const divlabelsAll = {};
-  // empty objects of top items for a week
-  // let topHashtag = {};
-  // let topSound = {};
-  // let topDivLabel = {};
+
   // empty arrays that will be fed into observable plot
   const hashtagData = [];
   const soundData = [];
   const diverseLabelData = [];
+
   // const vidData = .Activity["Video Browsing History"].VideoList;
-  let date_start = withoutTime(new Date(gdprVidData[0].Date));
+  let dateStart = withoutTime(new Date(gdprVidData[0].Date));
   const dateToStop = new Date(
-    withoutTime(date_start) - convertDaysToMs(timeRange - 1),
+    +withoutTime(dateStart) - convertDaysToMs(timeRange - 1),
   );
   let lastDayOfTick = new Date(
-    withoutTime(date_start) - convertDaysToMs(tickLength - 1),
+    +withoutTime(dateStart) - convertDaysToMs(tickLength - 1),
   );
-  let i = 0;
+
   // loop through all video data
-  for (const vid of gdprVidData.slice(-500)) {
-    const date_curr = withoutTime(new Date(vid.Date));
+  let i = 0;
+  for (const vid of gdprVidData) {
+    const dateCurr = withoutTime(new Date(vid.Date));
+
     // stop looping when you reach end of [timeRange] days
-    if (date_curr < dateToStop) {
+    if (dateCurr < dateToStop) {
       break;
     }
-    if (date_curr < lastDayOfTick) {
-      getTop(
-        i,
-        hashtags,
-        hashtagData,
-        numOfTopItems,
-        date_start,
-        lastDayOfTick,
-      );
-      getTop(i, sounds, soundData, numOfTopItems, date_start, lastDayOfTick);
+
+    if (dateCurr < lastDayOfTick) {
+      getTop(i, hashtags, hashtagData, numOfTopItems, dateStart, lastDayOfTick);
+      getTop(i, sounds, soundData, numOfTopItems, dateStart, lastDayOfTick);
       getTop(
         i,
         divlabels,
         diverseLabelData,
         numOfTopItems,
-        date_start,
+        dateStart,
         lastDayOfTick,
       );
+
       // reset everything
-      date_start = date_curr;
+      dateStart = dateCurr;
       lastDayOfTick = new Date(
-        withoutTime(date_start) - convertDaysToMs(tickLength - 1),
+        +withoutTime(dateStart) - convertDaysToMs(tickLength - 1),
       );
+
       // reset objects
       hashtags = {};
       sounds = {};
       divlabels = {};
+
       // console.log("empty objs", hashtags, sounds, divlabels);
       i += 1;
     } else {
@@ -213,6 +211,7 @@ export function getTopData(
       buildDiversificationLabelsArray(vidInfo, divlabels, divlabelsAll);
     }
   }
+
   // console.log("all hashtags", hashtagsAll);
   const topHashtag = getTopOverallItems(hashtagsAll);
   const topSound = getTopOverallItems(soundsAll);
