@@ -14,7 +14,7 @@ import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { useConfig, useScraping } from "renderer/contexts";
 import { currentDelay } from "renderer/lib/delay";
 import StatusContent from "../components/StatusContent";
-import { getStatus, isMonitoringPending, STATUS } from "../lib/status";
+import { getStatus, isStatusPending, STATUS } from "../lib/status";
 
 export default function WaitingPage(): JSX.Element {
   const history = useHistory();
@@ -159,7 +159,7 @@ export default function WaitingPage(): JSX.Element {
     <>
       <WizardLayout className="text-center" footerSlots={footerSlots}>
         {/* scraping-done: Keine Anzeige notwendig */}
-        {isMonitoringPending(status) && (
+        {isStatusPending(status) && (
           <StatusContent
             title="DSGVO-Daten angefordert"
             body="Bitte habe noch etwas Geduld. Deine DSGVO-Daten wurden angefordert, aber TikTok bietet sie noch nicht zum Download an."
