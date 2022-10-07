@@ -11,7 +11,12 @@ import { BrowserWindow } from "electron";
 import log from "electron-log";
 import _ from "lodash";
 import { addLookups, addLookupsToUpload, getLookups } from "../db";
+import { HTML_FOLDER } from "../scraping";
 import { addMainHandler, fetchBackend } from "../utils";
+
+// set ENV to save broken schaufel html to this very folder
+// FIXME: not working right now
+process.env.SCHAUFEL_DIR = HTML_FOLDER;
 
 const isResultSane = (x: any) => {
   return x.error === null || x.error !== "Parsing error";
@@ -25,6 +30,7 @@ export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
       ids: string[],
       onlyScrape = false,
       max: null | number = null,
+      htmlLogging = false,
     ): Promise<any> => {
       // check local lookups
       const [existings, missing] = _.partition(
@@ -72,7 +78,7 @@ export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
         true,
         false,
         false,
-        false,
+        htmlLogging,
         0,
         log.scope("schaufel").info,
       );
