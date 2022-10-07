@@ -111,7 +111,8 @@ export const Menu = ({
 
         {/* footer menu */}
         <div className="pl-8 mb-4 relative">
-          {showAdvancedMenu && (
+          {true && (
+            // {showAdvancedMenu && (
             <div className="absolute right-8 bottom-0">
               <AdvancedMenu
                 onItemClicked={() => setIsOpen(false)}
