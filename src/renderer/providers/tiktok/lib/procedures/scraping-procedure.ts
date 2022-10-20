@@ -2,15 +2,27 @@ import { ProcedureArgs } from "renderer/lib/scraping";
 import { GetHtmlFunction, GetHtmlLazyFunction } from "renderer/providers/types";
 import { getMostRecentWatchVideos } from "../data-wrangling";
 
-const scrapeWatchedVideos = async (config: any): Promise<string> => {
+const scrapeWatchedVideos = async (
+  config: any,
+  procedureArgs: ProcedureArgs,
+): Promise<string> => {
   const dump = await window.electron.ipc.invoke("scraping-get-download");
   const ids = getMostRecentWatchVideos(dump, config.max);
-  await window.electron.ipc.invoke("tiktok-scrape-videos", ids, true);
+  await window.electron.ipc.invoke(
+    "tiktok-scrape-videos",
+    ids,
+    true,
+    null,
+    procedureArgs.htmlLogging,
+  );
   return "scraping-done";
 };
 
-const scrapeVideosTimeFrame = async (config: any): Promise<string> => {
-  return scrapeWatchedVideos(config);
+const scrapeVideosTimeFrame = async (
+  config: any,
+  procedureArgs: ProcedureArgs,
+): Promise<string> => {
+  return scrapeWatchedVideos(config, procedureArgs);
   // const dump = await window.electron.ipc.invoke("scraping-get-download");
   // return "scraping-done";
 };
@@ -35,7 +47,7 @@ async function* scrapingProcedure(
       {
         success: true,
         slug,
-        fields: { status: await funs[slug](config) },
+        fields: { status: await funs[slug](config, procedureArgs) },
         errors: [],
       },
     ];

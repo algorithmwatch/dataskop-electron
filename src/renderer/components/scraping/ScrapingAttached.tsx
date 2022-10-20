@@ -4,8 +4,10 @@
  * @module
  */
 import { useEffect } from "react";
+import { useHistory } from "react-router";
 import { useConfig, useScraping } from "renderer/contexts";
 import { currentDelay } from "renderer/lib/delay";
+import { isMonitoringPending } from "renderer/providers/tiktok/lib/status";
 import ScrapingManager from "./ScrapingManager";
 
 export default function ScrapingAttached() {
@@ -25,6 +27,7 @@ export default function ScrapingAttached() {
     dispatch: configDispatch,
   } = useConfig();
 
+  const history = useHistory();
   // Monitoring
 
   // we only want to find out if it's reaady to notify the user
@@ -64,6 +67,15 @@ export default function ScrapingAttached() {
       }
     })();
   }, [userConfig?.monitoring, isScrapingFinished]);
+
+  // Jump to waiting screen
+  useEffect(() => {
+    (async () => {
+      if (!userConfig?.monitoring && (await isMonitoringPending())) {
+        history.push("/tiktok/waiting");
+      }
+    })();
+  }, [userConfig?.monitoring]);
 
   // Only render scraping manger when the campaign is set to avoid tedious guard clauses.
   if (isAttached && campaign && userConfig)

@@ -30,6 +30,9 @@ const lookupStore = new Store({
   cwd: DB_FOLDER,
 });
 
+// enable debug logging in alpha
+const isAlpha = app.getVersion().includes("alpha");
+
 const configStore = new Store({
   name: "config",
   cwd: DB_FOLDER,
@@ -38,8 +41,8 @@ const configStore = new Store({
     openAtLogin: true,
     monitoring: false,
     monitoringInterval: true,
-    debugLogging: false,
-    htmlLogging: false,
+    debugLogging: isAlpha,
+    htmlLogging: isAlpha,
   },
 });
 

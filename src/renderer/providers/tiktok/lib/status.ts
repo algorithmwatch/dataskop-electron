@@ -75,7 +75,7 @@ const getStatus = async (): Promise<string> => {
   return _.get(row.fields, "status", "status-not-available") as string;
 };
 
-const isMonitoringPending = (status: string) => {
+const isStatusPending = (status: string) => {
   return [
     "data-pending",
     "monitoring-pending",
@@ -83,12 +83,16 @@ const isMonitoringPending = (status: string) => {
   ].includes(status);
 };
 
-window.electron.ipc.on("monitoring-pending", async () => {
+const isMonitoringPending = async () => {
   const s = await getStatus();
+  return isStatusPending(s);
+};
+
+window.electron.ipc.on("monitoring-pending", async () => {
   window.electron.ipc.invoke(
     "monitoring-pending-reply",
-    isMonitoringPending(s),
+    await isMonitoringPending(),
   );
 });
 
-export { getStatus, isMonitoringPending, StatusKey, STATUS };
+export { getStatus, isMonitoringPending, isStatusPending, StatusKey, STATUS };

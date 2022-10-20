@@ -1,6 +1,6 @@
 {
   "name": "dataskop-electron",
-  "version": "0.5.0-alpha.5",
+  "version": "0.5.0-alpha.8",
   "description": "DataSkop Electron App: The Personal Data Dashboard (PeDD) of DataSkop",
   "main": "./src/main/main.ts",
   "scripts": {
@@ -257,7 +257,7 @@
   "dependencies": {
     "@algorithmwatch/harke": "^0.4.8",
     "@algorithmwatch/schaufel-ab": "^0.3.2",
-    "@algorithmwatch/schaufel-core": "^0.6.0",
+    "@algorithmwatch/schaufel-core": "^0.7.2",
     "@fortawesome/fontawesome-pro": "^6.1.2",
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
     "@fortawesome/free-brands-svg-icons": "^6.1.2",
