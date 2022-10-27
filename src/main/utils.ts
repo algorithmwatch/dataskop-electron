@@ -27,15 +27,17 @@ export const addMainHandler = (channel: string, fun: any) => {
 };
 
 export const isFromLocalhost = (event: any) => {
-  return true;
-  // FIXME
   const parsedUrl = new URL(event.senderFrame.url);
-  const fromLocal =
+  const fromLocalhost =
     parsedUrl.protocol === "http:" &&
     parsedUrl.hostname === "localhost" &&
     parsedUrl.port === "1212";
+
+  const fromLocalFile = parsedUrl.protocol === "file:";
+  const fromLocal = fromLocalhost || fromLocalFile;
+
   if (!fromLocal) {
-    log.warn("Event was not sent from localhost");
+    log.warn("Event wasn't sent from local.");
   }
   return fromLocal;
 };
