@@ -137,6 +137,7 @@ export default function WaitingPage(): JSX.Element {
         ),
         isDebug && (
           <AdvancedMenu
+            key="2"
             menuLabel="DEBUG only: Set Status"
             menuItems={Object.keys(STATUS).map((x) => ({
               key: x,
