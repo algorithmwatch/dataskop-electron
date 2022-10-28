@@ -22,6 +22,15 @@ const themes = {
     content: "p-20 max-w-prose text-lg",
     footer: "pb-10 flex items-center justify-center",
   },
+  tiktokSurvey: {
+    backdrop: "bg-white/80",
+    title: "",
+    panel:
+      "flex max-w-5xl min-h-[36rem] rounded-5xl shadow-xl bg-gradient-to-br from-[#B5FFFD] to-[#FFB8CE] p-1.5 shadow-flat",
+    contentWrap: "bg-white rounded-4xl grow flex",
+    content: "p-4 text-lg w-full",
+    footer: "pb-10 flex items-center justify-center",
+  },
 };
 
 export default function Modal({
@@ -79,9 +88,14 @@ export default function Modal({
 
                   <div className={themes[theme].content}>{children}</div>
 
-                  <footer className={themes[theme].footer}>
-                    {buttons || <Button onClick={closeModal}>Schließen</Button>}
-                  </footer>
+                  {typeof buttons === "undefined" ||
+                    (buttons && buttons.length > 0 && (
+                      <footer className={themes[theme].footer}>
+                        {buttons || (
+                          <Button onClick={closeModal}>Schließen</Button>
+                        )}
+                      </footer>
+                    ))}
                 </div>
               </Dialog.Panel>
             </Transition.Child>

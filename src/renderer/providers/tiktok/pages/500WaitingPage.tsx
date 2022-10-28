@@ -10,11 +10,51 @@ import { useEffect, useMemo, useState } from "react";
 import { useHistory } from "react-router";
 import AdvancedMenu from "renderer/components/admin/AdvancedMenu";
 import { Button } from "renderer/components/Button";
+import Modal from "renderer/components/Modal";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { useConfig, useScraping } from "renderer/contexts";
 import { currentDelay } from "renderer/lib/delay";
+import { Survey } from "renderer/providers/tiktok/components/survey/Survey";
+import { SurveyProvider, useSurvey } from "renderer/providers/tiktok/contexts";
 import StatusContent from "../components/StatusContent";
+import { questions } from "../components/survey/questions";
 import { getStatus, isStatusPending, STATUS } from "../lib/status";
+
+const SurveyModal = ({
+  isOpen,
+  toggle,
+  onChange,
+  isComplete,
+  setIsComplete,
+}: {
+  isOpen: boolean;
+  toggle: () => void;
+  onChange: (isComplete: boolean, value: any) => void;
+  isComplete: boolean;
+  setIsComplete: (val: boolean) => void;
+}) => {
+  const { answers, compileResult } = useSurvey();
+
+  useEffect(() => {
+    const result = compileResult();
+    onChange(isComplete, result);
+  }, [answers]);
+
+  return (
+    <Modal
+      theme="tiktokSurvey"
+      isOpen={isOpen}
+      closeModal={toggle}
+      buttons={[]}
+    >
+      <Survey
+        isComplete={isComplete}
+        setIsComplete={setIsComplete}
+        close={toggle}
+      />
+    </Modal>
+  );
+};
 
 export default function WaitingPage(): JSX.Element {
   const history = useHistory();
@@ -28,9 +68,18 @@ export default function WaitingPage(): JSX.Element {
 
   const [footerButtonsAreVisible, setFooterButtonsAreVisible] = useState(true);
   const [status, setStatus] = useState<string | null>(null);
+  const [surveyModalIsOpen, setSurveyModalIsOpen] = useState(false);
+  const [surveyValues, setSurveyValues] = useState();
+  const [surveyIsComplete, setSurveyIsComplete] = useState(false);
 
   const openSurvey = () => {
-    // TODO: to be implemented
+    setSurveyModalIsOpen(true);
+  };
+
+  const updateSurveyValues = (isComplete: boolean, value: any) => {
+    setSurveyValues(value);
+    setSurveyIsComplete(isComplete);
+    console.warn("values updated", value);
   };
 
   const handleDownloadActionRequired = async () => {
@@ -96,7 +145,7 @@ export default function WaitingPage(): JSX.Element {
       center: [
         <Transition
           key="1"
-          show={footerButtonsAreVisible}
+          show={footerButtonsAreVisible && !surveyIsComplete}
           appear
           enter="transition-opacity duration-1000"
           enterFrom="opacity-0"
@@ -149,7 +198,7 @@ export default function WaitingPage(): JSX.Element {
         ),
       ],
     }),
-    [footerButtonsAreVisible],
+    [footerButtonsAreVisible, surveyIsComplete],
   );
 
   window.electron.log.info("Status", status);
@@ -158,6 +207,16 @@ export default function WaitingPage(): JSX.Element {
 
   return (
     <>
+      <SurveyProvider questions={questions}>
+        <SurveyModal
+          isOpen={surveyModalIsOpen}
+          toggle={() => setSurveyModalIsOpen((oldState) => !oldState)}
+          onChange={updateSurveyValues}
+          isComplete={surveyIsComplete}
+          setIsComplete={setSurveyIsComplete}
+        />
+      </SurveyProvider>
+
       <WizardLayout className="text-center" footerSlots={footerSlots}>
         {/* scraping-done: Keine Anzeige notwendig */}
         {isStatusPending(status) && (
