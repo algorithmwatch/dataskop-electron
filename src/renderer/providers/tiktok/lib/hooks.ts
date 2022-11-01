@@ -1,5 +1,5 @@
+import { getMostRecentWatchVideos } from "@algorithmwatch/schaufel-wrangle";
 import { useMemo, useState } from "react";
-import { getMostRecentWatchVideos } from "./data-wrangling";
 
 const useData = (maxVideos = 200) => {
   const [dump, setDump] = useState<null | JSON>(null);
@@ -10,7 +10,7 @@ const useData = (maxVideos = 200) => {
       const newDump = await window.electron.ipc.invoke("scraping-get-download");
       setDump(newDump);
 
-      const ids = getMostRecentWatchVideos(newDump, maxVideos);
+      const ids = getMostRecentWatchVideos(newDump, maxVideos, null);
       setLookups(await window.electron.ipc.invoke("db-get-lookups", ids));
     })();
   }, []);

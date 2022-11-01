@@ -1,6 +1,6 @@
 import * as d3 from "d3";
+import { getLookupId } from "@algorithmwatch/schaufel-wrangle";
 import { withoutTime, convertDaysToMs } from "./viz-utils";
-import { getLookupId } from "../../../lib/data-wrangling";
 
 const hashtagBlocklist = new Set([
   "#fyp",

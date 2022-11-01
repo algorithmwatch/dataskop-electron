@@ -1,18 +1,22 @@
+import { getMostRecentWatchVideos } from "@algorithmwatch/schaufel-wrangle";
 import { ProcedureArgs } from "renderer/lib/scraping";
 import { GetHtmlFunction, GetHtmlLazyFunction } from "renderer/providers/types";
-import { getMostRecentWatchVideos } from "../data-wrangling";
 
 const scrapeWatchedVideos = async (
   config: any,
   procedureArgs: ProcedureArgs,
 ): Promise<string> => {
   const dump = await window.electron.ipc.invoke("scraping-get-download");
-  const ids = getMostRecentWatchVideos(dump, config.max);
+  const ids = getMostRecentWatchVideos(
+    dump,
+    config.maxVideos,
+    config.minWatchedSeconds,
+  );
   await window.electron.ipc.invoke(
     "tiktok-scrape-videos",
     ids,
     true,
-    null,
+    config.maxScraping,
     procedureArgs.htmlLogging,
   );
   return "scraping-done";

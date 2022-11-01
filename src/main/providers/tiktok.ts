@@ -29,7 +29,7 @@ export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
       _event: any,
       ids: string[],
       onlyScrape = false,
-      max: null | number = null,
+      maxScraping: null | number = null,
       htmlLogging = false,
     ): Promise<any> => {
       // check local lookups
@@ -70,7 +70,9 @@ export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
       }
       addLookups(backendDone);
 
-      const todoLimited = max ? todo.slice(0, max) : todo;
+      // Take N videos from the beginning because the ids should be still
+      // ordered descendingly. So the ids are from the most recent
+      const todoLimited = maxScraping ? todo.slice(0, maxScraping) : todo;
 
       log.info(`Scraping: ${todoLimited.length} videos`);
       const fetched = await getTiktokVideoMeta(
