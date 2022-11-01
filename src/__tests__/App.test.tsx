@@ -5,7 +5,9 @@ import App from "../renderer/App";
 describe("App", () => {
   it("should render", () => {
     window.electron = {};
-    window.electron.procEnv = "{}";
+    window.electron.log = {};
+    window.electron.log.error = () => console.log("mock log error");
+    window.electron.log.info = () => console.log("mock log info");
     window.electron.ipc = {};
     window.electron.ipc.invoke = () => console.log("mock invoke");
     window.electron.ipc.on = () => console.log("mock on");

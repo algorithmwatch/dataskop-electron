@@ -88,11 +88,14 @@ const isMonitoringPending = async () => {
   return isStatusPending(s);
 };
 
-window.electron.ipc.on("monitoring-pending", async () => {
-  window.electron.ipc.invoke(
-    "monitoring-pending-reply",
-    await isMonitoringPending(),
-  );
-});
+// During testing, `ipc` is not set correctly
+if (window.electron) {
+  window.electron.ipc.on("monitoring-pending", async () => {
+    window.electron.ipc.invoke(
+      "monitoring-pending-reply",
+      await isMonitoringPending(),
+    );
+  });
+}
 
 export { getStatus, isMonitoringPending, isStatusPending, StatusKey, STATUS };
