@@ -124,7 +124,7 @@ export default function WaitingPage(): JSX.Element {
       if (newStatus === status) return;
 
       if (newStatus === "scraping-done") {
-        // history.push("/tiktok/waiting_done");
+        history.push("/tiktok/waiting_done");
         return;
       }
 
