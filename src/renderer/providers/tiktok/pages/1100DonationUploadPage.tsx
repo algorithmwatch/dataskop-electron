@@ -18,10 +18,12 @@ export default function DonationFormPage(): JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null);
   const [emailInputValue, setEmailInputValue] = useState<string>(""); // TODO: insert initial state value when user came back to this form
   const [inputIsValid, setInputIsValid] = useState(false);
+
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputIsValid(event.target.checkValidity());
     setEmailInputValue(event.target.value);
   };
+
   const saveDonationEmail = (value: string) => {
     // TODO: to be implemented
   };

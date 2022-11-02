@@ -33,7 +33,7 @@ export default function DonationChoicePage(): JSX.Element {
         key="1"
         className="min-w-[6rem]"
         onClick={() => {
-          history.push("/tiktok/donation_form");
+          history.push("/tiktok/donation_upload");
         }}
       >
         Ja
@@ -43,7 +43,7 @@ export default function DonationChoicePage(): JSX.Element {
         className="min-w-[6rem]"
         theme="outline"
         onClick={() => {
-          history.push("/tiktok/newsletter_choice");
+          history.push("/tiktok/newsletter");
         }}
       >
         Nein

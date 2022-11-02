@@ -14,6 +14,9 @@ import { useNavigation } from "../../../contexts";
 export default function WaitingDonePage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
+
+  // JF: Not sure when hasData is false. If we gave up with the scraping? We
+  // could still show the first viz.
   const hasData = true; // TODO: to be implemented
 
   const footerSlots: FooterSlots = {
@@ -37,7 +40,7 @@ export default function WaitingDonePage(): JSX.Element {
             <Button
               className="min-w-[6rem]"
               onClick={() => {
-                history.push("/tiktok/donation_form");
+                history.push("/tiktok/donation_upload");
               }}
             >
               Ja
@@ -46,7 +49,7 @@ export default function WaitingDonePage(): JSX.Element {
               className="min-w-[6rem]"
               theme="outline"
               onClick={() => {
-                history.push("/tiktok/newsletter_choice");
+                history.push("/tiktok/newsletter");
               }}
             >
               Nein

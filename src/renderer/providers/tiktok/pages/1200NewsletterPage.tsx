@@ -21,6 +21,7 @@ export default function NewsletterChoicePage(): JSX.Element {
     setInputIsValid(event.target.checkValidity());
     setEmailInputValue(event.target.value);
   };
+
   const signUpForNewsletter = () => {
     // TODO: to be implemented
   };
