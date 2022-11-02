@@ -61,7 +61,7 @@ export default function DonationPage2(): JSX.Element {
 
     const scrapingSession = await getSessionById(sessionId);
 
-    if (scrapingSession === null) {
+    if (scrapingSession === null || scrapingSession.campaign === null) {
       setStatus("session is null, something is broken :/");
       return;
     }
@@ -76,8 +76,8 @@ export default function DonationPage2(): JSX.Element {
       platformUrl,
       seriousProtection,
       email,
-      redactedResults,
-      scrapingSession,
+      { scrapingResults: redactedResults, scrapingSession },
+      scrapingSession.campaign.id,
     );
     if (resp.ok) {
       history.push(getNextPage("path"));
