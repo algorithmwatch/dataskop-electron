@@ -10,16 +10,61 @@ import {
 import { BrowserWindow } from "electron";
 import log from "electron-log";
 import _ from "lodash";
+import pLimit from "p-limit";
+import PQueue from "p-queue";
 import { addLookups, addLookupsToUpload, getLookups } from "../db";
 import { HTML_FOLDER } from "../scraping";
-import { addMainHandler, fetchBackend } from "../utils";
+import { addMainHandler, delay, fetchBackend } from "../utils";
 
-// set ENV to save broken schaufel html to this very folder
+const BACKEND_CHUNK_SIZE = 50;
+const SCRAPE_CHUNK_SIZE = 20;
+const SCRAPE_CONCURRENCY = 3;
+
+// Set ENV to save broken schaufel html to this very folder
 // FIXME: not working right now
 process.env.SCHAUFEL_DIR = HTML_FOLDER;
 
+const queue = new PQueue();
+
+// Avoid race conditions by saving the scraped files via a single worker queue
+const persistsDoneScraping = async (videos: any) => {
+  addLookups(videos);
+
+  // save keys to upload them later
+  addLookupsToUpload(_.keys(videos));
+
+  // Add some delay because it's unclear how electron-store handles multiple
+  // writes within a short timeframe
+  await delay(1000);
+};
+
 const isResultSane = (x: any) => {
   return x.error === null || x.error !== "Parsing error";
+};
+
+const scrapeVideos = async (
+  videos: string[],
+  htmlLogging: boolean,
+): Promise<any> => {
+  log.info(`Scraping: ${videos.length} videos`);
+  const fetched = await getTiktokVideoMeta(
+    videos.map(idToTiktokUrl),
+    true,
+    false,
+    false,
+    htmlLogging,
+    0,
+    log.scope("schaufel").info,
+  );
+  log.info(`Fetched: ${fetched.length} videos`);
+
+  const newDone: any[] = _.zip(videos, fetched).filter((x: any[]) =>
+    isResultSane(x[1]),
+  );
+
+  const scrapedDone = Object.fromEntries(newDone);
+  await queue.add(() => persistsDoneScraping(scrapedDone));
+  return scrapedDone;
 };
 
 export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
@@ -44,7 +89,6 @@ export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
       const missingKeys = missing.map(_.head) as string[];
 
       // check backend lookups
-      const BACKEND_CHUNK_SIZE = 50;
       const backendDone = {};
       const todo: string[] = [];
       for (const chunk of _.chunk(missingKeys, BACKEND_CHUNK_SIZE)) {
@@ -74,27 +118,11 @@ export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
       // ordered descendingly. So the ids are from the most recent
       const todoLimited = maxScraping ? todo.slice(0, maxScraping) : todo;
 
-      log.info(`Scraping: ${todoLimited.length} videos`);
-      const fetched = await getTiktokVideoMeta(
-        todoLimited.map(idToTiktokUrl),
-        true,
-        false,
-        false,
-        htmlLogging,
-        0,
-        log.scope("schaufel").info,
+      const limit = pLimit(SCRAPE_CONCURRENCY);
+      const pScrapes = _.chunk(todoLimited, SCRAPE_CHUNK_SIZE).map((x) =>
+        limit(() => scrapeVideos(x, htmlLogging)),
       );
-      log.info(`Fetched: ${fetched.length} videos`);
-
-      const newDone: any[] = _.zip(todoLimited, fetched).filter((x: any[]) =>
-        isResultSane(x[1]),
-      );
-
-      const scrapedDone = Object.fromEntries(newDone);
-      addLookups(scrapedDone);
-
-      // save keys to upload them later
-      addLookupsToUpload(_.keys(scrapedDone));
+      const scrapedDone = (await Promise.all(pScrapes)).flat();
 
       if (onlyScrape) return {};
       return _.merge(Object.fromEntries(existings), backendDone, scrapedDone);
