@@ -11,13 +11,16 @@ import {
   faCog,
 } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ChangeEvent, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { postDonation } from "renderer/lib/networking";
 import Content from "renderer/providers/tiktok/components/Content";
 import { useConfig, useNavigation, useScraping } from "../../../contexts";
+
+let persistEmail = "";
+const emailRegex = new RegExp(/^\S+@\S+\.\S\S+$/);
 
 export default function DonationFormPage(): JSX.Element {
   const { getNextPage } = useNavigation();
@@ -31,19 +34,14 @@ export default function DonationFormPage(): JSX.Element {
   const history = useHistory();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [emailInputValue, setEmailInputValue] = useState<string>(""); // TODO: insert initial state value when user came back to this form
-  const [inputIsValid, setInputIsValid] = useState(false);
+  const [email, setEmail] = useState(persistEmail);
   const [isUploading, setUploading] = useState(false);
   const [isDone, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputIsValid(
-      event.target.checkValidity() &&
-        /^\S+@\S+\.\S\S+$/.test(event.target.value),
-    );
-    setEmailInputValue(event.target.value);
-  };
+  const inputIsValid = useMemo(() => {
+    return emailRegex.test(email);
+  }, [email]);
 
   const footerSlots: FooterSlots = {
     center: [
@@ -51,7 +49,10 @@ export default function DonationFormPage(): JSX.Element {
         key="1"
         theme="text"
         startIcon={faAngleLeft}
-        onClick={() => history.goBack()}
+        onClick={() => {
+          persistEmail = email;
+          history.goBack();
+        }}
       >
         Zurück
       </Button>,
@@ -83,8 +84,8 @@ export default function DonationFormPage(): JSX.Element {
             required
             placeholder="Deine E-Mail-Adresse"
             className="px-4 py-2 max-w-md w-full text-xl bg-white appearance-none border-2 border-black rounded ring-8 ring-east-blue-100 focus:outline-none focus:ring-east-blue-300"
-            value={emailInputValue}
-            onChange={handleInputChange}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div className="mt-10">
@@ -106,7 +107,7 @@ export default function DonationFormPage(): JSX.Element {
                   version,
                   platformUrl,
                   seriousProtection,
-                  emailInputValue,
+                  email,
                   data,
                   campaign.id,
                 );
