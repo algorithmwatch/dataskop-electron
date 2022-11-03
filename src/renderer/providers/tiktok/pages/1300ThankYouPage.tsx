@@ -43,8 +43,6 @@ const ShareButton = ({
 };
 
 export default function ThankYouPage(): JSX.Element {
-  const hasDonation = true;
-
   const footerSlots = {
     center: [
       <div className="text-sm text-neutral-500">
@@ -57,12 +55,14 @@ export default function ThankYouPage(): JSX.Element {
     <WizardLayout className="text-center" footerSlots={footerSlots}>
       <Content
         title={
-          hasDonation ? "Danke für deine Spende!" : "Danke für deine Teilnahme!"
+          window.hasDonated
+            ? "Danke für deine Spende!"
+            : "Danke für deine Teilnahme!"
         }
         theme="tiktokLight"
-        icon={hasDonation ? faFaceSmileHearts : faFaceRelieved}
+        icon={window.hasDonated ? faFaceSmileHearts : faFaceRelieved}
       >
-        {hasDonation ? (
+        {window.hasDonated ? (
           <p>
             Du hilfst uns mit deiner Spende, TikTok besser zu verstehen. Damit
             tust du etwas Gutes für die Wissenschaft.

@@ -3,7 +3,7 @@
  *
  * @module
  */
-import { redactTiktokDump } from "@algorithmwatch/schaufel-core";
+import { redactTiktokDump } from "@algorithmwatch/schaufel-wrangle";
 import { faFileHeart } from "@fortawesome/pro-light-svg-icons";
 import {
   faAngleLeft,
@@ -17,10 +17,9 @@ import { useHistory } from "react-router";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { postDonation } from "renderer/lib/networking";
+import { isValidEmail } from "renderer/lib/utils/strings";
 import Content from "renderer/providers/tiktok/components/Content";
 import { useConfig, useNavigation, useScraping } from "../../../contexts";
-
-const emailRegex = new RegExp(/^\S+@\S+\.\S\S+$/);
 
 /**
  * Get data from the disk
@@ -38,7 +37,8 @@ const getData = async () => {
   return { data: data.data, lookups, dump };
 };
 
-let persistEmail = "";
+window.persistEmail = "";
+window.hasDonated = false;
 
 export default function DonationFormPage(): JSX.Element {
   const { getNextPage } = useNavigation();
@@ -52,13 +52,13 @@ export default function DonationFormPage(): JSX.Element {
   const history = useHistory();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [email, setEmail] = useState(persistEmail);
+  const [email, setEmail] = useState(window.persistEmail);
   const [isUploading, setUploading] = useState(false);
   const [isDone, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const inputIsValid = useMemo(() => {
-    return emailRegex.test(email);
+    return isValidEmail(email);
   }, [email]);
 
   const footerSlots: FooterSlots = {
@@ -68,7 +68,7 @@ export default function DonationFormPage(): JSX.Element {
         theme="text"
         startIcon={faAngleLeft}
         onClick={() => {
-          persistEmail = email;
+          window.persistEmail = email;
           history.goBack();
         }}
       >
@@ -135,6 +135,7 @@ export default function DonationFormPage(): JSX.Element {
                 if (resp.ok) {
                   setUploading(false);
                   setDone(true);
+                  window.hasDonated = true;
                 } else {
                   setUploading(false);
                   setError("Ups, uns ist ein Fehler passiert.");
