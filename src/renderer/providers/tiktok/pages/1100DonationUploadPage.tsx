@@ -3,6 +3,7 @@
  *
  * @module
  */
+import { redactTiktokDump } from "@algorithmwatch/schaufel-core";
 import { faFileHeart } from "@fortawesome/pro-light-svg-icons";
 import {
   faAngleLeft,
@@ -19,8 +20,25 @@ import { postDonation } from "renderer/lib/networking";
 import Content from "renderer/providers/tiktok/components/Content";
 import { useConfig, useNavigation, useScraping } from "../../../contexts";
 
-let persistEmail = "";
 const emailRegex = new RegExp(/^\S+@\S+\.\S\S+$/);
+
+/**
+ * Get data from the disk
+ */
+const getData = async () => {
+  const dump = redactTiktokDump(
+    await window.electron.ipc.invoke("scraping-get-download"),
+  );
+  const data = await window.electron.ipc.invoke("db-read");
+  // Upload only a subset of lookups (only the one we just scraped)
+  const lookups = await window.electron.ipc.invoke(
+    "db-get-lookups",
+    data.lookupsToUploads,
+  );
+  return { data: data.data, lookups, dump };
+};
+
+let persistEmail = "";
 
 export default function DonationFormPage(): JSX.Element {
   const { getNextPage } = useNavigation();
@@ -99,10 +117,12 @@ export default function DonationFormPage(): JSX.Element {
                   return;
                 }
 
+                setError(null);
                 setUploading(true);
 
-                const data = {};
+                const data = await getData();
 
+                // TODO: test upload
                 const resp = await postDonation(
                   version,
                   platformUrl,
@@ -125,13 +145,23 @@ export default function DonationFormPage(): JSX.Element {
             </Button>
           )}
 
-          <div className={isUploading ? "opacity-100 p-10" : "opacity-0 p-10"}>
-            <FontAwesomeIcon spin icon={faCog} size="3x" />
-            <div>Einen Moment bitte.</div>
-          </div>
+          {!isDone && error === null && (
+            <div
+              className={isUploading ? "opacity-100 p-10" : "opacity-0 p-10"}
+            >
+              <FontAwesomeIcon spin icon={faCog} size="3x" />
+              <div>Einen Moment bitte.</div>
+            </div>
+          )}
 
           {error !== null && (
-            <div className="text-xl text-red-800 font-bold">{error}</div>
+            <div className="text-xl text-red-800 font-bold pt-10">{error}</div>
+          )}
+
+          {isDone && (
+            <div className="text-xl text-green-800 font-bold pt-10">
+              Deine Daten wurden erfolgreich hochgeladen.
+            </div>
           )}
         </div>
       </Content>
