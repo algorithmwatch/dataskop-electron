@@ -28,7 +28,8 @@ const getData = async () => {
   const dump = redactTiktokDump(
     await window.electron.ipc.invoke("scraping-get-download"),
   );
-  const data = await window.electron.ipc.invoke("db-read");
+  const data = await window.electron.ipc.invoke("db-get-data");
+
   // Upload only a subset of lookups (only the one we just scraped)
   const lookups = await window.electron.ipc.invoke(
     "db-get-lookups",
@@ -97,6 +98,7 @@ export default function DonationFormPage(): JSX.Element {
         </p>
         <div className="mt-12">
           <input
+            disabled={isDone}
             ref={inputRef}
             type="email"
             required
@@ -109,7 +111,7 @@ export default function DonationFormPage(): JSX.Element {
         <div className="mt-10">
           {true && (
             <Button
-              disabled={isUploading || !inputIsValid}
+              disabled={isUploading || !inputIsValid || isDone}
               endIcon={faAngleUp}
               onClick={async () => {
                 if (campaign === null || platformUrl === null) {
@@ -136,6 +138,7 @@ export default function DonationFormPage(): JSX.Element {
                   setUploading(false);
                   setDone(true);
                   window.hasDonated = true;
+                  window.persistEmail = email;
                 } else {
                   setUploading(false);
                   setError("Ups, uns ist ein Fehler passiert.");

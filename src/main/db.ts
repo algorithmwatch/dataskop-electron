@@ -78,6 +78,10 @@ export default async function registerDbHandlers() {
     return dataStore.get("data");
   });
 
+  addMainHandler("db-get-data", () => {
+    return dataStore.store;
+  });
+
   addMainHandler("db-set-lookups", (_e: any, lookups: any) => {
     return addLookups(lookups);
   });

@@ -9,13 +9,20 @@ import { ChangeEvent, Fragment, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
+import { useConfig } from "renderer/contexts";
+import { postNewsletterSubscription } from "renderer/lib/networking";
 import { isValidEmail } from "renderer/lib/utils/strings";
 import Content from "renderer/providers/tiktok/components/Content";
 
 export default function NewsletterChoicePage(): JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [email, setEmail] = useState<string>(window.persistEmail);
+  const [email, setEmail] = useState<string>(window.persistEmail ?? "");
   const [formIsVisible, setFormIsVisible] = useState(false);
+
+  const {
+    state: { platformUrl, seriousProtection },
+  } = useConfig();
+
   const history = useHistory();
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -26,7 +33,13 @@ export default function NewsletterChoicePage(): JSX.Element {
   }, [email]);
 
   const signUpForNewsletter = () => {
-    // TODO: to be implemented
+    return postNewsletterSubscription(
+      platformUrl as string,
+      seriousProtection,
+      email,
+      !!window.hasDonated,
+      email !== window.persistEmail || !window.hasDonated,
+    );
   };
 
   const footerSlots: FooterSlots = useMemo(
@@ -70,10 +83,10 @@ export default function NewsletterChoicePage(): JSX.Element {
               key="1"
               className="min-w-[6rem]"
               disabled={!inputIsValid}
-              onClick={() => {
+              onClick={async () => {
                 if (!inputIsValid) return;
 
-                signUpForNewsletter();
+                await signUpForNewsletter();
                 history.push("/tiktok/thank_you");
               }}
             >

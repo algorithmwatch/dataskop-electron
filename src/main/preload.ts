@@ -56,6 +56,7 @@ const exportChannels = [
 const dbChannels = [
   "db-read",
   "db-write",
+  "db-get-data",
   "db-get-config",
   "db-set-config",
   "db-get-lookups",

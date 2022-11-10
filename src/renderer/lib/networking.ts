@@ -14,7 +14,7 @@ const toBase64 = (str: string) => {
 const postJson = (url: string, seriousProtection: string | null, body: any) => {
   return fetch(url, {
     method: "POST",
-    body,
+    body: JSON.stringify(body),
     headers: {
       "Content-Type": "application/json",
       Authorization: `Basic ${toBase64(`user:${seriousProtection}`)}`,
@@ -85,4 +85,27 @@ const postDonation = async (
   return res;
 };
 
-export { getActiveCampaigns, postEvent, postDonation };
+const postNewsletterSubscription = async (
+  platformUrl: string,
+  seriousProtection: string | null,
+  email: string,
+  has_donated: boolean,
+  needs_double_optin: boolean,
+) => {
+  const url = `${platformUrl}/api/mailjetsync/`;
+
+  const res = await postJson(url, seriousProtection, {
+    email,
+    has_donated,
+    needs_double_optin,
+  });
+  if (!res.ok) console.warn(res);
+  return res;
+};
+
+export {
+  getActiveCampaigns,
+  postEvent,
+  postDonation,
+  postNewsletterSubscription,
+};
