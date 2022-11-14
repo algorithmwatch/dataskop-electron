@@ -53,6 +53,25 @@ export const postDownloadFileProcessing = async (filePath: string) => {
   return filePathExtracted;
 };
 
+export const getDownload = async (picks: string[] = []) => {
+  const allJsons = getFileList(DOWNLOADS_FOLDER).filter(
+    (x) => path.extname(x) === ".json",
+  );
+
+  if (allJsons.length) {
+    allJsons.sort();
+    const chosenJson = _.last(allJsons);
+    log.info(`Using the following file: ${chosenJson}`);
+    if (!chosenJson) return;
+
+    const data = JSON.parse(fs.readFileSync(chosenJson, "utf-8"));
+
+    if (picks.length) return _.pick(data, picks);
+    return data;
+  }
+  return null;
+};
+
 // Register several handlers for the scraping view
 export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
   log.debug(
@@ -386,25 +405,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     },
   );
 
-  addMainHandler(
-    "scraping-get-download",
-    (_event: any, picks: string[] = []) => {
-      const allJsons = getFileList(DOWNLOADS_FOLDER).filter(
-        (x) => path.extname(x) === ".json",
-      );
-
-      if (allJsons.length) {
-        allJsons.sort();
-        const chosenJson = _.last(allJsons);
-        log.info(`Using the following file: ${chosenJson}`);
-        if (!chosenJson) return;
-
-        const data = JSON.parse(fs.readFileSync(chosenJson, "utf-8"));
-
-        if (picks.length) return _.pick(data, picks);
-        return data;
-      }
-      return null;
-    },
+  addMainHandler("scraping-get-download", (_event: any, picks: string[] = []) =>
+    getDownload(picks),
   );
 }

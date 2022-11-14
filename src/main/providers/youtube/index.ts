@@ -9,7 +9,7 @@ import log from "electron-log";
 import fs from "fs";
 import pLimit from "p-limit";
 import path from "path";
-import { addMainHandler } from "../utils";
+import { addMainHandler } from "../../utils";
 
 export default function registerYoutubeHandlers(mainWindow: BrowserWindow) {
   addMainHandler(

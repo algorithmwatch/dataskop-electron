@@ -56,7 +56,6 @@ const exportChannels = [
 const dbChannels = [
   "db-read",
   "db-write",
-  "db-get-data",
   "db-get-config",
   "db-set-config",
   "db-get-lookups",
@@ -69,7 +68,11 @@ const youtubeChannels = [
   "youtube-scraping-background-videos",
 ];
 
-const tiktokChannels = ["tiktok-scrape-videos"];
+const tiktokChannels = [
+  "tiktok-scrape-videos",
+  "tiktok-data-upload",
+  "tiktok-data-export",
+];
 
 // whitelist certain channels for certain action
 const validInvokeChannels = mainChannels.concat(

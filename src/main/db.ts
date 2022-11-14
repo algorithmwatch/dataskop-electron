@@ -78,10 +78,6 @@ export default async function registerDbHandlers() {
     return dataStore.get("data");
   });
 
-  addMainHandler("db-get-data", () => {
-    return dataStore.store;
-  });
-
   addMainHandler("db-set-lookups", (_e: any, lookups: any) => {
     return addLookups(lookups);
   });
@@ -103,4 +99,11 @@ export default async function registerDbHandlers() {
   });
 }
 
-export { configStore, DB_FOLDER, getLookups, addLookups, addLookupsToUpload };
+export {
+  configStore,
+  dataStore,
+  DB_FOLDER,
+  getLookups,
+  addLookups,
+  addLookupsToUpload,
+};

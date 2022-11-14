@@ -63,10 +63,16 @@ export default function ThankYouPage(): JSX.Element {
         icon={window.hasDonated ? faFaceSmileHearts : faFaceRelieved}
       >
         {window.hasDonated ? (
-          <p>
-            Du hilfst uns mit deiner Spende, TikTok besser zu verstehen. Damit
-            tust du etwas Gutes für die Wissenschaft.
-          </p>
+          <>
+            <p className="mb-5">
+              Du hilfst uns mit deiner Spende, TikTok besser zu verstehen. Damit
+              tust du etwas Gutes für die Wissenschaft.
+            </p>
+            <p>
+              Bitte schau in dein Postfach und bestätige deine E-Mail-Adresse.
+              Nur so können wir deine Daten für die Auswertung nutzen.
+            </p>
+          </>
         ) : (
           <p>Wir sind froh, dass du ein Teil von DataSkop warst.</p>
         )}

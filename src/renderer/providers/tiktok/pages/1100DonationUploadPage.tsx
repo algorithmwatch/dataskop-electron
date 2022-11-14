@@ -3,7 +3,6 @@
  *
  * @module
  */
-import { redactTiktokDump } from "@algorithmwatch/schaufel-wrangle";
 import { faFileHeart } from "@fortawesome/pro-light-svg-icons";
 import {
   faAngleLeft,
@@ -16,27 +15,9 @@ import { useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
-import { postDonation } from "renderer/lib/networking";
 import { isValidEmail } from "renderer/lib/utils/strings";
 import Content from "renderer/providers/tiktok/components/Content";
 import { useConfig, useNavigation, useScraping } from "../../../contexts";
-
-/**
- * Get data from the disk
- */
-const getData = async () => {
-  const dump = redactTiktokDump(
-    await window.electron.ipc.invoke("scraping-get-download"),
-  );
-  const data = await window.electron.ipc.invoke("db-get-data");
-
-  // Upload only a subset of lookups (only the one we just scraped)
-  const lookups = await window.electron.ipc.invoke(
-    "db-get-lookups",
-    data.lookupsToUploads,
-  );
-  return { data: data.data, lookups, dump };
-};
 
 window.persistEmail = "";
 window.hasDonated = false;
@@ -122,23 +103,18 @@ export default function DonationFormPage(): JSX.Element {
                 setError(null);
                 setUploading(true);
 
-                const data = await getData();
-
-                // TODO: test upload
-                const resp = await postDonation(
-                  version,
-                  platformUrl,
-                  seriousProtection,
+                const uploadSuccess = await window.electron.ipc.invoke(
+                  "tiktok-data-upload",
                   email,
-                  data,
                   campaign.id,
                 );
 
-                if (resp.ok) {
+                if (uploadSuccess) {
                   setUploading(false);
                   setDone(true);
                   window.hasDonated = true;
                   window.persistEmail = email;
+                  history.push(getNextPage("path"));
                 } else {
                   setUploading(false);
                   setError("Ups, uns ist ein Fehler passiert.");

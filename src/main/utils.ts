@@ -86,3 +86,16 @@ export const fetchBackend = async (url: string) =>
       },
     })
   ).json();
+
+export const postBackend = (url: string, data: any) => {
+  return fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Basic ${toBase64(
+        `user:${process.env.SERIOUS_PROTECTION}`,
+      )}`,
+    },
+    body: JSON.stringify(data),
+  });
+};

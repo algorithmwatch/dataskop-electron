@@ -12,9 +12,9 @@ import log from "electron-log";
 import _ from "lodash";
 import pLimit from "p-limit";
 import PQueue from "p-queue";
-import { addLookups, addLookupsToUpload, getLookups } from "../db";
-import { HTML_FOLDER } from "../scraping";
-import { addMainHandler, delay, fetchBackend } from "../utils";
+import { addLookups, addLookupsToUpload, getLookups } from "../../db";
+import { HTML_FOLDER } from "../../scraping";
+import { addMainHandler, delay, fetchBackend } from "../../utils";
 
 const BACKEND_CHUNK_SIZE = 50;
 const SCRAPE_CHUNK_SIZE = 20;
@@ -67,7 +67,9 @@ const scrapeVideos = async (
   return scrapedDone;
 };
 
-export default function registerTiktokHandlers(mainWindow: BrowserWindow) {
+export default function registerTiktokScrapingHandlers(
+  mainWindow: BrowserWindow,
+) {
   addMainHandler(
     "tiktok-scrape-videos",
     async (
