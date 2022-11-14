@@ -1,5 +1,6 @@
+// BrowserRouter breaks images in prod builds
 import {
-  BrowserRouter as Router,
+  MemoryRouter as Router,
   Redirect,
   Route,
   Switch,

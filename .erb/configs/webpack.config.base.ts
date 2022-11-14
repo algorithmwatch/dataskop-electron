@@ -18,9 +18,12 @@ const configuration: webpack.Configuration = {
         exclude: /node_modules/,
         use: {
           loader: "ts-loader",
-          // add to make compilation of @aw/harke work
           options: {
+            // Remove this line to enable type checking in webpack builds
             transpileOnly: true,
+            compilerOptions: {
+              module: "esnext",
+            },
           },
         },
       },
