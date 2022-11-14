@@ -7,7 +7,7 @@ const useData = (maxVideos = 200) => {
 
   useMemo(() => {
     (async () => {
-      const newDump = await window.electron.ipc.invoke("scraping-get-download");
+      const newDump = await window.electron.ipc.invoke("downloads-get");
       setDump(newDump);
 
       const ids = getMostRecentWatchVideos(newDump, maxVideos, null);

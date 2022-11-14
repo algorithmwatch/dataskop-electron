@@ -23,7 +23,7 @@ export default function ImportDataExportPage(): JSX.Element {
 
   const handleFiles = async (files: File[]) => {
     const response = await window.electron.ipc.invoke(
-      "import-files",
+      "downloads-import",
       files.map(({ path }) => path),
     );
 

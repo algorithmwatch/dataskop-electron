@@ -6,7 +6,7 @@ const scrapeWatchedVideos = async (
   config: any,
   procedureArgs: ProcedureArgs,
 ): Promise<string> => {
-  const dump = await window.electron.ipc.invoke("scraping-get-download");
+  const dump = await window.electron.ipc.invoke("downloads-get");
   const ids = getMostRecentWatchVideos(
     dump,
     config.maxVideos,
@@ -27,7 +27,7 @@ const scrapeVideosTimeFrame = async (
   procedureArgs: ProcedureArgs,
 ): Promise<string> => {
   return scrapeWatchedVideos(config, procedureArgs);
-  // const dump = await window.electron.ipc.invoke("scraping-get-download");
+  // const dump = await window.electron.ipc.invoke("downloads-get");
   // return "scraping-done";
 };
 

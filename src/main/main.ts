@@ -29,6 +29,7 @@ import path from "path";
 import "regenerator-runtime/runtime";
 import registerBackgroundScrapingHandlers from "./background-scraping";
 import registerDbHandlers, { configStore } from "./db";
+import registerDownloadsHandlers from "./downloads";
 import registerExportHandlers from "./export";
 import { buildMenu } from "./menu";
 import registerTiktokDataHandlers from "./providers/tiktok/data";
@@ -273,6 +274,7 @@ const createWindow = async () => {
 
   // Register general handlers
   registerScrapingHandlers(mainWindow);
+  registerDownloadsHandlers(mainWindow);
   registerExportHandlers(mainWindow);
   registerBackgroundScrapingHandlers();
   registerDbHandlers();

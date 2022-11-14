@@ -8,7 +8,7 @@ import { redactTiktokDump } from "@algorithmwatch/schaufel-wrangle";
 import { app, BrowserWindow, dialog } from "electron";
 import log from "electron-log";
 import { dataStore, getLookups } from "../../db";
-import { getDownload } from "../../scraping";
+import { getDownload } from "../../downloads";
 import { addMainHandler, getNowString, postBackend } from "../../utils";
 
 /**

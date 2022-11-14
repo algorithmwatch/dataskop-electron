@@ -8,15 +8,9 @@ import log from "electron-log";
 import fs from "fs";
 import _ from "lodash";
 import path from "path";
-import unzipper from "unzipper";
+import { DOWNLOADS_FOLDER, postDownloadFileProcessing } from "../downloads";
 import { postLoadUrlYoutube } from "../providers/youtube";
-import {
-  addMainHandler,
-  delay,
-  getFileList,
-  getNowString,
-  stripNonAscii,
-} from "../utils";
+import { addMainHandler, delay, getNowString, stripNonAscii } from "../utils";
 import {
   clickElement,
   elementExists,
@@ -27,50 +21,7 @@ import { getUserAgent } from "./user-agent";
 
 let scrapingView: BrowserView | null = null;
 
-export const DOWNLOADS_FOLDER = path.join(app.getPath("userData"), "downloads");
 export const HTML_FOLDER = path.join(app.getPath("userData"), "html");
-
-export const postDownloadFileProcessing = async (filePath: string) => {
-  let filePathExtracted = "";
-
-  if (filePath.endsWith(".zip")) {
-    log.info("Unzipping downloaded file");
-
-    filePathExtracted = filePath.replace(/\.zip$/, "");
-
-    // some delay is needed to prevent a race condition
-    await delay(1000);
-
-    fs.createReadStream(filePath).pipe(
-      unzipper.Extract({ path: filePathExtracted }),
-    );
-
-    // some delay is needed to prevent a race condition
-    await delay(1000);
-    log.info("Unzipping done. Deleting original file.");
-    fs.unlinkSync(filePath);
-  }
-  return filePathExtracted;
-};
-
-export const getDownload = async (picks: string[] = []) => {
-  const allJsons = getFileList(DOWNLOADS_FOLDER).filter(
-    (x) => path.extname(x) === ".json",
-  );
-
-  if (allJsons.length) {
-    allJsons.sort();
-    const chosenJson = _.last(allJsons);
-    log.info(`Using the following file: ${chosenJson}`);
-    if (!chosenJson) return;
-
-    const data = JSON.parse(fs.readFileSync(chosenJson, "utf-8"));
-
-    if (picks.length) return _.pick(data, picks);
-    return data;
-  }
-  return null;
-};
 
 // Register several handlers for the scraping view
 export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
@@ -403,9 +354,5 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       if (scrapingView)
         return clickElement(scrapingView, selector, docIndex, shadowSelector);
     },
-  );
-
-  addMainHandler("scraping-get-download", (_event: any, picks: string[] = []) =>
-    getDownload(picks),
   );
 }

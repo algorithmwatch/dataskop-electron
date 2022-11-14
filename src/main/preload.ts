@@ -30,7 +30,12 @@ const scrapingChannels = [
   "scraping-click-element",
   "scraping-submit-form",
   "scraping-element-exists",
-  "scraping-get-download",
+];
+
+const downloadsChannels = [
+  "downloads-get",
+  "downloads-clear",
+  "downloads-import",
 ];
 
 // background-scraping.ts
@@ -49,7 +54,6 @@ const exportChannels = [
   "export-debug-archive",
   "export-debug-size",
   "export-debug-clean",
-  "import-files",
 ];
 
 // db.ts
@@ -78,6 +82,7 @@ const tiktokChannels = [
 const validInvokeChannels = mainChannels.concat(
   monitoringChannels,
   scrapingChannels,
+  downloadsChannels,
   backgroundScrapingChannels,
   exportChannels,
   dbChannels,
