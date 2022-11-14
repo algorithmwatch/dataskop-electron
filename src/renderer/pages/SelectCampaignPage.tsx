@@ -1,14 +1,12 @@
 /**
  * Load config from server and optionally select a campaign configuration.
  *
- * TODO: The base layout is also applied to this page. Should we use it? Or just
- * override it?
  * @module
  */
 import { useEffect } from "react";
 import { useHistory } from "react-router";
 import { getActiveCampaigns } from "renderer/lib/networking";
-import { localActiveCampaings, providerInfo } from "renderer/providers/info";
+import { providerInfo } from "renderer/providers/info";
 import { useConfig, useNavigation, useScraping } from "../contexts";
 
 export default function SelectCampaignPage(): JSX.Element {
@@ -55,31 +53,28 @@ export default function SelectCampaignPage(): JSX.Element {
   const setActiveCampaign = async () => {
     if (platformUrl == null) return;
 
-    if (autoSelectCampaign !== null) {
-      handleCampaignChange(localActiveCampaings[autoSelectCampaign]);
-      return;
-    }
-
     try {
-      const campaigns = localActiveCampaings.concat(
-        await getActiveCampaigns(platformUrl, seriousProtection),
-      );
-
-      const filteredCampaigns = campaigns.filter(
-        (x) => x.config && x.config.provider,
+      const campaigns = await getActiveCampaigns(
+        platformUrl,
+        seriousProtection,
       );
 
       // only use campaigns that have a valid provider configuration
-      dispatch({
-        type: "set-available-campaigns",
-        availableCampaigns: filteredCampaigns,
-      });
+      const filteredCampaigns = campaigns.filter(
+        (x) => x.config && x.config.provider,
+      );
 
       // if a featured campaign exists, skip over the campaign selection page
       const featuredCampaigns = filteredCampaigns.filter((x) => x.featured);
       if (featuredCampaigns.length === 1) {
         handleCampaignChange(featuredCampaigns[0]);
+        return;
       }
+
+      dispatch({
+        type: "set-available-campaigns",
+        availableCampaigns: filteredCampaigns,
+      });
 
       sendEvent(null, "successfully fetched remote config");
     } catch (error) {
@@ -94,6 +89,8 @@ export default function SelectCampaignPage(): JSX.Element {
   useEffect(() => {
     setActiveCampaign();
   }, [platformUrl, seriousProtection]);
+
+  if (availableCampaigns.length === 0) return <div />;
 
   return (
     <>

@@ -30,6 +30,8 @@ export default function BaseLayoutSwitch({
     }
   }, [pathname]);
 
+  // For development, selection a local campaign with `autoSelectCampaign`.
+  // Set the value in .env. This ensure that HMR works as indented.
   useEffect(() => {
     if (!module.hot) return;
     if (autoSelectCampaign === null) return;
