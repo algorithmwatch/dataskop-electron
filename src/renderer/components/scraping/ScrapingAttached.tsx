@@ -28,13 +28,15 @@ export default function ScrapingAttached() {
   } = useConfig();
 
   const history = useHistory();
-  // Monitoring
 
-  // we only want to find out if it's reaady to notify the user
+  // Some monitoring logic because this component gets rendered on initialization.
 
   useEffect(() => {
     (async () => {
+      window.electron.log.info("Check if should start a monitoring step");
       if (userConfig && userConfig.monitoring && !isScrapingStarted) {
+        window.electron.log.info("Yes, start a monitoring step");
+
         dispatch({ type: "set-attached", attached: true, visible: false });
         await currentDelay();
         dispatch({
@@ -45,13 +47,17 @@ export default function ScrapingAttached() {
         // Attach
         // Check if loggend in, then act
         // Start scraping
+      } else {
+        window.electron.log.info("No, don't start a monitoring step");
       }
     })();
   }, [userConfig?.monitoring, isScrapingStarted]);
 
   useEffect(() => {
     (async () => {
+      window.electron.log.info("Check if monitoring is done");
       if (userConfig && userConfig.monitoring && isScrapingFinished) {
+        window.electron.log.info("Yes, monitoring is done");
         configDispatch({
           type: "set-user-config",
           newValues: { monitoring: false },
@@ -64,6 +70,8 @@ export default function ScrapingAttached() {
         // Notify main about finished monitoring
 
         // If something went wrong, ask them to check again. If not's working to report to us.
+      } else {
+        window.electron.log.info("No, monitoring is not done");
       }
     })();
   }, [userConfig?.monitoring, isScrapingFinished]);
@@ -71,8 +79,15 @@ export default function ScrapingAttached() {
   // Jump to waiting screen
   useEffect(() => {
     (async () => {
-      if (!userConfig?.monitoring && (await isMonitoringPending())) {
+      window.electron.log.info("Check if we should jump to waiting page");
+      const isPending = await isMonitoringPending();
+      if (userConfig && !userConfig.monitoring && isPending) {
+        window.electron.log.info("Yes, jump to waiting page");
         history.push("/tiktok/waiting");
+      } else {
+        window.electron.log.info(
+          `No, don't jump to waiting page. Pending: ${isPending}. Monitoring: ${userConfig?.monitoring}`,
+        );
       }
     })();
   }, [userConfig?.monitoring]);

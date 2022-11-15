@@ -64,7 +64,7 @@ const clickOnDownloadTab = async (getCurrentHtml: GetCurrentHtml) => {
     'button span:contains("Download data")',
   ).first();
 
-  window.electron.log.debug(downloadDataTab);
+  window.electron.log.info(`downloadDataTab: ${downloadDataTab.length}`);
 
   if (downloadDataTab.length) {
     await clickOnElementIframe(downloadDataTab, $html);
@@ -148,7 +148,8 @@ const clickDownloadButton = async (getCurrentHtml: GetCurrentHtml) => {
     `${GDPR_RESULTS_HTML_SELECTOR} button:contains("Download")`,
   ).first();
 
-  window.electron.log.debug(downloadButton);
+  window.electron.log.info(`downloadButton: ${downloadButton.length}`);
+
   const buttonAvailable = !!downloadButton.length;
 
   if (!buttonAvailable) return { buttonAvailable };
@@ -182,7 +183,7 @@ const isDownloadExpired = async (getCurrentHtml: GetCurrentHtml) => {
     `${GDPR_RESULTS_HTML_SELECTOR} button:disabled div:contains("Expired")`,
   ).first();
 
-  window.electron.log.debug(expiredButton);
+  window.electron.log.info(`expiredButton: ${expiredButton.length}`);
 
   return !!expiredButton.length;
 };
