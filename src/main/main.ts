@@ -42,6 +42,12 @@ import { delay, isFromLocalhost, resolveHtmlPath } from "./utils";
 // read .env files for development
 require("dotenv").config();
 
+// https://github.com/electron/electron/issues/23756#issuecomment-651287598
+app.commandLine.appendSwitch(
+  "disable-features",
+  "SpareRendererForSitePerProcess,WebRtcHideLocalIpsWithMdns",
+);
+
 const DEBUG =
   process.env.NODE_ENV === "development" || process.env.DEBUG_PROD === "true";
 
