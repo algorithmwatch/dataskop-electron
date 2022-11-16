@@ -82,8 +82,12 @@ export default function ScrapingAttached() {
       window.electron.log.info("Check if we should jump to waiting page");
       const isPending = await isMonitoringPending();
       if (userConfig && !userConfig.monitoring && isPending) {
-        window.electron.log.info("Yes, jump to waiting page");
-        history.push("/tiktok/waiting");
+        window.electron.log.info(
+          `Yes, jump to waiting page. history: ${!!history}`,
+        );
+        setTimeout(() => {
+          history.push("/tiktok/waiting");
+        }, 500);
       } else {
         window.electron.log.info(
           `No, don't jump to waiting page. Pending: ${isPending}. Monitoring: ${userConfig?.monitoring}`,
