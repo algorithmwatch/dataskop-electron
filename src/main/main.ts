@@ -50,7 +50,7 @@ app.commandLine.appendSwitch(
 
 // https://stackoverflow.com/a/65863174/4028896
 if (process.platform === "win32") {
-  app.setAppUserModelId(app.name);
+  app.setAppUserModelId(app.getName());
 }
 
 const DEBUG =
