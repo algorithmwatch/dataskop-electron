@@ -54,6 +54,13 @@ export const getDownload = async (picks: string[] = []) => {
   return null;
 };
 
+export const clearDownloads = () => {
+  getFileList(DOWNLOADS_FOLDER).forEach((x) => {
+    fs.unlinkSync(x);
+    log.info(`Successfully deleted ${x}`);
+  });
+};
+
 export default function registerDownloadsHandlers(mainWindow: BrowserWindow) {
   log.debug(
     `Called registerDownloadsHandlers, mainWindow: ${mainWindow !== null}`,
@@ -63,12 +70,7 @@ export default function registerDownloadsHandlers(mainWindow: BrowserWindow) {
     getDownload(picks),
   );
 
-  addMainHandler("downloads-clear", (_event: any) =>
-    getFileList(DOWNLOADS_FOLDER).forEach((x) => {
-      fs.unlinkSync(x);
-      log.info(`Successfully deleted ${x}`);
-    }),
-  );
+  addMainHandler("downloads-clear", (_event: any) => clearDownloads());
 
   addMainHandler("downloads-import", async (_e: any, paths: string[]) => {
     const dir = path.join(DOWNLOADS_FOLDER, getNowString());

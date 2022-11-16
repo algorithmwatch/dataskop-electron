@@ -5,6 +5,7 @@
  */
 
 import { app } from "electron";
+import log from "electron-log";
 import Store from "electron-store";
 import path from "path";
 import { setOpenAtLogin } from "./tray";
@@ -61,7 +62,15 @@ const getLookups = (keys: string[]) => {
   return keys.map((x) => [x, lookupStore.get(x, null)]);
 };
 
-const clearLookups = () => lookupStore.reset();
+const clearLookups = () => {
+  log.info("Clearing `lookups`");
+  lookupStore.reset();
+};
+
+const clearData = () => {
+  log.info("Clearing `data`");
+  dataStore.set("data", {});
+};
 
 const addLookupsToUpload = (keys: string[]) => {
   const newValues = dataStore.get("lookupsToUploads", []) as string[];
@@ -106,4 +115,5 @@ export {
   getLookups,
   addLookups,
   addLookupsToUpload,
+  clearData,
 };

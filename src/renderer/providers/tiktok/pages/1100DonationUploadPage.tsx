@@ -7,7 +7,6 @@ import { faFileHeart } from "@fortawesome/pro-light-svg-icons";
 import {
   faAngleLeft,
   faAngleRight,
-  faAngleUp,
   faCog,
 } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -25,7 +24,7 @@ window.hasDonated = false;
 export default function DonationFormPage(): JSX.Element {
   const { getNextPage } = useNavigation();
   const {
-    state: { platformUrl, seriousProtection, version },
+    state: { platformUrl },
   } = useConfig();
   const {
     state: { campaign },
@@ -43,6 +42,33 @@ export default function DonationFormPage(): JSX.Element {
     return isValidEmail(email);
   }, [email]);
 
+  const upload = async () => {
+    if (campaign === null || platformUrl === null) {
+      setError("Ups, uns ist ein Fehler passiert.");
+      return;
+    }
+
+    setError(null);
+    setUploading(true);
+
+    const uploadSuccess = await window.electron.ipc.invoke(
+      "tiktok-data-upload",
+      email,
+      campaign.id,
+    );
+
+    if (uploadSuccess) {
+      setUploading(false);
+      setDone(true);
+      window.hasDonated = true;
+      window.persistEmail = email;
+      history.push(getNextPage("path"));
+    } else {
+      setUploading(false);
+      setError("Ups, uns ist ein Fehler passiert.");
+    }
+  };
+
   const footerSlots: FooterSlots = {
     center: [
       <Button
@@ -59,10 +85,8 @@ export default function DonationFormPage(): JSX.Element {
       <Button
         key="2"
         endIcon={faAngleRight}
-        disabled={!isDone}
-        onClick={() => {
-          history.push(getNextPage("path"));
-        }}
+        disabled={isUploading || !inputIsValid}
+        onClick={upload}
       >
         Weiter
       </Button>,
@@ -87,50 +111,22 @@ export default function DonationFormPage(): JSX.Element {
             className="px-4 py-2 max-w-md w-full text-xl bg-white appearance-none border-2 border-black rounded ring-8 ring-east-blue-100 focus:outline-none focus:ring-east-blue-300"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && inputIsValid) {
+                upload();
+              }
+            }}
           />
         </div>
         <div className="mt-10">
-          {true && (
-            <Button
-              disabled={isUploading || !inputIsValid || isDone}
-              endIcon={faAngleUp}
-              onClick={async () => {
-                if (campaign === null || platformUrl === null) {
-                  setError("Ups, uns ist ein Fehler passiert.");
-                  return;
-                }
-
-                setError(null);
-                setUploading(true);
-
-                const uploadSuccess = await window.electron.ipc.invoke(
-                  "tiktok-data-upload",
-                  email,
-                  campaign.id,
-                );
-
-                if (uploadSuccess) {
-                  setUploading(false);
-                  setDone(true);
-                  window.hasDonated = true;
-                  window.persistEmail = email;
-                  history.push(getNextPage("path"));
-                } else {
-                  setUploading(false);
-                  setError("Ups, uns ist ein Fehler passiert.");
-                }
-              }}
-            >
-              Hochladen
-            </Button>
-          )}
-
           {!isDone && error === null && (
             <div
               className={isUploading ? "opacity-100 p-10" : "opacity-0 p-10"}
             >
               <FontAwesomeIcon spin icon={faCog} size="3x" />
-              <div>Einen Moment bitte.</div>
+              <div className="mt-5">
+                Einen Moment bitte. Die Daten werden hochgeladen.
+              </div>
             </div>
           )}
 

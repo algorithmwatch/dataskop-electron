@@ -18,6 +18,7 @@ export default function ScrapingAttached() {
       campaign,
       isScrapingStarted,
       isScrapingFinished,
+      scrapingProgress,
     },
     dispatch,
   } = useScraping();
@@ -85,6 +86,7 @@ export default function ScrapingAttached() {
         window.electron.log.info(
           `Yes, jump to waiting page. history: ${!!history}`,
         );
+        // Add some timeout because a race condition prevented a navigation.
         setTimeout(() => {
           history.push("/tiktok/waiting");
         }, 500);
@@ -95,6 +97,19 @@ export default function ScrapingAttached() {
       }
     })();
   }, [userConfig?.monitoring]);
+
+  // Expose the status of the scraping to the main process to check wheter the
+  // can safely be closed.
+  useEffect(() => {
+    window.electron.ipc.removeAllListeners("close-action");
+    window.electron.ipc.on("close-action", () => {
+      window.electron.ipc.invoke(
+        "close-main-window",
+        scrapingProgress.isActive,
+        window.hasDonated !== undefined,
+      );
+    });
+  }, [scrapingProgress.isActive, window.hasDonated]);
 
   // Only render scraping manger when the campaign is set to avoid tedious guard clauses.
   if (isAttached && campaign && userConfig)

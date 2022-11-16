@@ -6,7 +6,7 @@
  * @module
  */
 import _ from "lodash";
-import React, { useEffect } from "react";
+import React from "react";
 import { Campaign, DemoData } from "renderer/providers/types";
 
 export type ScrapingProgress = {
@@ -300,18 +300,6 @@ const ScrapingProvider = ({ children }: ScrapingProviderProps) => {
   };
 
   const value = { state, dispatch, getEtaUntil };
-
-  // Expose the status of the scraping to the main process to check wheter the
-  // can safely be closed.
-  useEffect(() => {
-    window.electron.ipc.removeAllListeners("close-action");
-    window.electron.ipc.on("close-action", () => {
-      window.electron.ipc.invoke(
-        "close-main-window",
-        state.scrapingProgress.isActive,
-      );
-    });
-  }, [state.scrapingProgress.isActive]);
 
   return (
     <ScrapingStateContext.Provider value={value}>
