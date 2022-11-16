@@ -223,6 +223,7 @@ export default function WaitingPage(): JSX.Element {
           <StatusContent
             title="DSGVO-Daten angefordert"
             body="Bitte habe noch etwas Geduld. Deine DSGVO-Daten wurden angefordert, aber TikTok bietet sie noch nicht zum Download an."
+            helpButtons
             fancyNotificationText
           />
         )}
@@ -231,10 +232,8 @@ export default function WaitingPage(): JSX.Element {
           "download-action-required",
         ].includes(status) && (
           <StatusContent
-            title="Bitte die Daten herunterladen"
-            body="Ihre Hilfe ist notwendig um die Daten herunterladen."
-            helpButtons
-            fancyNotificationText
+            title="Aktion erforderlich"
+            body="Deine Hilfe ist erforderlich, um die Daten herunterzuladen."
           />
         )}
         {[
@@ -257,29 +256,28 @@ export default function WaitingPage(): JSX.Element {
         ].includes(status) && (
           <StatusContent
             title="Fehler beim Download"
-            body="Wir konnten deine TikTok-Daten nicht herunterladen. Besuche alternativ  Tiktok.com in deinem Browser und lade dir deine DSGVO-Daten in deinem Benutzerkonto herunter. Anschließend kannst du sie in der Dateskop-App importieren."
-            fancyNotificationText
+            body="Wir konnten deine TikTok-Daten nicht herunterladen. Besuche Tiktok.com im Browser und lade dir die DSGVO-Daten in deinem Benutzerkonto herunter. Anschließend kannst du sie in der DataSkop-App importieren."
           />
         )}
         {["monitoring-download-expired"].includes(status) && (
           <StatusContent
             title="Download abgelaufen"
-            body="Bitte neu beantragen."
-            fancyNotificationText
+            body="Der Download für deine DSGVO-Daten ist abgelaufen. Bitte starte die App erneut und beantrage ihn noch einmal."
           />
         )}
         {["monitoring-captcha"].includes(status) && (
+          // duplicate default messsage
           <StatusContent
-            title="Captcha"
-            body="Wir überprüden den Status später."
+            title="DSGVO-Daten angefordert"
+            body="Bitte habe noch etwas Geduld. Deine DSGVO-Daten wurden angefordert, aber TikTok bietet sie noch nicht zum Download an."
+            helpButtons
             fancyNotificationText
           />
         )}
         {["data-error-request"].includes(status) && (
           <StatusContent
             title="DSGVO-Anfrage fehlgeschlagen"
-            body="Wir konnten den DSGVO-Export nicht beantragen. Bitte logge dich auf tiktok.com ein und beantrage dort die Daten. Eine Anleitung findest du auf unserer Homepage."
-            fancyNotificationText
+            body="Wir konnten deine DSGVO-Daten nicht beantragen. Besuche Tiktok.com im Browser und lade dir die DSGVO-Daten in deinem Benutzerkonto herunter. Anschließend kannst du sie in der DataSkop-App importieren."
           />
         )}
         {[
@@ -289,9 +287,8 @@ export default function WaitingPage(): JSX.Element {
           "status-not-available",
         ].includes(status) && (
           <StatusContent
-            title="Fehler"
-            body="Es gibt ein Fehler unserseits."
-            fancyNotificationText
+            title="Fehler beim Download"
+            body="Wir konnten den Status deines DSGVO-Downloads nicht überprüfen. Besuche Tiktok.com im Browser und lade dir die DSGVO-Daten in deinem Benutzerkonto herunter. Anschließend kannst du sie in der DataSkop-App importieren."
           />
         )}
       </WizardLayout>

@@ -12,55 +12,80 @@ const STATUS = {
   // The download could not happen in the background, we need action from the user
   "monitoring-download-action-required": {
     notification: {
-      title: "Download verfügbar",
-      body: "Der Datenexport steht zum Download bereit",
+      title: "Aktion erforderlich",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
     },
   },
   "monitoring-download-success": {},
-  "monitoring-download-error": {},
-  "monitoring-download-error-timeout": {},
+  "monitoring-download-error": {
+    notification: {
+      title: "Fehler beim Download",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
+  "monitoring-download-error-timeout": {
+    notification: {
+      title: "Fehler beim Download",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
   // Time to download data has expired
   "monitoring-download-expired": {
     notification: {
       title: "Download abgelaufen",
-      body: "Der Datenexport muss erneut beantragt werden.",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
     },
   },
   // monitoring-captcha
   // Monitoring interrupted by captcha
   // Should prompt user to fill out captcha form
-  "monitoring-captcha": {
-    notification: {
-      title: "Captcha erforderlich",
-      body: "Wir konnten den Status der Datenspende aufgrund eines Captchas nicht überprüfen.",
-    },
-  },
+  "monitoring-captcha": {},
   // Error, the HTML may have changed
   "monitoring-error-nothing-found": {
     notification: {
       title: "Fehler",
-      body: "Es ist ein Fehler aufgetreten.",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
     },
   },
   // Error, the HTML may have changed
   "monitoring-error-tab-not-found": {
     notification: {
       title: "Fehler",
-      body: "Es ist ein Fehler aufgetreten.",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
     },
   },
   // Error, the HTML may have changed
-  "data-error-tab-not-found": {},
+  "data-error-tab-not-found": {
+    notification: {
+      title: "Fehler",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
   // Waiting until TikTok created the dump
   "data-pending": {},
   // successfully requested a new GDPR dump
   "data-request-success": {},
   // There were errors when requesting a new GDPR dump
-  "data-error-request": {},
+  "data-error-request": {
+    notification: {
+      title: "Fehler",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
   "download-action-required": {},
   "download-success": {},
-  "download-error": {},
-  "download-error-timeout": {},
+  "download-error": {
+    notification: {
+      title: "Fehler beim Download",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
+  "download-error-timeout": {
+    notification: {
+      title: "Fehler beim Download",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
   // A scraping step was finished
   "scraping-done": {},
   "files-imported": {},
