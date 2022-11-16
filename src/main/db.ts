@@ -69,7 +69,7 @@ const clearLookups = () => {
 
 const clearData = () => {
   log.info("Clearing `data`");
-  dataStore.set("data", {});
+  dataStore.set("data", null);
 };
 
 const addLookupsToUpload = (keys: string[]) => {
