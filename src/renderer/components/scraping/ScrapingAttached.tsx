@@ -98,6 +98,10 @@ export default function ScrapingAttached() {
     })();
   }, [userConfig?.monitoring]);
 
+  useEffect(() => {
+    window.hasDonated = null;
+  });
+
   // Expose the status of the scraping to the main process to check wheter the
   // can safely be closed.
   useEffect(() => {
@@ -106,7 +110,7 @@ export default function ScrapingAttached() {
       window.electron.ipc.invoke(
         "close-main-window",
         scrapingProgress.isActive,
-        window.hasDonated !== undefined,
+        window.hasDonated !== null,
       );
     });
   }, [scrapingProgress.isActive, window.hasDonated]);
