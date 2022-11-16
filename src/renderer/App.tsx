@@ -37,9 +37,10 @@ export default function App() {
                   </Route>
                 </Switch>
               </BaseLayoutSwitch>
+              {/* `ScrapingAttached` has to come _after_ the pages in the router
+              but has to be a child of `Router` to navigate */}
+              <ScrapingAttached />
             </Router>
-            {/* has to come here _after_ the pages in the router */}
-            <ScrapingAttached />
           </ScrapingProvider>
         </ModalProvider>
       </NavigationProvider>
