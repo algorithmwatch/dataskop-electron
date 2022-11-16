@@ -4,7 +4,7 @@
  * @module
  */
 import { faAngleRight } from "@fortawesome/pro-regular-svg-icons";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
 import { useNavigation } from "../../../contexts";
 import awlogo from "../../../static/images/logos/aw-logo.png";

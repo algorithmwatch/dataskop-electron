@@ -6,7 +6,7 @@
 import { faFileImport } from "@fortawesome/pro-light-svg-icons";
 import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
 import { useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
 import DropFile from "renderer/components/DropFile";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";

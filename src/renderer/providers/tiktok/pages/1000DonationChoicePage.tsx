@@ -5,7 +5,7 @@
  */
 import { faFileHeart } from "@fortawesome/pro-light-svg-icons";
 import { faAngleLeft } from "@fortawesome/pro-solid-svg-icons";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import Content from "renderer/providers/tiktok/components/Content";

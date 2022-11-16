@@ -7,7 +7,7 @@
 import { faAngleRight } from "@fortawesome/pro-solid-svg-icons";
 import { Transition } from "@headlessui/react";
 import { useEffect, useMemo, useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import AdvancedMenu from "renderer/components/admin/AdvancedMenu";
 import { Button } from "renderer/components/Button";
 import Modal from "renderer/components/Modal";

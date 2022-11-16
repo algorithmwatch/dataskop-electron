@@ -4,7 +4,7 @@
  * @module
  */
 import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { useNavigation } from "../../../contexts";

@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { faBars } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import { useConfig } from "renderer/contexts";
 import logo from "renderer/providers/tiktok/static/images/bildmarke.svg";
 

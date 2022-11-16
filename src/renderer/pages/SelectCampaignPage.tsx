@@ -4,7 +4,7 @@
  * @module
  */
 import { useEffect } from "react";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import { getActiveCampaigns } from "renderer/lib/networking";
 import { providerInfo } from "renderer/providers/info";
 import { useConfig, useNavigation, useScraping } from "../contexts";

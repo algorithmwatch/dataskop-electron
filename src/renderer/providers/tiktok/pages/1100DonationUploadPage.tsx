@@ -12,7 +12,7 @@ import {
 } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMemo, useRef, useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { isValidEmail } from "renderer/lib/utils/strings";

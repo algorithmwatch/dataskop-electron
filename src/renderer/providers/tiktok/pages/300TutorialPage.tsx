@@ -17,7 +17,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { ReactNode, useRef } from "react";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
 import { Carousel, Slide } from "renderer/components/Carousel/Carousel";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";

@@ -6,7 +6,7 @@
 import { faEnvelopeOpenText } from "@fortawesome/pro-light-svg-icons";
 import { faAngleLeft } from "@fortawesome/pro-solid-svg-icons";
 import { ChangeEvent, Fragment, useMemo, useRef, useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { useConfig } from "renderer/contexts";

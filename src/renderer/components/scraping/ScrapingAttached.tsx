@@ -4,7 +4,7 @@
  * @module
  */
 import { useEffect } from "react";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import { useConfig, useScraping } from "renderer/contexts";
 import { currentDelay } from "renderer/lib/delay";
 import { isMonitoringPending } from "renderer/providers/tiktok/lib/status";

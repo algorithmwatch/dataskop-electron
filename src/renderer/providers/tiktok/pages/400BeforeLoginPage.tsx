@@ -6,8 +6,7 @@
 import { faCircleUser } from "@fortawesome/pro-light-svg-icons";
 import { faAngleLeft } from "@fortawesome/pro-solid-svg-icons";
 import { useState } from "react";
-import { useHistory } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
 import Modal from "renderer/components/Modal";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
