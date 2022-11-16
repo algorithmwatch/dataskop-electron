@@ -48,6 +48,11 @@ app.commandLine.appendSwitch(
   "SpareRendererForSitePerProcess,WebRtcHideLocalIpsWithMdns",
 );
 
+// https://stackoverflow.com/a/65863174/4028896
+if (process.platform === "win32") {
+  app.setAppUserModelId(app.name);
+}
+
 const DEBUG =
   process.env.NODE_ENV === "development" || process.env.DEBUG_PROD === "true";
 
