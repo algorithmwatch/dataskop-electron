@@ -141,6 +141,12 @@ export default function NewsletterChoicePage(): JSX.Element {
               className="px-4 py-2 max-w-lg w-full max-auto text-xl bg-white appearance-none border-2 border-black rounded ring-8 ring-east-blue-100 focus:outline-none focus:ring-east-blue-300"
               value={email}
               onChange={handleInputChange}
+              onKeyDown={async (e) => {
+                if (e.key === "Enter" && inputIsValid) {
+                  await signUpForNewsletter();
+                  history.push("/tiktok/thank_you");
+                }
+              }}
             />
             {/* Only show confirmation notice if user hasn't donated */}
             {!window.hasDonated && (
