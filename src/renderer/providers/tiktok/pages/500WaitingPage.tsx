@@ -69,8 +69,8 @@ export default function WaitingPage(): JSX.Element {
   const [footerButtonsAreVisible, setFooterButtonsAreVisible] = useState(true);
   const [status, setStatus] = useState<string | null>(null);
   const [surveyModalIsOpen, setSurveyModalIsOpen] = useState(false);
-  const [surveyValues, setSurveyValues] = useState();
-  const [surveyIsComplete, setSurveyIsComplete] = useState(false);
+  const [surveyValues, setSurveyValues] = useState(); // <-- this is where to get the survey value from
+  const [surveyIsComplete, setSurveyIsComplete] = useState(false); // <-- if the survey was completed or not
 
   const openSurvey = () => {
     setSurveyModalIsOpen(true);
@@ -79,7 +79,6 @@ export default function WaitingPage(): JSX.Element {
   const updateSurveyValues = (isComplete: boolean, value: any) => {
     setSurveyValues(value);
     setSurveyIsComplete(isComplete);
-    console.warn("values updated", value);
   };
 
   const handleDownloadActionRequired = async () => {
