@@ -4,7 +4,7 @@ declare global {
     electron: any;
     log: any;
     persistEmail: string;
-    hasDonated: boolean;
+    hasDonated: boolean | null;
   }
 }
 export {};

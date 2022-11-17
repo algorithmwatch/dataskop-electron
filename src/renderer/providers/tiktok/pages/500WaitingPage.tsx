@@ -1,6 +1,8 @@
 /**
  * Manage different waiting situations
  *
+ * FIXME: The survey should get encapsulated into an component.
+ *
  * @module
  */
 
@@ -13,6 +15,7 @@ import { Button } from "renderer/components/Button";
 import Modal from "renderer/components/Modal";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { useConfig, useScraping } from "renderer/contexts";
+import { addScrapingResult, getScrapingResults } from "renderer/lib/db";
 import { currentDelay } from "renderer/lib/delay";
 import { Survey } from "renderer/providers/tiktok/components/survey/Survey";
 import { SurveyProvider, useSurvey } from "renderer/providers/tiktok/contexts";
@@ -67,19 +70,45 @@ export default function WaitingPage(): JSX.Element {
   } = useConfig();
 
   const [footerButtonsAreVisible, setFooterButtonsAreVisible] = useState(true);
-  const [status, setStatus] = useState<string | null>(null);
+  const [status, setStatus] = useState<string>("loading...");
+
   const [surveyModalIsOpen, setSurveyModalIsOpen] = useState(false);
-  const [surveyValues, setSurveyValues] = useState(); // <-- this is where to get the survey value from
-  const [surveyIsComplete, setSurveyIsComplete] = useState(false); // <-- if the survey was completed or not
+  const [surveyValues, setSurveyValues] = useState();
+  const [surveyIsComplete, setSurveyIsComplete] = useState(false);
 
-  const openSurvey = () => {
-    setSurveyModalIsOpen(true);
-  };
+  useEffect(() => {
+    // Save survey values to disk when the survey modal has closed
+    if (!surveyModalIsOpen && surveyValues != null) {
+      addScrapingResult(
+        "no-session",
+        0,
+        {
+          success: true,
+          slug: "survey",
+          fields: {
+            values: surveyValues,
+            complete: surveyIsComplete,
+          },
+        },
+        true,
+      );
+    }
+  }, [surveyModalIsOpen]);
 
-  const updateSurveyValues = (isComplete: boolean, value: any) => {
-    setSurveyValues(value);
-    setSurveyIsComplete(isComplete);
-  };
+  useEffect(() => {
+    (async () => {
+      const res = await getScrapingResults();
+      const isDone = res.filter(
+        (x) => x.slug && x.slug === "survey" && x.fields.complete,
+      );
+      if (isDone.length) {
+        window.electron.log.info(
+          "Not showing survey since it was already completed",
+        );
+        setSurveyIsComplete(true);
+      }
+    })();
+  }, []);
 
   const handleDownloadActionRequired = async () => {
     dispatch({
@@ -117,7 +146,7 @@ export default function WaitingPage(): JSX.Element {
       await currentDelay();
       const newStatus = await getStatus();
       window.electron.log.info(
-        `Setting new status in waiting page ${newStatus}`,
+        `Setting new status in waiting page: ${newStatus}`,
       );
 
       if (newStatus === status) return;
@@ -157,7 +186,10 @@ export default function WaitingPage(): JSX.Element {
             Dürfen wir dir ein paar Fragen stellen?
           </div>
           <div className="flex items-center justify-center space-x-4">
-            <Button className="min-w-[6rem]" onClick={openSurvey}>
+            <Button
+              className="min-w-[6rem]"
+              onClick={() => setSurveyModalIsOpen(true)}
+            >
               Ja
             </Button>
             <Button
@@ -200,22 +232,8 @@ export default function WaitingPage(): JSX.Element {
     [footerButtonsAreVisible, surveyIsComplete],
   );
 
-  window.electron.log.info("Status", status);
-
-  if (status === null) return <div />;
-
-  return (
-    <>
-      <SurveyProvider questions={questions}>
-        <SurveyModal
-          isOpen={surveyModalIsOpen}
-          toggle={() => setSurveyModalIsOpen((oldState) => !oldState)}
-          onChange={updateSurveyValues}
-          isComplete={surveyIsComplete}
-          setIsComplete={setSurveyIsComplete}
-        />
-      </SurveyProvider>
-
+  const statusMemo = useMemo(
+    () => (
       <WizardLayout className="text-center" footerSlots={footerSlots}>
         {/* scraping-done: Keine Anzeige notwendig */}
         {isStatusPending(status) && (
@@ -291,6 +309,30 @@ export default function WaitingPage(): JSX.Element {
           />
         )}
       </WizardLayout>
+    ),
+    [status],
+  );
+
+  return (
+    <>
+      <SurveyProvider questions={questions}>
+        <SurveyModal
+          isOpen={surveyModalIsOpen}
+          toggle={() => {
+            setSurveyModalIsOpen((oldState) => {
+              return !oldState;
+            });
+          }}
+          onChange={(isComplete: boolean, value: any) => {
+            setSurveyValues(value);
+            setSurveyIsComplete(isComplete);
+          }}
+          isComplete={surveyIsComplete}
+          setIsComplete={setSurveyIsComplete}
+        />
+      </SurveyProvider>
+
+      {statusMemo}
     </>
   );
 }

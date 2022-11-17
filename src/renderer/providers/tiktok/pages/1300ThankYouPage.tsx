@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /**
  * TODO: For TikTok
  *
@@ -42,10 +44,25 @@ const ShareButton = ({
   );
 };
 
+const DownloadDataLink = () => {
+  return (
+    <span>
+      Wenn du deine Daten herunterladen möchtest, klicke{" "}
+      <span
+        className="hover:cursor-pointer underline"
+        onClick={() => window.electron.ipc.invoke("tiktok-data-export")}
+      >
+        hier
+      </span>
+      . Sie werden beim Schließen der App gelöscht.
+    </span>
+  );
+};
+
 export default function ThankYouPage(): JSX.Element {
   const footerSlots = {
     center: [
-      <div className="text-sm text-neutral-500">
+      <div className="text-sm text-neutral-500" key="1">
         Du kannst die App jetzt schließen.
       </div>,
     ],
@@ -66,15 +83,19 @@ export default function ThankYouPage(): JSX.Element {
           <>
             <p className="mb-5">
               Du hilfst uns mit deiner Spende, TikTok besser zu verstehen. Damit
-              tust du etwas Gutes für die Wissenschaft.
+              tust du etwas Gutes für die Wissenschaft. <DownloadDataLink />
             </p>
             <p>
-              Bitte schau in dein Postfach und bestätige deine E-Mail-Adresse.
-              Nur so können wir deine Daten für die Auswertung nutzen.
+              <b>Wichtig:</b> Bitte schau in dein Postfach und bestätige deine
+              E-Mail-Adresse. Nur so können wir deine Daten für die Auswertung
+              nutzen.
             </p>
           </>
         ) : (
-          <p>Wir sind froh, dass du ein Teil von DataSkop warst.</p>
+          <p>
+            Wir sind froh, dass du ein Teil von DataSkop warst.{" "}
+            <DownloadDataLink />
+          </p>
         )}
 
         <h2 className="hl-2xl mt-16 mb-3">Sag es weiter</h2>

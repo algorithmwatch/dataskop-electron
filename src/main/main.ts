@@ -28,8 +28,8 @@ import { autoUpdater } from "electron-updater";
 import path from "path";
 import "regenerator-runtime/runtime";
 import registerBackgroundScrapingHandlers from "./background-scraping";
-import registerDbHandlers, { configStore } from "./db";
-import registerDownloadsHandlers from "./downloads";
+import registerDbHandlers, { clearData, configStore } from "./db";
+import registerDownloadsHandlers, { clearDownloads } from "./downloads";
 import registerExportHandlers from "./export";
 import { buildMenu } from "./menu";
 import registerTiktokDataHandlers from "./providers/tiktok/data";
@@ -38,9 +38,6 @@ import registerYoutubeHandlers from "./providers/youtube";
 import registerScrapingHandlers from "./scraping";
 import { buildTray } from "./tray";
 import { delay, isFromLocalhost, resolveHtmlPath } from "./utils";
-
-// read .env files for development
-require("dotenv").config();
 
 // https://github.com/electron/electron/issues/23756#issuecomment-651287598
 app.commandLine.appendSwitch(
@@ -52,6 +49,9 @@ app.commandLine.appendSwitch(
 if (process.platform === "win32") {
   app.setAppUserModelId(app.getName());
 }
+
+// read .env files for development
+require("dotenv").config();
 
 const DEBUG =
   process.env.NODE_ENV === "development" || process.env.DEBUG_PROD === "true";
@@ -219,6 +219,7 @@ const createWindow = async () => {
     minWidth: 800,
     minHeight: 600,
     icon: getAssetPath("icon.png"),
+    skipTaskbar: true,
     webPreferences: {
       preload: app.isPackaged
         ? path.join(__dirname, "preload.js")
@@ -300,26 +301,35 @@ const createWindow = async () => {
  * Controlling main window
  */
 
-ipcMain.handle("close-main-window", (_e, isCurrentlyScraping: boolean) => {
-  log.debug("called handle close-main-window", mainWindow == null);
-  if (mainWindow === null) return;
+ipcMain.handle(
+  "close-main-window",
+  (_e, isCurrentlyScraping: boolean, cleanupData: boolean) => {
+    log.debug("called handle close-main-window", mainWindow == null);
+    if (mainWindow === null) return;
 
-  if (isCurrentlyScraping) {
-    const choice = dialog.showMessageBoxSync(mainWindow, {
-      type: "question",
-      buttons: ["Ja, beenden", "Abbrechen"],
-      defaultId: 1,
-      cancelId: 1,
-      title: "Bestätigen",
-      message:
-        "Willst du DataSkop wirklich beenden? Der Scraping-Vorgang läuft noch.",
-    });
-    if (choice === 1) {
-      return;
+    if (isCurrentlyScraping) {
+      const choice = dialog.showMessageBoxSync(mainWindow, {
+        type: "question",
+        buttons: ["Ja, beenden", "Abbrechen"],
+        defaultId: 1,
+        cancelId: 1,
+        title: "Bestätigen",
+        message: "Willst du DataSkop wirklich beenden? Ein Vorgang läuft noch.",
+      });
+      if (choice === 1) {
+        return;
+      }
     }
-  }
-  mainWindow.destroy();
-});
+
+    // Cleanup after the user donated (or finish the walkthrough)
+    if (cleanupData) {
+      clearDownloads();
+      clearData();
+    }
+
+    mainWindow.destroy();
+  },
+);
 
 app.on("window-all-closed", () => {
   // Respect the OSX convention of having the application in memory even

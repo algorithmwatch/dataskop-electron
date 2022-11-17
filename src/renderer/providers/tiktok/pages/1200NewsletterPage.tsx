@@ -142,19 +142,22 @@ export default function NewsletterChoicePage(): JSX.Element {
               value={email}
               onChange={handleInputChange}
             />
-            <p className="text-neutral-500 text-base max-w-prose mx-auto">
-              Vergiss nicht, auf den Bestätigungslink zu klicken, den du im
-              Anschluss in einer E-Mail von uns erhältst.{" "}
-              <a
-                href="https://dataskop.net/datenschutzerklaerung/"
-                target="_blank"
-                rel="noreferrer"
-                className="underline hover:no-underline"
-              >
-                Hier
-              </a>{" "}
-              geht&apos;s zu den Datenschutzbestimmungen.
-            </p>
+            {/* Only show confirmation notice if user hasn't donated */}
+            {!window.hasDonated && (
+              <p className="text-neutral-500 text-base max-w-prose mx-auto">
+                Vergiss nicht, auf den Bestätigungslink zu klicken, den du im
+                Anschluss in einer E-Mail von uns erhältst.{" "}
+                <a
+                  href="https://dataskop.net/datenschutzerklaerung/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline hover:no-underline"
+                >
+                  Hier
+                </a>{" "}
+                geht&apos;s zu den Datenschutzbestimmungen.
+              </p>
+            )}
           </div>
         )}
       </Content>
