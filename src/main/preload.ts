@@ -107,7 +107,7 @@ const validremoveAllChannels = [
 ];
 
 contextBridge.exposeInMainWorld("electron", {
-  log: log.functions,
+  log: log.scope("renderer"),
   ipc: {
     on(channel: string, func: (arg0: any) => void) {
       if (validOnChannels.includes(channel)) {
