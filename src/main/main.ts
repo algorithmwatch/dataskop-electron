@@ -21,7 +21,7 @@ import {
   powerSaveBlocker,
   screen,
   session,
-  shell,
+  shell
 } from "electron";
 import log from "electron-log";
 import { autoUpdater } from "electron-updater";
@@ -219,7 +219,7 @@ const createWindow = async () => {
     minWidth: 800,
     minHeight: 600,
     icon: getAssetPath("icon.png"),
-    skipTaskbar: true,
+    // skipTaskbar: true,
     webPreferences: {
       preload: app.isPackaged
         ? path.join(__dirname, "preload.js")
