@@ -10,6 +10,7 @@ const mainChannels = [
   "update-check-beta",
   "update-restart-app",
   "show-notification",
+  "restart",
 ];
 
 const monitoringChannels = ["monitoring-done", "monitoring-pending-reply"];

@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { getLastResult } from "renderer/lib/db";
+import { addScrapingResult, getScrapingResults } from "renderer/lib/db";
 
 const STATUS = {
   // TikTok data was requested and TikTok is busy, It didn't fail yet
@@ -94,10 +94,11 @@ const STATUS = {
 type StatusKey = keyof typeof STATUS;
 
 const getStatus = async (): Promise<string> => {
-  const row = await getLastResult();
-  window.electron.log.info(row);
-  if (!row) return "status-not-available";
-  return _.get(row.fields, "status", "status-not-available") as string;
+  const rows = await getScrapingResults();
+  const statusRows = rows.filter((x) => x.fields && x.fields.status);
+  if (statusRows.length === 0) return "status-not-available";
+
+  return (_.last(statusRows) as any).fields.status as string;
 };
 
 const isStatusPending = (status: string) => {
@@ -113,6 +114,26 @@ const isMonitoringPending = async () => {
   return isStatusPending(s);
 };
 
+const shouldJumpToWaitingPage = async () => {
+  const status = await getStatus();
+  return status !== "status-not-available" && status !== "status-reset";
+};
+
+const addStatusReset = () => {
+  return addScrapingResult(
+    "no-session",
+    0,
+    {
+      success: true,
+      slug: "status-reset",
+      fields: {
+        status: "status-reset",
+      },
+    },
+    true,
+  );
+};
+
 // During testing, `ipc` is not set correctly
 if (window.electron) {
   window.electron.ipc.on("monitoring-pending", async () => {
@@ -123,4 +144,11 @@ if (window.electron) {
   });
 }
 
-export { getStatus, isMonitoringPending, isStatusPending, StatusKey, STATUS };
+export {
+  getStatus,
+  shouldJumpToWaitingPage,
+  isStatusPending,
+  StatusKey,
+  STATUS,
+  addStatusReset,
+};

@@ -220,6 +220,8 @@ const createWindow = async () => {
     minHeight: 600,
     icon: getAssetPath("icon.png"),
     // skipTaskbar: true,
+    // Remove app from Taskbar on macOS and Windows. We are currently to get it
+    // run with out this option. If we manage to do so, we may come back.
     webPreferences: {
       preload: app.isPackaged
         ? path.join(__dirname, "preload.js")
@@ -385,4 +387,9 @@ ipcMain.handle("show-notification", (_e, title, body) => {
   n.on("click", () => {
     createWindow();
   });
+});
+
+ipcMain.handle("restart", () => {
+  app.relaunch();
+  app.exit();
 });

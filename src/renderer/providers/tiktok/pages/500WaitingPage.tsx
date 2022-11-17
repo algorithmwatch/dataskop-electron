@@ -140,6 +140,15 @@ export default function WaitingPage(): JSX.Element {
     });
   };
 
+  const handleFileImported = async () => {
+    dispatch({ type: "set-attached", attached: true, visible: false });
+    await currentDelay("longer");
+    dispatch({
+      type: "start-scraping",
+      filterSteps: (x) => x.type === "scraping",
+    });
+  };
+
   useEffect(() => {
     (async () => {
       // Wait until new status is persisted to the db
@@ -157,11 +166,15 @@ export default function WaitingPage(): JSX.Element {
       }
 
       if (newStatus === "monitoring-download-action-required") {
-        handleDownloadActionRequired();
+        await handleDownloadActionRequired();
       }
 
       if (newStatus === "download-success") {
-        handleDownloadSuccess();
+        await handleDownloadSuccess();
+      }
+
+      if (newStatus === "files-imported") {
+        await handleFileImported();
       }
 
       setStatus(newStatus);

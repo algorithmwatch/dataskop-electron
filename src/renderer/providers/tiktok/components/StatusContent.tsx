@@ -1,7 +1,9 @@
 import { faLoader, IconDefinition } from "@fortawesome/pro-regular-svg-icons";
 import { useState } from "react";
+import { Button } from "renderer/components/Button";
 import Modal from "renderer/components/Modal";
 import HelpButton from "renderer/providers/tiktok/components/HelpButton";
+import { addStatusReset } from "../lib/status";
 
 import Content from "./Content";
 
@@ -82,6 +84,18 @@ const StatusContent = ({
             </span>
           </div>
         )}
+
+        <div>
+          <Button
+            onClick={async () => {
+              window.electron.log.info("Resetting state and restarting app");
+              await addStatusReset();
+              window.electron.ipc.invoke("restart");
+            }}
+          >
+            Reset (TODO: Improve design)
+          </Button>
+        </div>
       </Content>
     </>
   );
