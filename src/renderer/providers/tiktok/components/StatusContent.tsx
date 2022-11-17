@@ -76,8 +76,8 @@ const StatusContent = ({
             </span>
             <span className="absolute inset-0 animate-fade2 flex items-center justify-center">
               <div className="rounded-full bg-white/50 px-5 py-4">
-                Du kannst die App schließen, aber sie muss im Hintergrund
-                geöffnet bleiben.
+                Du kannst das Fenster schließen, aber die App muss im
+                Hintergrund geöffnet bleiben.
               </div>
             </span>
           </div>
