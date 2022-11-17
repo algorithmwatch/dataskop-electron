@@ -21,7 +21,7 @@ import {
   powerSaveBlocker,
   screen,
   session,
-  shell
+  shell,
 } from "electron";
 import log from "electron-log";
 import { autoUpdater } from "electron-updater";
