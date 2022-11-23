@@ -11,39 +11,36 @@ function DatasourceSwitch({ datasource, setDatasource }) {
         className="inline-flex rounded-lg p-1 bg-gradient-to-br from-[#B5FFFD] to-[#FFB8CE]"
         role="group"
       >
-        <div className="min-w-[12rem] ">
-          <a
-            href="#"
-            onClick={() => setDatasource("hashtags")}
-            aria-current="page"
-            className={`
-            grow rounded-l-md py-2 flex flex-col items-center
+        <a
+          href="#"
+          onClick={() => setDatasource("hashtags")}
+          aria-current="page"
+          className={`
+            min-w-[12rem] grow rounded-l-md py-2 flex flex-col items-center
         ${
           datasource === "hashtags"
-            ? "bg-gradient-to-t from-white to-transparent"
-            : "opacity-70"
+            ? "bg-gradient-to-l from-white to-transparent"
+            : "opacity-80"
         }
         `}
-          >
-            Hashtags
-          </a>
-        </div>
-        <div className="min-w-[12rem]">
-          <a
-            href="#"
-            onClick={() => setDatasource("diversification")}
-            className={`
-          grow rounded-r-md  py-2 flex flex-col items-center
+        >
+          Hashtags
+        </a>
+
+        <a
+          href="#"
+          onClick={() => setDatasource("diversification")}
+          className={`
+            min-w-[12rem] grow rounded-r-md py-2 flex flex-col items-center
               ${
                 datasource === "diversification"
-                  ? "bg-gradient-to-t from-white to-transparent"
-                  : "opacity-70"
+                  ? "bg-gradient-to-r from-white to-transparent"
+                  : "opacity-80"
               }
               `}
-          >
-            Diversification Labels
-          </a>
-        </div>
+        >
+          Diversification Labels
+        </a>
       </div>
     </div>
   );
