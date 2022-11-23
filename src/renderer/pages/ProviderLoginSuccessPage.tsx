@@ -39,7 +39,7 @@ export default function ProviderLoginSuccessPage(): JSX.Element {
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>
       <StatusContent
-        title="Einen Moment bitte"
+        title="Einen Moment, bitte"
         body="Wir beantragen gerade deine Daten bei TikTok."
       />
     </WizardLayout>

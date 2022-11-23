@@ -125,7 +125,7 @@ export default function DonationFormPage(): JSX.Element {
             >
               <FontAwesomeIcon spin icon={faCog} size="3x" />
               <div className="mt-5">
-                Einen Moment bitte. Die Daten werden hochgeladen.
+                Einen Moment, bitte. Die Daten werden hochgeladen.
               </div>
             </div>
           )}
