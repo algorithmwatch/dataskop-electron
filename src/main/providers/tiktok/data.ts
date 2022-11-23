@@ -24,7 +24,7 @@ const getData = async (redact: boolean) => {
   // Upload only a subset of lookups (only the one we just scraped)
   const lookups = getLookups(data.lookupsToUploads as string[]);
 
-  return { data: data.data, lookups, dump };
+  return { sessions: data.data, lookups, dump, version: app.getVersion() };
 };
 
 export default function registerTiktokDataHandlers(mainWindow: BrowserWindow) {
@@ -36,7 +36,6 @@ export default function registerTiktokDataHandlers(mainWindow: BrowserWindow) {
         unauthorized_email: email,
         campaign,
         results: await getData(true),
-        version: app.getVersion(),
       };
 
       const res = await postBackend(url, data);

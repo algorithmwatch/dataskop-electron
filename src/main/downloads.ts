@@ -8,12 +8,40 @@ import fs from "fs";
 import _ from "lodash";
 import path from "path";
 import unzipper from "unzipper";
-import { addMainHandler, delay, getFileList, getNowString } from "./utils";
+import { addLookups } from "./db";
+import {
+  addMainHandler,
+  delay,
+  getFileList,
+  getNowString,
+  readJson,
+  writeJson,
+} from "./utils";
 
 export const DOWNLOADS_FOLDER = path.join(app.getPath("userData"), "downloads");
 
+/**
+ * Handle import of a JSON file that was created via a DataSkop export
+ * @param filePath
+ */
+const handleImportDataSkop = (filePath: string) => {
+  if (filePath.endsWith(".json")) {
+    const data = readJson(filePath);
+    if ("lookups" in data) {
+      log.info(`Importing ${data.lookups.length} lookups`);
+      addLookups(Object.fromEntries(data.lookups));
+    }
+
+    if ("dump" in data) {
+      // overide exising file to only contain the dump
+      log.info("Remove `lookups` etc. from import of DataSkop export");
+      writeJson(filePath, data.dump);
+    }
+  }
+};
+
 export const postDownloadFileProcessing = async (filePath: string) => {
-  let filePathExtracted = "";
+  let filePathExtracted = filePath;
 
   if (filePath.endsWith(".zip")) {
     log.info("Unzipping downloaded file");
@@ -32,6 +60,9 @@ export const postDownloadFileProcessing = async (filePath: string) => {
     log.info("Unzipping done. Deleting original file.");
     fs.unlinkSync(filePath);
   }
+
+  handleImportDataSkop(filePathExtracted);
+
   return filePathExtracted;
 };
 
@@ -84,9 +115,10 @@ export default function registerDownloadsHandlers(mainWindow: BrowserWindow) {
       const dest = path.join(dir, path.basename(p));
 
       fs.copyFileSync(p, dest);
-      await postDownloadFileProcessing(dest);
+      const resultingDest = await postDownloadFileProcessing(dest);
       log.info(`Imported ${dest}`);
       dests.push(dest);
+      if (dest !== resultingDest) dests.push(resultingDest);
     }
 
     return { success: true, paths: dests };
