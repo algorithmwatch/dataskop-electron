@@ -11,9 +11,10 @@ import {
   faFaceSmileHearts,
   IconDefinition,
 } from "@fortawesome/pro-light-svg-icons";
-import { faEnvelope } from "@fortawesome/pro-solid-svg-icons";
+import { faCog, faEnvelope } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
+import { useState } from "react";
 import WizardLayout from "renderer/components/WizardLayout";
 import Content from "renderer/providers/tiktok/components/Content";
 
@@ -44,13 +45,17 @@ const ShareButton = ({
   );
 };
 
-const DownloadDataLink = () => {
+const ExportLink = ({ setExporting }) => {
   return (
     <span>
       Wenn du deine Daten herunterladen möchtest, klicke{" "}
       <span
         className="hover:cursor-pointer underline"
-        onClick={() => window.electron.ipc.invoke("tiktok-data-export")}
+        onClick={async () => {
+          setExporting(true);
+          await window.electron.ipc.invoke("tiktok-data-export");
+          setExporting(false);
+        }}
       >
         hier
       </span>
@@ -60,6 +65,8 @@ const DownloadDataLink = () => {
 };
 
 export default function ThankYouPage(): JSX.Element {
+  const [isExporting, setExporting] = useState(false);
+
   const footerSlots = {
     center: [
       <div className="text-sm text-neutral-500" key="1">
@@ -79,12 +86,22 @@ export default function ThankYouPage(): JSX.Element {
         theme="tiktokLight"
         icon={window.hasDonated ? faFaceSmileHearts : faFaceRelieved}
       >
+        {isExporting && (
+          <>
+            <FontAwesomeIcon spin icon={faCog} size="3x" />
+            <div className="my-5">
+              Einen Moment, bitte. Die Daten werden exportiert.
+            </div>
+          </>
+        )}
         {window.hasDonated ? (
           <>
             <p className="mb-5">
               Du hilfst uns mit deiner Spende, TikTok besser zu verstehen. Damit
-              tust du etwas Gutes für die Wissenschaft. <DownloadDataLink />
+              tust du etwas Gutes für die Wissenschaft.{" "}
+              <ExportLink setExporting={setExporting} />
             </p>
+
             <p>
               <b>Wichtig:</b> Bitte schau in dein Postfach und bestätige deine
               E-Mail-Adresse. Nur so können wir deine Daten für die Auswertung
@@ -94,7 +111,7 @@ export default function ThankYouPage(): JSX.Element {
         ) : (
           <p>
             Wir sind froh, dass du ein Teil von DataSkop warst.{" "}
-            <DownloadDataLink />
+            <ExportLink setExporting={setExporting} />
           </p>
         )}
 

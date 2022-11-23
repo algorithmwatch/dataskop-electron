@@ -236,7 +236,7 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
           }}
         >
           {waitExport
-            ? "Einen Moment bitte, der Export wird vorbereitet"
+            ? "Einen Moment, bitte, der Export wird vorbereitet"
             : "CSV exportieren"}
         </Button>
       </div>
