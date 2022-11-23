@@ -2,7 +2,7 @@ import { faPenToSquare } from "@fortawesome/pro-regular-svg-icons";
 import * as Plot from "@observablehq/plot";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Switch from "renderer/components/Switch";
-import { SelectInput } from "renderer/providers/tiktok/components/visualizations/SelectInput";
+import { SelectInput } from "./SelectInput";
 import { shortenGdprData } from "./utils/shorten_data";
 import addTooltips from "./utils/tooltips";
 import { arrangeDataVizOne } from "./utils/viz-utils";
