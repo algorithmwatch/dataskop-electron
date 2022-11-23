@@ -105,11 +105,13 @@ export default function Beeswarm({ data }) {
 
   useEffect(() => {
     if (beeRef.current && beeSvg) {
+      console.log("rendering beeswarm");
+      console.log(data);
       //select(beeRef.current).selectAll('text').style('font-size', '2em');
       beeRef.current.replaceChildren(beeSvg);
       return () => beeSvg?.remove();
     }
   }, [beeSvg, beeRef, width, height]);
 
-  return <div className="flex w-full h-full" ref={beeRef} />;
+  return <div className="flex-1 mb-2" ref={beeRef} />;
 }

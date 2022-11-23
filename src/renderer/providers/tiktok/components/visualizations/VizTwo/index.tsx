@@ -60,8 +60,10 @@ export default function VizTwo({ gdprData, metadata }) {
 
   const data =
     datasource === "hashtags" ? topHashtagsFlat : topDiversificationLabels;
+
+  console.log(data);
   return (
-    <div className="">
+    <>
       <div className="mx-auto flex items-center text-2xl mb-6">
         <div className="">Deine XXXX</div>
       </div>
@@ -75,15 +77,13 @@ export default function VizTwo({ gdprData, metadata }) {
         ]}
       />
 
-      <main className="viz-two-main w-full min-h-[50vh]">
+      <main className="flex flex-col items-stretch min-h-[50vh] grow">
         <DatasourceSwitch
           datasource={datasource}
           setDatasource={setDatasource}
         />
-        <div className="flex items-center justify-center h-full">
-          <Beeswarm data={data} />
-        </div>
+        <Beeswarm data={data} />
       </main>
-    </div>
+    </>
   );
 }
