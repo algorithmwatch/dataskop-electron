@@ -124,3 +124,11 @@
 
 /* GlideJS */
 @import "components/Carousel/theme.scss";
+
+main.viz-two-main {
+  text-align: center;
+  vertical-align: center;
+  line-height: 100vh;
+  margin-top: 3em;
+  height: 70vh;
+}
