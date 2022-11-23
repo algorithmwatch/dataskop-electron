@@ -6,7 +6,7 @@ import { SelectInput } from "./SelectInput";
 import { shortenGdprData } from "./utils/shorten_data";
 import addTooltips from "./utils/tooltips";
 import { arrangeDataVizOne } from "./utils/viz-utils";
-import { VizBox } from "./VizBox";
+import { VizBoxRow } from "./VizBox";
 
 function rangeOfTime(timeofday: string) {
   switch (timeofday) {
@@ -191,12 +191,14 @@ function VizOne({ gdprData }: { gdprData: any }) {
         </div>
       </div>
 
-      <div className="flex mx-auto space-x-4 mb-6">
-        <VizBox head={totActivity} label="Aktivität" />
-        <VizBox head={avgMinsPerDay} label="pro Tag" />
-        <VizBox head={`${numAppOpen} x`} label="App geöffnet" />
-        <VizBox head={`${coreTimeString} h`} label="Kernzeit" />
-      </div>
+      <VizBoxRow
+        values={[
+          { head: totActivity, label: "Aktivität" },
+          { head: avgMinsPerDay, label: "pro Tag" },
+          { head: `${numAppOpen} x`, label: "App geöffnet" },
+          { head: `${coreTimeString} h`, label: "Kernzeit" },
+        ]}
+      />
 
       <div className="flex mx-auto space-x-4">
         <Switch

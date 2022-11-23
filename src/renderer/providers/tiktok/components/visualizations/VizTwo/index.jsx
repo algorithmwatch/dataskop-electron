@@ -1,9 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-// import "./App.css";
-
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
+import { VizBoxRow } from "../VizBox";
 import Beeswarm from "./Beeswarm";
-
 import { transformData } from "./data";
 
 function DatasourceSwitch({ datasource, setDatasource }) {
@@ -63,11 +61,29 @@ export default function VizTwo({ gdprData, metadata }) {
   const data =
     datasource === "hashtags" ? topHashtagsFlat : topDiversificationLabels;
   return (
-    <main className="viz-two-main">
-      <DatasourceSwitch datasource={datasource} setDatasource={setDatasource} />
-      <div className="flex items-center justify-center h-full">
-        <Beeswarm data={data} />
+    <div className="">
+      <div className="mx-auto flex items-center text-2xl mb-6">
+        <div className="">Deine XXXX</div>
       </div>
-    </main>
+
+      <VizBoxRow
+        values={[
+          { head: "todo", label: "todo1" },
+          { head: "todo", label: "todo2" },
+          { head: "todo", label: "todo3" },
+          { head: "todo", label: "todo4" },
+        ]}
+      />
+
+      <main className="viz-two-main w-full min-h-[50vh]">
+        <DatasourceSwitch
+          datasource={datasource}
+          setDatasource={setDatasource}
+        />
+        <div className="flex items-center justify-center h-full">
+          <Beeswarm data={data} />
+        </div>
+      </main>
+    </div>
   );
 }
