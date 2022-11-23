@@ -52,7 +52,7 @@ export default function registerTiktokDataHandlers(mainWindow: BrowserWindow) {
   addMainHandler("tiktok-data-export", async (_event: any) => {
     if (mainWindow === null) return;
     const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
-      defaultPath: `dataskop-tiktok-${getNowString()}`,
+      defaultPath: `dataskop-tiktok-${getNowString()}.json`,
     });
     if (canceled || !filePath) return;
 
