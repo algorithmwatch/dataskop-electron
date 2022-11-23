@@ -8,43 +8,42 @@ function DatasourceSwitch({ datasource, setDatasource }) {
   return (
     <div className="flex items-center justify-center">
       <div
-        className="inline-flex shadow-md hover:shadow-lg focus:shadow-lg"
+        className="inline-flex rounded-lg p-1 bg-gradient-to-br from-[#B5FFFD] to-[#FFB8CE]"
         role="group"
       >
-        <a
-          href="#"
-          onClick={() => setDatasource("hashtags")}
-          aria-current="page"
-          className={`
-        rounded-l
-        px-6
-        py-2.5
-        font-medium
-        text-xs
-        leading-tight
-        uppercase
-        ${datasource === "hashtags" ? "bg-blue-800" : "bg-blue-600"}
+        <div className="min-w-[12rem] ">
+          <a
+            href="#"
+            onClick={() => setDatasource("hashtags")}
+            aria-current="page"
+            className={`
+            grow rounded-l-md py-2 flex flex-col items-center
+        ${
+          datasource === "hashtags"
+            ? "bg-gradient-to-t from-white to-transparent"
+            : "opacity-70"
+        }
         `}
-        >
-          Hashtags
-        </a>
-        <a
-          href="#"
-          onClick={() => setDatasource("diversification")}
-          className={`
-              px-6
-              py-2.5
-              font-medium
-              text-xs
-              leading-tight
-              uppercase
+          >
+            Hashtags
+          </a>
+        </div>
+        <div className="min-w-[12rem]">
+          <a
+            href="#"
+            onClick={() => setDatasource("diversification")}
+            className={`
+          grow rounded-r-md  py-2 flex flex-col items-center
               ${
-                datasource === "diversification" ? "bg-blue-800" : "bg-blue-600"
+                datasource === "diversification"
+                  ? "bg-gradient-to-t from-white to-transparent"
+                  : "opacity-70"
               }
               `}
-        >
-          Diversification Labels
-        </a>
+          >
+            Diversification Labels
+          </a>
+        </div>
       </div>
     </div>
   );
