@@ -68,6 +68,14 @@ export const getFileList = (dirName: string): string[] => {
   return files;
 };
 
+export const readJson = (filePath: string) => {
+  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+};
+
+export const writeJson = (filePath: string, data: any) => {
+  fs.writeFileSync(filePath, JSON.stringify(data));
+};
+
 // base64
 
 const toBase64 = (str: string) => {
