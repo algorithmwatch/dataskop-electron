@@ -2,6 +2,7 @@ import { faLoader, IconDefinition } from "@fortawesome/pro-regular-svg-icons";
 import { useState } from "react";
 import { Button } from "renderer/components/Button";
 import Modal from "renderer/components/Modal";
+import { useConfig } from "renderer/contexts";
 import HelpButton from "renderer/providers/tiktok/components/HelpButton";
 import { addStatusReset } from "../lib/status";
 
@@ -20,6 +21,10 @@ const StatusContent = ({
   helpButtons?: boolean;
   fancyNotificationText?: boolean;
 }) => {
+  const {
+    state: { isMac },
+  } = useConfig();
+
   const [modal1IsOpen, setModal1IsOpen] = useState(false);
   const [modal2IsOpen, setModal2IsOpen] = useState(false);
 
@@ -78,8 +83,9 @@ const StatusContent = ({
             </span>
             <span className="absolute inset-0 animate-fade2 flex items-center justify-center">
               <div className="rounded-full bg-white/50 px-5 py-4">
-                Du kannst das Fenster schließen, aber die App muss im
-                Hintergrund geöffnet bleiben.
+                {`Du kannst das Fenster ${
+                  isMac ? "schließen" : "minimieren"
+                }, aber die App muss im Hintergrund geöffnet bleiben.`}
               </div>
             </span>
           </div>

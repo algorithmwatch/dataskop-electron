@@ -4,8 +4,7 @@ import log from "electron-log";
 // export main functions to renderer
 // main.ts
 const mainChannels = [
-  "get-version-number",
-  "get-env",
+  "get-info",
   "close-main-window",
   "update-check-beta",
   "update-restart-app",

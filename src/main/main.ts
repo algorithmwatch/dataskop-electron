@@ -357,21 +357,21 @@ app.on("activate", () => {
 
 // Expose certain information to the renderer
 
-ipcMain.handle("get-version-number", () => {
-  return app.getVersion();
-});
-
-ipcMain.handle("get-env", (e) => {
+ipcMain.handle("get-info", (e) => {
   // Expose configs done via .env to the renderer. The keys have to explicitly
   // specified as follows (right now).
   if (isFromLocalhost(e))
     return {
-      NODE_ENV: process.env.NODE_ENV,
-      DEBUG_PROD: process.env.DEBUG_PROD,
-      PLATFORM_URL: process.env.PLATFORM_URL,
-      TRACK_EVENTS: process.env.TRACK_EVENTS,
-      SERIOUS_PROTECTION: process.env.SERIOUS_PROTECTION,
-      AUTO_SELECT_CAMPAIGN: process.env.AUTO_SELECT_CAMPAIGN,
+      version: app.getVersion(),
+      isMac: process.platform === "darwin",
+      env: {
+        NODE_ENV: process.env.NODE_ENV,
+        DEBUG_PROD: process.env.DEBUG_PROD,
+        PLATFORM_URL: process.env.PLATFORM_URL,
+        TRACK_EVENTS: process.env.TRACK_EVENTS,
+        SERIOUS_PROTECTION: process.env.SERIOUS_PROTECTION,
+        AUTO_SELECT_CAMPAIGN: process.env.AUTO_SELECT_CAMPAIGN,
+      },
     };
 });
 
