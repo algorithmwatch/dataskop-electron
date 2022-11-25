@@ -169,7 +169,7 @@ export default function ScrapingManager({
       // create a uuid every time you hit start scraping
       const { config } = campaign;
       if (filterSteps) config.steps = config.steps.filter(filterSteps);
-      window.electron.log.info("Start scraping", config);
+      window.electron.log.info("Start data gathering", config);
 
       // eslint-disable-next-line @typescript-eslint/no-shadow
       const sessionId = uuidv4();
@@ -217,7 +217,7 @@ export default function ScrapingManager({
 
         if (result === null || !result.success) {
           window.electron.log.info(
-            "The scraping result was marked as unsuccessful. However, we continue.",
+            "The data gathering result was marked as unsuccessful. However, we continue.",
             step,
             result,
           );
@@ -231,7 +231,7 @@ export default function ScrapingManager({
 
           setSessionFinishedAt(sessionId);
           dispatch({ type: "scraping-has-finished" });
-          window.electron.log.info("Scraping done");
+          window.electron.log.info("Data gathering done");
         } else {
           // Store data w/ async
           addScrapingResult(sessionId, step, result);

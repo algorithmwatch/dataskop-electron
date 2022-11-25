@@ -6,8 +6,8 @@
  * @module
  */
 
-import { faAngleRight } from "@fortawesome/pro-solid-svg-icons";
 import { Transition } from "@headlessui/react";
+import _ from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import AdvancedMenu from "renderer/components/admin/AdvancedMenu";
@@ -15,6 +15,7 @@ import { Button } from "renderer/components/Button";
 import Modal from "renderer/components/Modal";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { useConfig, useScraping } from "renderer/contexts";
+import dayjs from "renderer/lib/dayjs";
 import { addScrapingResult, getScrapingResults } from "renderer/lib/db";
 import { currentDelay } from "renderer/lib/delay";
 import { Survey } from "renderer/providers/tiktok/components/survey/Survey";
@@ -62,15 +63,19 @@ const SurveyModal = ({
 export default function WaitingPage(): JSX.Element {
   const history = useHistory();
   const {
-    state: { isScrapingFinished },
+    state: { isScrapingFinished, isScrapingStarted },
     dispatch,
   } = useScraping();
   const {
-    state: { isDebug },
+    state: { isDebug, userConfig },
+    dispatch: configDispatch,
   } = useConfig();
 
   const [footerButtonsAreVisible, setFooterButtonsAreVisible] = useState(true);
-  const [status, setStatus] = useState<string>("loading...");
+  const [status, setStatus] = useState({
+    status: "loading...",
+    updatedAt: dayjs(),
+  });
 
   const [surveyModalIsOpen, setSurveyModalIsOpen] = useState(false);
   const [surveyValues, setSurveyValues] = useState();
@@ -121,7 +126,7 @@ export default function WaitingPage(): JSX.Element {
 
     dispatch({
       type: "start-scraping",
-      filterSteps: (x) => x.slug === "tt-data-export-monitoring",
+      filterSteps: (x) => x.slug === "tt-data-export",
     });
   };
 
@@ -149,35 +154,92 @@ export default function WaitingPage(): JSX.Element {
     });
   };
 
+  const handlePending = async () => {
+    // Don't process if scraping is already started
+    if (isScrapingStarted) {
+      window.electron.log.info(
+        "Not checking for GDPR status because scraping has already started.",
+      );
+      return;
+    }
+
+    window.electron.log.info("Check for GDPR status.");
+
+    dispatch({ type: "set-attached", attached: true, visible: false });
+    await currentDelay();
+    dispatch({
+      type: "start-scraping",
+      filterSteps: (x) => x.slug === "tt-data-export",
+    });
+  };
+
   useEffect(() => {
     (async () => {
       // Wait until new status is persisted to the db
       await currentDelay();
       const newStatus = await getStatus();
+
+      // Abort when there is no status update
+      if (_.isEqual(status, newStatus)) return;
+
       window.electron.log.info(
-        `Setting new status in waiting page: ${newStatus}`,
+        `Setting new status in waiting page: ${newStatus.status}`,
       );
 
-      if (newStatus === status) return;
+      setStatus(newStatus);
 
-      if (newStatus === "scraping-done") {
+      // On status changes, do some logic
+
+      if (
+        isScrapingFinished &&
+        newStatus.status !== "monitoring-download-action-required" &&
+        newStatus.status !== "download-success" &&
+        newStatus.status !== "monitoring-download-success"
+      ) {
+        window.electron.log.info(`Data gathering is finished. Cleaning up.`);
+        dispatch({ type: "reset-scraping" });
+        dispatch({ type: "set-attached", attached: false, visible: false });
+
+        if (userConfig && userConfig.monitoring) {
+          window.electron.log.info(`Monitoring step from tray is done`);
+          configDispatch({
+            type: "set-user-config",
+            newValues: { monitoring: false },
+          });
+          await window.electron.ipc.invoke("monitoring-done");
+        }
+        await currentDelay();
+      }
+
+      if (newStatus.status === "scraping-done") {
         history.push("/tiktok/waiting_done");
         return;
       }
 
-      if (newStatus === "monitoring-download-action-required") {
-        await handleDownloadActionRequired();
+      if (newStatus.status === "monitoring-download-action-required") {
+        handleDownloadActionRequired();
       }
 
-      if (newStatus === "download-success") {
-        await handleDownloadSuccess();
+      if (
+        newStatus.status === "download-success" ||
+        newStatus.status === "monitoring-download-success"
+      ) {
+        handleDownloadSuccess();
       }
 
-      if (newStatus === "files-imported") {
-        await handleFileImported();
+      if (newStatus.status === "files-imported") {
+        handleFileImported();
       }
 
-      setStatus(newStatus);
+      if (isStatusPending(newStatus.status)) {
+        if (dayjs().diff(newStatus.updatedAt, "minute") > 1) {
+          handlePending();
+        } else {
+          window.electron.log.info(
+            "Not checking for status because the last status was set recently.",
+          );
+        }
+      }
     })();
   }, [isScrapingFinished]);
 
@@ -217,18 +279,6 @@ export default function WaitingPage(): JSX.Element {
       ],
       end: [
         isDebug && (
-          <Button
-            key="1"
-            theme="text"
-            endIcon={faAngleRight}
-            onClick={() => {
-              history.push("/tiktok/waiting_done");
-            }}
-          >
-            DEBUG ONLY: Weiter
-          </Button>
-        ),
-        isDebug && (
           <AdvancedMenu
             key="2"
             menuLabel="DEBUG only: Set Status"
@@ -249,7 +299,7 @@ export default function WaitingPage(): JSX.Element {
     () => (
       <WizardLayout className="text-center" footerSlots={footerSlots}>
         {/* scraping-done: Keine Anzeige notwendig */}
-        {isStatusPending(status) && (
+        {isStatusPending(status.status) && (
           <StatusContent
             title="DSGVO-Daten angefordert"
             body="Bitte habe noch etwas Geduld. Deine DSGVO-Daten wurden angefordert, aber TikTok bietet sie noch nicht zum Download an."
@@ -260,7 +310,7 @@ export default function WaitingPage(): JSX.Element {
         {[
           "monitoring-download-action-required",
           "download-action-required",
-        ].includes(status) && (
+        ].includes(status.status) && (
           <StatusContent
             title="Aktion erforderlich"
             body="Deine Hilfe ist erforderlich, um die Daten herunterzuladen."
@@ -270,7 +320,7 @@ export default function WaitingPage(): JSX.Element {
           "monitoring-download-success",
           "download-success",
           "files-imported",
-        ].includes(status) && (
+        ].includes(status.status) && (
           <StatusContent
             title="Daten werden verarbeitet"
             body="Es dauert nicht mehr lange! Deine TikTok-Daten wurden heruntergeladen und werden nun verarbeitet."
@@ -283,19 +333,19 @@ export default function WaitingPage(): JSX.Element {
           "monitoring-download-error-timeout",
           "download-error",
           "download-error-timeout",
-        ].includes(status) && (
+        ].includes(status.status) && (
           <StatusContent
             title="Fehler beim Download"
             body="Wir konnten deine TikTok-Daten nicht herunterladen. Besuche Tiktok.com im Browser und lade dir die DSGVO-Daten in deinem Benutzerkonto herunter. Anschließend kannst du sie in der DataSkop-App importieren."
           />
         )}
-        {["monitoring-download-expired"].includes(status) && (
+        {["monitoring-download-expired"].includes(status.status) && (
           <StatusContent
             title="Download abgelaufen"
             body="Der Download für deine DSGVO-Daten ist abgelaufen. Bitte starte die App erneut und beantrage ihn noch einmal."
           />
         )}
-        {["monitoring-captcha"].includes(status) && (
+        {["monitoring-captcha"].includes(status.status) && (
           // duplicate default messsage
           <StatusContent
             title="DSGVO-Daten angefordert"
@@ -304,7 +354,7 @@ export default function WaitingPage(): JSX.Element {
             fancyNotificationText
           />
         )}
-        {["data-error-request"].includes(status) && (
+        {["data-error-request"].includes(status.status) && (
           <StatusContent
             title="DSGVO-Anfrage fehlgeschlagen"
             body="Wir konnten deine DSGVO-Daten nicht beantragen. Besuche Tiktok.com im Browser und lade dir die DSGVO-Daten in deinem Benutzerkonto herunter. Anschließend kannst du sie in der DataSkop-App importieren."
@@ -315,7 +365,7 @@ export default function WaitingPage(): JSX.Element {
           "monitoring-error-tab-not-found",
           "data-error-tab-not-found",
           "status-not-available",
-        ].includes(status) && (
+        ].includes(status.status) && (
           <StatusContent
             title="Fehler beim Download"
             body="Wir konnten den Status deines DSGVO-Downloads nicht überprüfen. Besuche Tiktok.com im Browser und lade dir die DSGVO-Daten in deinem Benutzerkonto herunter. Anschließend kannst du sie in der DataSkop-App importieren."

@@ -129,8 +129,6 @@ const installExtensions = async () => {
 let doingMonitoring = false;
 
 const doMonitoring = async () => {
-  if (mainWindow === null) return;
-
   const isPendingStatus: Promise<boolean> = new Promise((resolve) => {
     if (mainWindow === null) {
       resolve(false);
@@ -156,7 +154,8 @@ const doMonitoring = async () => {
     log.info("Some monitoring action has already stared. Do nothing.");
     return;
   }
-  log.info("Starting to do a monitoring ste.");
+
+  log.info("Starting to check for GDRP status.");
   doingMonitoring = true;
 
   configStore.set("monitoring", true);
@@ -174,7 +173,8 @@ ipcMain.handle("monitoring-done", () => {
   log.info("Monitoring is done. Removing flags and closing main window.");
   configStore.set("monitoring", false);
   doingMonitoring = false;
-  if (mainWindow) mainWindow.close();
+  // Close window on macOS only, keep it minimized for the rest
+  if (mainWindow && process.platform === "darwin") mainWindow.close();
 });
 
 // Main function to initialize a window
@@ -348,7 +348,7 @@ app
 
 // macOS only
 app.on("activate", () => {
-  log.debug("called activate", mainWindow == null);
+  log.debug("Called activate", mainWindow == null);
 
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.

@@ -12,7 +12,7 @@ const defaultConfig: TikTokScrapingConfig = {
   navigation: "tt-default",
   version: 1,
   steps: [
-    { type: "action", slug: "tt-data-export-monitoring" },
+    { type: "action", slug: "tt-data-export" },
     {
       type: "scraping",
       slug: "tt-scrape-watched-videos",

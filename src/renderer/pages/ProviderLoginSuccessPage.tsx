@@ -32,7 +32,7 @@ export default function ProviderLoginSuccessPage(): JSX.Element {
     // TikTok specific
     dispatch({
       type: "start-scraping",
-      filterSteps: (x) => x.slug === "tt-data-export-monitoring",
+      filterSteps: (x) => x.slug === "tt-data-export",
     });
   }, []);
 

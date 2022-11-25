@@ -332,7 +332,7 @@ async function* actionProcedure(
 ) {
   const { slug } = config;
 
-  if (slug === "tt-data-export-monitoring") {
+  if (slug === "tt-data-export") {
     try {
       const data = await (procedureArgs.monitoring
         ? monitorDataExport
