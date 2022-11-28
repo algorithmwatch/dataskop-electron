@@ -288,7 +288,7 @@ export default function WaitingPage(): JSX.Element {
             menuItems={Object.keys(STATUS).map((x) => ({
               key: x,
               label: x,
-              click: () => setStatus(x),
+              click: () => setStatus({ status: x, updatedAt: dayjs() }),
             }))}
             onItemClicked={undefined}
           />

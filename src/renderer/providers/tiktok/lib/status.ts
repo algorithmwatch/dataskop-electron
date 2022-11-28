@@ -95,6 +95,9 @@ const STATUS = {
   "files-imported": {},
 };
 
+// There are two more special stati: `status-not-available` and `status-reset`.
+// They are not listed here because the procedures must not return it.
+
 type StatusKey = keyof typeof STATUS;
 
 const getStatus = async (): Promise<{ status: string; updatedAt: Dayjs }> => {
