@@ -39,7 +39,7 @@ function DatasourceSwitch({ datasource, setDatasource }) {
               }
               `}
         >
-          Diversification Labels
+          Kategorien
         </a>
       </div>
     </div>
@@ -61,15 +61,15 @@ export default function VizTwo({ gdprData, metadata }) {
   return (
     <>
       <div className="mx-auto flex items-center text-2xl mb-6">
-        <div className="">Deine XXXX</div>
+        <div className="">Deine Top Hashtags und Kategorien</div>
       </div>
 
       <VizBoxRow
         values={[
-          { head: "todo", label: "todo1" },
-          { head: "todo", label: "todo2" },
-          { head: "todo", label: "todo3" },
-          { head: "todo", label: "todo4" },
+          { head: "#deinemudda", label: "Top Hashtag" },
+          { head: "Katzen", label: "Top Label" },
+          { head: "3443", label: "Anzahl Videos" },
+          { head: "12", label: "Tage" },
         ]}
       />
 
