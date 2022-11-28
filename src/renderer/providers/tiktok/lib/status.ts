@@ -1,4 +1,6 @@
+import { Dayjs } from "dayjs";
 import _ from "lodash";
+import dayjs from "renderer/lib/dayjs";
 import { addScrapingResult, getScrapingResults } from "renderer/lib/db";
 
 const STATUS = {
@@ -93,12 +95,17 @@ const STATUS = {
 
 type StatusKey = keyof typeof STATUS;
 
-const getStatus = async (): Promise<string> => {
+const getStatus = async (): Promise<{ status: string; updatedAt: Dayjs }> => {
   const rows = await getScrapingResults();
   const statusRows = rows.filter((x) => x.fields && x.fields.status);
-  if (statusRows.length === 0) return "status-not-available";
+  if (statusRows.length === 0)
+    return { status: "status-not-available", updatedAt: dayjs() };
 
-  return (_.last(statusRows) as any).fields.status as string;
+  const last = _.last(statusRows) as any;
+  return {
+    status: last.fields.status as string,
+    updatedAt: dayjs(last.scrapedAt as number),
+  };
 };
 
 const isStatusPending = (status: string) => {
@@ -106,16 +113,17 @@ const isStatusPending = (status: string) => {
     "data-pending",
     "monitoring-pending",
     "data-request-success",
+    "monitoring-captcha", // still keep looking even though an error occured
   ].includes(status);
 };
 
 const isMonitoringPending = async () => {
-  const s = await getStatus();
-  return isStatusPending(s);
+  const { status } = await getStatus();
+  return isStatusPending(status);
 };
 
 const shouldJumpToWaitingPage = async () => {
-  const status = await getStatus();
+  const { status } = await getStatus();
   return status !== "status-not-available" && status !== "status-reset";
 };
 

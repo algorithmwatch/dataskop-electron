@@ -7,8 +7,7 @@ import { faAngleRight } from "@fortawesome/pro-regular-svg-icons";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
-import { currentDelay } from "renderer/lib/delay";
-import { useConfig, useNavigation, useScraping } from "../../../contexts";
+import { useNavigation } from "../../../contexts";
 import awlogo from "../../../static/images/logos/aw-logo.png";
 import bmbflogo from "../../../static/images/logos/bmbf-logo.png";
 import enslogo from "../../../static/images/logos/ens-logo.png";
@@ -22,77 +21,18 @@ export default function StartPage(): JSX.Element {
   const { getNextPage } = useNavigation();
   const history = useHistory();
 
-  const {
-    state: { isScrapingStarted, isScrapingFinished },
-    dispatch,
-  } = useScraping();
-
-  const {
-    state: { userConfig },
-    dispatch: configDispatch,
-  } = useConfig();
-
-  // Some monitoring logic because this component gets rendered on initialization.
-
+  // Jump to waiting screen (sometimes)
   useEffect(() => {
     (async () => {
-      // Don't process if scraping is already started
-      if (!userConfig || isScrapingStarted) return;
-
-      if (userConfig.monitoring) {
-        window.electron.log.info("Do a monitoring step");
-
-        dispatch({ type: "set-attached", attached: true, visible: false });
-        await currentDelay();
-        dispatch({
-          type: "start-scraping",
-          filterSteps: (x) => x.slug === "tt-data-export-monitoring",
-        });
-      }
-    })();
-  }, [userConfig?.monitoring]);
-
-  useEffect(() => {
-    (async () => {
-      // Don't need to process if not monitoring mode is active
-      if (!userConfig || !userConfig.monitoring) return;
-
-      if (isScrapingFinished) {
-        window.electron.log.info("Monitoring is done");
-        // Disable monitoring flag
-        configDispatch({
-          type: "set-user-config",
-          newValues: { monitoring: false },
-        });
-        dispatch({ type: "reset-scraping" });
-        dispatch({ type: "set-attached", attached: false, visible: false });
-        window.electron.ipc.invoke("monitoring-done");
-        // Process post-monitoring result
-        // Notify main about finished monitoring
-      }
-    })();
-  }, [isScrapingFinished]);
-
-  // Jump to waiting screen
-  useEffect(() => {
-    (async () => {
-      // Don't jump in monitoring mode
-      if (!userConfig || userConfig.monitoring) return;
-
       const doJump = await shouldJumpToWaitingPage();
       if (doJump) {
         window.electron.log.info(`Jump to waiting page`);
-        // Add some timeout because a race condition prevented a navigation.
-        setTimeout(() => {
-          history.push("/tiktok/waiting");
-        }, 0);
+        history.push("/tiktok/waiting");
       } else {
-        window.electron.log.info(
-          `Don't jump to waiting page. DoJump: ${doJump}. Monitoring: ${userConfig?.monitoring}`,
-        );
+        window.electron.log.info(`Don't jump to waiting page`);
       }
     })();
-  }, [userConfig?.monitoring]);
+  }, []);
 
   const hadnleNextClick = () => {
     history.push(getNextPage("path"));

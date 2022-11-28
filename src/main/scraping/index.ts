@@ -267,7 +267,8 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
   addMainHandler(
     "scraping-get-current-html",
     async (_event: any, htmlLogging = false) => {
-      if (scrapingView == null) throw new Error("Peter");
+      if (scrapingView == null)
+        throw new Error("Scraping view is not initialized!");
 
       await waitUntilIdle(scrapingView);
 
