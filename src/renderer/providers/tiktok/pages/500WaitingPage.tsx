@@ -18,8 +18,11 @@ import { useConfig, useScraping } from "renderer/contexts";
 import dayjs from "renderer/lib/dayjs";
 import { addScrapingResult, getScrapingResults } from "renderer/lib/db";
 import { currentDelay } from "renderer/lib/delay";
+import {
+  SurveyProvider,
+  useSurvey,
+} from "renderer/providers/tiktok/components/survey/context";
 import { Survey } from "renderer/providers/tiktok/components/survey/Survey";
-import { SurveyProvider, useSurvey } from "renderer/providers/tiktok/contexts";
 import StatusContent from "../components/StatusContent";
 import { questions } from "../components/survey/questions";
 import { getStatus, isStatusPending, STATUS } from "../lib/status";

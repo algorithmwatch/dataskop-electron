@@ -20,7 +20,7 @@ import {
   QuestionTextType,
   QuestionTypes,
   useSurvey,
-} from "renderer/providers/tiktok/contexts";
+} from "renderer/providers/tiktok/components/survey/context";
 
 const SurveyTextInput = ({
   question,

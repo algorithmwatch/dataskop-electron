@@ -1,4 +1,4 @@
-import { QuestionTypes } from "renderer/providers/tiktok/contexts";
+import { QuestionTypes } from "renderer/providers/tiktok/components/survey/context";
 
 export const questions: QuestionTypes[] = [
   {
