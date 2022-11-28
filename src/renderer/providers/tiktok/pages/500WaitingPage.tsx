@@ -345,7 +345,10 @@ export default function WaitingPage(): JSX.Element {
             body="Der Download für deine DSGVO-Daten ist abgelaufen. Bitte starte die App erneut und beantrage ihn noch einmal."
           />
         )}
-        {["monitoring-captcha"].includes(status.status) && (
+        {[
+          "error-captcha-required",
+          "data-pending-error-unable-to-check",
+        ].includes(status.status) && (
           // duplicate default messsage
           <StatusContent
             title="DSGVO-Daten angefordert"

@@ -38,10 +38,6 @@ const STATUS = {
       body: "Bitte öffne die DataSkop-App, um fortzufahren.",
     },
   },
-  // monitoring-captcha
-  // Monitoring interrupted by captcha
-  // Should prompt user to fill out captcha form
-  "monitoring-captcha": {},
   // Error, the HTML may have changed
   "monitoring-error-nothing-found": {
     notification: {
@@ -56,6 +52,8 @@ const STATUS = {
       body: "Bitte öffne die DataSkop-App, um fortzufahren.",
     },
   },
+  // Should prompt user to fill out captcha form
+  "error-captcha-required": {},
   // Error, the HTML may have changed
   "data-error-tab-not-found": {
     notification: {
@@ -65,6 +63,9 @@ const STATUS = {
   },
   // Waiting until TikTok created the dump
   "data-pending": {},
+  // The data request should either be pending or done but we couldn't verfiy the
+  // current state. Are there network problems?
+  "data-pending-error-unable-to-check": {},
   // successfully requested a new GDPR dump
   "data-request-success": {},
   // There were errors when requesting a new GDPR dump
@@ -90,6 +91,7 @@ const STATUS = {
   },
   // A scraping step was finished
   "scraping-done": {},
+  // A user imported a dump
   "files-imported": {},
 };
 
@@ -113,11 +115,12 @@ const isStatusPending = (status: string) => {
     "data-pending",
     "monitoring-pending",
     "data-request-success",
-    "monitoring-captcha", // still keep looking even though an error occured
+    "error-captcha-required", // still keep looking even though an error occured
+    "data-pending-error-unable-to-check", // as well
   ].includes(status);
 };
 
-const isMonitoringPending = async () => {
+const isLastStatusPending = async () => {
   const { status } = await getStatus();
   return isStatusPending(status);
 };
@@ -147,15 +150,16 @@ if (window.electron) {
   window.electron.ipc.on("monitoring-pending", async () => {
     window.electron.ipc.invoke(
       "monitoring-pending-reply",
-      await isMonitoringPending(),
+      await isLastStatusPending(),
     );
   });
 }
 
 export {
   getStatus,
-  shouldJumpToWaitingPage,
   isStatusPending,
+  isLastStatusPending,
+  shouldJumpToWaitingPage,
   StatusKey,
   STATUS,
   addStatusReset,

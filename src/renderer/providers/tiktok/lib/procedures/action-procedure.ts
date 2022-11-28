@@ -11,7 +11,7 @@ import {
   GetHtmlFunction,
   GetHtmlLazyFunction,
 } from "renderer/providers/types";
-import { STATUS, StatusKey } from "../status";
+import { isStatusPending, STATUS, StatusKey } from "../status";
 
 type ActionReturn = Promise<{
   status: StatusKey;
@@ -137,29 +137,6 @@ const downloadDump = async (
   }
 };
 
-/**
- * Check if the GPDR dump is ready and download it if so
- */
-const clickDownloadButton = async (getCurrentHtml: GetCurrentHtml) => {
-  const html = await getReadyHtmlIframe(getCurrentHtml);
-  const $html = cheerio.load(html);
-
-  const downloadButton = $html(
-    `${GDPR_RESULTS_HTML_SELECTOR} button:contains("Download")`,
-  ).first();
-
-  window.electron.log.info(`downloadButton: ${downloadButton.length}`);
-
-  const buttonAvailable = !!downloadButton.length;
-
-  if (!buttonAvailable) return { buttonAvailable };
-
-  const data = await downloadDump(() =>
-    clickOnElementIframe(downloadButton, $html),
-  );
-  return { buttonAvailable, ...data };
-};
-
 const isDumpCreationPending = async (getCurrentHtml: GetCurrentHtml) => {
   const html = await getReadyHtmlIframe(getCurrentHtml);
   const $html = cheerio.load(html);
@@ -173,6 +150,49 @@ const isDumpCreationPending = async (getCurrentHtml: GetCurrentHtml) => {
   ).first().length;
 
   return !!(pendingButton1 + pendingButton2);
+};
+
+/**
+ * Check if the GPDR dump is ready and download it if so.
+ */
+const clickDownloadButton = async (
+  getCurrentHtml: GetCurrentHtml,
+  lastStatusPending: boolean,
+) => {
+  let numTry = 0;
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const html = await getReadyHtmlIframe(getCurrentHtml);
+    const $html = cheerio.load(html);
+
+    const downloadButton = $html(
+      `${GDPR_RESULTS_HTML_SELECTOR} button:contains("Download")`,
+    ).first();
+
+    const buttonAvailable = !!downloadButton.length;
+    window.electron.log.info(`Download button available: ${buttonAvailable}`);
+
+    if (!buttonAvailable) {
+      if (
+        numTry < 5 &&
+        lastStatusPending &&
+        !(await isDumpCreationPending(getCurrentHtml))
+      ) {
+        window.electron.log.warn(
+          "Something went wrong. There should either a `Download` or `Pending` button. Retry.",
+        );
+        await currentDelay("longer");
+        numTry += 1;
+        continue;
+      }
+      return { buttonAvailable };
+    }
+
+    const data = await downloadDump(() =>
+      clickOnElementIframe(downloadButton, $html),
+    );
+    return { buttonAvailable, ...data };
+  }
 };
 
 const isDownloadExpired = async (getCurrentHtml: GetCurrentHtml) => {
@@ -233,7 +253,10 @@ const GET_DATA_URL =
  *
  * This action gets started in headless monitoring mode.
  */
-const monitorDataExport = async (getHtml: GetHtmlFunction): ActionReturn => {
+const monitorDataExport = async (
+  getHtml: GetHtmlFunction,
+  lastStatusPending: boolean,
+): ActionReturn => {
   window.electron.log.info("Started monitor data export");
 
   // the lang paramater is important because we are filtering by text later on
@@ -253,7 +276,11 @@ const monitorDataExport = async (getHtml: GetHtmlFunction): ActionReturn => {
     return { status: "monitoring-pending" };
   }
 
-  const downloadData = await clickDownloadButton(getCurrentHtml);
+  const downloadData = await clickDownloadButton(
+    getCurrentHtml,
+    lastStatusPending,
+  );
+
   if (downloadData.buttonAvailable) {
     return {
       filePath: downloadData.filePath,
@@ -266,7 +293,7 @@ const monitorDataExport = async (getHtml: GetHtmlFunction): ActionReturn => {
   }
 
   if (isCaptcha(cheerio.load((await getCurrentHtml()).html))) {
-    return { status: "monitoring-captcha" };
+    return { status: "error-captcha-required" };
   }
 
   return { status: "monitoring-error-nothing-found" };
@@ -284,7 +311,10 @@ const monitorDataExport = async (getHtml: GetHtmlFunction): ActionReturn => {
  * @param getHtml
  * @returns
  */
-const getDataExport = async (getHtml: GetHtmlFunction): ActionReturn => {
+const getDataExport = async (
+  getHtml: GetHtmlFunction,
+  lastStatusPending: boolean,
+): ActionReturn => {
   window.electron.log.info("Started get data export");
 
   const getCurrentHtml = await getHtml(GET_DATA_URL);
@@ -300,7 +330,11 @@ const getDataExport = async (getHtml: GetHtmlFunction): ActionReturn => {
   }
 
   window.electron.log.info("Looking for download button");
-  const downloadData = await clickDownloadButton(getCurrentHtml);
+  const downloadData = await clickDownloadButton(
+    getCurrentHtml,
+    lastStatusPending,
+  );
+
   if (downloadData.buttonAvailable) {
     return _.pick(downloadData, ["filePath", "status"]);
   }
@@ -308,6 +342,14 @@ const getDataExport = async (getHtml: GetHtmlFunction): ActionReturn => {
   // Check if we have to wait (second try)
   if (await isDumpCreationPending(getCurrentHtml)) {
     return { status: "data-pending" };
+  }
+
+  // Only request a new dump if we can be sure that we don't overwrite an old dump.
+  if (lastStatusPending) {
+    if (isCaptcha(cheerio.load((await getCurrentHtml()).html))) {
+      return { status: "error-captcha-required" };
+    }
+    return { status: "data-pending-error-unable-to-check" };
   }
 
   // Request a new dump
@@ -332,11 +374,13 @@ async function* actionProcedure(
 ) {
   const { slug } = config;
 
+  const lastStatusPending = isStatusPending(procedureArgs.lastStatus.status);
+
   if (slug === "tt-data-export") {
     try {
       const data = await (procedureArgs.monitoring
         ? monitorDataExport
-        : getDataExport)(getHtml);
+        : getDataExport)(getHtml, lastStatusPending);
 
       // Only show notifications for a subset of status
       const status = STATUS[data.status];

@@ -18,6 +18,7 @@ import { currentDelay } from "renderer/lib/delay";
 import { createScrapingGenerator } from "renderer/lib/scraping";
 import { delay } from "renderer/lib/utils/time";
 import { providerInfo } from "renderer/providers/info";
+import { getStatus } from "renderer/providers/tiktok/lib/status";
 import { Campaign } from "renderer/providers/types";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -174,6 +175,9 @@ export default function ScrapingManager({
       // eslint-disable-next-line @typescript-eslint/no-shadow
       const sessionId = uuidv4();
 
+      // TODO: Make Tiktok agnostic
+      const lastStatus = await getStatus();
+
       const gen = createScrapingGenerator(
         config,
         provider.deserializeMapping,
@@ -183,6 +187,7 @@ export default function ScrapingManager({
           sessionId,
           htmlLogging: userConfig.htmlLogging,
           monitoring: userConfig.monitoring,
+          lastStatus,
         },
       );
 

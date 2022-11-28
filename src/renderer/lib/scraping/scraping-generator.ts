@@ -1,3 +1,4 @@
+import { Dayjs } from "dayjs";
 import {
   GetHtmlFunction,
   GetHtmlLazyFunction,
@@ -15,6 +16,7 @@ type ProcedureArgs = {
   sessionId: string;
   htmlLogging: boolean;
   monitoring: boolean;
+  lastStatus: { status: string; updatedAt: Dayjs };
 };
 
 const createScrapingGenerator = (
