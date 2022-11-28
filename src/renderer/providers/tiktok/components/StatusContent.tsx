@@ -94,7 +94,7 @@ const StatusContent = ({
         <div>
           <Button
             onClick={async () => {
-              window.electron.log.info("Resetting state and restarting app");
+              window.electron.log.info("Resetting `status` and restarting app");
               await addStatusReset();
               window.electron.ipc.invoke("restart");
             }}

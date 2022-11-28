@@ -6,7 +6,7 @@ import ContentWrapper from "renderer/providers/youtube/components/ContentWrapper
 import FooterNav, {
   FooterNavItem,
 } from "renderer/providers/youtube/components/FooterNav";
-import { providerInfo } from "../../";
+import { providerInfo } from "../../info";
 import whatsHappening from "../static/images/start/img_was_passiert.jpg";
 
 export default function OnboardingPage2(): JSX.Element {

@@ -32,6 +32,7 @@ type Action =
       seriousProtection: string;
       autoSelectCampaign: number | null;
       userConfig: UserConfig;
+      isMac: boolean;
     }
   | { type: "show-advanced-menu" }
   | { type: "set-debug"; isDebug: boolean }
@@ -102,9 +103,10 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
 
   useEffect(() => {
     (async () => {
-      const { env, version, isMac } = await window.electron.ipc.invoke(
-        "get-info",
-      );
+      const mainInfo = await window.electron.ipc.invoke("get-info");
+      // mainInfo is not working w/ Jest, so abort it
+      if (!mainInfo) return;
+      const { env, version, isMac } = mainInfo;
 
       const userConfig = await window.electron.ipc.invoke("db-get-config");
 
