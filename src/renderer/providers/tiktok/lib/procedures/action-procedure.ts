@@ -32,7 +32,9 @@ const monitorDataExport = async (
   getHtml: GetHtmlFunction,
   lastStatusPending: boolean,
 ): ActionReturn => {
-  window.electron.log.info("Started monitor data export");
+  window.electron.log.info(
+    `Started \`monitorDataExport\` with \`lastStatusPending\`:${lastStatusPending}`,
+  );
 
   const getCurrentHtml = await getHtml(GET_DATA_URL);
 
@@ -84,7 +86,9 @@ const getDataExport = async (
   getHtml: GetHtmlFunction,
   lastStatusPending: boolean,
 ): ActionReturn => {
-  window.electron.log.info("Started get data export");
+  window.electron.log.info(
+    `Started \`getDataExport\` with \`lastStatusPending\`:${lastStatusPending}`,
+  );
 
   const getCurrentHtml = await getHtml(GET_DATA_URL);
 

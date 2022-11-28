@@ -379,7 +379,7 @@ export default function WaitingPage(): JSX.Element {
         )}
       </WizardLayout>
     ),
-    [status],
+    [status, footerButtonsAreVisible, surveyIsComplete],
   );
 
   return (
