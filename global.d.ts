@@ -5,6 +5,7 @@ declare global {
     log: any;
     persistEmail: string;
     hasDonated: boolean | null;
+    notEligibleToDonate: true | null;
   }
 }
 export {};

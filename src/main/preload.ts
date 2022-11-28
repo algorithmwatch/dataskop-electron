@@ -76,6 +76,7 @@ const tiktokChannels = [
   "tiktok-scrape-videos",
   "tiktok-data-upload",
   "tiktok-data-export",
+  "tiktok-eligible-to-donate",
 ];
 
 // whitelist certain channels for certain action

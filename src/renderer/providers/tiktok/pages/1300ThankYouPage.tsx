@@ -64,6 +64,15 @@ const ExportLink = ({ setExporting }) => {
   );
 };
 
+const NotEligibleLink = () => {
+  return (
+    <span>
+      Weil du unter 18 bist, kannst du deine Daten leider{" "}
+      <a href="https://dataskop.net/faq">nicht spenden</a>.{" "}
+    </span>
+  );
+};
+
 export default function ThankYouPage(): JSX.Element {
   const [isExporting, setExporting] = useState(false);
 
@@ -111,6 +120,7 @@ export default function ThankYouPage(): JSX.Element {
         ) : (
           <p>
             Wir sind froh, dass du ein Teil von DataSkop warst.{" "}
+            {window.notEligibleToDonate && <NotEligibleLink />}
             <ExportLink setExporting={setExporting} />
           </p>
         )}

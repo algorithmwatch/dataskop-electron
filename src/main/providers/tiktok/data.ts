@@ -4,7 +4,10 @@
 
 import fs from "fs";
 
-import { redactTiktokDump } from "@algorithmwatch/schaufel-wrangle";
+import {
+  isEligibleToDonate,
+  redactTiktokDump,
+} from "@algorithmwatch/schaufel-wrangle";
 import { app, BrowserWindow, dialog } from "electron";
 import log from "electron-log";
 import { dataStore, getLookups } from "../../db";
@@ -58,5 +61,10 @@ export default function registerTiktokDataHandlers(mainWindow: BrowserWindow) {
     const data = await getData(false);
 
     fs.writeFileSync(filePath, JSON.stringify(data));
+  });
+
+  addMainHandler("tiktok-eligible-to-donate", async (_event: any) => {
+    const dump = await getDownload();
+    return isEligibleToDonate(dump);
   });
 }
