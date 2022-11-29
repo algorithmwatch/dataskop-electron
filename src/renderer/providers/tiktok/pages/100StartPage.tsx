@@ -49,10 +49,10 @@ export default function StartPage(): JSX.Element {
             </Button>
           </div>
         </div>
-        <div className="flex pb-8">
+        <div className="flex">
           <div className="text-center">
             <div className="font-bold mb-3">Partner:</div>
-            <div className="flex flex-wrap items-center justify-center mb-5 max-w-xl">
+            <div className="flex flex-wrap items-center justify-center mb-5 max-w-[30rem]">
               <img
                 src={awlogo}
                 alt=""
@@ -83,6 +83,20 @@ export default function StartPage(): JSX.Element {
           <div className="text-center">
             <div className="font-bold">Gefördert durch:</div>
             <img src={bmbflogo} alt="" className="block w-52 mx-auto -mt-1" />
+          </div>
+        </div>
+        <div className="text-center h-10 flex items-center justify-center">
+          <div className="text-gray-600 text-sm bg-gray-200 rounded-t-md px-3 py-2">
+            Wir verarbeiten Deine Daten entsprechend unserer{" "}
+            <a
+              href="https://dataskop.net"
+              target="_blank"
+              className="underline hover:no-underline"
+              rel="noreferrer"
+            >
+              Datenschutzerklärung
+            </a>
+            .
           </div>
         </div>
       </div>
