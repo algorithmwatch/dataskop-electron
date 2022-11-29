@@ -11,7 +11,7 @@ import {
   faFaceSmileHearts,
   IconDefinition,
 } from "@fortawesome/pro-light-svg-icons";
-import { faCog } from "@fortawesome/pro-solid-svg-icons";
+import { faCog, faEnvelope } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { useState } from "react";
@@ -29,6 +29,7 @@ const ShareButton = ({
   url: any;
   className: string;
 }) => {
+  // `target="_blank" isn't necessary. All links are handled by the OS (Browser / Mail client)
   return (
     <a
       className={clsx(
@@ -36,7 +37,6 @@ const ShareButton = ({
         className,
       )}
       href={url}
-      target="blank"
     >
       <FontAwesomeIcon
         icon={icon}
@@ -85,7 +85,7 @@ export default function ThankYouPage(): JSX.Element {
   const facebookUrl = `https://www.facebook.com/sharer.php?u=${shareUrl}`;
   const twitterUrl = `https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}`;
   const mailUrl =
-    "mailto:m.mustermann@domain.de?body=Hallo%20Max,%0D%0A%0D%0Ahier%20steht%20die%20Nachricht.";
+    "mailto:m.mustermann@domain.de?subject=DataSkop&body=Hallo%20Max,%0D%0A%0D%0Ahier%20steht%20die%20Nachricht.";
 
   const footerSlots = {
     center: [
@@ -151,13 +151,12 @@ export default function ThankYouPage(): JSX.Element {
             url={twitterUrl}
             className="text-[#1DA1F2] focus:ring-[#1DA1F2]/60"
           />
-          {/* TODO: implement mailto link */}
-          {/* <ShareButton
+          <ShareButton
             title="E-Mail versenden"
             icon={faEnvelope}
             url={mailUrl}
             className="text-east-blue-700 focus:ring-east-blue-600/60"
-          /> */}
+          />
         </div>
       </Content>
     </WizardLayout>
