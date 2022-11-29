@@ -273,10 +273,10 @@ const createWindow = async () => {
 
   buildTray(doMonitoring, configStore, getAssetPath("icon.png"));
 
-  // Open urls in the user's browser
-  mainWindow.webContents.on("new-window", (event, url) => {
-    event.preventDefault();
+  // Open URLs in the user's browser
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
+    return { action: "deny" };
   });
 
   // Wait a second until checkin for new update to let the app initialize.
