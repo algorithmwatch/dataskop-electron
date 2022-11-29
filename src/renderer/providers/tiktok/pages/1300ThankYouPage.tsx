@@ -11,7 +11,7 @@ import {
   faFaceSmileHearts,
   IconDefinition,
 } from "@fortawesome/pro-light-svg-icons";
-import { faCog, faEnvelope } from "@fortawesome/pro-solid-svg-icons";
+import { faCog } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { useState } from "react";
@@ -21,19 +21,22 @@ import Content from "renderer/providers/tiktok/components/Content";
 const ShareButton = ({
   title,
   icon,
+  url,
   className,
 }: {
   title: string;
   icon: IconDefinition;
+  url: any;
   className: string;
 }) => {
   return (
-    <button
-      type="button"
+    <a
       className={clsx(
         "inline-flex items-center justify-center px-4 py-3 text-lg font-medium rounded-full bg-white shadow-sm focus:ring",
         className,
       )}
+      href={url}
+      target="blank"
     >
       <FontAwesomeIcon
         icon={icon}
@@ -41,7 +44,7 @@ const ShareButton = ({
         className="shrink-0 mr-2 text-3xl"
       />
       {title}
-    </button>
+    </a>
   );
 };
 
@@ -75,6 +78,14 @@ const NotEligibleLink = () => {
 
 export default function ThankYouPage(): JSX.Element {
   const [isExporting, setExporting] = useState(false);
+  const shareUrl = "https://dataskop.net/";
+  const shareText = encodeURIComponent(
+    "Was weiß TikTok über dich? Mach mit bei der Datenspende-Aktion:",
+  );
+  const facebookUrl = `https://www.facebook.com/sharer.php?u=${shareUrl}`;
+  const twitterUrl = `https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}`;
+  const mailUrl =
+    "mailto:m.mustermann@domain.de?body=Hallo%20Max,%0D%0A%0D%0Ahier%20steht%20die%20Nachricht.";
 
   const footerSlots = {
     center: [
@@ -131,18 +142,22 @@ export default function ThankYouPage(): JSX.Element {
           <ShareButton
             title="Teilen"
             icon={faFacebook}
+            url={facebookUrl}
             className="text-[#4267B2] focus:ring-[#4267B2]/60"
           />
           <ShareButton
             title="Twittern"
             icon={faTwitter}
+            url={twitterUrl}
             className="text-[#1DA1F2] focus:ring-[#1DA1F2]/60"
           />
-          <ShareButton
+          {/* TODO: implement mailto link */}
+          {/* <ShareButton
             title="E-Mail versenden"
             icon={faEnvelope}
+            url={mailUrl}
             className="text-east-blue-700 focus:ring-east-blue-600/60"
-          />
+          /> */}
         </div>
       </Content>
     </WizardLayout>
