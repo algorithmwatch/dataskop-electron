@@ -268,7 +268,9 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
-  buildMenu(mainWindow);
+  // Only build OS menu on MacOS
+  if (process.platform === "darwin") buildMenu(mainWindow);
+
   buildTray(doMonitoring, configStore, getAssetPath("icon.png"));
 
   // Open urls in the user's browser
