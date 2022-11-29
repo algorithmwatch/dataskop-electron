@@ -40,50 +40,28 @@ export const Menu = ({
       label: "Über",
       icon: faInfoCircle,
       onClick: () => {
-        // dispatchModal({
-        //   type: "set-modal-options",
-        //   options: { isOpen: true, componentName: "about" },
-        // });
+        window.open("https://dataskop.net/ueber/");
       },
     },
     {
       label: "Kontakt",
       icon: faPaperPlane,
       onClick: () => {
-        // dispatchModal({
-        //   type: "set-modal-options",
-        //   options: { isOpen: true, componentName: "contact" },
-        // });
+        window.open("https://dataskop.net/kontakt/");
       },
     },
-    // {
-    //   label: 'FAQ',
-    //   icon: faQuestionCircle,
-    //   onClick: () => {
-    //     dispatchModal({
-    //       type: 'set-modal-options',
-    //       options: { isOpen: true, componentName: 'faq' },
-    //     });
-    //   },
-    // },
     {
       label: "Datenspende-Vertrag",
       icon: faFileContract, // faFileSignatur
       onClick: () => {
-        // dispatchModal({
-        //   type: "set-modal-options",
-        //   options: { isOpen: true, componentName: "terms" },
-        // });
+        window.open("https://dataskop.net/datenspendevertrag/");
       },
     },
     {
       label: "Datenschutz",
       icon: faUserSecret,
       onClick: () => {
-        // dispatchModal({
-        //   type: "set-modal-options",
-        //   options: { isOpen: true, componentName: "privacy" },
-        // });
+        window.open("https://dataskop.net/datenschutzerklaerung/");
       },
     },
   ];
