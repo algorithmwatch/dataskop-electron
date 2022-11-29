@@ -14,12 +14,14 @@ const StatusContent = ({
   icon = faLoader,
   helpButtons,
   fancyNotificationText,
+  allowReset,
 }: {
   title: string;
   body: string;
   icon?: IconDefinition;
   helpButtons?: boolean;
   fancyNotificationText?: boolean;
+  allowReset?: boolean;
 }) => {
   const {
     state: { isMac },
@@ -74,8 +76,25 @@ const StatusContent = ({
           </div>
         )}
 
+        {!allowReset && (
+          <div className="mt-5">
+            <Button
+              // theme="outline"
+              onClick={async () => {
+                window.electron.log.info(
+                  "Resetting `status` and restarting app",
+                );
+                await addStatusReset();
+                window.electron.ipc.invoke("restart");
+              }}
+            >
+              Status zurücksetzen & Neustarten
+            </Button>
+          </div>
+        )}
+
         {fancyNotificationText && (
-          <div className="mt-24 text-base font-medium relative whitespace-nowrap">
+          <div className="mt-12 lg:mt-24 text-base font-medium relative whitespace-nowrap">
             <span className="absolute inset-0 animate-fade1 flex items-center justify-center">
               <div className="rounded-full bg-white/50 px-5 py-4">
                 Du erhältst eine Benachrichtigung, sobald es weitergehen kann.
@@ -90,18 +109,6 @@ const StatusContent = ({
             </span>
           </div>
         )}
-
-        <div>
-          <Button
-            onClick={async () => {
-              window.electron.log.info("Resetting `status` and restarting app");
-              await addStatusReset();
-              window.electron.ipc.invoke("restart");
-            }}
-          >
-            Reset (TODO: Improve design)
-          </Button>
-        </div>
       </Content>
     </>
   );

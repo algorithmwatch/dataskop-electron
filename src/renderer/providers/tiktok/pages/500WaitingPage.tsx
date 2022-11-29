@@ -340,12 +340,14 @@ export default function WaitingPage(): JSX.Element {
           <StatusContent
             title="Fehler beim Download"
             body="Wir konnten deine TikTok-Daten nicht herunterladen. Besuche Tiktok.com im Browser und lade dir die DSGVO-Daten in deinem Benutzerkonto herunter. Anschließend kannst du sie in der DataSkop-App importieren."
+            allowReset
           />
         )}
         {["monitoring-download-expired"].includes(status.status) && (
           <StatusContent
             title="Download abgelaufen"
             body="Der Download für deine DSGVO-Daten ist abgelaufen. Bitte starte die App erneut und beantrage ihn noch einmal."
+            allowReset
           />
         )}
         {[
@@ -364,6 +366,7 @@ export default function WaitingPage(): JSX.Element {
           <StatusContent
             title="DSGVO-Anfrage fehlgeschlagen"
             body="Wir konnten deine DSGVO-Daten nicht beantragen. Besuche Tiktok.com im Browser und lade dir die DSGVO-Daten in deinem Benutzerkonto herunter. Anschließend kannst du sie in der DataSkop-App importieren."
+            allowReset
           />
         )}
         {[
@@ -375,6 +378,7 @@ export default function WaitingPage(): JSX.Element {
           <StatusContent
             title="Fehler beim Download"
             body="Wir konnten den Status deines DSGVO-Downloads nicht überprüfen. Besuche Tiktok.com im Browser und lade dir die DSGVO-Daten in deinem Benutzerkonto herunter. Anschließend kannst du sie in der DataSkop-App importieren."
+            allowReset
           />
         )}
       </WizardLayout>
