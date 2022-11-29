@@ -1,6 +1,6 @@
 {
   "name": "dataskop-electron",
-  "version": "0.5.0-alpha.16",
+  "version": "0.5.0-alpha.17",
   "description": "DataSkop Electron App: The Personal Data Dashboard (PeDD) of DataSkop",
   "main": "./src/main/main.ts",
   "scripts": {
