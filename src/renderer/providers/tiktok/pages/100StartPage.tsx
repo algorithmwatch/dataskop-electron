@@ -89,7 +89,7 @@ export default function StartPage(): JSX.Element {
           <div className="text-gray-600 text-sm bg-gray-100 rounded-t-md px-3 py-2">
             Wir verarbeiten Deine Daten entsprechend unserer{" "}
             <a
-              href="https://dataskop.net"
+              href="https://dataskop.net/datenschutzerklaerung/"
               target="_blank"
               className="underline hover:no-underline"
               rel="noreferrer"
