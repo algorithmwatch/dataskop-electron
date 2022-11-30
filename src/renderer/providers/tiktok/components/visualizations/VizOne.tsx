@@ -55,8 +55,8 @@ function VizOne({ gdprData }: { gdprData: any }) {
       [graph, range.value],
     );
 
-  const chartWidth = Math.round((window.outerWidth * 90) / 100);
-  const chartHeight = Math.round((window.outerHeight * 40) / 100);
+  const chartWidth = Math.round((window.outerWidth * 100) / 100);
+  const chartHeight = Math.round((window.outerHeight * 70) / 100);
   const commonProps = {
     width: chartWidth,
     height: chartHeight,
@@ -66,7 +66,7 @@ function VizOne({ gdprData }: { gdprData: any }) {
     marginRight: 60,
     style: {
       background: "transparent",
-      fontSize: "16px",
+      fontSize: "18px",
     },
     x: {
       type: "band",
@@ -82,8 +82,8 @@ function VizOne({ gdprData }: { gdprData: any }) {
   };
   const tickStep =
     videoData.length > 28 ? Math.round(videoData.length / 15) : 1;
-  console.warn("tickStep", tickStep);
-  console.warn("videoData.length", videoData.length);
+  // console.warn("tickStep", tickStep);
+  // console.warn("videoData.length", videoData.length);
   const timeslotsAndSingleColorBarsPlot = {
     ...commonProps,
     x: {
@@ -225,7 +225,7 @@ function VizOne({ gdprData }: { gdprData: any }) {
       </div>
 
       {/* Chart wrapper */}
-      <div ref={toggleRef} className="w-full min-h-[50vh]" />
+      <div ref={toggleRef} className="w-full mt-6 min-h-[50vh]" />
     </>
   );
 }

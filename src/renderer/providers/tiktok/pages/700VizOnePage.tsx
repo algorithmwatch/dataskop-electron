@@ -43,7 +43,7 @@ export default function VizOnePage(): JSX.Element {
 
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>
-      <div className="mt-12 flex flex-col">
+      <div className="mt-12 flex flex-col px-16">
         {dump && <VizOne gdprData={dump} />}
       </div>
     </WizardLayout>
