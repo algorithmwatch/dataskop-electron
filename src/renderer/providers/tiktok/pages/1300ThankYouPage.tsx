@@ -85,7 +85,7 @@ export default function ThankYouPage(): JSX.Element {
   const facebookUrl = `https://www.facebook.com/sharer.php?u=${shareUrl}`;
   const twitterUrl = `https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}`;
   const mailUrl =
-    "mailto:m.mustermann@domain.de?subject=DataSkop&body=Hallo%20Max,%0D%0A%0D%0Ahier%20steht%20die%20Nachricht.";
+    "mailto:m.mustermann@domain.de?subject=Mach%20mit%20bei%20der%20TikTok-Datenspende%21&body=Hallo%21%0A%0AIch%20habe%20gerade%20die%20DataSkop-App%20ausprobiert.%20Sie%20zeigt%20dir%2C%20was%20TikTok%20%C3%BCber%20dich%20wei%C3%9F.%20Mach%20mit%20bei%20der%20Datenspende-Aktion%20unter%20https%3A%2F%2Fdataskop.net%0A%0AGru%C3%9F";
 
   const footerSlots = {
     center: [
