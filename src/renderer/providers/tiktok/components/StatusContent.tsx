@@ -76,7 +76,7 @@ const StatusContent = ({
           </div>
         )}
 
-        {!allowReset && (
+        {allowReset && (
           <div className="mt-5">
             <Button
               // theme="outline"
