@@ -61,19 +61,15 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
   );
 
   addMainHandler(
-    "results-save-screenshot",
-    async (
-      _event: any,
-      rect: Electron.Rectangle | undefined,
-      filename: any,
-    ) => {
+    "export-screenshot",
+    async (_event: any, rect: Electron.Rectangle, filename: any) => {
       if (mainWindow === null) return;
       const nativeImage = await mainWindow.webContents.capturePage(rect);
       const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
         defaultPath: filename,
       });
       if (canceled || !filePath) return;
-      fs.writeFileSync(filePath, nativeImage.toPNG());
+      fs.writeFileSync(filePath, nativeImage.toJPEG(75));
     },
   );
 

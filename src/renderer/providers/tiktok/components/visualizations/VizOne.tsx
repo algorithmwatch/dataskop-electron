@@ -228,7 +228,11 @@ function VizOne({ gdprData }: { gdprData: any }) {
       </div>
 
       {/* Chart wrapper */}
-      <div ref={toggleRef} className="w-full mt-6 min-h-[50vh]" />
+      <div
+        ref={toggleRef}
+        className="w-full mt-6 min-h-[50vh]"
+        id="dataskop-export-screenshot-inner"
+      />
     </>
   );
 }

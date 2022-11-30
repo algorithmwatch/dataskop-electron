@@ -50,7 +50,7 @@ const backgroundScrapingChannels = [
 const exportChannels = [
   "results-import",
   "results-export",
-  "results-save-screenshot",
+  "export-screenshot",
   "export-debug-archive",
   "export-debug-size",
   "export-debug-clean",
