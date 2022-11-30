@@ -55,15 +55,18 @@ function VizOne({ gdprData }: { gdprData: any }) {
       [graph, range.value],
     );
 
-  const chartWidth = Math.round((window.outerWidth * 100) / 100);
-  const chartHeight = Math.round((window.outerHeight * 70) / 100);
+  const smallerScreen = window.outerHeight <= 1000;
+  const chartWidth = Math.round(window.outerWidth);
+  const chartHeight = Math.round(
+    window.outerHeight * (smallerScreen ? 0.5 : 0.7),
+  );
   const commonProps = {
     width: chartWidth,
     height: chartHeight,
-    marginBottom: 75,
-    marginTop: 60,
-    marginLeft: 60,
-    marginRight: 60,
+    marginBottom: smallerScreen ? 60 : 75,
+    marginTop: smallerScreen ? 50 : 60,
+    marginLeft: smallerScreen ? 50 : 60,
+    marginRight: smallerScreen ? 50 : 60,
     style: {
       background: "transparent",
       fontSize: "18px",
