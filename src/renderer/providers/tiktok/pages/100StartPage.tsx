@@ -86,7 +86,7 @@ export default function StartPage(): JSX.Element {
           </div>
         </div>
         <div className="text-center h-10 flex items-center justify-center">
-          <div className="text-gray-600 text-sm bg-gray-200 rounded-t-md px-3 py-2">
+          <div className="text-gray-600 text-sm bg-gray-100 rounded-t-md px-3 py-2">
             Wir verarbeiten Deine Daten entsprechend unserer{" "}
             <a
               href="https://dataskop.net"
