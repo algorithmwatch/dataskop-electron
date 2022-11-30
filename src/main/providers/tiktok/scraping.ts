@@ -6,6 +6,7 @@ import { b } from "@algorithmwatch/schaufel-ab";
 import {
   getTiktokVideoMeta,
   idToTiktokUrl,
+  scrapeAuthorAvatar,
 } from "@algorithmwatch/schaufel-core";
 import { BrowserWindow } from "electron";
 import log from "electron-log";
@@ -18,7 +19,7 @@ import { addMainHandler, delay, fetchBackend } from "../../utils";
 
 const BACKEND_CHUNK_SIZE = 50;
 const SCRAPE_CHUNK_SIZE = 20;
-const SCRAPE_CONCURRENCY = 3;
+const SCRAPE_CONCURRENCY = 2;
 
 // Set ENV to save broken schaufel html to this very folder
 // FIXME: not working right now
@@ -128,6 +129,41 @@ export default function registerTiktokScrapingHandlers(
 
       if (onlyScrape) return {};
       return _.merge(Object.fromEntries(existings), backendDone, scrapedDone);
+    },
+  );
+
+  // Keep authors always on the device. Don't upload them.
+  // prepend `ta` for TikTok avatars
+  addMainHandler(
+    "tiktok-scrape-author-avatars",
+    async (
+      _event: any,
+      avatars: string[],
+      htmlLogging = false,
+    ): Promise<any> => {
+      // check local lookups
+      const [existings, missing] = _.partition(
+        getLookups(avatars.map((x) => `ta${x}`)),
+        (x) => x != null,
+      );
+      log.info(
+        `Scraping Tiktok author avatars: ${existings.length} existing lookups and ${missing.length} missing`,
+      );
+
+      const missingKeys = missing.map(_.head) as string[];
+
+      const scrapedDone = [];
+      for (const k of missingKeys) {
+        const result = await scrapeAuthorAvatar(
+          k.slice(2),
+          log.scope("schaufel").info,
+        );
+
+        addLookups({ [k]: result });
+        scrapedDone.push([k, result]);
+      }
+
+      return _.merge(Object.fromEntries(existings), scrapedDone);
     },
   );
 }
