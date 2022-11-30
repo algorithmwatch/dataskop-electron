@@ -15,6 +15,7 @@ import fhplogo from "../../../static/images/logos/fhp-logo.png";
 import mplogo from "../../../static/images/logos/mp-logo.png";
 import uplogo from "../../../static/images/logos/up-logo.png";
 import { shouldJumpToWaitingPage } from "../lib/status";
+import videoBg from "../static/bg.mp4";
 import dslogo from "../static/images/logo.svg";
 
 export default function StartPage(): JSX.Element {
@@ -100,6 +101,17 @@ export default function StartPage(): JSX.Element {
           </div>
         </div>
       </div>
+      <video
+        playsInline
+        autoPlay
+        muted
+        loop
+        className="object-top -mt-px w-screen h-screen fixed inset-0 -z-10 focus:outline-none outline-none"
+        style={{ clipPath: "inset(1px 1px)" }}
+        poster=""
+      >
+        <source src={videoBg} type="video/mp4" />
+      </video>
     </>
   );
 }
