@@ -17,7 +17,7 @@ import { addMainHandler, getNowString, postBackend } from "../../utils";
 /**
  * Get data from the disk
  */
-const getData = async (redact: boolean) => {
+const getData = async (redact: boolean, allLookups: boolean) => {
   const dump = await getDownload();
 
   if (redact) redactTiktokDump(dump);
@@ -25,7 +25,9 @@ const getData = async (redact: boolean) => {
   const data = dataStore.store;
 
   // Upload only a subset of lookups (only the one we just scraped)
-  const lookups = getLookups(data.lookupsToUploads as string[]);
+  const lookups = allLookups
+    ? getLookups()
+    : getLookups(data.lookupsToUploads as string[]);
 
   return { sessions: data.data, lookups, dump, version: app.getVersion() };
 };
@@ -38,7 +40,7 @@ export default function registerTiktokDataHandlers(mainWindow: BrowserWindow) {
       const data = {
         unauthorized_email: email,
         campaign,
-        results: await getData(true),
+        results: await getData(true, false),
       };
 
       const res = await postBackend(url, data);
@@ -58,7 +60,7 @@ export default function registerTiktokDataHandlers(mainWindow: BrowserWindow) {
     });
     if (canceled || !filePath) return;
 
-    const data = await getData(false);
+    const data = await getData(false, true);
 
     fs.writeFileSync(filePath, JSON.stringify(data));
   });

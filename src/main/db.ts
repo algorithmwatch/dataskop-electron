@@ -58,7 +58,9 @@ const addLookups = (lookups: any) => {
   lookupStore.set(lookups);
 };
 
-const getLookups = (keys: string[]) => {
+// FIXME: This is not efficient
+const getLookups = (keys?: string[]) => {
+  if (keys === undefined) return Object.entries(lookupStore.store);
   return keys.map((x) => [x, lookupStore.get(x, null)]);
 };
 
