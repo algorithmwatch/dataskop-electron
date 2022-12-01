@@ -168,8 +168,8 @@ export default function registerTiktokScrapingHandlers(
       }
 
       return _.merge(
-        Object.fromEntries(existings),
-        Object.fromEntries(scrapedDone),
+        Object.fromEntries(existings.map((x) => [x[0].slice(2), x[1]])),
+        Object.fromEntries(scrapedDone.map((x) => [x[0].slice(2), x[1]])),
       );
     },
   );
