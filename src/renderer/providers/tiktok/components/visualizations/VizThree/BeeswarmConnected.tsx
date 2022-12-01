@@ -96,7 +96,7 @@ export default function beeswarm({ data }) {
 
   const voronoiCells = useMemo(() => {
     const points = simulation.map((d) => [d.x, d.y]);
-    console.log(points);
+    // console.log(points);
     const voronoi = Delaunay.from(points).voronoi([
       -100,
       -100,
@@ -115,7 +115,7 @@ export default function beeswarm({ data }) {
     return simulation.filter((d) => d[1] === active);
   }, [active]);
 
-  console.log(activeLines);
+  // console.log(activeLines);
 
   return (
     <svg ref={ref} className="flex-1 mb-4">
