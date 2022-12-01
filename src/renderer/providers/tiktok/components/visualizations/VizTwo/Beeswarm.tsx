@@ -72,7 +72,7 @@ export default function Beeswarm({ data }) {
         height: height,
         marginTop: 30,
         marginBottom: 50,
-        marginLeft: 150,
+        marginLeft: 200,
         style: {
           //fontSize: '0.8em',
           color: "#000",
