@@ -144,7 +144,7 @@ export default function registerTiktokScrapingHandlers(
       // check local lookups
       const [existings, missing] = _.partition(
         getLookups(avatars.map((x) => `ta${x}`)),
-        (x) => x != null,
+        (x) => x[1] !== null,
       );
       log.info(
         `Scraping Tiktok author avatars: ${existings.length} existing lookups and ${missing.length} missing`,
@@ -154,16 +154,23 @@ export default function registerTiktokScrapingHandlers(
 
       const scrapedDone = [];
       for (const k of missingKeys) {
-        const result = await scrapeAuthorAvatar(
-          k.slice(2),
-          log.scope("schaufel").info,
-        );
-
-        addLookups({ [k]: result });
-        scrapedDone.push([k, result]);
+        try {
+          const result = await scrapeAuthorAvatar(
+            k.slice(2),
+            log.scope("schaufel").info,
+          );
+          addLookups({ [k]: result });
+          scrapedDone.push([k, result]);
+        } catch {
+          log.info("Skipping");
+          await delay(1000);
+        }
       }
 
-      return _.merge(Object.fromEntries(existings), scrapedDone);
+      return _.merge(
+        Object.fromEntries(existings),
+        Object.fromEntries(scrapedDone),
+      );
     },
   );
 }

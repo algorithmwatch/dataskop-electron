@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/rules-of-hooks */
 import { extent, flatGroup, groups } from "d3-array";
 import { Delaunay } from "d3-delaunay";
 import { forceCollide, forceSimulation, forceX, forceY } from "d3-force";
@@ -17,7 +19,7 @@ export function AxisBottom({ scale, height }) {
   ));
 }
 
-export default function beeswarm({ data }) {
+export default function beeswarm({ data, pics }) {
   const [rect, ref] = useRect();
   const [active, setActive] = useState(null);
   const [simulationDone, setSimulationDone] = useState(false);

@@ -74,6 +74,7 @@ const youtubeChannels = [
 
 const tiktokChannels = [
   "tiktok-scrape-videos",
+  "tiktok-scrape-author-avatars",
   "tiktok-data-upload",
   "tiktok-data-export",
   "tiktok-eligible-to-donate",
