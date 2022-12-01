@@ -11,7 +11,7 @@ import { useRect } from "../utils/useRect";
 
 function beeswarm(
   data,
-  { gap = 1, ticks = 30, dynamic, direction = "y", ...options },
+  { gap = 1, ticks = 40, dynamic, direction = "y", ...options },
 ) {
   const dots = Plot.dot(data, options);
   const { render } = dots;
@@ -91,7 +91,7 @@ export default function Beeswarm({ data }) {
             marginLeft: 50,
             dynamic: true,
             title: (d) => d.label,
-            x: (d) => d.date,
+            x: (d) => d.day,
             y: (d) => d.label,
             fill: (d) => d.label,
             stroke: "none",
