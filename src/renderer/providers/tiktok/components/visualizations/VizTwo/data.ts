@@ -1,4 +1,4 @@
-import { ascending, flatGroup, group } from "d3-array";
+import { ascending, extent, flatGroup, group } from "d3-array";
 
 const topNum = 10;
 
@@ -168,7 +168,18 @@ const transformData = (gdprData, metadata) => {
     .map((d) => d[1])
     .flat();
 
-  return { topHashtagsFlat, topDiversificationLabels };
+  const dateExtent = extent(entriesExpanded, (d) => d.date);
+
+  const stats = {
+    topHashtag: topHashtags[0][0],
+    topLabel: topDiversificationLabels[0].label,
+    totalVideos: entries.length,
+    totalDays: Math.round(
+      (dateExtent[1].getTime() - dateExtent[0].getTime()) / 1000 / 60 / 60 / 24,
+    ),
+  };
+
+  return { topHashtagsFlat, topDiversificationLabels, stats };
 };
 
 export { transformData };

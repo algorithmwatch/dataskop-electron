@@ -49,7 +49,7 @@ function DatasourceSwitch({ datasource, setDatasource }) {
 export default function VizTwo({ gdprData, metadata }) {
   const [datasource, setDatasource] = useState("hashtags");
 
-  const { topDiversificationLabels, topHashtagsFlat } = useMemo(
+  const { topDiversificationLabels, topHashtagsFlat, stats } = useMemo(
     () => transformData(gdprData, metadata),
     [gdprData, metadata],
   );
@@ -66,10 +66,10 @@ export default function VizTwo({ gdprData, metadata }) {
 
       <VizBoxRow
         values={[
-          { head: "#deinemudda", label: "Top Hashtag" },
-          { head: "Katzen", label: "Top Label" },
-          { head: "3443", label: "Anzahl Videos" },
-          { head: "12", label: "Tage" },
+          { head: `${stats.topHashtag}`, label: "Top Hashtag" },
+          { head: `${stats.topLabel}`, label: "Top Label" },
+          { head: `${stats.totalVideos}`, label: "Anzahl Videos" },
+          { head: `${stats.totalDays}`, label: "Tage" },
         ]}
       />
 
