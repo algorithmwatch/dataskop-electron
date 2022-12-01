@@ -8,10 +8,13 @@ import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { useNavigation } from "../../../contexts";
+import VizThree from "../components/visualizations/VizThree";
+import { useData } from "../lib/hooks";
 
-export default function VizThreePage(): JSX.Element {
+export default function VizTwoPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
+  const { dump, lookups } = useData();
 
   const footerSlots: FooterSlots = {
     center: [
@@ -39,9 +42,8 @@ export default function VizThreePage(): JSX.Element {
 
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>
-      <h1 className="hl-4xl mb-20">Viz Three Page</h1>
-      <div className="space-y-4">
-        <p>This is the content</p>
+      <div className="mt-12 flex flex-col w-full grow">
+        {dump && lookups && <VizThree gdprData={dump} metadata={lookups} />}
       </div>
     </WizardLayout>
   );

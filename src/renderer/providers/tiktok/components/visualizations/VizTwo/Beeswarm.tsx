@@ -7,7 +7,7 @@ import {
 } from "d3-force";
 import { select } from "d3-selection";
 import { useEffect, useMemo } from "react";
-import { useRect } from "./useRect";
+import { useRect } from "../utils/useRect";
 
 function beeswarm(
   data,
