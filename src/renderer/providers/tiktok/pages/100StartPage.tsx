@@ -45,7 +45,11 @@ export default function StartPage(): JSX.Element {
         <div className="grow flex flex-col justify-center items-center max-h-[65%] h-full">
           <img src={dslogo} alt="Dataskop Logo" className="w-80 mx-auto" />
           <div className="mt-6">
-            <Button endIcon={faAngleRight} onClick={hadnleNextClick}>
+            <Button
+              endIcon={faAngleRight}
+              onClick={hadnleNextClick}
+              tabIndex={0}
+            >
               Start
             </Button>
           </div>

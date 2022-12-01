@@ -223,9 +223,10 @@ const createWindow = async () => {
     // Remove app from Taskbar on macOS and Windows. We are currently to get it
     // run with out this option. If we manage to do so, we may come back.
     webPreferences: {
-      preload: app.isPackaged
-        ? path.join(__dirname, "preload.js")
-        : path.join(__dirname, "../../.erb/dll/preload.js"),
+      preload:
+        process.env.NODE_ENV === "development"
+          ? path.join(__dirname, "../../.erb/dll/preload.js")
+          : path.join(__dirname, "preload.js"),
       backgroundThrottling: false,
       sandbox: false,
     },

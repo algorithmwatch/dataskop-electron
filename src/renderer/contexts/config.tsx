@@ -103,10 +103,9 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
 
   useEffect(() => {
     (async () => {
-      const mainInfo = await window.electron.ipc.invoke("get-info");
-      // mainInfo is not working w/ Jest, so abort it
-      if (!mainInfo) return;
-      const { env, version, isMac } = mainInfo;
+      const { env, version, isMac } = await window.electron.ipc.invoke(
+        "get-info",
+      );
 
       const userConfig = await window.electron.ipc.invoke("db-get-config");
 

@@ -16,7 +16,7 @@
     "start:main": "cross-env NODE_ENV=development electron -r ts-node/register/transpile-only .",
     "start:preload": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
     "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
-    "test": "jest",
+    "test": "npx playwright test",
     "cross-env": "cross-env",
     "format": "prettier --write .",
     "schema": "./scripts/create_schema.sh",
@@ -133,60 +133,17 @@
     "dataskop"
   ],
   "homepage": "https://dataskop.net",
-  "jest": {
-    "testURL": "http://localhost/",
-    "testEnvironment": "jsdom",
-    "transform": {
-      "\\.(ts|tsx|js|jsx)$": "ts-jest"
-    },
-    "transformIgnorePatterns": [
-      "node_modules/(?!(lowdb|steno|p-queue|p-timeout|d3-array|internmap|d3-force|d3-quadtree|d3-dispatch|d3-timer|d3-selection|@observablehq/plot|d3|delaunator|robust-predicates|isoformat))"
-    ],
-    "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
-      "\\.(css|less|sass|scss)$": "identity-obj-proxy",
-      "^renderer/(.*)": "<rootDir>/src/renderer/$1",
-      "^renderer": "<rootDir>/src/renderer",
-      "lowdb": "lowdb/lib/index"
-    },
-    "moduleFileExtensions": [
-      "js",
-      "jsx",
-      "ts",
-      "tsx",
-      "json"
-    ],
-    "moduleDirectories": [
-      "node_modules",
-      "release/app/node_modules"
-    ],
-    "testPathIgnorePatterns": [
-      "release/app/dist"
-    ],
-    "setupFiles": [
-      "./.erb/scripts/check-build-exists.ts"
-    ],
-    "globals": {
-      "ts-jest": {
-        "diagnostics": {
-          "warnOnly": true
-        }
-      }
-    }
-  },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.95.0",
+    "@playwright/test": "^1.28.1",
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.1",
     "@svgr/webpack": "^6.5.1",
     "@teamsupercell/typings-for-css-modules-loader": "^2.4.0",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.1.2",
     "@types/archiver": "^5.3.1",
     "@types/cheerio": "^0.22.29",
     "@types/d3": "^7.4.0",
     "@types/glidejs__glide": "^3.4.1",
     "@types/history": "4.7.9",
-    "@types/jest": "^27.0.2",
     "@types/lodash": "^4.14.168",
     "@types/node": "16.10.2",
     "@types/react": "^18",
@@ -225,7 +182,6 @@
     "eslint-import-resolver-webpack": "^0.13.2",
     "eslint-plugin-compat": "^4.0.2",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jest": "^26.2.2",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^6.0.0",
@@ -234,7 +190,6 @@
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.2",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^27.2.4",
     "mini-css-extract-plugin": "^2.3.0",
     "postcss": "^8.4.16",
     "postcss-loader": "^5.2.0",
@@ -248,7 +203,6 @@
     "style-loader": "^3.3.0",
     "tailwindcss": "^3.1.8",
     "terser-webpack-plugin": "^5.2.4",
-    "ts-jest": "^27.0.5",
     "ts-json-schema-generator": "^0.97.0",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.2.1",

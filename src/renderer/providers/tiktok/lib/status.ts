@@ -148,15 +148,12 @@ const addStatusReset = () => {
   );
 };
 
-// During testing, `ipc` is not set correctly
-if (window.electron) {
-  window.electron.ipc.on("monitoring-pending", async () => {
-    window.electron.ipc.invoke(
-      "monitoring-pending-reply",
-      await isLastStatusPending(),
-    );
-  });
-}
+window.electron.ipc.on("monitoring-pending", async () => {
+  window.electron.ipc.invoke(
+    "monitoring-pending-reply",
+    await isLastStatusPending(),
+  );
+});
 
 export {
   getStatus,
