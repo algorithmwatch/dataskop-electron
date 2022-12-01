@@ -33,7 +33,17 @@ const transformData = (gdprData, metadata) => {
 
   const allData = [...shareList, ...favoriteList, ...viewList];
 
-  return { allData };
+  const totalNicknames = new Set(allData.map((d) => d.nickname)).size;
+
+  const stats = {
+    comments: commentsList.length,
+    shares: shareList.length,
+    favorites: favoriteList.length,
+    views: viewList.length,
+    totalNicknames,
+  };
+
+  return { allData, stats };
 };
 
 export { transformData };

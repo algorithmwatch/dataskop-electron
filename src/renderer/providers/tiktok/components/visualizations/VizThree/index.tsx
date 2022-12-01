@@ -5,7 +5,7 @@ import BeeswarmConnected from "./BeeswarmConnected";
 import { transformData } from "./data";
 
 export default function VizThree({ gdprData, metadata }) {
-  const { allData } = useMemo(
+  const { allData, stats } = useMemo(
     () => transformData(gdprData, metadata),
     [gdprData, metadata],
   );
@@ -20,11 +20,14 @@ export default function VizThree({ gdprData, metadata }) {
 
       <VizBoxRow
         values={[
-          { head: "345 Kanäle", label: "insgesamt" },
-          { head: "1234 Videos", label: "gesehen" },
-          { head: "33 x", label: "geliked" },
-          { head: "45 Videos", label: "mit anderen geteilt" },
-          { head: "123 x", label: "kommentiert" },
+          { head: `${stats.totalNicknames} Kanäle`, label: "insgesamt" },
+          { head: `${stats.views} Videos`, label: "gesehen" },
+          { head: `${stats.shares} Videos`, label: "mit anderen geteilt" },
+          { head: `${stats.comments} x`, label: "kommentiert" },
+          { head: `${stats.favorites} Favoriten`, label: "gespeichert" },
+          // { head: "33 x", label: "geliked" },
+          // { head: "45 Videos", label: "mit anderen geteilt" },
+          // { head: "123 x", label: "kommentiert" },
         ]}
       />
 
