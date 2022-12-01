@@ -26,6 +26,7 @@ export default function Header({ toggleMenu }: { toggleMenu: () => void }) {
         {/* Logo */}
         <div className="relative">
           <img
+            id="dataskop-logo"
             src={logo}
             alt="Dataskop Logo"
             className="w-[52px] pointer-events-auto"
