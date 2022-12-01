@@ -73,7 +73,10 @@ export default function VizTwo({ gdprData, metadata }) {
         ]}
       />
 
-      <main className="flex flex-col items-stretch min-h-[50vh] grow">
+      <main
+        className="flex flex-col items-stretch min-h-[50vh] grow"
+        id="dataskop-export-screenshot-inner"
+      >
         <DatasourceSwitch
           datasource={datasource}
           setDatasource={setDatasource}

@@ -6,16 +6,16 @@ const doScreenshot = async (box, fn: string) => {
   const div = document.createElement("div");
   div.style.cssText = `position: absolute; top:${box.height - 40}px; left:${
     box.width - 150
-  }px;`;
+  }px; padding:3px; background-color: white;`;
   div.textContent = "dataskop.net";
   div.id = "dataskop-export-brand-url";
   document.body.insertAdjacentElement("beforeend", div);
 
-  const logoHeight = window.outerHeight * 0.1;
+  const logoHeight = Math.round(window.outerHeight * 0.07);
 
   // Show text for a short time
   const img = document.createElement("img");
-  img.style.cssText = `position: absolute; top: 10px; left: 10px; height: ${logoHeight}px;`;
+  img.style.cssText = `position: absolute; top: 5px; left: 5px; height: ${logoHeight}px;`;
   img.src = logo;
   img.id = "dataskop-export-brand-logo";
   document.body.insertAdjacentElement("beforeend", img);
