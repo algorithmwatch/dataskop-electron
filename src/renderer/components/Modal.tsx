@@ -19,7 +19,7 @@ const themes = {
     panel:
       "max-w-3xl rounded-5xl bg-gradient-to-br from-[#B5FFFD] to-[#FFB8CE] p-1.5 shadow-flat",
     contentWrap: "bg-white rounded-4xl",
-    content: "p-20 max-w-prose text-lg",
+    content: "p-20 max-w-prose text-lg mx-auto",
     footer: "pb-10 flex items-center justify-center",
   },
   tiktokSurvey: {
