@@ -5,6 +5,7 @@
 import fs from "fs";
 
 import {
+  getLookupId,
   getWatchedVideos,
   isEligibleToDonate,
   redactTiktokDump,
@@ -27,7 +28,7 @@ const getData = async (redact: boolean, allLookups: boolean) => {
 
   const lookups = allLookups
     ? // Only extract videos that are part of the dump
-      getLookups(getWatchedVideos(dump))
+      getLookups(getWatchedVideos(dump).map(getLookupId))
     : // Upload only a subset of lookups (only the one we just scraped)
       getLookups(data.lookupsToUploads as string[]);
 
@@ -57,12 +58,19 @@ export default function registerTiktokDataHandlers(mainWindow: BrowserWindow) {
 
   addMainHandler("tiktok-data-export", async (_event: any) => {
     if (mainWindow === null) return;
-    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
-      defaultPath: `dataskop-tiktok-${getNowString()}.json`,
-    });
-    if (canceled || !filePath) return;
 
     const data = await getData(false, true);
+    const defaultPath = `dataskop-tiktok-${getNowString()}.json`;
+
+    if (process.env.PLAYWRIGHT_TESTING === "true") {
+      fs.writeFileSync(defaultPath, JSON.stringify(data));
+      return;
+    }
+
+    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+      defaultPath,
+    });
+    if (canceled || !filePath) return;
 
     fs.writeFileSync(filePath, JSON.stringify(data));
   });

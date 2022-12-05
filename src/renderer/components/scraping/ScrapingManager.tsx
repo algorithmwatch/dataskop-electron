@@ -170,7 +170,7 @@ export default function ScrapingManager({
       // create a uuid every time you hit start scraping
       const { config } = campaign;
       if (filterSteps) config.steps = config.steps.filter(filterSteps);
-      window.electron.log.info("Start data gathering", config);
+      window.electron.log.info("Start data gathering", JSON.stringify(config));
 
       // eslint-disable-next-line @typescript-eslint/no-shadow
       const sessionId = uuidv4();

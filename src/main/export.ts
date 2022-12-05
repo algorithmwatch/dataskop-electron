@@ -65,6 +65,12 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
     async (_event: any, rect: Electron.Rectangle, filename: any) => {
       if (mainWindow === null) return;
       const nativeImage = await mainWindow.webContents.capturePage(rect);
+
+      if (process.env.PLAYWRIGHT_TESTING === "true") {
+        fs.writeFileSync(filename, nativeImage.toJPEG(75));
+        return;
+      }
+
       const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
         defaultPath: filename,
       });

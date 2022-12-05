@@ -104,6 +104,7 @@ export default function registerDownloadsHandlers(mainWindow: BrowserWindow) {
   addMainHandler("downloads-clear", (_event: any) => clearDownloads());
 
   addMainHandler("downloads-import", async (_e: any, paths: string[]) => {
+    log.info(`Importing ${paths.length} file(s)`);
     const dir = path.join(DOWNLOADS_FOLDER, getNowString());
 
     if (!fs.existsSync(dir)) {
@@ -112,6 +113,11 @@ export default function registerDownloadsHandlers(mainWindow: BrowserWindow) {
 
     const dests = [];
     for (const p of paths) {
+      if (p.length === 0) {
+        log.warn("Path is empty. Aborting import.");
+        return { success: false };
+      }
+
       const dest = path.join(dir, path.basename(p));
 
       fs.copyFileSync(p, dest);

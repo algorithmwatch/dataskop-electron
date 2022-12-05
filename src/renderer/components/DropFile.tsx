@@ -4,6 +4,7 @@
 import clsx from "clsx";
 import { ReactNode, useState } from "react";
 import { useDropArea } from "react-use";
+import { useConfig } from "renderer/contexts";
 
 const DropFile = ({
   handleFiles,
@@ -14,6 +15,10 @@ const DropFile = ({
   isDoppable: boolean;
   children: ReactNode;
 }) => {
+  const {
+    state: { isPlaywrightTesing },
+  } = useConfig();
+
   const [isDragOver, setIsDragOver] = useState(false);
   const [bond, state] = useDropArea({
     onFiles: handleFiles,
@@ -56,6 +61,15 @@ const DropFile = ({
               if (e.target.files) handleFiles(Array.from(e.target.files));
             }}
           />
+        )}
+        {/* Workaround for playwright because it has problems with file inputs */}
+        {isPlaywrightTesing && (
+          <input
+            id="playwright-workaround"
+            onChange={(e) => {
+              handleFiles([{ path: e.target.value }]);
+            }}
+          ></input>
         )}
       </label>
     </div>

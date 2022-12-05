@@ -61,6 +61,7 @@ const configuration: webpack.Configuration = {
       NODE_ENV: "production",
       DEBUG_PROD: false,
       START_MINIMIZED: false,
+      PLAYWRIGHT_TESTING: false,
     }),
     // read .env files for production
     new Dotenv(),

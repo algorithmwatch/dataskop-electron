@@ -192,7 +192,7 @@ export default function beeswarm({ data, pics }) {
         <g className="nodes">
           {simulation.map(([slot, nickname, data], i) => {
             const { author } = data[0];
-            const base64image = pics[author];
+            const base64image = pics ? pics[author] : null;
             return (
               <g
                 key={i}

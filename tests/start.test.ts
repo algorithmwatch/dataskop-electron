@@ -7,11 +7,6 @@ import {
 } from "@playwright/test";
 import path from "path";
 
-/**
- * For Getting started with Playwright, see here:
- * @see https://playwright.dev/docs/intro
- */
-
 test.describe.serial(() => {
   let page: Page;
   let electronApp: ElectronApplication;

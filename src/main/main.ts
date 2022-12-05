@@ -374,6 +374,7 @@ ipcMain.handle("get-info", (e) => {
         TRACK_EVENTS: process.env.TRACK_EVENTS,
         SERIOUS_PROTECTION: process.env.SERIOUS_PROTECTION,
         AUTO_SELECT_CAMPAIGN: process.env.AUTO_SELECT_CAMPAIGN,
+        PLAYWRIGHT_TESTING: process.env.PLAYWRIGHT_TESTING,
       },
     };
 });

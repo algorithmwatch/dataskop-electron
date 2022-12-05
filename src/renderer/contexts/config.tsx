@@ -33,6 +33,7 @@ type Action =
       autoSelectCampaign: number | null;
       userConfig: UserConfig;
       isMac: boolean;
+      isPlaywrightTesing: boolean;
     }
   | { type: "show-advanced-menu" }
   | { type: "set-debug"; isDebug: boolean }
@@ -41,6 +42,7 @@ type Dispatch = (action: Action) => void;
 type State = {
   version: string;
   isMac: boolean;
+  isPlaywrightTesing: boolean;
   isDebug: boolean;
   showAdvancedMenu: boolean;
   platformUrl: string | null;
@@ -99,6 +101,7 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
     seriousProtection: null,
     autoSelectCampaign: null,
     userConfig: null,
+    isPlaywrightTesing: false,
   });
 
   useEffect(() => {
@@ -141,6 +144,7 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
         showAdvancedMenu,
         userConfig,
         isMac,
+        isPlaywrightTesing: env.PLAYWRIGHT_TESTING === "true",
       });
     })();
   }, []);
