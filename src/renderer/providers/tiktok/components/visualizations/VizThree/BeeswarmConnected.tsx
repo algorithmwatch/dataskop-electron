@@ -24,6 +24,8 @@ export default function beeswarm({ data, pics }) {
   const [active, setActive] = useState(null);
   const [simulationDone, setSimulationDone] = useState(false);
 
+  console.log(pics);
+
   const { width, height } = rect;
   const text = {
     like: "gelikte Inhalte",
@@ -39,6 +41,7 @@ export default function beeswarm({ data, pics }) {
   };
   const minNum = 1;
   const ticks = 50;
+  const profileCutoff = 4;
 
   const groupedData = useMemo(() => {
     return flatGroup(
@@ -188,29 +191,52 @@ export default function beeswarm({ data, pics }) {
 
         <g className="nodes">
           {simulation.map(([slot, nickname, data], i) => {
+            const { author } = data[0];
+            const base64image = pics[author];
             return (
-              <image
+              <g
                 key={i}
-                xlinkHref="profile.jpeg"
-                x={simulation[i].x}
-                y={simulation[i].y}
-                width={size(data.length)}
-                height={size(data.length)}
-                className="transition-transform duration-300 ease-in-out"
-                clipPath="inset(0% round 50%)"
-                // transform={`translate(${-size(data.length) / 2}, ${-size(data.length) / 2})`}
-                style={{
-                  filter:
-                    active === nickname
-                      ? ""
-                      : `brightness(1.1) url(#flood${slot})`,
-                  transform: `translate(${-size(data.length) / 2}px, ${
-                    -size(data.length) / 2
-                  }px)  scale(${active === nickname ? 1.4 : 1})`,
-                  transformOrigin: "center center",
-                  transformBox: "fill-box",
-                }}
-              />
+                transform={`translate(${simulation[i].x},${simulation[i].y})`}
+              >
+                {base64image && (
+                  <image
+                    key={i}
+                    href={base64image}
+                    x={-size(data.length) / 2}
+                    y={-size(data.length) / 2}
+                    width={size(data.length)}
+                    height={size(data.length)}
+                    className="transition-transform duration-300 ease-in-out"
+                    clipPath="inset(0% round 50%)"
+                    style={{
+                      filter:
+                        active === nickname
+                          ? ""
+                          : `brightness(1.1) url(#flood${slot})`,
+                      transform: `scale(${active === nickname ? 1.4 : 1})`,
+                      transformOrigin: "center center",
+                      transformBox: "fill-box",
+                    }}
+                  />
+                )}
+                {!base64image && (
+                  <circle
+                    r={size(data.length) / 2}
+                    fill={
+                      slot === "view"
+                        ? "#0090CE"
+                        : slot === "share"
+                        ? "#FF004F"
+                        : "#00CEC7"
+                    }
+                    style={{
+                      transform: `scale(${active === nickname ? 1.4 : 1})`,
+                      transformOrigin: "center center",
+                      transformBox: "fill-box",
+                    }}
+                  />
+                )}
+              </g>
             );
           })}
         </g>
@@ -300,46 +326,35 @@ export default function beeswarm({ data, pics }) {
           </text>
         </g>
         {/* <g className="tooltip">
-          {active && (
-            <g
-              transform={`translate(${
-                width - margin.left - margin.right - 200
-              }, ${height - margin.top - margin.bottom - 200})`}
-            >
-              <rect width="200" height="200" className="fill-white" />
-              <text
-                x="0"
-                y="0"
-                textAnchor="start"
-                dominantBaseline="middle"
-                className="fill-gray-400"
-                style={{
-                  pointerEvents: "none",
-                  transform: "translate(10px, 10px) ",
-                }}
-              >
-                {active}
-              </text>
-              <text
-                x="0"
-                y="0"
-                textAnchor="start"
-                dominantBaseline="middle"
-                className="fill-gray-400"
-                style={{
-                  pointerEvents: "none",
-                  transform: "translate(10px, 30px) ",
-                }}
-              >
-                {
-                  simulation.find(
-                    ([slot, nickname, data]) => nickname === active,
-                  )[2].length
-                }
-              </text>
-            </g>
-          )}
-        </g> */}
+                {active && (
+                    <g transform={`translate(${width - margin.left - margin.right - 200}, ${height - margin.top - margin.bottom - 200})`}>
+                        <rect width="200" height="200" className="fill-white" />
+                        <text
+
+                            x="0"
+                            y="0"
+                            textAnchor="start"
+                            dominantBaseline="middle"
+                            className="fill-gray-400"
+                            style={{pointerEvents: "none", transform: "translate(10px, 10px) "}}
+                        >
+                            {active}
+                        </text>
+                        <text
+
+                            x="0"
+                            y="0"
+                            textAnchor="start"
+                            dominantBaseline="middle"
+                            className="fill-gray-400"
+                            style={{pointerEvents: "none", transform: "translate(10px, 30px) "}}
+                        >
+                            {simulation.find(([slot, nickname, data]) => nickname === active)[2].length}
+                        </text>
+
+                    </g>
+                )}
+                </g> */}
       </g>
     </svg>
   );
