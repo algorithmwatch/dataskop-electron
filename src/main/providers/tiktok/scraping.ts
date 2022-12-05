@@ -81,15 +81,14 @@ export default function registerTiktokScrapingHandlers(
       htmlLogging = false,
     ): Promise<any> => {
       // check local lookups
-      const [existings, missing] = _.partition(
-        getLookups(ids),
-        (x) => x[1] !== null && isResultSane(x[1]),
+      const existing = Object.entries(getLookups(ids)).filter(
+        (x) => x[1] != null && isResultSane(x[1]),
       );
-      log.info(
-        `Scraping Tiktok videos: ${existings.length} existing lookups and ${missing.length} missing`,
-      );
+      const missingKeys = _.difference(ids, existing.map(_.head));
 
-      const missingKeys = missing.map(_.head) as string[];
+      log.info(
+        `Scraping Tiktok videos: ${existing.length} existing lookups and ${missingKeys.length} missing`,
+      );
 
       // check backend lookups
       const backendDone = {};
@@ -128,7 +127,7 @@ export default function registerTiktokScrapingHandlers(
       const scrapedDone = (await Promise.all(pScrapes)).flat();
 
       if (onlyScrape) return {};
-      return _.merge(Object.fromEntries(existings), backendDone, scrapedDone);
+      return _.merge(Object.fromEntries(existing), backendDone, scrapedDone);
     },
   );
 
@@ -141,16 +140,17 @@ export default function registerTiktokScrapingHandlers(
       avatars: string[],
       htmlLogging = false,
     ): Promise<any> => {
+      const avatarKeys = avatars.map((x) => `ta${x}`);
       // check local lookups
-      const [existings, missing] = _.partition(
-        getLookups(avatars.map((x) => `ta${x}`)),
-        (x) => x[1] !== null,
-      );
-      log.info(
-        `Scraping Tiktok author avatars: ${existings.length} existing lookups and ${missing.length} missing`,
-      );
+      const existing = Object.entries(getLookups(avatarKeys));
+      const missingKeys = _.difference(
+        avatarKeys,
+        existing.map(_.head),
+      ) as string[];
 
-      const missingKeys = missing.map(_.head) as string[];
+      log.info(
+        `Scraping Tiktok author avatars: ${existing.length} existing lookups and ${missingKeys.length} missing`,
+      );
 
       const scrapedDone = [];
       for (const k of missingKeys) {
@@ -168,7 +168,7 @@ export default function registerTiktokScrapingHandlers(
       }
 
       return _.merge(
-        Object.fromEntries(existings.map((x) => [x[0].slice(2), x[1]])),
+        Object.fromEntries(existing.map((x) => [x[0].slice(2), x[1]])),
         Object.fromEntries(scrapedDone.map((x) => [x[0].slice(2), x[1]])),
       );
     },

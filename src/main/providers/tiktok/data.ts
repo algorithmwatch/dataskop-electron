@@ -5,6 +5,7 @@
 import fs from "fs";
 
 import {
+  getWatchedVideos,
   isEligibleToDonate,
   redactTiktokDump,
 } from "@algorithmwatch/schaufel-wrangle";
@@ -24,10 +25,11 @@ const getData = async (redact: boolean, allLookups: boolean) => {
 
   const data = dataStore.store;
 
-  // Upload only a subset of lookups (only the one we just scraped)
   const lookups = allLookups
-    ? getLookups()
-    : getLookups(data.lookupsToUploads as string[]);
+    ? // Only extract videos that are part of the dump
+      getLookups(getWatchedVideos(dump))
+    : // Upload only a subset of lookups (only the one we just scraped)
+      getLookups(data.lookupsToUploads as string[]);
 
   return { sessions: data.data, lookups, dump, version: app.getVersion() };
 };
