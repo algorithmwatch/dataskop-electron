@@ -84,7 +84,7 @@ export default function Beeswarm({ data }) {
         //   fill: (c) => c,
         // },
         y: { tickSize: 0 },
-        x: { types: "Datum", ticks: 15, tickRotate: -45 },
+        x: { types: "Datum", ticks: 15, tickRotate: -45, tickFormat: "%d.%m." },
         marks: [
           beeswarm(data, {
             marginTop: 50,
@@ -105,9 +105,9 @@ export default function Beeswarm({ data }) {
 
   useEffect(() => {
     if (beeRef.current && beeSvg) {
-      console.log("rendering beeswarm");
-      console.log(data);
-      //select(beeRef.current).selectAll('text').style('font-size', '2em');
+      // console.log("rendering beeswarm");
+      // console.log(data);
+      // select(beeRef.current).selectAll('text').style('font-size', '2em');
       beeRef.current.replaceChildren(beeSvg);
       return () => beeSvg?.remove();
     }

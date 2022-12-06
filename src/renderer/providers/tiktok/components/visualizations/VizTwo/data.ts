@@ -135,9 +135,7 @@ const transformData = (gdprData, metadata) => {
     .map((e) => e.dates.map((d) => ({ ...e, date: d })))
     .flat()
     .map((d) => {
-      const day = d.date.getDate();
-      const month = d.date.getMonth();
-      return { ...d, day: `${day}.${month}` };
+      return { ...d, day: d.date };
     });
 
   const entriesTagsExpanded = entriesExpanded

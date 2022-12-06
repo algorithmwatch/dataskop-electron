@@ -57,7 +57,10 @@ export default function VizTwo({ gdprData, metadata }) {
   const data =
     datasource === "hashtags" ? topHashtagsFlat : topDiversificationLabels;
 
-  console.log(data);
+  window.electron.log.info(
+    `Displayin Viz2 with ${datasource} for ${data.length} videos`,
+  );
+
   return (
     <>
       <div className="mx-auto flex items-center text-2xl mb-6">

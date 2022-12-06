@@ -74,12 +74,7 @@ function VizOne({ gdprData }: { gdprData: any }) {
     x: {
       type: "band",
       tickFormat: (d) =>
-        `${d.getDate()}.${d.getMonth() === 0 ? 12 : d.getMonth() + 1}`,
-      // tickFormat: (d) =>
-      //   `${d.getDate()}.${
-      //     d.getMonth() === 0 ? 12 : d.getMonth() + 1
-      //   }.${d.getFullYear()}`,
-      // tickRotate: -90,
+        `${`0${d.getDate()}`.slice(-2)}.${`0${d.getMonth() + 1}`.slice(-2)}.`,
       label: "Zeitverlauf",
     },
   };
