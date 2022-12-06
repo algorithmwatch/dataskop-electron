@@ -161,8 +161,8 @@ export default function registerTiktokScrapingHandlers(
           );
           addLookups({ [k]: result });
           scrapedDone.push([k, result]);
-        } catch {
-          log.info("Skipping");
+        } catch (err) {
+          log.info(`Skipping tiktok avatar for ${k}: ${err}`);
           await delay(1000);
         }
       }

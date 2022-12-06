@@ -1,13 +1,13 @@
-import { group } from "d3-array";
+import _ from "lodash";
+
+// TODO: Add limit to not iterate over very large dumps
 
 const transformData = (gdprData, metadata) => {
-  const metaLookup = group(Object.values(metadata), (d) => d?.result?.id);
-
   const addData = (d) => {
     const id = (d.Link || d.VideoLink).split("/").reverse()[1];
-    const data = metaLookup.get(id);
+    const data = _.get(metadata, `tv${id}`, null);
     let item = {};
-    if (data?.length && data[0].result) item = data[0].result;
+    if (data && data.result) item = data.result;
     return { ...d, id, ...item };
   };
 
@@ -16,24 +16,24 @@ const transformData = (gdprData, metadata) => {
     addData,
   )
     .map((d) => ({ ...d, slot: "share" }))
-    .filter((d) => d.nickname);
+    .filter((d) => d.author);
 
   const favoriteList = gdprData.Activity["Like List"].ItemFavoriteList.map(
     addData,
   )
     .map((d) => ({ ...d, slot: "like" }))
-    .filter((d) => d.nickname);
+    .filter((d) => d.author);
 
   // const viewList = entriesExpanded.map((d) => ({ ...d, slot: "view" }));
   const viewList = gdprData.Activity["Video Browsing History"].VideoList.map(
     addData,
   )
     .map((d) => ({ ...d, slot: "view" }))
-    .filter((d) => d.nickname);
+    .filter((d) => d.author);
 
   const allData = [...shareList, ...favoriteList, ...viewList];
 
-  const totalNicknames = new Set(allData.map((d) => d.nickname)).size;
+  const totalNicknames = new Set(allData.map((d) => d.author)).size;
 
   const stats = {
     comments: commentsList.length,

@@ -5,6 +5,8 @@ import { VizBoxRow } from "../VizBox";
 import BeeswarmConnected from "./BeeswarmConnected";
 import { transformData } from "./data";
 
+const NUM_TOP_AUTHORS = 10;
+
 export default function VizThree({ gdprData, metadata }) {
   const [pics, setPics] = useState(null);
 
@@ -15,20 +17,30 @@ export default function VizThree({ gdprData, metadata }) {
 
   useEffect(() => {
     (async () => {
-      console.log(allData);
-      const authors = _.uniq(allData.map((x) => x.author));
-      console.log(authors);
+      const allAuthors = Object.entries(
+        _.countBy(allData.map((x) => x.author)),
+      );
+
+      const topAuthors = _.orderBy(allAuthors, (x) => x[1], "desc")
+        .slice(0, NUM_TOP_AUTHORS)
+        .map((x) => x[0]);
+
+      window.electron.log.info(
+        `Fetching avatars for the top authors ${JSON.stringify(topAuthors)}`,
+      );
 
       const r = await window.electron.ipc.invoke(
         "tiktok-scrape-author-avatars",
-        authors.slice(0, 10),
+        topAuthors,
       );
       setPics(r);
     })();
   }, allData);
 
-  console.log(allData);
-  console.log(pics);
+  if (pics)
+    window.electron.log.info(
+      `Got pics for ${Object.keys(pics).length} authors`,
+    );
 
   return (
     <>

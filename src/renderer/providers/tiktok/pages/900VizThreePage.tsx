@@ -22,7 +22,7 @@ import { useData } from "../lib/hooks";
 export default function VizTwoPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
-  const { dump, lookups } = useData();
+  const { dump, lookups } = useData(2000);
   const [aboutModalIsOpen, setAboutModalIsOpen] = useState(false);
 
   const footerSlots: FooterSlots = {

@@ -24,7 +24,7 @@ export default function beeswarm({ data, pics }) {
   const [active, setActive] = useState(null);
   const [simulationDone, setSimulationDone] = useState(false);
 
-  console.log(pics);
+  // console.log(pics);
 
   const { width, height } = rect;
   const text = {
@@ -39,7 +39,13 @@ export default function beeswarm({ data, pics }) {
     top: 10,
     bottom: 60,
   };
-  const minNum = 1;
+
+  const minNum = {
+    view: 5,
+    like: 2,
+    share: 0,
+  };
+
   const ticks = 50;
   const profileCutoff = 4;
 
@@ -47,14 +53,14 @@ export default function beeswarm({ data, pics }) {
     return flatGroup(
       data,
       (d) => d.slot,
-      (d) => d.nickname,
+      (d) => d.author,
     ).filter(
-      ([slot, nickname, data]) =>
-        nickname !== undefined && data.length > minNum,
+      ([slot, author, data]) =>
+        author !== undefined && data.length >= minNum[slot],
     );
   }, [data, minNum]);
 
-  // console.log("numAvatare",groups(data, d=> d.nickname).filter(d => d[1].length > minNum).length)
+  // console.log("numAvatare",groups(data, d=> d.author).filter(d => d[1].length > minNum).length)
 
   const xDomain = useMemo(() => {
     return extent(groupedData, ([slot, nickname, data]) => data.length);
