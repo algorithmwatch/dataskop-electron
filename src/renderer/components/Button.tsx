@@ -34,7 +34,7 @@ const sizes = {
 
 const iconSizes = {
   xs: "space-x-1.5",
-  sm: "space-x-2",
+  sm: "space-x-2 [&_svg]:text-base",
   md: "space-x-2.5",
   lg: "space-x-2.5",
 };

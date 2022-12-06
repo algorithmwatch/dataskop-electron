@@ -27,13 +27,13 @@ export default function WizardLayout({
       </div>
       {footerSlots && (
         <nav className="z-10 h-28 shrink-0 px-6 grid grid-cols-7">
-          <div className="flex items-start justify-start space-x-4 col-span-2">
+          <div className="flex items-start justify-start space-x-4 col-span-2 pt-2">
             {footerSlots.start}
           </div>
-          <div className="flex items-start justify-center space-x-4 col-span-3">
+          <div className="flex items-start justify-center space-x-4 col-span-3 pt-2">
             {footerSlots.center}
           </div>
-          <div className="flex items-start justify-end space-x-4 col-span-2">
+          <div className="flex items-start justify-end space-x-4 col-span-2 pt-2">
             {footerSlots.end}
           </div>
         </nav>
