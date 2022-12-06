@@ -3,10 +3,17 @@
  *
  * @module
  */
-import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
+import {
+  faAngleLeft,
+  faAngleRight,
+  faImage,
+  faInfoCircle,
+} from "@fortawesome/pro-solid-svg-icons";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
+import Modal from "../../../components/Modal";
 import { useNavigation } from "../../../contexts";
 import { doScreenshot } from "../components/visualizations/utils/screenshot";
 import VizOne from "../components/visualizations/VizOne";
@@ -15,14 +22,52 @@ import { useData } from "../lib/hooks";
 export default function VizOnePage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
+  const [aboutModalIsOpen, setAboutModalIsOpen] = useState(false);
 
   const { dump } = useData();
 
   const footerSlots: FooterSlots = {
     start: [
       <Button
+        className="mt-3"
         theme="outline"
+        size="sm"
         key="1"
+        startIcon={faInfoCircle}
+        onClick={() => setAboutModalIsOpen(true)}
+      >
+        Über diese Grafik
+      </Button>,
+    ],
+    center: [
+      <Button
+        key="1"
+        theme="text"
+        startIcon={faAngleLeft}
+        onClick={() => {
+          history.push(getPreviousPage("path"));
+        }}
+      >
+        Zurück
+      </Button>,
+
+      <Button
+        key="2"
+        endIcon={faAngleRight}
+        onClick={() => {
+          history.push(getNextPage("path"));
+        }}
+      >
+        Weiter
+      </Button>,
+    ],
+    end: [
+      <Button
+        className="mt-3"
+        theme="outline"
+        key="2"
+        size="sm"
+        startIcon={faImage}
         onClick={() => {
           const outer = window.document.querySelector(
             "#dataskop-export-screenshot-outer",
@@ -49,38 +94,28 @@ export default function VizOnePage(): JSX.Element {
         Als Bild speichern
       </Button>,
     ],
-    center: [
-      <Button
-        key="1"
-        theme="text"
-        startIcon={faAngleLeft}
-        onClick={() => {
-          history.push(getPreviousPage("path"));
-        }}
-      >
-        Zurück
-      </Button>,
-
-      <Button
-        key="2"
-        endIcon={faAngleRight}
-        onClick={() => {
-          history.push(getNextPage("path"));
-        }}
-      >
-        Weiter
-      </Button>,
-    ],
   };
 
   return (
-    <WizardLayout className="text-center" footerSlots={footerSlots}>
-      <div
-        className="mt-12 flex flex-col mx-16"
-        id="dataskop-export-screenshot-outer"
+    <>
+      <Modal
+        theme="tiktok"
+        isOpen={aboutModalIsOpen}
+        closeModal={() => setAboutModalIsOpen(false)}
       >
-        {dump && <VizOne gdprData={dump} />}
-      </div>
-    </WizardLayout>
+        <div className="text-center">
+          <h1 className="hl-2xl mb-4">Über diese Grafik</h1>
+          <p className="">Schalalalala!</p>
+        </div>
+      </Modal>
+      <WizardLayout className="text-center" footerSlots={footerSlots}>
+        <div
+          className="mt-12 flex flex-col mx-16"
+          id="dataskop-export-screenshot-outer"
+        >
+          {dump && <VizOne gdprData={dump} />}
+        </div>
+      </WizardLayout>
+    </>
   );
 }
