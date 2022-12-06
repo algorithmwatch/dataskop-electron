@@ -2,11 +2,11 @@ import { faPenToSquare } from "@fortawesome/pro-regular-svg-icons";
 import * as Plot from "@observablehq/plot";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Switch from "renderer/components/Switch";
-import { SelectInput } from "renderer/providers/tiktok/components/visualizations/SelectInput";
+import { SelectInput } from "./SelectInput";
 import { shortenGdprData } from "./utils/shorten_data";
 import addTooltips from "./utils/tooltips";
 import { arrangeDataVizOne } from "./utils/viz-utils";
-import { VizBox } from "./VizBox";
+import { VizBoxRow } from "./VizBox";
 
 function rangeOfTime(timeofday: string) {
   switch (timeofday) {
@@ -55,18 +55,21 @@ function VizOne({ gdprData }: { gdprData: any }) {
       [graph, range.value],
     );
 
-  const chartWidth = Math.round((window.outerWidth * 90) / 100);
-  const chartHeight = Math.round((window.outerHeight * 40) / 100);
+  const smallerScreen = window.outerHeight <= 1000;
+  const chartWidth = Math.round(window.outerWidth);
+  const chartHeight = Math.round(
+    window.outerHeight * (smallerScreen ? 0.5 : 0.7),
+  );
   const commonProps = {
     width: chartWidth,
     height: chartHeight,
-    marginBottom: 75,
-    marginTop: 60,
-    marginLeft: 60,
-    marginRight: 60,
+    marginBottom: smallerScreen ? 60 : 75,
+    marginTop: smallerScreen ? 50 : 60,
+    marginLeft: smallerScreen ? 50 : 60,
+    marginRight: smallerScreen ? 50 : 60,
     style: {
       background: "transparent",
-      fontSize: "16px",
+      fontSize: "18px",
     },
     x: {
       type: "band",
@@ -82,8 +85,8 @@ function VizOne({ gdprData }: { gdprData: any }) {
   };
   const tickStep =
     videoData.length > 28 ? Math.round(videoData.length / 15) : 1;
-  console.warn("tickStep", tickStep);
-  console.warn("videoData.length", videoData.length);
+  // console.warn("tickStep", tickStep);
+  // console.warn("videoData.length", videoData.length);
   const timeslotsAndSingleColorBarsPlot = {
     ...commonProps,
     x: {
@@ -191,12 +194,14 @@ function VizOne({ gdprData }: { gdprData: any }) {
         </div>
       </div>
 
-      <div className="flex mx-auto space-x-4 mb-6">
-        <VizBox head={totActivity} label="Aktivität" />
-        <VizBox head={avgMinsPerDay} label="pro Tag" />
-        <VizBox head={`${numAppOpen} x`} label="App geöffnet" />
-        <VizBox head={`${coreTimeString} h`} label="Kernzeit" />
-      </div>
+      <VizBoxRow
+        values={[
+          { head: totActivity, label: "Aktivität" },
+          { head: avgMinsPerDay, label: "pro Tag" },
+          { head: `${numAppOpen} x`, label: "App geöffnet" },
+          { head: `${coreTimeString} h`, label: "Kernzeit" },
+        ]}
+      />
 
       <div className="flex mx-auto space-x-4">
         <Switch
@@ -223,7 +228,11 @@ function VizOne({ gdprData }: { gdprData: any }) {
       </div>
 
       {/* Chart wrapper */}
-      <div ref={toggleRef} className="w-full min-h-[50vh]" />
+      <div
+        ref={toggleRef}
+        className="w-full mt-6 min-h-[50vh]"
+        id="dataskop-export-screenshot-inner"
+      />
     </>
   );
 }

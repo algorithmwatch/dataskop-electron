@@ -1,7 +1,10 @@
 import { faLoader, IconDefinition } from "@fortawesome/pro-regular-svg-icons";
 import { useState } from "react";
+import { Button } from "renderer/components/Button";
 import Modal from "renderer/components/Modal";
+import { useConfig } from "renderer/contexts";
 import HelpButton from "renderer/providers/tiktok/components/HelpButton";
+import { addStatusReset } from "../lib/status";
 
 import Content from "./Content";
 
@@ -11,13 +14,19 @@ const StatusContent = ({
   icon = faLoader,
   helpButtons,
   fancyNotificationText,
+  allowReset,
 }: {
   title: string;
   body: string;
   icon?: IconDefinition;
   helpButtons?: boolean;
   fancyNotificationText?: boolean;
+  allowReset?: boolean;
 }) => {
+  const {
+    state: { isMac },
+  } = useConfig();
+
   const [modal1IsOpen, setModal1IsOpen] = useState(false);
   const [modal2IsOpen, setModal2IsOpen] = useState(false);
 
@@ -67,8 +76,25 @@ const StatusContent = ({
           </div>
         )}
 
+        {allowReset && (
+          <div className="mt-5">
+            <Button
+              // theme="outline"
+              onClick={async () => {
+                window.electron.log.info(
+                  "Resetting `status` and restarting app",
+                );
+                await addStatusReset();
+                window.electron.ipc.invoke("restart");
+              }}
+            >
+              Status zurücksetzen & Neustarten
+            </Button>
+          </div>
+        )}
+
         {fancyNotificationText && (
-          <div className="mt-24 text-base font-medium relative whitespace-nowrap">
+          <div className="mt-12 lg:mt-24 text-base font-medium relative whitespace-nowrap">
             <span className="absolute inset-0 animate-fade1 flex items-center justify-center">
               <div className="rounded-full bg-white/50 px-5 py-4">
                 Du erhältst eine Benachrichtigung, sobald es weitergehen kann.
@@ -76,8 +102,9 @@ const StatusContent = ({
             </span>
             <span className="absolute inset-0 animate-fade2 flex items-center justify-center">
               <div className="rounded-full bg-white/50 px-5 py-4">
-                Du kannst die App schließen, aber sie muss im Hintergrund
-                geöffnet bleiben.
+                {`Du kannst das Fenster ${
+                  isMac ? "schließen" : "minimieren"
+                }, aber die App muss im Hintergrund geöffnet bleiben.`}
               </div>
             </span>
           </div>

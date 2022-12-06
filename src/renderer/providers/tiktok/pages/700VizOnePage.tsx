@@ -4,10 +4,11 @@
  * @module
  */
 import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { useNavigation } from "../../../contexts";
+import { doScreenshot } from "../components/visualizations/utils/screenshot";
 import VizOne from "../components/visualizations/VizOne";
 import { useData } from "../lib/hooks";
 
@@ -18,6 +19,36 @@ export default function VizOnePage(): JSX.Element {
   const { dump } = useData();
 
   const footerSlots: FooterSlots = {
+    start: [
+      <Button
+        theme="outline"
+        key="1"
+        onClick={() => {
+          const outer = window.document.querySelector(
+            "#dataskop-export-screenshot-outer",
+          );
+          const inner = window.document.querySelector(
+            "#dataskop-export-screenshot-inner svg",
+          );
+
+          if (!outer || !inner) return;
+
+          const box = outer.getBoundingClientRect();
+          const svgBox = inner.getBoundingClientRect();
+          const bottomPadding = 10;
+
+          const width = Math.round(box.width + box.x);
+          const height = Math.round(svgBox.height + svgBox.y) + bottomPadding;
+
+          doScreenshot(
+            { width, height, y: 0, x: 0 },
+            "DataSkop_TikTok_Viz_1.jpg",
+          );
+        }}
+      >
+        Als Bild speichern
+      </Button>,
+    ],
     center: [
       <Button
         key="1"
@@ -29,6 +60,7 @@ export default function VizOnePage(): JSX.Element {
       >
         Zurück
       </Button>,
+
       <Button
         key="2"
         endIcon={faAngleRight}
@@ -43,7 +75,10 @@ export default function VizOnePage(): JSX.Element {
 
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>
-      <div className="mt-12 flex flex-col">
+      <div
+        className="mt-12 flex flex-col mx-16"
+        id="dataskop-export-screenshot-outer"
+      >
         {dump && <VizOne gdprData={dump} />}
       </div>
     </WizardLayout>

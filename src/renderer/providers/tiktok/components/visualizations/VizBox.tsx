@@ -14,3 +14,13 @@ export const VizBox = ({
     </div>
   );
 };
+
+export const VizBoxRow = ({ values }) => {
+  return (
+    <div className="flex mx-auto space-x-4 mb-6">
+      {values.map(({ head, label }) => (
+        <VizBox key={label} head={head} label={label} />
+      ))}
+    </div>
+  );
+};

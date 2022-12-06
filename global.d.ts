@@ -3,6 +3,9 @@ declare global {
   interface Window {
     electron: any;
     log: any;
+    persistEmail: string;
+    hasDonated: boolean | null;
+    notEligibleToDonate: true | null;
   }
 }
 export {};

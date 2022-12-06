@@ -25,7 +25,7 @@ export default function UpdateNotification(): JSX.Element {
   return (
     <>
       {isUpdateAvailable && (
-        <div className="fixed inset-0 bg-yellow-100 z-60 flex flex-col items-center justify-center">
+        <div className="fixed inset-0 z-60 flex flex-col items-center justify-center">
           <div className="space-y-4 text-center text-yellow-1500">
             <div className="hl-3xl">Neues Update verfügbar</div>
 

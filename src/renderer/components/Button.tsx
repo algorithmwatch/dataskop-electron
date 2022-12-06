@@ -106,7 +106,7 @@ export const Button = forwardRef(
     const classNames = clsx(
       "min-w-0 inline-flex items-center justify-center font-bold",
       "focus:outline-none hover:no-underline",
-      "disabled:opacity-70 disabled:cursor-not-allowed",
+      "disabled:opacity-50 disabled:cursor-not-allowed",
       themes[theme],
       sizes[size],
       { [iconSizes[size]]: isLoading || startIcon || endIcon },

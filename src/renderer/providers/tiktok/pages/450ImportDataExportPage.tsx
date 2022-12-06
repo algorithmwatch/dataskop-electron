@@ -6,24 +6,21 @@
 import { faFileImport } from "@fortawesome/pro-light-svg-icons";
 import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
 import { useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
 import DropFile from "renderer/components/DropFile";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
-import { useScraping } from "renderer/contexts";
 import { addScrapingResult } from "renderer/lib/db";
-import { currentDelay } from "renderer/lib/delay";
 import Content from "renderer/providers/tiktok/components/Content";
 
 export default function ImportDataExportPage(): JSX.Element {
-  const { dispatch } = useScraping();
   const history = useHistory();
   const [importIsValid, setImportIsValid] = useState(false);
   const [inputTouched, setInputTouched] = useState(false);
 
   const handleFiles = async (files: File[]) => {
     const response = await window.electron.ipc.invoke(
-      "import-files",
+      "downloads-import",
       files.map(({ path }) => path),
     );
 
@@ -63,15 +60,8 @@ export default function ImportDataExportPage(): JSX.Element {
         endIcon={faAngleRight}
         disabled={!importIsValid}
         onClick={async () => {
-          // First navigate, then start scraping
+          // First navigate, then start scraping on the waiting page
           history.push("/tiktok/waiting");
-
-          dispatch({ type: "set-attached", attached: true, visible: false });
-          await currentDelay("longer");
-          dispatch({
-            type: "start-scraping",
-            filterSteps: (x) => x.type === "scraping",
-          });
         }}
       >
         Weiter

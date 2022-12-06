@@ -17,8 +17,11 @@ deleteSourceMaps();
 
 const configuration: webpack.Configuration = {
   devtool: "source-map",
+
   mode: "production",
+
   target: "electron-main",
+
   entry: {
     main: path.join(webpackPaths.srcMainPath, "main.ts"),
     preload: path.join(webpackPaths.srcMainPath, "preload.ts"),
@@ -27,6 +30,9 @@ const configuration: webpack.Configuration = {
   output: {
     path: webpackPaths.distMainPath,
     filename: "[name].js",
+    library: {
+      type: "umd",
+    },
   },
 
   optimization: {
@@ -55,9 +61,14 @@ const configuration: webpack.Configuration = {
       NODE_ENV: "production",
       DEBUG_PROD: false,
       START_MINIMIZED: false,
+      PLAYWRIGHT_TESTING: false,
     }),
     // read .env files for production
     new Dotenv(),
+
+    new webpack.DefinePlugin({
+      "process.type": '"main"',
+    }),
   ],
 
   /**

@@ -43,7 +43,7 @@ export default function SettingsPage(): JSX.Element {
               Toggle
             </Button>
           </div>
-          <div className="m-5">
+          <div className="m-5" id="debug-logging">
             <div>Debug logging: {userConfig.debugLogging ? "yes" : "no"}</div>
             <Button
               onClick={() =>
@@ -58,7 +58,7 @@ export default function SettingsPage(): JSX.Element {
               Toggle
             </Button>
           </div>
-          <div className="m-5">
+          <div className="m-5" id="html-logging">
             <div>HTML logging: {userConfig.htmlLogging ? "yes" : "no"}</div>
             <Button
               onClick={() =>

@@ -2,13 +2,18 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { faBars } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import { useConfig } from "renderer/contexts";
 import logo from "renderer/providers/tiktok/static/images/bildmarke.svg";
 
 const ToggleMenuButton = ({ toggle }: { toggle: () => void }) => {
   return (
-    <button type="button" className="mr-2 pointer-events-auto" onClick={toggle}>
+    <button
+      type="button"
+      tabIndex={0}
+      className="mr-2 pointer-events-auto"
+      onClick={toggle}
+    >
       <FontAwesomeIcon icon={faBars} size="2x" />
     </button>
   );
@@ -26,6 +31,7 @@ export default function Header({ toggleMenu }: { toggleMenu: () => void }) {
         {/* Logo */}
         <div className="relative">
           <img
+            id="dataskop-logo"
             src={logo}
             alt="Dataskop Logo"
             className="w-[52px] pointer-events-auto"

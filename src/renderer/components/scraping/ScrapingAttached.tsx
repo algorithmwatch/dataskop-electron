@@ -4,78 +4,36 @@
  * @module
  */
 import { useEffect } from "react";
-import { useHistory } from "react-router";
 import { useConfig, useScraping } from "renderer/contexts";
-import { currentDelay } from "renderer/lib/delay";
-import { isMonitoringPending } from "renderer/providers/tiktok/lib/status";
 import ScrapingManager from "./ScrapingManager";
 
 export default function ScrapingAttached() {
   const {
-    state: {
-      isAttached,
-      disableInput,
-      campaign,
-      isScrapingStarted,
-      isScrapingFinished,
-    },
+    state: { isAttached, disableInput, campaign, scrapingProgress },
     dispatch,
   } = useScraping();
 
   const {
     state: { userConfig },
-    dispatch: configDispatch,
   } = useConfig();
 
-  const history = useHistory();
-  // Monitoring
-
-  // we only want to find out if it's reaady to notify the user
-
   useEffect(() => {
-    (async () => {
-      if (userConfig && userConfig.monitoring && !isScrapingStarted) {
-        dispatch({ type: "set-attached", attached: true, visible: false });
-        await currentDelay();
-        dispatch({
-          type: "start-scraping",
-          filterSteps: (x) => x.slug === "tt-data-export-monitoring",
-        });
+    // Set flag so we now that the user hasn't reached the donation page
+    window.hasDonated = null;
+  }, []);
 
-        // Attach
-        // Check if loggend in, then act
-        // Start scraping
-      }
-    })();
-  }, [userConfig?.monitoring, isScrapingStarted]);
-
+  // Expose the status of the scraping to the main process to check wheter the
+  // can safely be closed.
   useEffect(() => {
-    (async () => {
-      if (userConfig && userConfig.monitoring && isScrapingFinished) {
-        configDispatch({
-          type: "set-user-config",
-          newValues: { monitoring: false },
-        });
-        dispatch({ type: "reset-scraping" });
-        dispatch({ type: "set-attached", attached: false, visible: false });
-        window.electron.ipc.invoke("monitoring-done");
-        // Disable monitoring flag
-        // Process post-monitoring result
-        // Notify main about finished monitoring
-
-        // If something went wrong, ask them to check again. If not's working to report to us.
-      }
-    })();
-  }, [userConfig?.monitoring, isScrapingFinished]);
-
-  // Jump to waiting screen
-  useEffect(() => {
-    (async () => {
-      if (!userConfig?.monitoring && (await isMonitoringPending())) {
-        history.push("/tiktok/waiting");
-      }
-    })();
-  }, [userConfig?.monitoring]);
+    window.electron.ipc.removeAllListeners("close-action");
+    window.electron.ipc.on("close-action", () => {
+      window.electron.ipc.invoke(
+        "close-main-window",
+        scrapingProgress.isActive,
+        window.hasDonated !== null,
+      );
+    });
+  }, [scrapingProgress.isActive, window.hasDonated]);
 
   // Only render scraping manger when the campaign is set to avoid tedious guard clauses.
   if (isAttached && campaign && userConfig)

@@ -4,12 +4,12 @@ import log from "electron-log";
 // export main functions to renderer
 // main.ts
 const mainChannels = [
-  "get-version-number",
-  "get-env",
+  "get-info",
   "close-main-window",
   "update-check-beta",
   "update-restart-app",
   "show-notification",
+  "restart",
 ];
 
 const monitoringChannels = ["monitoring-done", "monitoring-pending-reply"];
@@ -30,7 +30,12 @@ const scrapingChannels = [
   "scraping-click-element",
   "scraping-submit-form",
   "scraping-element-exists",
-  "scraping-get-download",
+];
+
+const downloadsChannels = [
+  "downloads-get",
+  "downloads-clear",
+  "downloads-import",
 ];
 
 // background-scraping.ts
@@ -45,11 +50,10 @@ const backgroundScrapingChannels = [
 const exportChannels = [
   "results-import",
   "results-export",
-  "results-save-screenshot",
+  "export-screenshot",
   "export-debug-archive",
   "export-debug-size",
   "export-debug-clean",
-  "import-files",
 ];
 
 // db.ts
@@ -68,12 +72,19 @@ const youtubeChannels = [
   "youtube-scraping-background-videos",
 ];
 
-const tiktokChannels = ["tiktok-scrape-videos"];
+const tiktokChannels = [
+  "tiktok-scrape-videos",
+  "tiktok-scrape-author-avatars",
+  "tiktok-data-upload",
+  "tiktok-data-export",
+  "tiktok-eligible-to-donate",
+];
 
 // whitelist certain channels for certain action
 const validInvokeChannels = mainChannels.concat(
   monitoringChannels,
   scrapingChannels,
+  downloadsChannels,
   backgroundScrapingChannels,
   exportChannels,
   dbChannels,
@@ -98,7 +109,7 @@ const validremoveAllChannels = [
 ];
 
 contextBridge.exposeInMainWorld("electron", {
-  log: log.functions,
+  log: log.scope("renderer"),
   ipc: {
     on(channel: string, func: (arg0: any) => void) {
       if (validOnChannels.includes(channel)) {

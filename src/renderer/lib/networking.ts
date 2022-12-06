@@ -3,7 +3,7 @@
  *
  * @module
  */
-import { ScrapingSession } from "renderer/lib/db";
+import { Buffer } from "buffer";
 import { Campaign } from "renderer/providers/types";
 
 const toBase64 = (str: string) => {
@@ -11,11 +11,7 @@ const toBase64 = (str: string) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-const postJson = (
-  url: string,
-  seriousProtection: string | null,
-  body: Object,
-) => {
+const postJson = (url: string, seriousProtection: string | null, body: any) => {
   return fetch(url, {
     method: "POST",
     body: JSON.stringify(body),
@@ -73,17 +69,43 @@ const postDonation = async (
   platformUrl: string,
   seriousProtection: string | null,
   email: string,
-  result: any,
-  session: ScrapingSession,
+  results: any,
+  campaign: string | number,
 ) => {
   const url = `${platformUrl}/api/donations/`;
+
+  results.version = version;
+
   const res = await postJson(url, seriousProtection, {
     unauthorized_email: email,
-    campaign: session.campaign?.id,
-    results: { scrapingResult: result, session, version },
+    campaign,
+    results,
   });
   if (!res.ok) console.warn(res);
   return res;
 };
 
-export { getActiveCampaigns, postEvent, postDonation };
+const postNewsletterSubscription = async (
+  platformUrl: string,
+  seriousProtection: string | null,
+  email: string,
+  has_donated: boolean,
+  needs_double_optin: boolean,
+) => {
+  const url = `${platformUrl}/api/mailjetsync/`;
+
+  const res = await postJson(url, seriousProtection, {
+    email,
+    has_donated,
+    needs_double_optin,
+  });
+  if (!res.ok) console.warn(res);
+  return res;
+};
+
+export {
+  getActiveCampaigns,
+  postEvent,
+  postDonation,
+  postNewsletterSubscription,
+};

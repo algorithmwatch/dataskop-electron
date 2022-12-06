@@ -5,7 +5,9 @@
  */
 
 import { app } from "electron";
+import log from "electron-log";
 import Store from "electron-store";
+import _ from "lodash";
 import path from "path";
 import { setOpenAtLogin } from "./tray";
 import { addMainHandler } from "./utils";
@@ -57,11 +59,20 @@ const addLookups = (lookups: any) => {
   lookupStore.set(lookups);
 };
 
-const getLookups = (keys: string[]) => {
-  return keys.map((x) => [x, lookupStore.get(x, null)]);
+const getLookups = (keys?: string[]) => {
+  if (keys === undefined) return lookupStore.store;
+  return _.pick(lookupStore.store, keys);
 };
 
-const clearLookups = () => lookupStore.reset();
+const clearLookups = () => {
+  log.info("Clearing `lookups`");
+  lookupStore.reset();
+};
+
+const clearData = () => {
+  log.info("Clearing `data`");
+  dataStore.set("data", null);
+};
 
 const addLookupsToUpload = (keys: string[]) => {
   const newValues = dataStore.get("lookupsToUploads", []) as string[];
@@ -83,8 +94,8 @@ export default async function registerDbHandlers() {
   });
 
   addMainHandler("db-get-lookups", (_e: any, keys: string[] | null) => {
-    if (keys === null) return lookupStore.store;
-    return Object.fromEntries(getLookups(keys));
+    if (keys === null) return getLookups();
+    return getLookups(keys);
   });
 
   addMainHandler("db-clear-lookups", clearLookups);
@@ -99,4 +110,12 @@ export default async function registerDbHandlers() {
   });
 }
 
-export { configStore, DB_FOLDER, getLookups, addLookups, addLookupsToUpload };
+export {
+  configStore,
+  dataStore,
+  DB_FOLDER,
+  getLookups,
+  addLookups,
+  addLookupsToUpload,
+  clearData,
+};

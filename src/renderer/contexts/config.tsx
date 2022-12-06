@@ -32,6 +32,8 @@ type Action =
       seriousProtection: string;
       autoSelectCampaign: number | null;
       userConfig: UserConfig;
+      isMac: boolean;
+      isPlaywrightTesing: boolean;
     }
   | { type: "show-advanced-menu" }
   | { type: "set-debug"; isDebug: boolean }
@@ -39,6 +41,8 @@ type Action =
 type Dispatch = (action: Action) => void;
 type State = {
   version: string;
+  isMac: boolean;
+  isPlaywrightTesing: boolean;
   isDebug: boolean;
   showAdvancedMenu: boolean;
   platformUrl: string | null;
@@ -89,6 +93,7 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
   // initial values get overriden with `useEffect` when the component gets mounten
   const [state, dispatch] = React.useReducer(configReducer, {
     version: "loading...",
+    isMac: false,
     isDebug: false,
     showAdvancedMenu: false,
     platformUrl: null,
@@ -96,14 +101,16 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
     seriousProtection: null,
     autoSelectCampaign: null,
     userConfig: null,
+    isPlaywrightTesing: false,
   });
 
   useEffect(() => {
     (async () => {
-      // in devopment, this returns the electron version instead of the app version.
-      const version = await window.electron.ipc.invoke("get-version-number");
+      const { env, version, isMac } = await window.electron.ipc.invoke(
+        "get-info",
+      );
+
       const userConfig = await window.electron.ipc.invoke("db-get-config");
-      const env = await window.electron.ipc.invoke("get-env");
 
       if (!env) {
         window.electron.log.error("Could not get ENV from main. Aborting.");
@@ -136,6 +143,8 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
         autoSelectCampaign,
         showAdvancedMenu,
         userConfig,
+        isMac,
+        isPlaywrightTesing: env.PLAYWRIGHT_TESTING === "true",
       });
     })();
   }, []);

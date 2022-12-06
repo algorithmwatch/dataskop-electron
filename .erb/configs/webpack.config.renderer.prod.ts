@@ -20,13 +20,12 @@ deleteSourceMaps();
 
 const configuration: webpack.Configuration = {
   devtool: "source-map",
+
   mode: "production",
+
   target: ["web", "electron-renderer"],
-  entry: [
-    "core-js",
-    "regenerator-runtime/runtime",
-    path.join(webpackPaths.srcRendererPath, "index.tsx"),
-  ],
+
+  entry: [path.join(webpackPaths.srcRendererPath, "index.tsx")],
 
   output: {
     path: webpackPaths.distRendererPath,
@@ -72,8 +71,32 @@ const configuration: webpack.Configuration = {
       },
       // Images
       {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        test: /\.(png|jpg|jpeg|gif)$/i,
         type: "asset/resource",
+      },
+      // Video
+      {
+        test: /\.(mp4)$/i,
+        type: "asset/resource",
+      },
+      // SVG
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: "@svgr/webpack",
+            options: {
+              prettier: false,
+              svgo: false,
+              svgoConfig: {
+                plugins: [{ removeViewBox: false }],
+              },
+              titleProp: true,
+              ref: true,
+            },
+          },
+          "file-loader",
+        ],
       },
     ],
   },
@@ -121,6 +144,10 @@ const configuration: webpack.Configuration = {
       },
       isBrowser: false,
       isDevelopment: process.env.NODE_ENV !== "production",
+    }),
+
+    new webpack.DefinePlugin({
+      "process.type": '"renderer"',
     }),
   ],
 };

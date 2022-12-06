@@ -1,5 +1,7 @@
+import { Dayjs } from "dayjs";
 import _ from "lodash";
-import { getLastResult } from "renderer/lib/db";
+import dayjs from "renderer/lib/dayjs";
+import { addScrapingResult, getScrapingResults } from "renderer/lib/db";
 
 const STATUS = {
   // TikTok data was requested and TikTok is busy, It didn't fail yet
@@ -12,67 +14,103 @@ const STATUS = {
   // The download could not happen in the background, we need action from the user
   "monitoring-download-action-required": {
     notification: {
-      title: "Download verfügbar",
-      body: "Der Datenexport steht zum Download bereit",
+      title: "Aktion erforderlich",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
     },
   },
   "monitoring-download-success": {},
-  "monitoring-download-error": {},
-  "monitoring-download-error-timeout": {},
+  "monitoring-download-error": {
+    notification: {
+      title: "Fehler beim Download",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
+  "monitoring-download-error-timeout": {
+    notification: {
+      title: "Fehler beim Download",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
   // Time to download data has expired
   "monitoring-download-expired": {
     notification: {
       title: "Download abgelaufen",
-      body: "Der Datenexport muss erneut beantragt werden.",
-    },
-  },
-  // monitoring-captcha
-  // Monitoring interrupted by captcha
-  // Should prompt user to fill out captcha form
-  "monitoring-captcha": {
-    notification: {
-      title: "Captcha erforderlich",
-      body: "Wir konnten den Status der Datenspende aufgrund eines Captchas nicht überprüfen.",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
     },
   },
   // Error, the HTML may have changed
   "monitoring-error-nothing-found": {
     notification: {
       title: "Fehler",
-      body: "Es ist ein Fehler aufgetreten.",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
     },
   },
   // Error, the HTML may have changed
   "monitoring-error-tab-not-found": {
     notification: {
       title: "Fehler",
-      body: "Es ist ein Fehler aufgetreten.",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
     },
   },
+  // Should prompt user to fill out captcha form
+  "error-captcha-required": {},
   // Error, the HTML may have changed
-  "data-error-tab-not-found": {},
+  "data-error-tab-not-found": {
+    notification: {
+      title: "Fehler",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
   // Waiting until TikTok created the dump
   "data-pending": {},
+  // The data request should either be pending or done but we couldn't verfiy the
+  // current state. Are there network problems?
+  "data-pending-error-unable-to-check": {},
   // successfully requested a new GDPR dump
   "data-request-success": {},
   // There were errors when requesting a new GDPR dump
-  "data-error-request": {},
+  "data-error-request": {
+    notification: {
+      title: "Fehler",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
   "download-action-required": {},
   "download-success": {},
-  "download-error": {},
-  "download-error-timeout": {},
+  "download-error": {
+    notification: {
+      title: "Fehler beim Download",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
+  "download-error-timeout": {
+    notification: {
+      title: "Fehler beim Download",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
   // A scraping step was finished
   "scraping-done": {},
+  // A user imported a dump
   "files-imported": {},
 };
 
+// There are two more special stati: `status-not-available` and `status-reset`.
+// They are not listed here because the procedures must not return it.
+
 type StatusKey = keyof typeof STATUS;
 
-const getStatus = async (): Promise<string> => {
-  const row = await getLastResult();
-  window.electron.log.info(row);
-  if (!row) return "status-not-available";
-  return _.get(row.fields, "status", "status-not-available") as string;
+const getStatus = async (): Promise<{ status: string; updatedAt: Dayjs }> => {
+  const rows = await getScrapingResults();
+  const statusRows = rows.filter((x) => x.fields && x.fields.status);
+  if (statusRows.length === 0)
+    return { status: "status-not-available", updatedAt: dayjs() };
+
+  const last = _.last(statusRows) as any;
+  return {
+    status: last.fields.status as string,
+    updatedAt: dayjs(last.scrapedAt as number),
+  };
 };
 
 const isStatusPending = (status: string) => {
@@ -80,19 +118,49 @@ const isStatusPending = (status: string) => {
     "data-pending",
     "monitoring-pending",
     "data-request-success",
+    "error-captcha-required", // still keep looking even though an error occured
+    "data-pending-error-unable-to-check", // as well
   ].includes(status);
 };
 
-const isMonitoringPending = async () => {
-  const s = await getStatus();
-  return isStatusPending(s);
+const isLastStatusPending = async () => {
+  const { status } = await getStatus();
+  return isStatusPending(status);
+};
+
+const shouldJumpToWaitingPage = async () => {
+  const { status } = await getStatus();
+  return status !== "status-not-available" && status !== "status-reset";
+};
+
+const addStatusReset = () => {
+  return addScrapingResult(
+    "no-session",
+    0,
+    {
+      success: true,
+      slug: "status-reset",
+      fields: {
+        status: "status-reset",
+      },
+    },
+    true,
+  );
 };
 
 window.electron.ipc.on("monitoring-pending", async () => {
   window.electron.ipc.invoke(
     "monitoring-pending-reply",
-    await isMonitoringPending(),
+    await isLastStatusPending(),
   );
 });
 
-export { getStatus, isMonitoringPending, isStatusPending, StatusKey, STATUS };
+export {
+  getStatus,
+  isStatusPending,
+  isLastStatusPending,
+  shouldJumpToWaitingPage,
+  StatusKey,
+  STATUS,
+  addStatusReset,
+};

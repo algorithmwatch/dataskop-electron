@@ -168,7 +168,7 @@ const addScrapingResult = (
     ...data,
     scrapedAt: Date.now(),
   };
-  if (skipQueue) _addScrapingResult(obj);
+  if (skipQueue) return _addScrapingResult(obj);
   return queue.add(() => _addScrapingResult(obj));
 };
 
@@ -189,11 +189,6 @@ const getScrapingResultsBySession = async (
       (slug == null || x.slug === slug) &&
       (step == null || x.step === step),
   );
-};
-
-const getLastResult = async (): Promise<ScrapingResultSaved> => {
-  const data = await getScrapingResults();
-  return data[data.length - 1];
 };
 
 // scraping config
@@ -278,7 +273,6 @@ export {
   getSessions,
   getScrapingResultsBySession,
   addNewSession,
-  getLastResult,
   setUpDb,
   modifyLocalCampaigns,
   getLocalCampaigns,

@@ -28,14 +28,27 @@ import { autoUpdater } from "electron-updater";
 import path from "path";
 import "regenerator-runtime/runtime";
 import registerBackgroundScrapingHandlers from "./background-scraping";
-import registerDbHandlers, { configStore } from "./db";
+import registerDbHandlers, { clearData, configStore } from "./db";
+import registerDownloadsHandlers, { clearDownloads } from "./downloads";
 import registerExportHandlers from "./export";
 import { buildMenu } from "./menu";
-import registerTiktokHandlers from "./providers/tiktok";
+import registerTiktokDataHandlers from "./providers/tiktok/data";
+import registerTiktokScrapingHandlers from "./providers/tiktok/scraping";
 import registerYoutubeHandlers from "./providers/youtube";
 import registerScrapingHandlers from "./scraping";
 import { buildTray } from "./tray";
 import { delay, isFromLocalhost, resolveHtmlPath } from "./utils";
+
+// https://github.com/electron/electron/issues/23756#issuecomment-651287598
+app.commandLine.appendSwitch(
+  "disable-features",
+  "SpareRendererForSitePerProcess,WebRtcHideLocalIpsWithMdns",
+);
+
+// https://stackoverflow.com/a/65863174/4028896
+if (process.platform === "win32") {
+  app.setAppUserModelId(app.getName());
+}
 
 // read .env files for development
 require("dotenv").config();
@@ -116,8 +129,6 @@ const installExtensions = async () => {
 let doingMonitoring = false;
 
 const doMonitoring = async () => {
-  if (mainWindow === null) return;
-
   const isPendingStatus: Promise<boolean> = new Promise((resolve) => {
     if (mainWindow === null) {
       resolve(false);
@@ -143,7 +154,8 @@ const doMonitoring = async () => {
     log.info("Some monitoring action has already stared. Do nothing.");
     return;
   }
-  log.info("Starting to do a monitoring ste.");
+
+  log.info("Starting to check for GDRP status.");
   doingMonitoring = true;
 
   configStore.set("monitoring", true);
@@ -161,7 +173,8 @@ ipcMain.handle("monitoring-done", () => {
   log.info("Monitoring is done. Removing flags and closing main window.");
   configStore.set("monitoring", false);
   doingMonitoring = false;
-  if (mainWindow) mainWindow.close();
+  // Close window on macOS only, keep it minimized for the rest
+  if (mainWindow && process.platform === "darwin") mainWindow.close();
 });
 
 // Main function to initialize a window
@@ -206,10 +219,14 @@ const createWindow = async () => {
     minWidth: 800,
     minHeight: 600,
     icon: getAssetPath("icon.png"),
+    // skipTaskbar: true,
+    // Remove app from Taskbar on macOS and Windows. We are currently to get it
+    // run with out this option. If we manage to do so, we may come back.
     webPreferences: {
-      preload: app.isPackaged
-        ? path.join(__dirname, "preload.js")
-        : path.join(__dirname, "../../.erb/dll/preload.js"),
+      preload:
+        process.env.NODE_ENV === "development"
+          ? path.join(__dirname, "../../.erb/dll/preload.js")
+          : path.join(__dirname, "preload.js"),
       backgroundThrottling: false,
       sandbox: false,
     },
@@ -252,13 +269,15 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
-  buildMenu(mainWindow);
+  // Only build OS menu on MacOS
+  if (process.platform === "darwin") buildMenu(mainWindow);
+
   buildTray(doMonitoring, configStore, getAssetPath("icon.png"));
 
-  // Open urls in the user's browser
-  mainWindow.webContents.on("new-window", (event, url) => {
-    event.preventDefault();
+  // Open URLs in the user's browser
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
+    return { action: "deny" };
   });
 
   // Wait a second until checkin for new update to let the app initialize.
@@ -272,39 +291,50 @@ const createWindow = async () => {
 
   // Register general handlers
   registerScrapingHandlers(mainWindow);
+  registerDownloadsHandlers(mainWindow);
   registerExportHandlers(mainWindow);
   registerBackgroundScrapingHandlers();
   registerDbHandlers();
 
   // Register provider specific handlers
   registerYoutubeHandlers(mainWindow);
-  registerTiktokHandlers(mainWindow);
+  registerTiktokScrapingHandlers(mainWindow);
+  registerTiktokDataHandlers(mainWindow);
 };
 
 /**
  * Controlling main window
  */
 
-ipcMain.handle("close-main-window", (_e, isCurrentlyScraping: boolean) => {
-  log.debug("called handle close-main-window", mainWindow == null);
-  if (mainWindow === null) return;
+ipcMain.handle(
+  "close-main-window",
+  (_e, isCurrentlyScraping: boolean, cleanupData: boolean) => {
+    log.debug("called handle close-main-window", mainWindow == null);
+    if (mainWindow === null) return;
 
-  if (isCurrentlyScraping) {
-    const choice = dialog.showMessageBoxSync(mainWindow, {
-      type: "question",
-      buttons: ["Ja, beenden", "Abbrechen"],
-      defaultId: 1,
-      cancelId: 1,
-      title: "Bestätigen",
-      message:
-        "Willst du DataSkop wirklich beenden? Der Scraping-Vorgang läuft noch.",
-    });
-    if (choice === 1) {
-      return;
+    if (isCurrentlyScraping) {
+      const choice = dialog.showMessageBoxSync(mainWindow, {
+        type: "question",
+        buttons: ["Ja, beenden", "Abbrechen"],
+        defaultId: 1,
+        cancelId: 1,
+        title: "Bestätigen",
+        message: "Willst du DataSkop wirklich beenden? Ein Vorgang läuft noch.",
+      });
+      if (choice === 1) {
+        return;
+      }
     }
-  }
-  mainWindow.destroy();
-});
+
+    // Cleanup after the user donated (or finish the walkthrough)
+    if (cleanupData) {
+      clearDownloads();
+      clearData();
+    }
+
+    mainWindow.destroy();
+  },
+);
 
 app.on("window-all-closed", () => {
   // Respect the OSX convention of having the application in memory even
@@ -321,7 +351,7 @@ app
 
 // macOS only
 app.on("activate", () => {
-  log.debug("called activate", mainWindow == null);
+  log.debug("Called activate", mainWindow == null);
 
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
@@ -330,23 +360,22 @@ app.on("activate", () => {
 
 // Expose certain information to the renderer
 
-ipcMain.handle("get-version-number", () => {
-  return app.getVersion();
-});
-
-ipcMain.handle("get-env", (e) => {
+ipcMain.handle("get-info", (e) => {
   // Expose configs done via .env to the renderer. The keys have to explicitly
   // specified as follows (right now).
   if (isFromLocalhost(e))
     return {
-      NODE_ENV: process.env.NODE_ENV,
-      DEBUG_PROD: process.env.DEBUG_PROD,
-      PLATFORM_URL: process.env.PLATFORM_URL,
-      TRACK_EVENTS: process.env.TRACK_EVENTS,
-      SERIOUS_PROTECTION: process.env.SERIOUS_PROTECTION,
-      AUTO_SELECT_CAMPAIGN: "0",
-      // HOTFIX:
-      // AUTO_SELECT_CAMPAIGN: process.env.AUTO_SELECT_CAMPAIGN,
+      version: app.getVersion(),
+      isMac: process.platform === "darwin",
+      env: {
+        NODE_ENV: process.env.NODE_ENV,
+        DEBUG_PROD: process.env.DEBUG_PROD,
+        PLATFORM_URL: process.env.PLATFORM_URL,
+        TRACK_EVENTS: process.env.TRACK_EVENTS,
+        SERIOUS_PROTECTION: process.env.SERIOUS_PROTECTION,
+        AUTO_SELECT_CAMPAIGN: process.env.AUTO_SELECT_CAMPAIGN,
+        PLAYWRIGHT_TESTING: process.env.PLAYWRIGHT_TESTING,
+      },
     };
 });
 
@@ -362,4 +391,9 @@ ipcMain.handle("show-notification", (_e, title, body) => {
   n.on("click", () => {
     createWindow();
   });
+});
+
+ipcMain.handle("restart", () => {
+  app.relaunch();
+  app.exit();
 });

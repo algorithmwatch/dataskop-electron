@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import {
   faFileContract,
   faInfoCircle,
@@ -5,6 +7,7 @@ import {
   faUserSecret,
 } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
 import AdvancedMenu from "renderer/components/admin/AdvancedMenu";
 import Drawer from "renderer/components/Drawer";
 import { useConfig, useScraping } from "renderer/contexts";
@@ -20,58 +23,45 @@ export const Menu = ({
 }) => {
   const {
     state: { version, showAdvancedMenu },
+    dispatch: configDispatch,
   } = useConfig();
-  const { dispatch } = useScraping();
+  const { dispatch: scrapingDispatch } = useScraping();
+
+  // click the version to unlock the advanced menu
+  const [versionClicked, setVersionClicked] = useState(0);
+  const handleversionClicked = () => {
+    if (versionClicked > 2) {
+      configDispatch({ type: "show-advanced-menu" });
+    } else setVersionClicked(versionClicked + 1);
+  };
 
   const menuItems = [
     {
       label: "Über",
       icon: faInfoCircle,
       onClick: () => {
-        // dispatchModal({
-        //   type: "set-modal-options",
-        //   options: { isOpen: true, componentName: "about" },
-        // });
+        window.open("https://dataskop.net/ueber/");
       },
     },
     {
       label: "Kontakt",
       icon: faPaperPlane,
       onClick: () => {
-        // dispatchModal({
-        //   type: "set-modal-options",
-        //   options: { isOpen: true, componentName: "contact" },
-        // });
+        window.open("https://dataskop.net/kontakt/");
       },
     },
-    // {
-    //   label: 'FAQ',
-    //   icon: faQuestionCircle,
-    //   onClick: () => {
-    //     dispatchModal({
-    //       type: 'set-modal-options',
-    //       options: { isOpen: true, componentName: 'faq' },
-    //     });
-    //   },
-    // },
     {
       label: "Datenspende-Vertrag",
       icon: faFileContract, // faFileSignatur
       onClick: () => {
-        // dispatchModal({
-        //   type: "set-modal-options",
-        //   options: { isOpen: true, componentName: "terms" },
-        // });
+        window.open("https://dataskop.net/datenspendevertrag/");
       },
     },
     {
       label: "Datenschutz",
       icon: faUserSecret,
       onClick: () => {
-        // dispatchModal({
-        //   type: "set-modal-options",
-        //   options: { isOpen: true, componentName: "privacy" },
-        // });
+        window.open("https://dataskop.net/datenschutzerklaerung/");
       },
     },
   ];
@@ -111,13 +101,12 @@ export const Menu = ({
 
         {/* footer menu */}
         <div className="pl-8 mb-4 relative">
-          {true && (
-            // {showAdvancedMenu && (
+          {showAdvancedMenu && (
             <div className="absolute right-8 bottom-0">
               <AdvancedMenu
                 onItemClicked={() => setIsOpen(false)}
                 menuItems={[
-                  { label: "Start TikTok", to: "/tt/start" },
+                  { label: "Start TikTok", to: "/tiktok/start" },
                   { label: "Start YouTube", to: "/yt/start" },
                   {
                     label: "Advanced scraping",
@@ -133,7 +122,7 @@ export const Menu = ({
                     label: "Reset scraping window",
                     click: () => {
                       window.electron.ipc.invoke("scraping-clear-storage");
-                      dispatch({ type: "reset-scraping" });
+                      scrapingDispatch({ type: "reset-scraping" });
                     },
                   },
                   {
@@ -155,7 +144,7 @@ export const Menu = ({
             </div>
           )}
 
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-gray-600" onClick={handleversionClicked}>
             DataSkop
             <br />
             Version: {version}

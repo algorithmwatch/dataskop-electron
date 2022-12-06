@@ -5,15 +5,31 @@
  */
 import { faFileHeart } from "@fortawesome/pro-light-svg-icons";
 import { faAngleLeft } from "@fortawesome/pro-solid-svg-icons";
-import { useHistory } from "react-router";
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import Content from "renderer/providers/tiktok/components/Content";
 import { useNavigation } from "../../../contexts";
 
 export default function DonationChoicePage(): JSX.Element {
-  const { getNextPage, getPreviousPage } = useNavigation();
+  const { getPreviousPage } = useNavigation();
   const history = useHistory();
+  const [canDonate, setCanDonate] = useState<true | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const can = await window.electron.ipc.invoke("tiktok-eligible-to-donate");
+      if (can) setCanDonate(true);
+      else {
+        window.electron.log.info(
+          "According to the date of birth in the dump, the user is underage. Skipping donation.",
+        );
+        window.notEligibleToDonate = true;
+        history.push("/tiktok/thank_you");
+      }
+    })();
+  }, []);
 
   const footerSlots: FooterSlots = {
     start: [
@@ -33,7 +49,7 @@ export default function DonationChoicePage(): JSX.Element {
         key="1"
         className="min-w-[6rem]"
         onClick={() => {
-          history.push("/tiktok/donation_form");
+          history.push("/tiktok/donation_upload");
         }}
       >
         Ja
@@ -43,13 +59,15 @@ export default function DonationChoicePage(): JSX.Element {
         className="min-w-[6rem]"
         theme="outline"
         onClick={() => {
-          history.push("/tiktok/newsletter_choice");
+          history.push("/tiktok/newsletter");
         }}
       >
         Nein
       </Button>,
     ],
   };
+
+  if (canDonate === null) <div />;
 
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>

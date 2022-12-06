@@ -57,4 +57,13 @@ function humanFileSize(bytes: number, si = false, dp = 1) {
   return bytes.toFixed(dp) + " " + units[u];
 }
 
-export { splitByWhitespace, fixDuplicatedString, stripNonAscii, humanFileSize };
+const emailRegex = new RegExp(/^\S+@\S+\.\S\S+$/);
+const isValidEmail = (x: string) => emailRegex.test(x);
+
+export {
+  splitByWhitespace,
+  fixDuplicatedString,
+  stripNonAscii,
+  humanFileSize,
+  isValidEmail,
+};

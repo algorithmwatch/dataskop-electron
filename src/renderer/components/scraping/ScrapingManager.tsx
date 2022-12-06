@@ -18,6 +18,7 @@ import { currentDelay } from "renderer/lib/delay";
 import { createScrapingGenerator } from "renderer/lib/scraping";
 import { delay } from "renderer/lib/utils/time";
 import { providerInfo } from "renderer/providers/info";
+import { getStatus } from "renderer/providers/tiktok/lib/status";
 import { Campaign } from "renderer/providers/types";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -169,10 +170,13 @@ export default function ScrapingManager({
       // create a uuid every time you hit start scraping
       const { config } = campaign;
       if (filterSteps) config.steps = config.steps.filter(filterSteps);
-      window.electron.log.info("Start scraping", config);
+      window.electron.log.info("Start data gathering", JSON.stringify(config));
 
       // eslint-disable-next-line @typescript-eslint/no-shadow
       const sessionId = uuidv4();
+
+      // TODO: Make Tiktok agnostic
+      const lastStatus = await getStatus();
 
       const gen = createScrapingGenerator(
         config,
@@ -183,6 +187,7 @@ export default function ScrapingManager({
           sessionId,
           htmlLogging: userConfig.htmlLogging,
           monitoring: userConfig.monitoring,
+          lastStatus,
         },
       );
 
@@ -217,7 +222,7 @@ export default function ScrapingManager({
 
         if (result === null || !result.success) {
           window.electron.log.info(
-            "The scraping result was marked as unsuccessful. However, we continue.",
+            "The data gathering result was marked as unsuccessful. However, we continue.",
             step,
             result,
           );
@@ -231,7 +236,7 @@ export default function ScrapingManager({
 
           setSessionFinishedAt(sessionId);
           dispatch({ type: "scraping-has-finished" });
-          window.electron.log.info("Scraping done");
+          window.electron.log.info("Data gathering done");
         } else {
           // Store data w/ async
           addScrapingResult(sessionId, step, result);

@@ -30,3 +30,6 @@ npm-debug.log.*
 
 # Boilerplate above, DataSkop from here:
 **/.env
+/test-results/
+/playwright-report/
+/playwright/.cache/

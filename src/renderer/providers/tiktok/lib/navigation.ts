@@ -56,11 +56,11 @@ const ttDefault: NavigationState = {
       sectionKey: null,
     },
     {
-      path: "/tiktok/donation_form",
+      path: "/tiktok/donation_upload",
       sectionKey: null,
     },
     {
-      path: "/tiktok/newsletter_choice",
+      path: "/tiktok/newsletter",
       sectionKey: null,
     },
     {

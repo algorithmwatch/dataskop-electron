@@ -24,12 +24,15 @@ export default function BaseLayoutSwitch({
   // navigation context. We need to know the current route to, e.g., go to next
   // route.
   useEffect(() => {
+    window.electron.log.info(`Navigate to: ${pathname}`);
     const pageIndex = getPageIndexByPath(pathname);
     if (pageIndex !== -1) {
       navDispath({ type: "set-page-index", pageIndex });
     }
   }, [pathname]);
 
+  // For development, selection a local campaign with `autoSelectCampaign`.
+  // Set the value in .env. This ensure that HMR works as indented.
   useEffect(() => {
     if (!module.hot) return;
     if (autoSelectCampaign === null) return;
