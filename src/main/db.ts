@@ -61,7 +61,7 @@ const addLookups = (lookups: any) => {
 
 const getLookups = (keys?: string[]) => {
   if (keys === undefined) return lookupStore.store;
-  return _.pick(lookupStore.store, keys);
+  return _.pick(lookupStore.store, _.uniq(keys));
 };
 
 const clearLookups = () => {
