@@ -33,6 +33,18 @@ export default function beeswarm({ data, pics }) {
     view: "angesehene Inhalte",
   };
 
+  const minNum = {
+    view: 5,
+    like: 2,
+    share: 0,
+  };
+
+  const colors = {
+    view: "#0090CE",
+    like: "#00CEC7",
+    share: "#FF004F",
+  };
+
   const margin = {
     left: 100,
     right: 100,
@@ -40,14 +52,7 @@ export default function beeswarm({ data, pics }) {
     bottom: 60,
   };
 
-  const minNum = {
-    view: 5,
-    like: 2,
-    share: 0,
-  };
-
   const ticks = 50;
-  const profileCutoff = 4;
 
   const groupedData = useMemo(() => {
     return flatGroup(
@@ -63,11 +68,11 @@ export default function beeswarm({ data, pics }) {
   // console.log("numAvatare",groups(data, d=> d.author).filter(d => d[1].length > minNum).length)
 
   const xDomain = useMemo(() => {
-    return extent(groupedData, ([slot, nickname, data]) => data.length);
+    return extent(groupedData, ([slot, author, data]) => data.length);
   }, [data]);
 
   const yDomain = useMemo(() => {
-    return groups(groupedData, ([slot, nickname, data]) => slot).map(
+    return groups(groupedData, ([slot, author, data]) => slot).map(
       ([slot, data]) => slot,
     );
   }, [data]);
@@ -134,7 +139,8 @@ export default function beeswarm({ data, pics }) {
         <filter id="floodlike">
           <feFlood
             result="floodFill"
-            floodColor="#00CEC7"
+            floodColor={colors.like}
+            floodOpacity="0.5"
             x="-10%"
             y="-10%"
             width="100%"
@@ -145,7 +151,8 @@ export default function beeswarm({ data, pics }) {
         <filter id="floodshare">
           <feFlood
             result="floodFill"
-            floodColor="#FF004F"
+            floodColor={colors.share}
+            floodOpacity="0.5"
             x="-10%"
             y="-10%"
             width="100%"
@@ -156,7 +163,8 @@ export default function beeswarm({ data, pics }) {
         <filter id="floodview">
           <feFlood
             result="floodFill"
-            floodColor="#0090CE"
+            floodColor={colors.view}
+            floodOpacity="0.5"
             x="-10%"
             y="-10%"
             width="100%"
@@ -196,8 +204,7 @@ export default function beeswarm({ data, pics }) {
         </g>
 
         <g className="nodes">
-          {simulation.map(([slot, nickname, data], i) => {
-            const { author } = data[0];
+          {simulation.map(([slot, author, data], i) => {
             const base64image = pics ? pics[author] : null;
             return (
               <g
@@ -216,10 +223,10 @@ export default function beeswarm({ data, pics }) {
                     clipPath="inset(0% round 50%)"
                     style={{
                       filter:
-                        active === nickname
+                        active === author
                           ? ""
                           : `brightness(1.1) url(#flood${slot})`,
-                      transform: `scale(${active === nickname ? 1.4 : 1})`,
+                      transform: `scale(${active === author ? 1.4 : 1})`,
                       transformOrigin: "center center",
                       transformBox: "fill-box",
                     }}
@@ -228,15 +235,9 @@ export default function beeswarm({ data, pics }) {
                 {!base64image && (
                   <circle
                     r={size(data.length) / 2}
-                    fill={
-                      slot === "view"
-                        ? "#0090CE"
-                        : slot === "share"
-                        ? "#FF004F"
-                        : "#00CEC7"
-                    }
+                    fill={colors[slot]}
                     style={{
-                      transform: `scale(${active === nickname ? 1.4 : 1})`,
+                      transform: `scale(${active === author ? 1.4 : 1})`,
                       transformOrigin: "center center",
                       transformBox: "fill-box",
                     }}
@@ -355,7 +356,7 @@ export default function beeswarm({ data, pics }) {
                             className="fill-gray-400"
                             style={{pointerEvents: "none", transform: "translate(10px, 30px) "}}
                         >
-                            {simulation.find(([slot, nickname, data]) => nickname === active)[2].length}
+                            {simulation.find(([slot, author, data]) => author === active)[2].length}
                         </text>
 
                     </g>
