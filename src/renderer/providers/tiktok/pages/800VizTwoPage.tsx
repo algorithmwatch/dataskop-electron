@@ -3,10 +3,17 @@
  *
  * @module
  */
-import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
+import {
+  faAngleLeft,
+  faAngleRight,
+  faImage,
+  faInfoCircle,
+} from "@fortawesome/pro-solid-svg-icons";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
+import Modal from "../../../components/Modal";
 import { useNavigation } from "../../../contexts";
 import { doScreenshot } from "../components/visualizations/utils/screenshot";
 import VizTwo from "../components/visualizations/VizTwo";
@@ -16,12 +23,26 @@ export default function VizTwoPage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
   const { dump, lookups } = useData();
+  const [aboutModalIsOpen, setAboutModalIsOpen] = useState(false);
 
   const footerSlots: FooterSlots = {
     start: [
       <Button
-        theme="outline"
+        className="mt-3"
+        theme="text"
+        size="sm"
         key="1"
+        startIcon={faInfoCircle}
+        onClick={() => setAboutModalIsOpen(true)}
+      >
+        Über diese Grafik
+      </Button>,
+      <Button
+        className="mt-3"
+        theme="text"
+        key="2"
+        size="sm"
+        startIcon={faImage}
         onClick={() => {
           const outer = window.document.querySelector(
             "#dataskop-export-screenshot-outer",
@@ -48,6 +69,7 @@ export default function VizTwoPage(): JSX.Element {
         Als Bild speichern
       </Button>,
     ],
+
     center: [
       <Button
         key="1"
@@ -72,13 +94,25 @@ export default function VizTwoPage(): JSX.Element {
   };
 
   return (
-    <WizardLayout className="text-center" footerSlots={footerSlots}>
-      <div
-        className="mt-12 flex flex-col w-full grow"
-        id="dataskop-export-screenshot-outer"
+    <>
+      <Modal
+        theme="tiktok"
+        isOpen={aboutModalIsOpen}
+        closeModal={() => setAboutModalIsOpen(false)}
       >
-        {dump && lookups && <VizTwo gdprData={dump} metadata={lookups} />}
-      </div>
-    </WizardLayout>
+        <div className="text-center">
+          <h1 className="hl-2xl mb-4">Über diese Grafik</h1>
+          <p className="">Schalalalala!</p>
+        </div>
+      </Modal>
+      <WizardLayout className="text-center" footerSlots={footerSlots}>
+        <div
+          className="mt-12 flex flex-col w-full grow"
+          id="dataskop-export-screenshot-outer"
+        >
+          {dump && lookups && <VizTwo gdprData={dump} metadata={lookups} />}
+        </div>
+      </WizardLayout>
+    </>
   );
 }

@@ -30,7 +30,7 @@ export default function VizOnePage(): JSX.Element {
     start: [
       <Button
         className="mt-3"
-        theme="outline"
+        theme="text"
         size="sm"
         key="1"
         startIcon={faInfoCircle}
@@ -38,33 +38,9 @@ export default function VizOnePage(): JSX.Element {
       >
         Über diese Grafik
       </Button>,
-    ],
-    center: [
-      <Button
-        key="1"
-        theme="text"
-        startIcon={faAngleLeft}
-        onClick={() => {
-          history.push(getPreviousPage("path"));
-        }}
-      >
-        Zurück
-      </Button>,
-
-      <Button
-        key="2"
-        endIcon={faAngleRight}
-        onClick={() => {
-          history.push(getNextPage("path"));
-        }}
-      >
-        Weiter
-      </Button>,
-    ],
-    end: [
       <Button
         className="mt-3"
-        theme="outline"
+        theme="text"
         key="2"
         size="sm"
         startIcon={faImage}
@@ -92,6 +68,28 @@ export default function VizOnePage(): JSX.Element {
         }}
       >
         Als Bild speichern
+      </Button>,
+    ],
+    center: [
+      <Button
+        key="1"
+        theme="text"
+        startIcon={faAngleLeft}
+        onClick={() => {
+          history.push(getPreviousPage("path"));
+        }}
+      >
+        Zurück
+      </Button>,
+
+      <Button
+        key="2"
+        endIcon={faAngleRight}
+        onClick={() => {
+          history.push(getNextPage("path"));
+        }}
+      >
+        Weiter
       </Button>,
     ],
   };
