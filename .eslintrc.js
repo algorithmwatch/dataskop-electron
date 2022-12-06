@@ -1,5 +1,25 @@
 module.exports = {
-  extends: "erb",
+  extends: [
+    "airbnb",
+    "airbnb-typescript",
+    "airbnb/hooks",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:promise/recommended",
+    "plugin:compat/recommended",
+    "plugin:prettier/recommended",
+  ],
+  env: {
+    browser: true,
+    node: true,
+  },
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    ecmaVersion: 2020,
+    sourceType: "module",
+    project: "./tsconfig.json",
+    tsconfigRootDir: __dirname,
+    createDefaultProgram: true,
+  },
   rules: {
     // A temporary hack related to IDE not resolving correct package.json
     "import/no-extraneous-dependencies": "off",
@@ -21,13 +41,6 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     "react/jsx-props-no-spreading": "off",
     "consistent-return": "off",
-  },
-  parserOptions: {
-    ecmaVersion: 2020,
-    sourceType: "module",
-    project: "./tsconfig.json",
-    tsconfigRootDir: __dirname,
-    createDefaultProgram: true,
   },
   settings: {
     "import/resolver": {
