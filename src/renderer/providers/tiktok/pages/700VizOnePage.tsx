@@ -11,6 +11,7 @@ import {
 } from "@fortawesome/pro-solid-svg-icons";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useWindowSize } from "react-use";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import Modal from "../../../components/Modal";
@@ -94,6 +95,8 @@ export default function VizOnePage(): JSX.Element {
     ],
   };
 
+  const { width, height } = useWindowSize();
+
   return (
     <>
       <Modal
@@ -111,7 +114,7 @@ export default function VizOnePage(): JSX.Element {
           className="mt-12 flex flex-col mx-16"
           id="dataskop-export-screenshot-outer"
         >
-          {dump && <VizOne gdprData={dump} />}
+          {dump && <VizOne gdprData={dump} width={width} height={height} />}
         </div>
       </WizardLayout>
     </>

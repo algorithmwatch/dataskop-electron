@@ -169,13 +169,13 @@ function addTimeOfDay(
 function getTimeOfDay(entryHour: number) {
   let timeOfDay = "";
   if (entryHour >= 6 && entryHour < 12) {
-    timeOfDay = "Morgens";
+    timeOfDay = "morgens";
   } else if (entryHour >= 12 && entryHour < 18) {
-    timeOfDay = "Mittags";
-  } else if (entryHour >= 18 && entryHour < 22) {
-    timeOfDay = "Abends";
-  } else if (entryHour >= 22 || entryHour < 6) {
-    timeOfDay = "Nachts";
+    timeOfDay = "nachmittags";
+  } else if (entryHour >= 18 && entryHour < 0) {
+    timeOfDay = "abends";
+  } else if (entryHour >= 0 || entryHour < 6) {
+    timeOfDay = "nachts";
   }
 
   return timeOfDay;
@@ -215,7 +215,7 @@ function makeWatchtimeData(
       coreTime(coreTimeObj, dateCurr.getHours(), gap);
       result.push({
         Date: withoutTime(datePrev),
-        GapLabel: gap > 2 ? "over 2 secs" : "under 2 secs",
+        GapLabel: gap > 2 ? "über 2 Sekunden" : "unter 2 Sekunden",
         GapLength: gap / 60, // might not need this... possibly should delete
       });
     }

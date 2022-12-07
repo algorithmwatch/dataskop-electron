@@ -1,5 +1,6 @@
 import { faPenToSquare } from "@fortawesome/pro-regular-svg-icons";
 import * as Plot from "@observablehq/plot";
+import _ from "lodash";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { SelectInput } from "./SelectInput";
 import TabBar from "./TabBar";
@@ -10,23 +11,25 @@ import { VizBoxRow } from "./VizBox";
 
 function rangeOfTime(timeofday: string) {
   switch (timeofday) {
-    case "Morgens":
+    case "morgens":
       return "6:00 - 11:59";
-    case "Mittags":
+    case "nachmittags":
       return "12:00 - 17:59";
-    case "Abends":
-      return "18:00 - 21:59";
-    case "Nachts":
-      return "22:00 - 5:59";
+    case "abends":
+      return "18:00 - 23:59";
+    case "nachts":
+      return "00:00 - 5:59";
     default:
-      throw new Error("Unexpected value for timeofday");
+      throw new Error("Unexpected value for timeofday" + timeofday);
   }
 }
 
 const rangeOptions = [
-  { id: "1", label: "letzte 7 Tage", value: 7 },
+  { id: "1", label: "letzte 14 Tage", value: 14 },
   { id: "2", label: "letzte 30 Tage", value: 30 },
   { id: "3", label: "letzte 90 Tage", value: 90 },
+  { id: "4", label: "letzte 180 Tage", value: 180 },
+  { id: "5", label: "letzte 365 Tage", value: 365 },
 ];
 
 const graphOptions = [
@@ -35,9 +38,9 @@ const graphOptions = [
   { option: "percentage bars, watchtime", value: "watchtime" },
 ];
 
-function VizOne({ gdprData }: { gdprData: any }) {
+function VizOne({ gdprData, height, width }: { gdprData: any }) {
   const toggleRef = useRef<null | HTMLDivElement>(null);
-  const [range, setRange] = useState(rangeOptions[0]);
+  const [range, setRange] = useState(rangeOptions[2]);
   const [graph, setGraph] = useState(graphOptions[0].value);
   const [
     videodata,
@@ -56,43 +59,53 @@ function VizOne({ gdprData }: { gdprData: any }) {
     );
 
   const smallerScreen = window.outerHeight <= 1000;
-  const chartWidth = Math.round(window.outerWidth);
-  const chartHeight = Math.round(
-    window.outerHeight * (smallerScreen ? 0.5 : 0.7),
-  );
+  const chartWidth = width;
+
+  const chartHeight =
+    Math.round(height * (smallerScreen ? 0.5 : 0.7)) +
+    (graph === "default" ? 0 : -45);
+
+  const uniqDates = _.orderBy(
+    _.uniqBy(videoData, (x) => `${x.Date.getDate()} ${x.Date.getMonth()}`),
+    "Date",
+  ).map((x) => x.Date);
+
+  const numTicks = Math.round(uniqDates.length / (smallerScreen ? 15 : 30));
+
+  let ticks = uniqDates;
+  if (ticks.length > (smallerScreen ? 15 : 30)) {
+    ticks = uniqDates.filter((_x: any, i: number) => i % numTicks === 0);
+  }
+
   const commonProps = {
     width: chartWidth,
     height: chartHeight,
-    marginBottom: smallerScreen ? 60 : 75,
-    marginTop: smallerScreen ? 50 : 60,
-    marginLeft: smallerScreen ? 50 : 60,
+    marginBottom: smallerScreen ? 50 : 75,
+    marginTop: 0,
+    marginLeft: smallerScreen ? 55 : 70,
     marginRight: smallerScreen ? 50 : 60,
     style: {
       background: "transparent",
-      fontSize: "18px",
+      fontSize: "0.8rem",
     },
     x: {
       type: "band",
+      tickRotate: -45,
       tickFormat: (d) =>
-        `${`0${d.getDate()}`.slice(-2)}.${`0${d.getMonth() + 1}`.slice(-2)}.`,
-      label: "Zeitverlauf",
+        `${`0${d.getDate()}`.slice(-2)}.${`0${d.getMonth() + 1}`.slice(-2)}.${d
+          .getFullYear()
+          .toString()
+          .slice(-2)}`,
+      label: null,
+      ticks,
     },
   };
-  const tickStep =
-    videoData.length > 28 ? Math.round(videoData.length / 15) : 1;
-  // console.warn("tickStep", tickStep);
-  // console.warn("videoData.length", videoData.length);
+
   const timeslotsAndSingleColorBarsPlot = {
     ...commonProps,
-    x: {
-      ...commonProps.x,
-      ticks: videoData
-        .filter((_x: any, i: number) => i % tickStep === 0)
-        .map((x) => x.Date),
-    },
     y: {
       grid: true,
-      label: "Minuten",
+      label: null,
     },
     color: {
       legend: true,
@@ -110,21 +123,21 @@ function VizOne({ gdprData }: { gdprData: any }) {
               ? (d) =>
                   `<strong>${d.TimeOfDay}</strong> (${rangeOfTime(
                     d.TimeOfDay,
-                  )}) aktiv, am ${d.Date.getDate()}. ${d.Date.toLocaleString(
-                    "default",
-                    {
-                      month: "long",
-                    },
-                  )}`
+                  )}) aktiv, am ${d.Date.toLocaleString("de-de", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}`
               : (d) =>
                   `<strong>${d.TotalTime.toFixed(
                     0,
-                  )} Min.</strong> aktiv am ${d.Date.getDate()}. ${d.Date.toLocaleString(
-                    "default",
-                    {
-                      month: "long",
-                    },
-                  )}`,
+                  )} Min.</strong> aktiv am ${d.Date.toLocaleString("de-de", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}`,
           reverse: true,
           fill: graph === "timeslots" ? "TimeOfDay" : "#9999ff",
         }),
@@ -137,7 +150,7 @@ function VizOne({ gdprData }: { gdprData: any }) {
     ...commonProps,
     y: {
       grid: true,
-      label: "Nr. Videos",
+      label: "Anzahl Videos",
     },
     color: {
       legend: true,
@@ -153,7 +166,7 @@ function VizOne({ gdprData }: { gdprData: any }) {
           {
             x: "Date",
             fill: "GapLabel",
-            title: (d) => `Nr. Videos: `,
+            title: (d) => `Anzahl Videos: `,
           },
         ),
       ),
@@ -173,7 +186,7 @@ function VizOne({ gdprData }: { gdprData: any }) {
     );
     if (toggleRef.current) toggleRef.current.append(chart);
     return () => chart.remove();
-  }, [videoData, graph]);
+  }, [videoData, graph, chartHeight]);
 
   return (
     <>
@@ -193,8 +206,8 @@ function VizOne({ gdprData }: { gdprData: any }) {
         values={[
           { head: totActivity, label: "Aktivität" },
           { head: avgMinsPerDay, label: "pro Tag" },
-          { head: `${numAppOpen} x`, label: "App geöffnet" },
-          { head: `${coreTimeString} h`, label: "Kernzeit" },
+          { head: `${numAppOpen}x`, label: "App geöffnet" },
+          { head: `${coreTimeString}:00`, label: "Hauptzeit" },
         ]}
       />
 
@@ -209,11 +222,22 @@ function VizOne({ gdprData }: { gdprData: any }) {
       />
 
       {/* Chart wrapper */}
-      <div
-        ref={toggleRef}
-        className="w-full mt-6 min-h-[50vh]"
-        id="dataskop-export-screenshot-inner"
-      />
+      <div className="relative">
+        <div
+          ref={toggleRef}
+          className="pl-16 2xl:pl-20 w-full mt-6"
+          id="dataskop-export-screenshot-inner"
+        />
+        <div
+          className="text-center text-gray-400 rotate-[270deg] absolute"
+          style={{ top: chartHeight / 2 - 20 }}
+        >
+          Minuten
+        </div>
+      </div>
+      <div className="text-center text-gray-400 pt-3 2xl:pt-5 mb-5">
+        Zeitverlauf
+      </div>
     </>
   );
 }

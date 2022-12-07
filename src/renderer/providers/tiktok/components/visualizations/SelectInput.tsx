@@ -14,7 +14,7 @@ type Option = {
   disabled?: boolean;
 };
 
-export const SelectInput = ({
+export function SelectInput({
   options,
   selectedOption,
   onUpdate,
@@ -24,10 +24,10 @@ export const SelectInput = ({
   selectedOption: Option;
   onUpdate: (val: Option) => void;
   buttonIcon?: IconDefinition;
-}) => {
+}) {
   return (
     <Listbox value={selectedOption} onChange={onUpdate}>
-      <div className="relative">
+      <div className="relative z-10">
         <Listbox.Button className="relative w-full cursor-pointer font-bold underline bg-white py-2 pl-2 pr-10 text-2xl text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300">
           <span className="block truncate">{selectedOption.label}</span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -76,4 +76,4 @@ export const SelectInput = ({
       </div>
     </Listbox>
   );
-};
+}

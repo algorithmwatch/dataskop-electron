@@ -202,10 +202,10 @@ export const questions: QuestionTypes[] = [
     name: "einschätzung-nutzungszeit-tageszeit",
     type: "radio-group",
     choices: [
-      { label: "Morgens", value: "morgens" },
-      { label: "Mittags", value: "mittags" },
-      { label: "Abends", value: "abends" },
-      { label: "Nachts", value: "nachts" },
+      { label: "morgens", value: "morgens" },
+      { label: "nachmittags", value: "nachmittags" },
+      { label: "abends", value: "abends" },
+      { label: "nachts", value: "nachts" },
     ],
   },
   {
