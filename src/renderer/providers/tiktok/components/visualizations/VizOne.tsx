@@ -1,8 +1,8 @@
 import { faPenToSquare } from "@fortawesome/pro-regular-svg-icons";
 import * as Plot from "@observablehq/plot";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import Switch from "renderer/components/Switch";
 import { SelectInput } from "./SelectInput";
+import TabBar from "./TabBar";
 import { shortenGdprData } from "./utils/shorten_data";
 import addTooltips from "./utils/tooltips";
 import { arrangeDataVizOne } from "./utils/viz-utils";
@@ -198,29 +198,15 @@ function VizOne({ gdprData }: { gdprData: any }) {
         ]}
       />
 
-      <div className="flex mx-auto space-x-4">
-        <Switch
-          label="Aktivität"
-          checked={graph === "default"}
-          onChange={(e) => {
-            setGraph("default");
-          }}
-        />
-        <Switch
-          label="Tageszeiten"
-          checked={graph === "timeslots"}
-          onChange={(e) => {
-            setGraph("timeslots");
-          }}
-        />
-        <Switch
-          label="Watchtime"
-          checked={graph === "watchtime"}
-          onChange={(e) => {
-            setGraph("watchtime");
-          }}
-        />
-      </div>
+      <TabBar
+        datasource={graph}
+        setDatasource={setGraph}
+        options={[
+          ["default", "Aktivität"],
+          ["timeslots", "Tageszeiten"],
+          ["watchtime", "Übersprungen"],
+        ]}
+      />
 
       {/* Chart wrapper */}
       <div

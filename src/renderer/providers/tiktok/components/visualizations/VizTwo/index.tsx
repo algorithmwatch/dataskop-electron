@@ -1,50 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useMemo, useState } from "react";
+import TabBar from "../TabBar";
 import { VizBoxRow } from "../VizBox";
 import Beeswarm from "./Beeswarm";
 import { transformData } from "./data";
-
-function DatasourceSwitch({ datasource, setDatasource }) {
-  return (
-    <div className="flex items-center justify-center">
-      <div
-        className="inline-flex rounded-lg p-1 bg-gradient-to-br from-[#B5FFFD] to-[#FFB8CE]"
-        role="group"
-      >
-        <a
-          href="#"
-          onClick={() => setDatasource("hashtags")}
-          aria-current="page"
-          className={`
-            min-w-[12rem] grow rounded-l-md py-2 flex flex-col items-center
-        ${
-          datasource === "hashtags"
-            ? "bg-gradient-to-l from-white to-transparent"
-            : "opacity-80"
-        }
-        `}
-        >
-          Hashtags
-        </a>
-
-        <a
-          href="#"
-          onClick={() => setDatasource("diversification")}
-          className={`
-            min-w-[12rem] grow rounded-r-md py-2 flex flex-col items-center
-              ${
-                datasource === "diversification"
-                  ? "bg-gradient-to-r from-white to-transparent"
-                  : "opacity-80"
-              }
-              `}
-        >
-          Kategorien
-        </a>
-      </div>
-    </div>
-  );
-}
 
 export default function VizTwo({ gdprData, metadata }) {
   const [datasource, setDatasource] = useState("hashtags");
@@ -80,9 +39,13 @@ export default function VizTwo({ gdprData, metadata }) {
         className="flex flex-col items-stretch min-h-[50vh] grow"
         id="dataskop-export-screenshot-inner"
       >
-        <DatasourceSwitch
+        <TabBar
           datasource={datasource}
           setDatasource={setDatasource}
+          options={[
+            ["hashtags", "hashtags"],
+            ["kategorien", "kategorien"],
+          ]}
         />
         <Beeswarm data={data} />
       </main>

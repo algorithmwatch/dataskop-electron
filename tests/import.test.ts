@@ -149,7 +149,7 @@ test.describe.serial(() => {
     );
 
     // Click on other tab
-    await page.locator("a", { hasText: "Kategorien" }).click();
+    await page.locator("button", { hasText: "Kategorien" }).click();
 
     await page.waitForTimeout(5000);
     await page.screenshot({
