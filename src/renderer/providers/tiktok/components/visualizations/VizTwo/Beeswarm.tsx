@@ -6,6 +6,7 @@ import {
   forceY as d3forceY,
 } from "d3-force";
 import { select } from "d3-selection";
+import _ from "lodash";
 import { useEffect, useMemo } from "react";
 import { useRect } from "../utils/useRect";
 
@@ -71,10 +72,10 @@ export default function Beeswarm({ data }) {
         width: width,
         height: height,
         marginTop: 30,
-        marginBottom: 50,
+        marginBottom: 53,
         marginLeft: 200,
         style: {
-          //fontSize: '0.8em',
+          fontSize: "0.8rem",
           color: "#000",
         },
         //grid: true,
@@ -84,7 +85,13 @@ export default function Beeswarm({ data }) {
         //   fill: (c) => c,
         // },
         y: { tickSize: 0 },
-        x: { types: "Datum", ticks: 15, tickRotate: -45, tickFormat: "%d.%m." },
+        x: {
+          type: "band",
+          // ticks: 15,
+          domain: _.orderBy(_.uniq(data.map((x) => x.day)), "date"),
+          reverse: true,
+          tickRotate: -45,
+        },
         marks: [
           beeswarm(data, {
             marginTop: 50,

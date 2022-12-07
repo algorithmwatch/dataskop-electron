@@ -28,9 +28,9 @@ export default function beeswarm({ data, pics }) {
 
   const { width, height } = rect;
   const text = {
-    like: "gelikte Inhalte",
-    share: "geteilte Inhalte",
-    view: "angesehene Inhalte",
+    like: "gelikte Videos",
+    share: "geteilte Videos",
+    view: "angesehene Videos",
   };
 
   const minNum = {

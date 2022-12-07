@@ -29,7 +29,7 @@ export default function VizTwo({ gdprData, metadata }) {
       <VizBoxRow
         values={[
           { head: `${stats.topHashtag}`, label: "Top Hashtag" },
-          { head: `${stats.topLabel}`, label: "Top Label" },
+          { head: `${stats.topLabel}`, label: "Top Kategorie" },
           { head: `${stats.totalVideos}`, label: "Anzahl Videos" },
           { head: `${stats.totalDays}`, label: "Tage" },
         ]}

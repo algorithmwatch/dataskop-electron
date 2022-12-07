@@ -1,4 +1,5 @@
 import { ascending, extent, flatGroup, group } from "d3-array";
+import dayjs from "dayjs";
 
 const topNum = 10;
 
@@ -135,7 +136,7 @@ const transformData = (gdprData, metadata) => {
     .map((e) => e.dates.map((d) => ({ ...e, date: d })))
     .flat()
     .map((d) => {
-      return { ...d, day: d.date };
+      return { ...d, day: dayjs(d.date).format("DD.MM.YY") };
     });
 
   const entriesTagsExpanded = entriesExpanded
