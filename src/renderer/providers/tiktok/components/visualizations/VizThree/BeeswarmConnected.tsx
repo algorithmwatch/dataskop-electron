@@ -140,15 +140,16 @@ export default function beeswarm({ data, pics }) {
   const tooltipPosition = useMemo(() => {
     if (active === null) return null;
     const data = simulation[active];
+    const name = data[2][0].nickname;
     const center = [width / 2 - margin.right, height / 2 - margin.bottom];
     const pos = [data.x, data.y];
     const diff = [center[0] - pos[0], center[1] - pos[1]];
     const dist = Math.sqrt(diff[0] ** 2 + diff[1] ** 2);
     const angle = Math.atan2(diff[1], diff[0]);
-    const offset = 40;
+    const offset = (size(data[2].length) / 2) * 1.2 + 10;
     const x = pos[0] + offset * Math.cos(angle);
     const y = pos[1] + offset * Math.sin(angle);
-    return [x, y, angle];
+    return [x, y, name];
   }, [active, simulation, width, height]);
 
   // console.log(activeLines);
@@ -355,7 +356,7 @@ export default function beeswarm({ data, pics }) {
           </text>
         </g>
         <g className="tooltip">
-          {active && (
+          {tooltipPosition && (
             <foreignObject
               x={tooltipPosition[0]}
               y={tooltipPosition[1]}
@@ -365,11 +366,15 @@ export default function beeswarm({ data, pics }) {
                 pointerEvents: "none",
                 transform: `translate(${
                   tooltipPosition[0] > width / 2 - margin.right ? "-200px" : "0"
-                }, -50%)`,
+                }, ${
+                  tooltipPosition[1] > height / 2 - margin.bottom
+                    ? "-50px"
+                    : "0"
+                })`,
               }}
             >
               <div className="dataskop-tooltip py-2 px-3 rounded shadow bg-white border-2 border-east-blue-200 whitespace-normal">
-                {activeAuthor}
+                {tooltipPosition[2]}
               </div>
             </foreignObject>
 
