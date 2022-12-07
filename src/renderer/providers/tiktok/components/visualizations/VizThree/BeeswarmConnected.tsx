@@ -3,7 +3,6 @@
 import { extent, flatGroup, groups } from "d3-array";
 import { Delaunay } from "d3-delaunay";
 import { forceCollide, forceSimulation, forceX, forceY } from "d3-force";
-import { polygonCentroid } from "d3-polygon";
 import { scaleLinear, scalePoint } from "d3-scale";
 import { useMemo, useState } from "react";
 import { useRect } from "../utils/useRect";
@@ -122,14 +121,35 @@ export default function beeswarm({ data, pics }) {
     return [...voronoi.cellPolygons()];
   }, [simulation, width, height]);
 
-  const cellCenters = useMemo(() => {
-    return voronoiCells.map(polygonCentroid);
-  }, [voronoiCells]);
+  // const cellCenters = useMemo(() => {
+  //   return voronoiCells.map(polygonCentroid);
+  // }, [voronoiCells]);
+
+  const activeAuthor = useMemo(() => {
+    if (active === null) return null;
+    let author = simulation[active][1];
+    if (author?.uniqueId) author = author.uniqueId;
+    return author;
+  }, [active, simulation]);
 
   const activeLines = useMemo(() => {
     if (active === null) return [];
-    return simulation.filter((d) => d[1] === active);
-  }, [active]);
+    return simulation.filter((d) => d[1] === activeAuthor);
+  }, [active, activeAuthor]);
+
+  const tooltipPosition = useMemo(() => {
+    if (active === null) return null;
+    const data = simulation[active];
+    const center = [width / 2 - margin.right, height / 2 - margin.bottom];
+    const pos = [data.x, data.y];
+    const diff = [center[0] - pos[0], center[1] - pos[1]];
+    const dist = Math.sqrt(diff[0] ** 2 + diff[1] ** 2);
+    const angle = Math.atan2(diff[1], diff[0]);
+    const offset = 40;
+    const x = pos[0] + offset * Math.cos(angle);
+    const y = pos[1] + offset * Math.sin(angle);
+    return [x, y, angle];
+  }, [active, simulation, width, height]);
 
   // console.log(activeLines);
 
@@ -223,10 +243,10 @@ export default function beeswarm({ data, pics }) {
                     clipPath="inset(0% round 50%)"
                     style={{
                       filter:
-                        active === author
+                        activeAuthor === author
                           ? ""
                           : `brightness(1.1) url(#flood${slot})`,
-                      transform: `scale(${active === author ? 1.4 : 1})`,
+                      transform: `scale(${activeAuthor === author ? 1.4 : 1})`,
                       transformOrigin: "center center",
                       transformBox: "fill-box",
                     }}
@@ -237,7 +257,7 @@ export default function beeswarm({ data, pics }) {
                     r={size(data.length) / 2}
                     fill={colors[slot]}
                     style={{
-                      transform: `scale(${active === author ? 1.4 : 1})`,
+                      transform: `scale(${activeAuthor === author ? 1.4 : 1})`,
                       transformOrigin: "center center",
                       transformBox: "fill-box",
                     }}
@@ -257,7 +277,9 @@ export default function beeswarm({ data, pics }) {
                 stroke="transparent"
                 // className="cursor-pointer"
                 onMouseEnter={() => {
-                  setActive(simulation[polygon.index][1]);
+                  // console.log(simulation[polygon.index]);
+                  // console.log(simulation[polygon.index][2][0].author);
+                  setActive(polygon.index);
                 }}
               />
             );
@@ -331,6 +353,48 @@ export default function beeswarm({ data, pics }) {
           >
             Anzahl der Interaktionen
           </text>
+        </g>
+        <g className="tooltip">
+          {active && (
+            <foreignObject
+              x={tooltipPosition[0]}
+              y={tooltipPosition[1]}
+              width="200"
+              height="50"
+              style={{
+                pointerEvents: "none",
+                transform: `translate(${
+                  tooltipPosition[0] > width / 2 - margin.right ? "-200px" : "0"
+                }, -50%)`,
+              }}
+            >
+              <div className="dataskop-tooltip py-2 px-3 rounded shadow bg-white border-2 border-east-blue-200 whitespace-normal">
+                {activeAuthor}
+              </div>
+            </foreignObject>
+
+            // <g
+            //   transform={`translate(${tooltipPosition[0]}, ${tooltipPosition[1]})`}
+            // >
+            //   <circle r="1" className="fill-slate-400" />
+            //   <text
+            //     x="0"
+            //     y="0"
+            //     textAnchor={
+            //       tooltipPosition[0] > width / 2 - margin.right
+            //         ? "end"
+            //         : "start"
+            //     }
+            //     dominantBaseline="middle"
+            //     className="fill-gray-400"
+            //     style={{
+            //       pointerEvents: "none",
+            //     }}
+            //   >
+            //     {activeAuthor}
+            //   </text>
+            // </g>
+          )}
         </g>
         {/* <g className="tooltip">
                 {active && (
