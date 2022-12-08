@@ -8,7 +8,7 @@ import {
 import { scaleQuantize } from "d3-scale";
 import { pointer, select } from "d3-selection";
 import _ from "lodash";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { chooseTicks } from "../utils/ticks";
 import { useRect } from "../utils/useRect";
 
@@ -107,8 +107,6 @@ function on(mark, listeners = {}) {
 }
 
 export default function Beeswarm({ data }) {
-  // const beeRef = useRef(null);
-  const tooltipRef = useRef(null);
   const [rect, beeRef] = useRect();
   const [tooltip, setTooltip] = useState(null);
 
@@ -128,12 +126,6 @@ export default function Beeswarm({ data }) {
           fontSize: "0.8rem",
           color: "#000",
         },
-        //grid: true,
-        // y: {
-        //   grid: false,
-        //   transforsm: (c) => `${c}`,
-        //   fill: (c) => c,
-        // },
         y: { tickSize: 0 },
         x: {
           type: "band",
@@ -162,8 +154,6 @@ export default function Beeswarm({ data }) {
             }),
             {
               pointerenter(event, d) {
-                // console.log("pointerenter", d);
-
                 select(event.target)
                   .style("cursor", "pointer")
                   .style("fill", "black");
@@ -180,9 +170,6 @@ export default function Beeswarm({ data }) {
                   y,
                   label: d.datum.desc,
                 });
-
-                // console.log(d.children);
-
                 // d.children.nodes().forEach((c, ii) => {
                 //   if (d.y == d.channels.title[ii]) {
                 //     select(c).style("fill", "black");
@@ -217,14 +204,8 @@ export default function Beeswarm({ data }) {
   return (
     <div className="flex mb-2 flex-col h-full grow">
       <div ref={beeRef} className="flex-1 h-full" />
-      {/* <div
-        ref={tooltipRef}
-        className="absolute z-10 bg-white p-2 shadow-lg"
-        style={{ display: "none" }}
-      /> */}
       {tooltip && (
         <div
-          // ref={tooltipRef}
           className="absolute max-w-md z-10 dataskop-tooltip py-2 px-3 rounded shadow bg-white border-2 border-east-blue-200 whitespace-normal pointer-events-none"
           style={{ left: tooltip.x, top: tooltip.y }}
         >
