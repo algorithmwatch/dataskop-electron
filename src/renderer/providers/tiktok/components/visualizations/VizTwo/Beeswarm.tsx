@@ -8,6 +8,7 @@ import {
 import { select } from "d3-selection";
 import _ from "lodash";
 import { useEffect, useMemo } from "react";
+import { chooseTicks } from "../utils/ticks";
 import { useRect } from "../utils/useRect";
 
 function beeswarm(
@@ -87,8 +88,12 @@ export default function Beeswarm({ data }) {
         y: { tickSize: 0 },
         x: {
           type: "band",
-          // ticks: 15,
+          ticks: chooseTicks(
+            _.orderBy(_.uniq(data.map((x) => x.day)), "date"),
+            window.outerHeight < 1000,
+          ),
           domain: _.orderBy(_.uniq(data.map((x) => x.day)), "date"),
+
           reverse: true,
           tickRotate: -45,
         },

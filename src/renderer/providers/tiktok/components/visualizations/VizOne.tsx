@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { SelectInput } from "./SelectInput";
 import TabBar from "./TabBar";
 import { shortenGdprData } from "./utils/shorten_data";
+import { chooseTicks } from "./utils/ticks";
 import addTooltips from "./utils/tooltips";
 import { arrangeDataVizOne } from "./utils/viz-utils";
 import { VizBoxRow } from "./VizBox";
@@ -72,12 +73,7 @@ function VizOne({ gdprData, height, width }: { gdprData: any }) {
     "Date",
   ).map((x) => x.Date);
 
-  const numTicks = Math.round(uniqDates.length / (smallerScreen ? 15 : 30));
-
-  let ticks = uniqDates;
-  if (ticks.length > (smallerScreen ? 15 : 30)) {
-    ticks = uniqDates.filter((_x: any, i: number) => i % numTicks === 0);
-  }
+  const ticks = chooseTicks(uniqDates, smallerScreen);
 
   const commonProps = {
     width: chartWidth,
