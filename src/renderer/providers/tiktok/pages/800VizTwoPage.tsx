@@ -15,8 +15,8 @@ import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import Modal from "../../../components/Modal";
 import { useNavigation } from "../../../contexts";
+import { VizTwo } from "../components/visualizations";
 import { doScreenshot } from "../components/visualizations/utils/screenshot";
-import VizTwo from "../components/visualizations/VizTwo";
 import { useData } from "../lib/hooks";
 
 export default function VizTwoPage(): JSX.Element {

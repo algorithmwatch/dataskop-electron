@@ -1,7 +1,10 @@
 import { delay } from "renderer/lib/utils/time";
 import logo from "renderer/providers/tiktok/static/images/logo.svg";
 
-const doScreenshot = async (box, fn: string) => {
+const doScreenshot = async (
+  box: { width: any; height: any; y: any; x: any },
+  fn: string,
+) => {
   // Show text for a short time
   const div = document.createElement("div");
   div.style.cssText = `position: absolute; top:${box.height - 40}px; left:${
@@ -20,7 +23,9 @@ const doScreenshot = async (box, fn: string) => {
   img.id = "dataskop-export-brand-logo";
   document.body.insertAdjacentElement("beforeend", img);
 
-  const origLogo = document.querySelector("#dataskop-logo");
+  const origLogo = document.querySelector("#dataskop-logo") as
+    | HTMLElement
+    | undefined;
   if (origLogo) origLogo.style.display = "none";
 
   // Need some time until the text it rendered
@@ -28,7 +33,9 @@ const doScreenshot = async (box, fn: string) => {
   setTimeout(() => {
     document.querySelector("#dataskop-export-brand-url")?.remove();
     document.querySelector("#dataskop-export-brand-logo")?.remove();
-    const origLogoHidden = document.querySelector("#dataskop-logo");
+    const origLogoHidden = document.querySelector("#dataskop-logo") as
+      | HTMLElement
+      | undefined;
     if (origLogoHidden) origLogoHidden.style.display = "";
   }, 500);
   await window.electron.ipc.invoke(

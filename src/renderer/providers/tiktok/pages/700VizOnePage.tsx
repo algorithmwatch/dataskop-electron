@@ -16,14 +16,16 @@ import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import Modal from "../../../components/Modal";
 import { useNavigation } from "../../../contexts";
+import { VizOne } from "../components/visualizations";
 import { doScreenshot } from "../components/visualizations/utils/screenshot";
-import VizOne from "../components/visualizations/VizOne";
 import { useData } from "../lib/hooks";
 
 export default function VizOnePage(): JSX.Element {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
   const [aboutModalIsOpen, setAboutModalIsOpen] = useState(false);
+
+  const [graph, setGraph] = useState("");
 
   const { dump } = useData();
 
@@ -107,6 +109,7 @@ export default function VizOnePage(): JSX.Element {
         <div className="text-center">
           <h1 className="hl-2xl mb-4">Über diese Grafik</h1>
           <p className="">Schalalalala!</p>
+          <p className="">Graph: {graph}</p>
         </div>
       </Modal>
       <WizardLayout className="text-center" footerSlots={footerSlots}>
@@ -114,7 +117,14 @@ export default function VizOnePage(): JSX.Element {
           className="mt-12 flex flex-col mx-16"
           id="dataskop-export-screenshot-outer"
         >
-          {dump && <VizOne gdprData={dump} width={width} height={height} />}
+          {dump && (
+            <VizOne
+              gdprData={dump}
+              width={width}
+              height={height}
+              onGraphChange={setGraph}
+            />
+          )}
         </div>
       </WizardLayout>
     </>

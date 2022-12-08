@@ -1,4 +1,4 @@
-import { withoutTime } from "./viz-utils";
+import { withoutTime } from "./data";
 
 function makeLoginObj(array) {
   const obj = {};

@@ -1,10 +1,4 @@
-export const VizBox = ({
-  head,
-  label,
-}: {
-  head: number | string;
-  label: string;
-}) => {
+const VizBox = ({ head, label }: { head: number | string; label: string }) => {
   return (
     <div className="flex rounded-lg p-1 min-w-[9rem] bg-gradient-to-br from-[#B5FFFD] to-[#FFB8CE]">
       <div className="grow rounded-md bg-white py-4 flex flex-col items-center">
@@ -15,7 +9,7 @@ export const VizBox = ({
   );
 };
 
-export const VizBoxRow = ({ values }) => {
+const VizBoxRow = ({ values }) => {
   return (
     <div className="flex mx-auto space-x-4 mb-6">
       {values.map(({ head, label }) => (
@@ -24,3 +18,5 @@ export const VizBoxRow = ({ values }) => {
     </div>
   );
 };
+
+export { VizBoxRow };

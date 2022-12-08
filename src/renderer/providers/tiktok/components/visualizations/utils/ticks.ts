@@ -1,4 +1,4 @@
-const chooseTicks = (values, smallerScreen) => {
+const chooseTicks = (values: any[], smallerScreen: boolean) => {
   const numTicks = Math.round(values.length / (smallerScreen ? 15 : 30));
 
   let ticks = values;

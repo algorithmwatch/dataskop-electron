@@ -2,13 +2,13 @@ import { faPenToSquare } from "@fortawesome/pro-regular-svg-icons";
 import * as Plot from "@observablehq/plot";
 import _ from "lodash";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { SelectInput } from "./SelectInput";
-import TabBar from "./TabBar";
-import { shortenGdprData } from "./utils/shorten_data";
-import { chooseTicks } from "./utils/ticks";
-import addTooltips from "./utils/tooltips";
-import { arrangeDataVizOne } from "./utils/viz-utils";
-import { VizBoxRow } from "./VizBox";
+import { SelectInput } from "../SelectInput";
+import TabBar from "../TabBar";
+import { chooseTicks } from "../utils/ticks";
+import addTooltips from "../utils/tooltips";
+import { VizBoxRow } from "../VizBox";
+import { arrangeDataVizOne } from "./data";
+import { shortenGdprData } from "./shorten_data";
 
 const TIMESLOTS = ["vormittags", "nachmittags", "abends", "nachts"];
 
@@ -41,7 +41,17 @@ const graphOptions = [
   { option: "percentage bars, watchtime", value: "watchtime" },
 ];
 
-function VizOne({ gdprData, height, width }: { gdprData: any }) {
+function VizOne({
+  gdprData,
+  height,
+  width,
+  onGraphChange,
+}: {
+  gdprData: any;
+  height: number;
+  width: number;
+  onGraphChange: (x: string) => void;
+}) {
   const toggleRef = useRef<null | HTMLDivElement>(null);
   const [range, setRange] = useState(rangeOptions[2]);
   const [graph, setGraph] = useState(graphOptions[0].value);
@@ -186,6 +196,10 @@ function VizOne({ gdprData, height, width }: { gdprData: any }) {
     if (toggleRef.current) toggleRef.current.append(chart);
     return () => chart.remove();
   }, [videoData, graph, chartHeight]);
+
+  useEffect(() => {
+    onGraphChange(graph);
+  }, [graph]);
 
   let headValues: any[] = [];
 
