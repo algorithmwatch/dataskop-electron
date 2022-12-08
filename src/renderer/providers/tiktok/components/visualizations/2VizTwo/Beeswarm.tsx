@@ -121,7 +121,7 @@ export default function Beeswarm({ data }) {
         height: height,
         marginTop: 30,
         marginBottom: 53,
-        marginLeft: 200,
+        marginLeft: 220,
         style: {
           fontSize: "0.8rem",
           color: "#000",
