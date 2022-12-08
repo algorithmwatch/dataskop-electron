@@ -21,26 +21,29 @@ module.exports = {
     createDefaultProgram: true,
   },
   rules: {
-    // A temporary hack related to IDE not resolving correct package.json
-    "import/no-extraneous-dependencies": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     // not working well with TypeScript
     "react/require-default-props": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-props-no-spreading": "off",
     "react/no-unused-prop-types": "off",
-    // allow console for debugging
-    "no-console": "off",
+    "react/function-component-definition": "arrow-function",
+    "react-hooks/exhaustive-deps": "off",
+    // A temporary hack related to IDE not resolving correct package.json
+    "import/no-extraneous-dependencies": "off",
     // not useful for iterative software development
     "import/prefer-default-export": "off",
-    // useful for async scraping / generators
+    // allow console for debugging
+    "no-console": "off",
     "no-await-in-loop": "off",
-    // not helpful
-    "react/react-in-jsx-scope": "off",
-    "react-hooks/exhaustive-deps": "off",
     "no-restricted-syntax": "off",
     "no-underscore-dangle": "off",
     "no-continue": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "react/jsx-props-no-spreading": "off",
     "consistent-return": "off",
+    "no-param-reassign": ["error", { props: false }],
   },
   settings: {
     "import/resolver": {
