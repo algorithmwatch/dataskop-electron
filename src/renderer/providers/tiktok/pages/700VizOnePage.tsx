@@ -27,7 +27,12 @@ export default function VizOnePage(): JSX.Element {
 
   const [graph, setGraph] = useState("");
 
-  const { dump } = useData();
+  const { dump } = useData({
+    dumpPicks: [
+      "Activity.Video Browsing History.VideoList",
+      "Activity.Login History.LoginHistoryList",
+    ],
+  });
 
   const footerSlots: FooterSlots = {
     start: [

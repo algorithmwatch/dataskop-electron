@@ -1,55 +1,27 @@
 import * as d3 from "d3";
 import _ from "lodash";
 
-/**
- *  This function uses the JSON data to return an array of objects that are in the following form:
- *  * If user selects to have bars broken up into time slots:
- * const videoData = [{
- *                      Date: *date object*,
- *                      TotalTime: *total time user spent on TikTok; Number*,
- *                      TimeOfDay: *Morgens, Mittag, Abends, or Nachts; string*
- *                    },
- *                    ...
- *                    ];
- *
- *  * else:
- * const videoData = [{
- *                      Date: *date object without time*,
- *                      TotalTime: *total time user spent on TikTok; Number*,
- *                    },
- *                    ...
- *                    ];
- * @returns
- */
+// 10 minutes between videos is acceptable
+const GAP_WATCHED = 10 * 60;
 
-export function getDayOfWeek(d: Date) {
-  let day;
-  switch (d.getDay()) {
-    case 0:
-      day = "So";
-      break;
-    case 1:
-      day = "Mo";
-      break;
-    case 2:
-      day = "Di";
-      break;
-    case 3:
-      day = "Mi";
-      break;
-    case 4:
-      day = "Do";
-      break;
-    case 5:
-      day = "Fr";
-      break;
-    case 6:
-      day = "Sa";
-      break;
-    default:
-      break;
+//  modify login data to facilitate checking for whether a new login was made
+function makeLoginObj(array) {
+  const obj = {};
+  for (const loginEntry of array) {
+    // extract date (without time)
+    // console.log(loginEntry);
+    const dateTime = new Date(loginEntry.Date.replace(" UTC", ""));
+    const dateNoTime = withoutTime(dateTime);
+
+    // check if date is already a key, add date (w/out time) as a key and the entire loginEntry (with time) as a value
+    if (dateNoTime in obj) {
+      obj[dateNoTime].push(dateTime);
+    } else {
+      obj[dateNoTime] = [];
+      obj[dateNoTime].push(dateTime);
+    }
   }
-  return day;
+  return obj;
 }
 
 const formatNumber = (number: number) => {
@@ -111,8 +83,8 @@ function addTimeOfDay(
   timeRange: number,
   loginObj: any,
 ): [{ Date: Date; TotalTime: number }[], number, string[]] {
+  let dailyTime = 0;
   let totalTime = 0;
-  let totActivity = 0;
   const coreTimeObj = {};
   const result = [];
 
@@ -127,43 +99,46 @@ function addTimeOfDay(
   for (const entry of ogVidData) {
     const dateCurr = new Date(entry.Date);
 
-    // stop looping when you reach end of 7, 30, or 90 days
+    // stop looping when you reach end selected range
     if (dateCurr < dateToStop) {
       break;
     }
 
     const timeCurr = dateCurr.getTime();
 
-    const gap = Number((timePrev - timeCurr) / (1000 * 60)); // gives gap in minutes
-    // if gap < 5 mins or no new login was made, add gap between watched video time stamps
-    if (gap < 5 || !checkForLogin(loginObj, datePrev, dateCurr)) {
-      // remove login check (2): ^^^ delete "|| !checkForLogin(loginObj, date_prev, date_curr)"
+    const gap = Number((timePrev - timeCurr) / 1000 / 60);
+
+    if (gap * 60 < GAP_WATCHED) {
+      dailyTime += gap;
       totalTime += gap;
-      totActivity += gap;
       coreTime(coreTimeObj, dateCurr.getHours(), gap);
     }
 
     // if we're on diff days, add gaps to totalTime
     if (!checkDatesEqual(datePrev, dateCurr)) {
-      result.push({
-        Date: datePrev,
-        TotalTime: totalTime,
-      });
-      totalTime = 0;
+      if (dailyTime > 0) {
+        result.push({
+          Date: datePrev,
+          TotalTime: dailyTime,
+        });
+        dailyTime = 0;
+      }
     }
     datePrev = dateCurr;
     timePrev = timeCurr;
   }
 
   // to add the last entry
-  result.push({
-    Date: datePrev,
-    TotalTime: totalTime,
-  });
+  if (dailyTime > 0) {
+    result.push({
+      Date: datePrev,
+      TotalTime: dailyTime,
+    });
+  }
 
   // below is an array of most common hour(s) user used TikTok
   const coreTimeArray = getCoreTime(coreTimeObj);
-  return [result, totActivity, coreTimeArray];
+  return [result, totalTime, coreTimeArray];
 }
 
 // helper function for getting time of day
@@ -194,7 +169,6 @@ function makeWatchtimeData(
   any,
 ] {
   let totActivity = 0; // totActivity, in this case, will give total number of videos watched
-  const coreTimeObj = {};
   const result = [];
   let datePrev = new Date(ogVidData[0].Date);
   let timePrev = datePrev.getTime();
@@ -207,18 +181,14 @@ function makeWatchtimeData(
     const dateCurr = new Date(entry.Date);
     const timeCurr = dateCurr.getTime();
 
-    // stop looping when you reach end of 7, 30, or 90 days
+    // stop looping when you reach end selected range
     if (dateCurr < dateToStop) {
       break;
     }
 
-    // coreTime(coreTimeObj, date_curr.getHours());
     const gap = Number((timePrev - timeCurr) / 1000); // gives gap in secs
-    // if gap between videos < 5 mins or no new login was made, add gap to total, to coreTime calculation, && add data entry to array
-    if (gap < 300 || !checkForLogin(loginObj, datePrev, dateCurr)) {
-      // remove login check (3): ^^^ delete "|| !checkForLogin(loginObj, date_prev, date_curr)"
+    if (gap < GAP_WATCHED) {
       totActivity += 1; // watchtime boxes fix (1): can change this to be "totActivity += gap / 60" to make boxes show time activity rather than number of vids watched
-      coreTime(coreTimeObj, dateCurr.getHours(), gap);
       result.push({
         Date: withoutTime(datePrev),
         GapLabel: gap > 2 ? "über 2 Sekunden" : "unter 2 Sekunden",
@@ -229,9 +199,6 @@ function makeWatchtimeData(
     datePrev = dateCurr;
     timePrev = timeCurr;
   }
-
-  // below is an array of most common hours user used TikTok
-  const coreTimeArray = getCoreTime(coreTimeObj);
 
   const aggregates = {};
   let total = 0;
@@ -246,7 +213,7 @@ function makeWatchtimeData(
     aggregates[k] /= total / 100;
   }
 
-  return [result, totActivity, coreTimeArray, aggregates];
+  return [result, totActivity, [], aggregates];
 }
 
 // for bars split into time slots
@@ -271,7 +238,7 @@ function makeTimeSlots(
   for (const entry of ogVidData) {
     const dateCurr = new Date(entry.Date);
 
-    // stop looping when you reach end of 7, 30, or 90 days
+    // stop looping when you reach end selected range
     if (dateCurr < dateToStop) {
       break;
     }
@@ -279,10 +246,8 @@ function makeTimeSlots(
     const timeCurr = dateCurr.getTime();
     const timeOfDayCurr = getTimeOfDay(dateCurr.getHours());
 
-    const gap = Number((timePrev - timeCurr) / (1000 * 60)); // gives gap in minutes
-    // if gap < 5 mins or no new login was made
-    if (gap < 5 || !checkForLogin(loginObj, datePrev, dateCurr)) {
-      // remove login check (4): ^^^ delete "|| !checkForLogin(loginObj, date_prev, date_curr)"
+    const gap = Number((timePrev - timeCurr) / 1000 / 60);
+    if (gap * 60 < GAP_WATCHED) {
       totalTime += gap;
       totActivity += gap;
       coreTime(coreTimeObj, dateCurr.getHours(), gap);
@@ -292,11 +257,13 @@ function makeTimeSlots(
       !checkDatesEqual(datePrev, dateCurr) ||
       !(timeOfDayPrev === timeOfDayCurr)
     ) {
-      result.push({
-        Date: withoutTime(datePrev),
-        TimeOfDay: timeOfDayPrev,
-        TotalTime: totalTime,
-      });
+      if (totalTime > 0) {
+        result.push({
+          Date: withoutTime(datePrev),
+          TimeOfDay: timeOfDayPrev,
+          TotalTime: totalTime,
+        });
+      }
       totalTime = 0;
     }
 
@@ -306,11 +273,13 @@ function makeTimeSlots(
   }
 
   // to add the last entry
-  result.push({
-    Date: withoutTime(datePrev),
-    TimeOfDay: timeOfDayPrev,
-    TotalTime: totalTime,
-  });
+  if (totalTime > 0) {
+    result.push({
+      Date: withoutTime(datePrev),
+      TimeOfDay: timeOfDayPrev,
+      TotalTime: totalTime,
+    });
+  }
 
   const aggregates = {};
   let total = 0;
@@ -342,7 +311,7 @@ function getNumAppOpen(ogLoginData: any, timeRange: number) {
   for (const entry of ogLoginData) {
     const dateCurr = new Date(entry.Date.replace(" UTC", ""));
 
-    // stop looping when you reach end of 7, 30, or 90 days
+    // stop looping when you reach end selected range
     if (dateCurr < dateToStop) {
       break;
     }
@@ -356,10 +325,9 @@ function getNumAppOpen(ogLoginData: any, timeRange: number) {
   return total;
 }
 
-// TODO: create typeOfGraph type
 // converts times to hours + mins if the times are over 60 mins, input is in mins
-function convertTime(tot: number, typeOfGraph: string) {
-  if (typeOfGraph === "watchtime") return `${formatNumber(tot)} Videos`; // watchtime boxes fix (2): delete this line of code
+function convertTime(tot: number, graph: string) {
+  if (graph === "watchtime") return `${formatNumber(tot)} Videos`; // watchtime boxes fix (2): delete this line of code
   if (tot < 60) return `${Math.round(tot)}m`;
   const mins = tot % 60;
   const hrs = Math.floor(tot / 60);
@@ -368,11 +336,9 @@ function convertTime(tot: number, typeOfGraph: string) {
 }
 
 export const arrangeDataVizOne = (
-  typeOfGraph: string,
+  dump: any,
+  graph: "timeslots" | "watchtime" | "default",
   timeRange: number,
-  ogVidData: any,
-  ogLoginData: any,
-  loginObj: any,
 ): [
   string,
   string,
@@ -396,26 +362,31 @@ export const arrangeDataVizOne = (
   let result;
   let aggregates;
 
-  if (typeOfGraph === "timeslots") {
+  const ogVidData = dump.Activity["Video Browsing History"].VideoList;
+  const ogLoginData = dump.Activity["Login History"].LoginHistoryList;
+
+  const loginObj = makeLoginObj(ogLoginData);
+
+  if (graph === "timeslots") {
     [result, totActivity, coreTimeArray, aggregates] = makeTimeSlots(
       ogVidData,
       timeRange,
       loginObj,
     );
-  } else if (typeOfGraph === "watchtime") {
+  } else if (graph === "watchtime") {
     [result, totActivity, coreTimeArray, aggregates] = makeWatchtimeData(
       ogVidData,
       timeRange,
       loginObj,
     );
-  } else if (typeOfGraph === "default") {
+  } else if (graph === "default") {
     [result, totActivity, coreTimeArray] = addTimeOfDay(
       ogVidData,
       timeRange,
       loginObj,
     );
   } else {
-    throw new Error("Invalid typeOfGraph");
+    throw new Error("Invalid graph");
   }
   const avgMinsPerDay = totActivity / timeRange;
   const numAppOpen = getNumAppOpen(ogLoginData, timeRange);
@@ -425,11 +396,11 @@ export const arrangeDataVizOne = (
   if (aggregates) headValue = aggregates;
 
   // make totActivity & avgMinsPerDay into hour if > 60 mins
-  const totActivityString = convertTime(totActivity, typeOfGraph);
+  const totActivityString = convertTime(totActivity, graph);
   const avgMinsPerDayString = convertTime(
-    // typeOfGraph === "watchtime" ? avgMinsPerDay : avgMinsPerDay,
-    typeOfGraph === "watchtime" ? Math.round(avgMinsPerDay) : avgMinsPerDay,
-    typeOfGraph,
+    // graph === "watchtime" ? avgMinsPerDay : avgMinsPerDay,
+    graph === "watchtime" ? Math.round(avgMinsPerDay) : avgMinsPerDay,
+    graph,
   );
   return [
     totActivityString,
@@ -439,72 +410,3 @@ export const arrangeDataVizOne = (
     result,
   ];
 };
-
-function makeLoginObj(array) {
-  const obj = {};
-  for (const loginEntry of array) {
-    // extract date (without time)
-    // console.log(loginEntry);
-    const dateTime = new Date(loginEntry.Date.replace(" UTC", ""));
-    const dateNoTime = withoutTime(dateTime);
-
-    // check if date is already a key, add date (w/out time) as a key and the entire loginEntry (with time) as a value
-    if (dateNoTime in obj) {
-      obj[dateNoTime].push(dateTime);
-    } else {
-      obj[dateNoTime] = [];
-      obj[dateNoTime].push(dateTime);
-    }
-  }
-  return obj;
-}
-
-export function shortenGdprData(data) {
-  // for viz 1 & 2
-  const videodata = data.Activity["Video Browsing History"].VideoList;
-  const logindata = data.Activity["Login History"].LoginHistoryList;
-  const tiktokLiveVids = data["Tiktok Live"]["Watch Live History"].WatchLiveMap;
-
-  // for viz 3
-  const likedVids = data.Activity["Like List"].ItemFavoriteList;
-  const sharedVids = data.Activity["Share History"].ShareHistoryList;
-  const savedVids = data.Activity["Favorite Videos"].FavoriteVideoList;
-
-  // For viz 1: modify login data to facilitate checking for whether a new login was made
-  const loginObj = makeLoginObj(logindata);
-
-  return [
-    videodata,
-    logindata,
-    loginObj,
-    tiktokLiveVids,
-    likedVids,
-    sharedVids,
-    savedVids,
-  ];
-}
-
-export function shortenMetadata(data) {
-  const result = {};
-  for (const url of Object.keys(data)) {
-    if (data[url].meta !== undefined && data[url].meta.results !== undefined) {
-      result[url] = {
-        Desc: data[url].meta.results.desc,
-        CreateTime: data[url].meta.results.createTime,
-        Duration: data[url].meta.results.video.duration,
-        Author: data[url].meta.results.author,
-        SoundTitle: data[url].meta.results.music.title,
-        SoundOriginal: data[url].meta.results.music.original,
-        SoundAuthor: data[url].meta.results.music.authorName,
-        SoundId: data[url].meta.results.music.id,
-        HashtagInfo: data[url].meta.results.challenges,
-        Stats: data[url].meta.results.stats,
-        DiversificationLabels: data[url].meta.results.diversificationLabels,
-        AuthorThumbnail: data[url].meta.results.avatarThumb,
-      };
-    }
-  }
-  // data = data.map((url) => ());
-
-  return result;
-}

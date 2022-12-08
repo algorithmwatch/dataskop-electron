@@ -1,14 +1,13 @@
 import { faPenToSquare } from "@fortawesome/pro-regular-svg-icons";
 import * as Plot from "@observablehq/plot";
 import _ from "lodash";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SelectInput } from "../SelectInput";
 import TabBar from "../TabBar";
 import { chooseTicks } from "../utils/ticks";
 import addTooltips from "../utils/tooltips";
 import { VizBoxRow } from "../VizBox";
 import { arrangeDataVizOne } from "./data";
-import { shortenGdprData } from "./shorten_data";
 
 const TIMESLOTS = ["vormittags", "nachmittags", "abends", "nachts"];
 
@@ -35,12 +34,6 @@ const rangeOptions = [
   { id: "5", label: "letzte 365 Tage", value: 365 },
 ];
 
-const graphOptions = [
-  { option: "solid bars, watch activity", value: "default" },
-  { option: "time slot bars, watch activity", value: "timeslots" },
-  { option: "percentage bars, watchtime", value: "watchtime" },
-];
-
 function VizOne({
   gdprData,
   height,
@@ -54,25 +47,17 @@ function VizOne({
 }) {
   const toggleRef = useRef<null | HTMLDivElement>(null);
   const [range, setRange] = useState(rangeOptions[2]);
-  const [graph, setGraph] = useState(graphOptions[0].value);
-  const [
-    videodata,
-    logindata,
-    loginObj,
-    tiktokLiveVids,
-    likedVids,
-    sharedVids,
-    savedVids,
-  ] = useMemo(() => shortenGdprData(gdprData), [gdprData]);
+  const [graph, setGraph] = useState<"default" | "timeslots" | "watchtime">(
+    "default",
+  );
+
   const [totActivity, avgMinsPerDay, numAppOpen, headValue, videoData] =
     React.useMemo(
-      () =>
-        arrangeDataVizOne(graph, range.value, videodata, logindata, loginObj),
+      () => arrangeDataVizOne(gdprData, graph, range.value),
       [graph, range.value],
     );
 
   const smallerScreen = window.outerHeight <= 1000;
-  const chartWidth = width;
 
   const chartHeight =
     Math.round(height * (smallerScreen ? 0.5 : 0.7)) +
@@ -86,7 +71,7 @@ function VizOne({
   const ticks = chooseTicks(uniqDates, smallerScreen);
 
   const commonProps = {
-    width: chartWidth,
+    width,
     height: chartHeight,
     marginBottom: smallerScreen ? 50 : 75,
     marginTop: 0,
@@ -120,7 +105,6 @@ function VizOne({
       domain: TIMESLOTS,
       range: ["#330010", "#990030", "#ff0050", "#ff99b9"],
     },
-    // scale: --> `${date_prev.getDate()}.${date_prev.getMonth() === 0 ? 12 : date_prev.getMonth() + 1}`
     marks: [
       Plot.barY(
         videoData,
@@ -214,7 +198,7 @@ function VizOne({
 
   if (graph === "timeslots") {
     headValues = TIMESLOTS.map((x) => [x, headValue[x]]).map((x) => ({
-      head: `${Math.round(x[1])}%`,
+      head: `${Math.round(x[1] ?? 0)}%`,
       label: x[0],
     }));
   }
@@ -224,11 +208,11 @@ function VizOne({
       { head: totActivity, label: "Aktivität" },
       { head: avgMinsPerDay, label: "pro Tag" },
       {
-        head: `${Math.round(headValue["über 2 Sekunden"])}%`,
+        head: `${Math.round(headValue["über 2 Sekunden"]) ?? 0}%`,
         label: "> 2 Sekunden",
       },
       {
-        head: `${Math.round(headValue["unter 2 Sekunden"])}%`,
+        head: `${Math.round(headValue["unter 2 Sekunden"] ?? 0)}%`,
         label: "< 2 Sekunden",
       },
     ];
