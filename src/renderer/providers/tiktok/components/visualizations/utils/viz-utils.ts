@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import _ from "lodash";
 
 /**
  *  This function uses the JSON data to return an array of objects that are in the following form:
@@ -169,10 +170,10 @@ function addTimeOfDay(
 function getTimeOfDay(entryHour: number) {
   let timeOfDay = "";
   if (entryHour >= 6 && entryHour < 12) {
-    timeOfDay = "morgens";
+    timeOfDay = "vormittags";
   } else if (entryHour >= 12 && entryHour < 18) {
     timeOfDay = "nachmittags";
-  } else if (entryHour >= 18 && entryHour < 0) {
+  } else if (entryHour >= 18 && entryHour < 24) {
     timeOfDay = "abends";
   } else if (entryHour >= 0 || entryHour < 6) {
     timeOfDay = "nachts";
@@ -186,7 +187,12 @@ function makeWatchtimeData(
   ogVidData: any,
   timeRange: number,
   loginObj: any,
-): [{ Date: Date; GapLabel: string; GapLength: number }[], number, string[]] {
+): [
+  { Date: Date; GapLabel: string; GapLength: number }[],
+  number,
+  string[],
+  any,
+] {
   let totActivity = 0; // totActivity, in this case, will give total number of videos watched
   const coreTimeObj = {};
   const result = [];
@@ -226,7 +232,21 @@ function makeWatchtimeData(
 
   // below is an array of most common hours user used TikTok
   const coreTimeArray = getCoreTime(coreTimeObj);
-  return [result, totActivity, coreTimeArray];
+
+  const aggregates = {};
+  let total = 0;
+
+  result.forEach((x) => {
+    const val = _.get(aggregates, x.GapLabel, 0);
+    _.set(aggregates, x.GapLabel, val + 1);
+    total += 1;
+  });
+
+  for (const k of Object.keys(aggregates)) {
+    aggregates[k] /= total / 100;
+  }
+
+  return [result, totActivity, coreTimeArray, aggregates];
 }
 
 // for bars split into time slots
@@ -234,7 +254,7 @@ function makeTimeSlots(
   ogVidData: any,
   timeRange: number,
   loginObj: any,
-): [{ Date: Date; TimeOfDay: string; TotalTime: number }[], number, string[]] {
+): [{ Date: Date; TimeOfDay: string; TotalTime: number }[], number, any, any] {
   let totalTime = 0;
   let totActivity = 0;
   const coreTimeObj = {};
@@ -292,9 +312,20 @@ function makeTimeSlots(
     TotalTime: totalTime,
   });
 
-  // below is an array of most common hours user used TikTok
-  const coreTimeArray = getCoreTime(coreTimeObj);
-  return [result, totActivity, coreTimeArray];
+  const aggregates = {};
+  let total = 0;
+
+  result.forEach((x) => {
+    const val = _.get(aggregates, x.TimeOfDay, 0);
+    _.set(aggregates, x.TimeOfDay, val + x.TotalTime);
+    total += x.TotalTime;
+  });
+
+  for (const k of Object.keys(aggregates)) {
+    aggregates[k] /= total / 100;
+  }
+
+  return [result, totActivity, [], aggregates];
 }
 
 // helper function to compute the total number of times the user
@@ -346,7 +377,7 @@ export const arrangeDataVizOne = (
   string,
   string,
   number,
-  string,
+  any,
   // TODO: create type
   (
     | {
@@ -363,15 +394,16 @@ export const arrangeDataVizOne = (
   let totActivity;
   let coreTimeArray;
   let result;
+  let aggregates;
 
   if (typeOfGraph === "timeslots") {
-    [result, totActivity, coreTimeArray] = makeTimeSlots(
+    [result, totActivity, coreTimeArray, aggregates] = makeTimeSlots(
       ogVidData,
       timeRange,
       loginObj,
     );
   } else if (typeOfGraph === "watchtime") {
-    [result, totActivity, coreTimeArray] = makeWatchtimeData(
+    [result, totActivity, coreTimeArray, aggregates] = makeWatchtimeData(
       ogVidData,
       timeRange,
       loginObj,
@@ -387,8 +419,10 @@ export const arrangeDataVizOne = (
   }
   const avgMinsPerDay = totActivity / timeRange;
   const numAppOpen = getNumAppOpen(ogLoginData, timeRange);
-  const coreTimeString =
+  let headValue =
     coreTimeArray.length > 1 ? `${coreTimeArray}` : `${coreTimeArray[0]}`;
+
+  if (aggregates) headValue = aggregates;
 
   // make totActivity & avgMinsPerDay into hour if > 60 mins
   const totActivityString = convertTime(totActivity, typeOfGraph);
@@ -401,7 +435,7 @@ export const arrangeDataVizOne = (
     totActivityString,
     avgMinsPerDayString,
     numAppOpen,
-    coreTimeString,
+    headValue,
     result,
   ];
 };
