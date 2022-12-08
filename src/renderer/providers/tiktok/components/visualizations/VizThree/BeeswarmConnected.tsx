@@ -30,18 +30,21 @@ export default function beeswarm({ data, pics }) {
     like: "gelikte Videos",
     share: "geteilte Videos",
     view: "angesehene Videos",
+    favorite: "favorisierte Videos",
   };
 
   const minNum = {
     view: 5,
     like: 2,
-    share: 0,
+    share: 1,
+    favorite: 1,
   };
 
   const colors = {
     view: "#0090CE",
     like: "#00CEC7",
     share: "#FF004F",
+    favorite: "#9999ff",
   };
 
   const margin = {
@@ -90,7 +93,7 @@ export default function beeswarm({ data, pics }) {
   }, [data, height]);
 
   const size = useMemo(() => {
-    return scaleLinear().domain(xDomain).range([15, 90]);
+    return scaleLinear().domain(xDomain).range([10, 70]);
   }, [data, xDomain]);
 
   const simulation = useMemo(() => {
@@ -246,7 +249,14 @@ export default function beeswarm({ data, pics }) {
                         activeAuthor === author
                           ? ""
                           : `brightness(1.1) url(#flood${slot})`,
-                      transform: `scale(${activeAuthor === author ? 1.4 : 1})`,
+                      transform: `scale(${
+                        // eslint-disable-next-line no-nested-ternary
+                        activeAuthor === author
+                          ? size(data.length) > 50
+                            ? 2
+                            : 4
+                          : 1
+                      })`,
                       transformOrigin: "center center",
                       transformBox: "fill-box",
                     }}
@@ -257,7 +267,7 @@ export default function beeswarm({ data, pics }) {
                     r={size(data.length) / 2}
                     fill={colors[slot]}
                     style={{
-                      transform: `scale(${activeAuthor === author ? 1.4 : 1})`,
+                      transform: `scale(${activeAuthor === author ? 2 : 1})`,
                       transformOrigin: "center center",
                       transformBox: "fill-box",
                     }}
@@ -301,7 +311,17 @@ export default function beeswarm({ data, pics }) {
         <g className="y-axis">
           {yDomain.map((slot, i) => {
             return (
-              <g key={i} transform={`translate(-20, ${y(slot)})`}>
+              <g key={i} transform={`translate(-20, ${y(slot)})`} fill>
+                <text
+                  key={`white${i}`}
+                  y={-y.step() / 2}
+                  dy="0.5em"
+                  dominantBaseline="middle"
+                  textAnchor="start"
+                  style={{ stroke: "white", strokeWidth: "0.4rem" }}
+                >
+                  {text[slot]}
+                </text>
                 <text
                   key={i}
                   y={-y.step() / 2}

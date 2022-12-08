@@ -50,14 +50,10 @@ export default function VizThree({ gdprData, metadata }) {
 
       <VizBoxRow
         values={[
-          // { head: `${stats.totalNicknames} Kanäle`, label: "insgesamt" },
-          { head: `${stats.views}`, label: "Videos angesehen" },
-          { head: `${stats.shares}`, label: "Videos geteilt" },
-          { head: `${stats.comments}`, label: "Videos favorisiert" },
-          { head: `${stats.favorites}`, label: "Videos gelikt" },
-          // { head: "33 x", label: "geliked" },
-          // { head: "45 Videos", label: "mit anderen geteilt" },
-          // { head: "123 x", label: "kommentiert" },
+          { head: `${stats.shares}`, label: "geteilt" },
+          { head: `${stats.favorites}`, label: "favorisiert" },
+          { head: `${stats.likes}`, label: "gelikt" },
+          { head: `${stats.views}`, label: "angesehen" },
         ]}
       />
 

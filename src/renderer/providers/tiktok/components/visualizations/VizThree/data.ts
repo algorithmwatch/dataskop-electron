@@ -13,16 +13,19 @@ const transformData = (gdprData, metadata) => {
     return { ...d, id, ...item, author, nickname };
   };
 
-  const commentsList = gdprData.Comment.Comments.CommentsList;
+  const favList = gdprData.Activity["Favorite Videos"].FavoriteVideoList.map(
+    addData,
+  )
+    .map((d) => ({ ...d, slot: "favorite" }))
+    .filter((d) => d.author);
+
   const shareList = gdprData.Activity["Share History"].ShareHistoryList.map(
     addData,
   )
     .map((d) => ({ ...d, slot: "share" }))
     .filter((d) => d.author);
 
-  const favoriteList = gdprData.Activity["Like List"].ItemFavoriteList.map(
-    addData,
-  )
+  const likeList = gdprData.Activity["Like List"].ItemFavoriteList.map(addData)
     .map((d) => ({ ...d, slot: "like" }))
     .filter((d) => d.author);
 
@@ -33,14 +36,14 @@ const transformData = (gdprData, metadata) => {
     .map((d) => ({ ...d, slot: "view" }))
     .filter((d) => d.author);
 
-  const allData = [...shareList, ...favoriteList, ...viewList];
+  const allData = [...shareList, ...favList, ...likeList, ...viewList];
 
   const totalNicknames = new Set(allData.map((d) => d.author)).size;
 
   const stats = {
-    comments: commentsList.length,
+    favorites: favList.length,
     shares: shareList.length,
-    favorites: favoriteList.length,
+    likes: likeList.length,
     views: viewList.length,
     totalNicknames,
   };
