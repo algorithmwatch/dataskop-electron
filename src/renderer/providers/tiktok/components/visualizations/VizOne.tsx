@@ -9,9 +9,11 @@ import addTooltips from "./utils/tooltips";
 import { arrangeDataVizOne } from "./utils/viz-utils";
 import { VizBoxRow } from "./VizBox";
 
+const TIMESLOTS = ["vormittags", "nachmittags", "abends", "nachts"];
+
 function rangeOfTime(timeofday: string) {
   switch (timeofday) {
-    case "morgens":
+    case "vormittags":
       return "6:00 - 11:59";
     case "nachmittags":
       return "12:00 - 17:59";
@@ -20,7 +22,7 @@ function rangeOfTime(timeofday: string) {
     case "nachts":
       return "00:00 - 5:59";
     default:
-      throw new Error("Unexpected value for timeofday" + timeofday);
+      throw new Error(`Unexpected value for timeofday: ${timeofday}`);
   }
 }
 
@@ -51,7 +53,7 @@ function VizOne({ gdprData, height, width }: { gdprData: any }) {
     sharedVids,
     savedVids,
   ] = useMemo(() => shortenGdprData(gdprData), [gdprData]);
-  const [totActivity, avgMinsPerDay, numAppOpen, coreTimeString, videoData] =
+  const [totActivity, avgMinsPerDay, numAppOpen, headValue, videoData] =
     React.useMemo(
       () =>
         arrangeDataVizOne(graph, range.value, videodata, logindata, loginObj),
@@ -108,7 +110,8 @@ function VizOne({ gdprData, height, width }: { gdprData: any }) {
       label: null,
     },
     color: {
-      legend: true,
+      legend: graph === "timeslots",
+      domain: TIMESLOTS,
       range: ["#330010", "#990030", "#ff0050", "#ff99b9"],
     },
     // scale: --> `${date_prev.getDate()}.${date_prev.getMonth() === 0 ? 12 : date_prev.getMonth() + 1}`
@@ -188,6 +191,39 @@ function VizOne({ gdprData, height, width }: { gdprData: any }) {
     return () => chart.remove();
   }, [videoData, graph, chartHeight]);
 
+  let headValues: any[] = [];
+
+  if (graph === "default") {
+    headValues = [
+      { head: totActivity, label: "Aktivität" },
+      { head: avgMinsPerDay, label: "pro Tag" },
+      { head: `${numAppOpen}x`, label: "App geöffnet" },
+      { head: `${headValue}:00`, label: "Hauptzeit" },
+    ];
+  }
+
+  if (graph === "timeslots") {
+    headValues = TIMESLOTS.map((x) => [x, headValue[x]]).map((x) => ({
+      head: `${Math.round(x[1])}%`,
+      label: x[0],
+    }));
+  }
+
+  if (graph === "watchtime") {
+    headValues = [
+      { head: totActivity, label: "Aktivität" },
+      { head: avgMinsPerDay, label: "pro Tag" },
+      {
+        head: `${Math.round(headValue["über 2 Sekunden"])}%`,
+        label: "> 2 Sekunden",
+      },
+      {
+        head: `${Math.round(headValue["unter 2 Sekunden"])}%`,
+        label: "< 2 Sekunden",
+      },
+    ];
+  }
+
   return (
     <>
       <div className="mx-auto flex items-center text-2xl mb-6">
@@ -202,14 +238,7 @@ function VizOne({ gdprData, height, width }: { gdprData: any }) {
         </div>
       </div>
 
-      <VizBoxRow
-        values={[
-          { head: totActivity, label: "Aktivität" },
-          { head: avgMinsPerDay, label: "pro Tag" },
-          { head: `${numAppOpen}x`, label: "App geöffnet" },
-          { head: `${coreTimeString}:00`, label: "Hauptzeit" },
-        ]}
-      />
+      <VizBoxRow values={headValues} />
 
       <TabBar
         datasource={graph}
