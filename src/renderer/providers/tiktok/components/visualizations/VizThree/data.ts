@@ -8,7 +8,9 @@ const transformData = (gdprData, metadata) => {
     const data = _.get(metadata, `tv${id}`, null);
     let item = {};
     if (data && data.result) item = data.result;
-    return { ...d, id, ...item };
+    const author = item.author?.uniqueId || item.author;
+    const nickname = item.author?.nickname || item.nickname;
+    return { ...d, id, ...item, author, nickname };
   };
 
   const commentsList = gdprData.Comment.Comments.CommentsList;

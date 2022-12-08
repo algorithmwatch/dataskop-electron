@@ -127,9 +127,7 @@ export default function beeswarm({ data, pics }) {
 
   const activeAuthor = useMemo(() => {
     if (active === null) return null;
-    let author = simulation[active][1];
-    if (author?.uniqueId) author = author.uniqueId;
-    return author;
+    return simulation[active][1];
   }, [active, simulation]);
 
   const activeLines = useMemo(() => {
@@ -140,6 +138,7 @@ export default function beeswarm({ data, pics }) {
   const tooltipPosition = useMemo(() => {
     if (active === null) return null;
     const data = simulation[active];
+    // console.log(data[1], data);
     const name = data[2][0].nickname;
     const center = [width / 2 - margin.right, height / 2 - margin.bottom];
     const pos = [data.x, data.y];
@@ -279,7 +278,6 @@ export default function beeswarm({ data, pics }) {
                 // className="cursor-pointer"
                 onMouseEnter={() => {
                   // console.log(simulation[polygon.index]);
-                  // console.log(simulation[polygon.index][2][0].author);
                   setActive(polygon.index);
                 }}
               />
