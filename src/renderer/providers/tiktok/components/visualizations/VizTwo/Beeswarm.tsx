@@ -5,9 +5,10 @@ import {
   forceX as d3forceX,
   forceY as d3forceY,
 } from "d3-force";
-import { select } from "d3-selection";
+import { scaleQuantize } from "d3-scale";
+import { pointer, select } from "d3-selection";
 import _ from "lodash";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRect } from "../utils/useRect";
 
 function beeswarm(
@@ -59,9 +60,57 @@ function beeswarm(
   return dots;
 }
 
+function on(mark, listeners = {}) {
+  const render = mark.render;
+  mark.render = function (facet, { x, y }, channels, dimensions, context) {
+    // 🌶 I'd like to be allowed to read the facet
+    // …  mutable debug = fx.domain()??
+
+    // 🌶 data[i] may or may not be the datum, depending on transforms
+    // (at this stage we only have access to the materialized channels we requested)
+    // but in simple cases it works
+    const data = this.data;
+
+    // 🌶 since a point or band scale doesn't have an inverse, create one from its domain and range
+    if (x && x.invert === undefined)
+      x.invert = scaleQuantize(x.range(), x.domain());
+    if (y && y.invert === undefined)
+      y.invert = scaleQuantize(y.range(), y.domain());
+
+    const g = render.apply(this, arguments);
+    const r = select(g).selectChildren();
+    for (const [type, callback] of Object.entries(listeners)) {
+      r.on(type, function (event, i) {
+        const p = pointer(event, g);
+        callback(event, {
+          type,
+          p,
+          datum: data[i],
+          i,
+          facet,
+          data,
+          channels,
+          dimensions,
+          context,
+          children: r,
+          ...(x && { x: x.invert(p[0]) }),
+          ...(y && { y: y.invert(p[1]) }),
+          ...(x && channels.x2 && { x2: x.invert(channels.x2[i]) }),
+          ...(y && channels.y2 && { y2: y.invert(channels.y2[i]) }),
+        });
+      });
+    }
+    return g;
+  };
+  return mark;
+}
+
 export default function Beeswarm({ data }) {
   // const beeRef = useRef(null);
+  const tooltipRef = useRef(null);
   const [rect, beeRef] = useRect();
+  const [tooltip, setTooltip] = useState(null);
+
   const { width, height } = rect;
 
   const beeSvg = useMemo(
@@ -93,18 +142,61 @@ export default function Beeswarm({ data }) {
           tickRotate: -45,
         },
         marks: [
-          beeswarm(data, {
-            marginTop: 50,
-            marginLeft: 50,
-            dynamic: true,
-            title: (d) => d.label,
-            x: (d) => d.day,
-            y: (d) => d.label,
-            fill: (d) => d.label,
-            stroke: "none",
-            //r: (d) => 5,
-            gap: 0.5,
-          }),
+          on(
+            beeswarm(data, {
+              marginTop: 50,
+              marginLeft: 50,
+              dynamic: true,
+              //title: (d) => d.label,
+              x: (d) => d.day,
+              y: (d) => d.label,
+              fill: (d) => d.label,
+              stroke: "none",
+              //r: (d) => 5,
+              gap: 0.5,
+            }),
+            {
+              pointerenter(event, d) {
+                // console.log("pointerenter", d);
+
+                select(event.target)
+                  .style("cursor", "pointer")
+                  .style("fill", "black");
+
+                let x = event.clientX + 10;
+                let y = event.clientY + 10;
+
+                if (x + 300 > width) {
+                  x = width - 300;
+                }
+
+                setTooltip({
+                  x,
+                  y,
+                  label: d.datum.desc,
+                });
+
+                // console.log(d.children);
+
+                // d.children.nodes().forEach((c, ii) => {
+                //   if (d.y == d.channels.title[ii]) {
+                //     select(c).style("fill", "black");
+                //   }
+                // });
+              },
+              pointermove(event, { datum }) {},
+              pointerout(event, d) {
+                select(event.target)
+                  .style("cursor", "pointer")
+                  .style("fill", null);
+
+                setTooltip(null);
+                // d.children.nodes().forEach((c, ii) => {
+                //   select(c).style("fill", d.channels.fill[ii]);
+                // });
+              },
+            },
+          ),
         ],
       }),
     [data, width, height],
@@ -112,13 +204,28 @@ export default function Beeswarm({ data }) {
 
   useEffect(() => {
     if (beeRef.current && beeSvg) {
-      // console.log("rendering beeswarm");
-      // console.log(data);
-      // select(beeRef.current).selectAll('text').style('font-size', '2em');
       beeRef.current.replaceChildren(beeSvg);
       return () => beeSvg?.remove();
     }
   }, [beeSvg, beeRef, width, height]);
 
-  return <div className="flex-1 mb-2" ref={beeRef} />;
+  return (
+    <div className="flex mb-2 flex-col h-full grow">
+      <div ref={beeRef} className="flex-1 h-full" />
+      {/* <div
+        ref={tooltipRef}
+        className="absolute z-10 bg-white p-2 shadow-lg"
+        style={{ display: "none" }}
+      /> */}
+      {tooltip && (
+        <div
+          // ref={tooltipRef}
+          className="absolute max-w-md z-10 dataskop-tooltip py-2 px-3 rounded shadow bg-white border-2 border-east-blue-200 whitespace-normal pointer-events-none"
+          style={{ left: tooltip.x, top: tooltip.y }}
+        >
+          {tooltip.label}
+        </div>
+      )}
+    </div>
+  );
 }
