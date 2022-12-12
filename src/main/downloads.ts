@@ -28,8 +28,8 @@ const handleImportDataSkop = (filePath: string) => {
   if (filePath.endsWith(".json")) {
     const data = readJson(filePath);
     if ("lookups" in data) {
-      log.info(`Importing ${data.lookups.length} lookups`);
-      addLookups(Object.fromEntries(data.lookups));
+      log.info(`Importing ${Object.keys(data.lookups).length} lookups`);
+      addLookups(data.lookups);
     }
 
     if ("dump" in data) {
