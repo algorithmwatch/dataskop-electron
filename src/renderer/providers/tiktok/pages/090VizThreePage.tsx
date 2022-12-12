@@ -17,12 +17,19 @@ import Modal from "../../../components/Modal";
 import { useNavigation } from "../../../contexts";
 import { VizThree } from "../components/visualizations";
 import { doScreenshot } from "../components/visualizations/utils/screenshot";
-import { useData } from "../lib/hooks";
+import { useData } from "../lib/useData";
 
 const VizThreePage = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
-  const { dump, lookups } = useData({ maxLookups: 2000 });
+  const { dump, lookups } = useData({
+    dumpPicks: [
+      "Activity.Video Browsing History",
+      "Activity.Favorite Videos",
+      "Activity.Share History",
+      "Activity.Like List",
+    ],
+  });
   const [aboutModalIsOpen, setAboutModalIsOpen] = useState(false);
 
   const footerSlots: FooterSlots = {

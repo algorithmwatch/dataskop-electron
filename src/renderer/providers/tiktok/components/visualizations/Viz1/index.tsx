@@ -2,7 +2,7 @@ import { faPenToSquare } from "@fortawesome/pro-regular-svg-icons";
 import * as Plot from "@observablehq/plot";
 import _ from "lodash";
 import React, { useEffect, useRef, useState } from "react";
-import { SelectInput } from "../SelectInput";
+import SelectInput from "../SelectInput";
 import TabBar from "../TabBar";
 import { chooseTicks } from "../utils/ticks";
 import addTooltips from "../utils/tooltips";

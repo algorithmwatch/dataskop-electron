@@ -1,5 +1,5 @@
-import VizOne from "./1VIzOne";
-import VizTwo from "./2VizTwo";
-import VizThree from "./3VizThree";
+import VizOne from "./Viz1";
+import VizTwo from "./Viz2";
+import VizThree from "./Viz3";
 
 export { VizOne, VizTwo, VizThree };

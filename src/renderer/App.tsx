@@ -17,7 +17,7 @@ import {
 } from "./contexts";
 import { allRoutes } from "./routes";
 
-export default function App() {
+const App = () => {
   return (
     <ConfigProvider>
       <NavigationProvider>
@@ -46,4 +46,6 @@ export default function App() {
       </NavigationProvider>
     </ConfigProvider>
   );
-}
+};
+
+export default App;

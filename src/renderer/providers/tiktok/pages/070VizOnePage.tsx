@@ -18,7 +18,7 @@ import Modal from "../../../components/Modal";
 import { useNavigation } from "../../../contexts";
 import { VizOne } from "../components/visualizations";
 import { doScreenshot } from "../components/visualizations/utils/screenshot";
-import { useData } from "../lib/hooks";
+import { useData } from "../lib/useData";
 
 const VizOnePage = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -28,10 +28,7 @@ const VizOnePage = (): JSX.Element => {
   const [graph, setGraph] = useState("");
 
   const { dump } = useData({
-    dumpPicks: [
-      "Activity.Video Browsing History.VideoList",
-      "Activity.Login History.LoginHistoryList",
-    ],
+    dumpPicks: ["Activity.Video Browsing History", "Activity.Login History"],
   });
 
   const footerSlots: FooterSlots = {
