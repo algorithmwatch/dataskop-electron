@@ -30,12 +30,19 @@ module.exports = {
     "react/react-in-jsx-scope": "off",
     "react/jsx-props-no-spreading": "off",
     "react/no-unused-prop-types": "off",
-    "react/function-component-definition": "arrow-function",
     "react-hooks/exhaustive-deps": "off",
+    "react/function-component-definition": [
+      "error",
+      {
+        namedComponents: ["arrow-function"],
+        unnamedComponents: ["arrow-function"],
+      },
+    ],
     // A temporary hack related to IDE not resolving correct package.json
     "import/no-extraneous-dependencies": "off",
     // not useful for iterative software development
     "import/prefer-default-export": "off",
+    "import/no-import-module-exports": "off",
     // allow console for debugging
     "no-console": "off",
     "no-await-in-loop": "off",
