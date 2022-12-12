@@ -7,10 +7,9 @@ import { useEffect } from "react";
 import { useConfig, useScraping } from "renderer/contexts";
 import ScrapingManager from "./ScrapingManager";
 
-export default function ScrapingAttached() {
+const ScrapingAttached = () => {
   const {
     state: { isAttached, disableInput, campaign, scrapingProgress },
-    dispatch,
   } = useScraping();
 
   const {
@@ -45,4 +44,6 @@ export default function ScrapingAttached() {
       />
     );
   return null;
-}
+};
+
+export default ScrapingAttached;

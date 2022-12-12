@@ -73,7 +73,7 @@ const TutorialSlide = ({
   );
 };
 
-export default function TutorialPage(): JSX.Element {
+const TutorialPage = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
   const carouselRef = useRef<Glide.Properties>(null);
@@ -168,4 +168,6 @@ export default function TutorialPage(): JSX.Element {
       </Carousel>
     </WizardLayout>
   );
-}
+};
+
+export default TutorialPage;

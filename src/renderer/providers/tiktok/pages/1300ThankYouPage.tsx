@@ -76,7 +76,7 @@ const NotEligibleLink = () => {
   );
 };
 
-export default function ThankYouPage(): JSX.Element {
+const ThankYouPage = (): JSX.Element => {
   const [isExporting, setExporting] = useState(false);
   const shareUrl = "https://dataskop.net/";
   const shareText = encodeURIComponent(
@@ -161,4 +161,6 @@ export default function ThankYouPage(): JSX.Element {
       </Content>
     </WizardLayout>
   );
-}
+};
+
+export default ThankYouPage;

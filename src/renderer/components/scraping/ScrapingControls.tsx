@@ -8,11 +8,11 @@ import { providerInfo } from "renderer/providers/info";
 import Button from "../../providers/youtube/components/Button";
 import { goToUrl } from "./ipc";
 
-export default function ScrapingControls({
+const ScrapingControls = ({
   hideControls = false,
 }: {
   hideControls?: boolean;
-}): JSX.Element {
+}): JSX.Element => {
   const {
     state: {
       campaign,
@@ -60,37 +60,37 @@ export default function ScrapingControls({
   };
 
   return (
-    <>
-      <div>
-        <p style={{ color: "red" }}>
-          {scrapingError !== null &&
-            `${scrapingError.name}: ${scrapingError.message}`}
-        </p>
-        <br />
-        <div className={hideControls ? "invisible" : ""}>
-          <Button onClick={resetScraping}>reset scraping</Button>
-          {!isUserLoggedIn && <p>Please login before continuing.</p>}
-          {isUserLoggedIn && !isScrapingStarted && (
-            <Button onClick={startScraping}>start scraping</Button>
-          )}
-          {!isScrapingFinished && isScrapingStarted && !isScrapingPaused && (
-            <Button onClick={pauseScraping}>pause scraping</Button>
-          )}
-          {!isScrapingFinished && isScrapingStarted && isScrapingPaused && (
-            <Button onClick={resumeScraping}>resume scraping</Button>
-          )}
-
-          <Button onClick={toggleIsMuted}>is {!isMuted && "not"} muted</Button>
-          <Button onClick={toggleVis}>
-            {!visibleWindow ? "show" : "hide"} scraping window
-          </Button>
-        </div>
-        {isScrapingStarted && (
-          <progress className="progress" value={scrapingProgress.value} max="1">
-            {scrapingProgress.value}
-          </progress>
+    <div>
+      <p style={{ color: "red" }}>
+        {scrapingError !== null &&
+          `${scrapingError.name}: ${scrapingError.message}`}
+      </p>
+      <br />
+      <div className={hideControls ? "invisible" : ""}>
+        <Button onClick={resetScraping}>reset scraping</Button>
+        {!isUserLoggedIn && <p>Please login before continuing.</p>}
+        {isUserLoggedIn && !isScrapingStarted && (
+          <Button onClick={startScraping}>start scraping</Button>
         )}
+        {!isScrapingFinished && isScrapingStarted && !isScrapingPaused && (
+          <Button onClick={pauseScraping}>pause scraping</Button>
+        )}
+        {!isScrapingFinished && isScrapingStarted && isScrapingPaused && (
+          <Button onClick={resumeScraping}>resume scraping</Button>
+        )}
+
+        <Button onClick={toggleIsMuted}>is {!isMuted && "not"} muted</Button>
+        <Button onClick={toggleVis}>
+          {!visibleWindow ? "show" : "hide"} scraping window
+        </Button>
       </div>
-    </>
+      {isScrapingStarted && (
+        <progress className="progress" value={scrapingProgress.value} max="1">
+          {scrapingProgress.value}
+        </progress>
+      )}
+    </div>
   );
-}
+};
+
+export default ScrapingControls;

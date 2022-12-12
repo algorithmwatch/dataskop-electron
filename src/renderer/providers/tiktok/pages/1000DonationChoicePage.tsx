@@ -12,7 +12,7 @@ import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import Content from "renderer/providers/tiktok/components/Content";
 import { useNavigation } from "../../../contexts";
 
-export default function DonationChoicePage(): JSX.Element {
+const DonationChoicePage = (): JSX.Element => {
   const { getPreviousPage } = useNavigation();
   const history = useHistory();
   const [canDonate, setCanDonate] = useState<true | null>(null);
@@ -85,4 +85,6 @@ export default function DonationChoicePage(): JSX.Element {
       </Content>
     </WizardLayout>
   );
-}
+};
+
+export default DonationChoicePage;

@@ -13,7 +13,7 @@ import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { addScrapingResult } from "renderer/lib/db";
 import Content from "renderer/providers/tiktok/components/Content";
 
-export default function ImportDataExportPage(): JSX.Element {
+const ImportDataExportPage = (): JSX.Element => {
   const history = useHistory();
   const [importIsValid, setImportIsValid] = useState(false);
   const [inputTouched, setInputTouched] = useState(false);
@@ -112,4 +112,6 @@ export default function ImportDataExportPage(): JSX.Element {
       </Content>
     </WizardLayout>
   );
-}
+};
+
+export default ImportDataExportPage;

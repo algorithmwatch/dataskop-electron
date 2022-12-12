@@ -10,7 +10,7 @@ import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import Content from "renderer/providers/tiktok/components/Content";
 import { useNavigation } from "../../../contexts";
 
-export default function IntroductionPage(): JSX.Element {
+const IntroductionPage = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
 
@@ -63,4 +63,6 @@ export default function IntroductionPage(): JSX.Element {
       </Content>
     </WizardLayout>
   );
-}
+};
+
+export default IntroductionPage;

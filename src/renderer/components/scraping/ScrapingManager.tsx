@@ -38,7 +38,7 @@ import ScrapingWindow from "./ScrapingWindow";
 
 const CALLBACK_NAV = "scraping-navigation-happened";
 
-export default function ScrapingManager({
+const ScrapingManager = ({
   disableInput = false,
   campaign,
   userConfig,
@@ -46,7 +46,7 @@ export default function ScrapingManager({
   disableInput?: boolean;
   campaign: Campaign;
   userConfig: UserConfig;
-}): JSX.Element {
+}): JSX.Element => {
   const { sendEvent } = useConfig();
 
   const {
@@ -299,4 +299,6 @@ export default function ScrapingManager({
   }, [disableInput]);
 
   return <ScrapingWindow forceReload={forceReload} />;
-}
+};
+
+export default ScrapingManager;

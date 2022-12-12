@@ -14,7 +14,7 @@ import { postNewsletterSubscription } from "renderer/lib/networking";
 import { isValidEmail } from "renderer/lib/utils/strings";
 import Content from "renderer/providers/tiktok/components/Content";
 
-export default function NewsletterChoicePage(): JSX.Element {
+const NewsletterChoicePage = (): JSX.Element => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState<string>(window.persistEmail ?? "");
   const [formIsVisible, setFormIsVisible] = useState(false);
@@ -169,4 +169,6 @@ export default function NewsletterChoicePage(): JSX.Element {
       </Content>
     </WizardLayout>
   );
-}
+};
+
+export default NewsletterChoicePage;

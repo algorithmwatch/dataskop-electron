@@ -3,6 +3,7 @@
  *
  * @module
  */
+
 import { faAngleRight } from "@fortawesome/pro-regular-svg-icons";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
@@ -18,7 +19,7 @@ import { shouldJumpToWaitingPage } from "../lib/status";
 import videoBg from "../static/bg.mp4";
 import dslogo from "../static/images/logo.svg";
 
-export default function StartPage(): JSX.Element {
+const StartPage = (): JSX.Element => {
   const { getNextPage } = useNavigation();
   const history = useHistory();
 
@@ -118,4 +119,6 @@ export default function StartPage(): JSX.Element {
       </video>
     </>
   );
-}
+};
+
+export default StartPage;

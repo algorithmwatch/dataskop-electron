@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Button } from "./Button";
 
-export default function UpdateNotification(): JSX.Element | null {
+const UpdateNotification = (): JSX.Element | null => {
   const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
   const [showRestartButton, setShowRestartButton] = useState(false);
 
@@ -51,4 +51,6 @@ export default function UpdateNotification(): JSX.Element | null {
       </div>
     </div>
   );
-}
+};
+
+export default UpdateNotification;

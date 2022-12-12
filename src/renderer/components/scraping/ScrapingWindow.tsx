@@ -12,11 +12,7 @@ import { useEffect } from "react";
 import { Rnd } from "react-rnd";
 import { Bounds, useScraping } from "renderer/contexts";
 
-export default function ScrapingWindow({
-  forceReload = 0,
-}: {
-  forceReload: number;
-}) {
+const ScrapingWindow = ({ forceReload = 0 }: { forceReload: number }) => {
   const margin = 30;
 
   const initSizeFactorHeight = 0.8;
@@ -156,4 +152,6 @@ export default function ScrapingWindow({
       )}
     </div>
   );
-}
+};
+
+export default ScrapingWindow;

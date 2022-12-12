@@ -19,7 +19,7 @@ import { VizTwo } from "../components/visualizations";
 import { doScreenshot } from "../components/visualizations/utils/screenshot";
 import { useData } from "../lib/hooks";
 
-export default function VizTwoPage(): JSX.Element {
+const VizTwoPage = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
   const { dump, lookups } = useData({ maxLookups: 2000 });
@@ -115,4 +115,6 @@ export default function VizTwoPage(): JSX.Element {
       </WizardLayout>
     </>
   );
-}
+};
+
+export default VizTwoPage;

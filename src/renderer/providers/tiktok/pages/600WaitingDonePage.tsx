@@ -11,8 +11,8 @@ import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import Content from "renderer/providers/tiktok/components/Content";
 import { useNavigation } from "../../../contexts";
 
-export default function WaitingDonePage(): JSX.Element {
-  const { getNextPage, getPreviousPage } = useNavigation();
+const WaitingDonePage = (): JSX.Element => {
+  const { getNextPage } = useNavigation();
   const history = useHistory();
 
   // JF: Not sure when hasData is false. If we gave up with the scraping? We
@@ -89,4 +89,6 @@ export default function WaitingDonePage(): JSX.Element {
       </Content>
     </WizardLayout>
   );
-}
+};
+
+export default WaitingDonePage;

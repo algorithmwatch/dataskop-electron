@@ -14,7 +14,7 @@ import Content from "renderer/providers/tiktok/components/Content";
 import HelpButton from "renderer/providers/tiktok/components/HelpButton";
 import { useNavigation } from "../../../contexts";
 
-export default function BeforeLoginPage(): JSX.Element {
+const BeforeLoginPage = (): JSX.Element => {
   const { getPreviousPage } = useNavigation();
   const [modal1IsOpen, setModal1IsOpen] = useState(false);
   const [modal2IsOpen, setModal2IsOpen] = useState(false);
@@ -121,4 +121,6 @@ export default function BeforeLoginPage(): JSX.Element {
       </WizardLayout>
     </>
   );
-}
+};
+
+export default BeforeLoginPage;

@@ -63,7 +63,7 @@ const SurveyModal = ({
   );
 };
 
-export default function WaitingPage(): JSX.Element {
+const WaitingPage = (): JSX.Element => {
   const history = useHistory();
   const {
     state: { isScrapingFinished, isScrapingStarted },
@@ -408,4 +408,6 @@ export default function WaitingPage(): JSX.Element {
       {statusMemo}
     </>
   );
-}
+};
+
+export default WaitingPage;
