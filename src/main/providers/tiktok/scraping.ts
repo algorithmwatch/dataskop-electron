@@ -39,6 +39,8 @@ const persistsDoneScraping = async (videos: any) => {
   await delay(1000);
 };
 
+// Check if lookup was successfully scraped (error === null) or the error was not a parsing error.
+// If the latter occurse, we have to adapt the parser to don't try to scrape it again.
 const isResultSane = (x: any) => {
   return x.error === null || x.error !== "Parsing error";
 };

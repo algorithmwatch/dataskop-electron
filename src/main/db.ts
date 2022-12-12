@@ -55,8 +55,19 @@ configStore.onDidChange("openAtLogin", (newValue) =>
   setOpenAtLogin(!!newValue),
 );
 
-const addLookups = (lookups: any) => {
-  lookupStore.set(lookups);
+const addLookups = (lookups: any, dontOverrideError = false) => {
+  if (dontOverrideError) {
+    // Don't override existing lookups with faulty ones (e.g. when importing).
+    const goodLookups: { [key: string]: any } = {};
+    for (const k of Object.keys(lookups)) {
+      const existing = lookupStore.get(k, null) as null | { error?: any };
+
+      if (!existing || !("error" in existing) || existing.error !== null) {
+        goodLookups[k] = lookups[k];
+      }
+    }
+    lookupStore.set(goodLookups);
+  } else lookupStore.set(lookups);
 };
 
 const getLookups = (keys?: string[]) => {
