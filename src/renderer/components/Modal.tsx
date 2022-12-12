@@ -33,14 +33,14 @@ const themes = {
   },
 };
 
-export default function Modal({
+const Modal = ({
   title,
   theme,
   isOpen,
   closeModal,
   buttons,
   children,
-}: ModalProps) {
+}: ModalProps) => {
   return (
     <Transition show={isOpen} as={Fragment}>
       <Dialog className="relative z-50" onClose={closeModal}>
@@ -104,4 +104,6 @@ export default function Modal({
       </Dialog>
     </Transition>
   );
-}
+};
+
+export default Modal;

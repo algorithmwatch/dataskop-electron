@@ -26,7 +26,7 @@ const sizes = {
   },
 };
 
-export default function Content({
+const Content = ({
   title,
   icon,
   iconSpinning = false,
@@ -40,7 +40,7 @@ export default function Content({
   size?: keyof typeof sizes;
   theme?: keyof typeof themes;
   children: ReactNode;
-}) {
+}) => {
   return (
     <div
       className={clsx(
@@ -62,4 +62,6 @@ export default function Content({
       </div>
     </div>
   );
-}
+};
+
+export default Content;

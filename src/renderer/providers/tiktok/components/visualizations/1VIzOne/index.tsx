@@ -34,7 +34,7 @@ const rangeOptions = [
   { id: "5", label: "letzte 365 Tage", value: 365 },
 ];
 
-function VizOne({
+const VizOne = ({
   gdprData,
   height,
   width,
@@ -44,7 +44,7 @@ function VizOne({
   height: number;
   width: number;
   onGraphChange: (x: string) => void;
-}) {
+}) => {
   const toggleRef = useRef<null | HTMLDivElement>(null);
   const [range, setRange] = useState(rangeOptions[2]);
   const [graph, setGraph] = useState<"default" | "timeslots" | "watchtime">(
@@ -263,6 +263,6 @@ function VizOne({
       </div>
     </>
   );
-}
+};
 
 export default VizOne;

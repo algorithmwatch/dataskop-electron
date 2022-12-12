@@ -3,13 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { ButtonHTMLAttributes, ReactNode } from "react";
 
-export default function HelpButton({
+const HelpButton = ({
   children,
   className,
   ...rest
 }: {
   children: ReactNode;
-} & ButtonHTMLAttributes<HTMLButtonElement>) {
+} & ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
     <button
       type="button"
@@ -27,4 +27,6 @@ export default function HelpButton({
       {children}
     </button>
   );
-}
+};
+
+export default HelpButton;

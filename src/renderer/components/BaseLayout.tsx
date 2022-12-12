@@ -3,11 +3,7 @@ import Header from "renderer/components/Header";
 import { Menu } from "renderer/components/Menu";
 import { useNavigation } from "renderer/contexts";
 
-export default function BaseLayout({
-  children,
-}: {
-  children: ReactNode;
-}): JSX.Element {
+const BaseLayout = ({ children }: { children: ReactNode }): JSX.Element => {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const { getCurrentPage } = useNavigation();
   const toggleMenu = () => {
@@ -28,4 +24,6 @@ export default function BaseLayout({
       <main className="relative min-h-full flex flex-col">{children}</main>
     </>
   );
-}
+};
+
+export default BaseLayout;

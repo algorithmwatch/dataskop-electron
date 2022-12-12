@@ -5,11 +5,11 @@ import { localActiveCampaings } from "renderer/providers/info";
 import YoutubeBase from "../providers/youtube/components/BaseLayout";
 import BaseLayout from "./BaseLayout";
 
-export default function BaseLayoutSwitch({
+const BaseLayoutSwitch = ({
   children,
 }: {
   children: ReactNode;
-}): JSX.Element {
+}): JSX.Element => {
   const {
     dispatch,
     state: { campaign },
@@ -57,4 +57,6 @@ export default function BaseLayoutSwitch({
     return <YoutubeBase>{children}</YoutubeBase>;
 
   return <BaseLayout>{children}</BaseLayout>;
-}
+};
+
+export default BaseLayoutSwitch;

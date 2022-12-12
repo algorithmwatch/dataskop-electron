@@ -19,37 +19,37 @@ const ToggleMenuButton = ({ toggle }: { toggle: () => void }) => {
   );
 };
 
-export default function Header({ toggleMenu }: { toggleMenu: () => void }) {
+const Header = ({ toggleMenu }: { toggleMenu: () => void }) => {
   const {
     state: { version },
   } = useConfig();
   const history = useHistory();
 
   return (
-    <>
-      <header className="fixed z-10 pointer-events-none inset-x-0 top-0 p-4 flex justify-between items-center">
-        {/* Logo */}
-        <div className="relative">
-          <img
-            id="dataskop-logo"
-            src={logo}
-            alt="Dataskop Logo"
-            className="w-[52px] pointer-events-auto"
-            onClick={() =>
-              process.env.NODE_ENV === "development"
-                ? history.push("/")
-                : undefined
-            }
-          />
-          {version && version.includes("beta") && (
-            <div className="absolute -right-full top-2.5 text-sm bg-gray-200 px-1.5 py-0.5 text-gray-600">
-              Beta
-            </div>
-          )}
-        </div>
+    <header className="fixed z-10 pointer-events-none inset-x-0 top-0 p-4 flex justify-between items-center">
+      {/* Logo */}
+      <div className="relative">
+        <img
+          id="dataskop-logo"
+          src={logo}
+          alt="Dataskop Logo"
+          className="w-[52px] pointer-events-auto"
+          onClick={() =>
+            process.env.NODE_ENV === "development"
+              ? history.push("/")
+              : undefined
+          }
+        />
+        {version && version.includes("beta") && (
+          <div className="absolute -right-full top-2.5 text-sm bg-gray-200 px-1.5 py-0.5 text-gray-600">
+            Beta
+          </div>
+        )}
+      </div>
 
-        <ToggleMenuButton toggle={toggleMenu} />
-      </header>
-    </>
+      <ToggleMenuButton toggle={toggleMenu} />
+    </header>
   );
-}
+};
+
+export default Header;

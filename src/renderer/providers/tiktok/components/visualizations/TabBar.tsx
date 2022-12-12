@@ -1,4 +1,4 @@
-function TabBar({ datasource, setDatasource, options }) {
+const TabBar = ({ datasource, setDatasource, options }) => {
   return (
     <div className="flex items-center justify-center">
       <div
@@ -27,6 +27,6 @@ function TabBar({ datasource, setDatasource, options }) {
       </div>
     </div>
   );
-}
+};
 
 export default TabBar;

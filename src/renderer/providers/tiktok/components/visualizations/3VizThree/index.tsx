@@ -7,7 +7,7 @@ import { transformData } from "./data";
 
 const NUM_TOP_AUTHORS = 10;
 
-export default function VizThree({ gdprData, metadata }) {
+const VizThree = ({ gdprData, metadata }) => {
   const [pics, setPics] = useState(null);
 
   const { allData, stats } = useMemo(
@@ -65,4 +65,6 @@ export default function VizThree({ gdprData, metadata }) {
       </main>
     </>
   );
-}
+};
+
+export default VizThree;

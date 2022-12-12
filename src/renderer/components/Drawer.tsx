@@ -11,7 +11,7 @@ type DrawerProps = {
   children: React.ReactNode;
 };
 
-export default function Drawer({ children, isOpen, setIsOpen }: DrawerProps) {
+const Drawer = ({ children, isOpen, setIsOpen }: DrawerProps) => {
   return (
     <Transition show={isOpen} as={Fragment}>
       <Dialog
@@ -63,4 +63,6 @@ export default function Drawer({ children, isOpen, setIsOpen }: DrawerProps) {
       </Dialog>
     </Transition>
   );
-}
+};
+
+export default Drawer;

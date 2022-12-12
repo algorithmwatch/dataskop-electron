@@ -14,7 +14,7 @@ type Option = {
   disabled?: boolean;
 };
 
-export function SelectInput({
+const SelectInput = ({
   options,
   selectedOption,
   onUpdate,
@@ -24,7 +24,7 @@ export function SelectInput({
   selectedOption: Option;
   onUpdate: (val: Option) => void;
   buttonIcon?: IconDefinition;
-}) {
+}) => {
   return (
     <Listbox value={selectedOption} onChange={onUpdate}>
       <div className="relative z-10">
@@ -76,4 +76,6 @@ export function SelectInput({
       </div>
     </Listbox>
   );
-}
+};
+
+export default SelectInput;

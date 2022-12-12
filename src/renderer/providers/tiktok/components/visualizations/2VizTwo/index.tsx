@@ -5,7 +5,7 @@ import { VizBoxRow } from "../VizBox";
 import Beeswarm from "./Beeswarm";
 import { transformData } from "./data";
 
-export default function VizTwo({ gdprData, metadata }) {
+const VizTwo = ({ gdprData, metadata }) => {
   const [datasource, setDatasource] = useState("hashtags");
 
   const { topDiversificationLabels, topHashtagsFlat, stats } = useMemo(
@@ -51,4 +51,6 @@ export default function VizTwo({ gdprData, metadata }) {
       </main>
     </>
   );
-}
+};
+
+export default VizTwo;

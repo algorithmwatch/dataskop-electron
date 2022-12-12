@@ -6,7 +6,7 @@ export type FooterSlots = {
   [key in SlotPosition]?: ReactNode;
 };
 
-export default function WizardLayout({
+const WizardLayout = ({
   className,
   children,
   footerSlots,
@@ -14,7 +14,7 @@ export default function WizardLayout({
   className?: string;
   children: ReactNode;
   footerSlots?: FooterSlots;
-}) {
+}) => {
   return (
     <>
       <div
@@ -40,4 +40,6 @@ export default function WizardLayout({
       )}
     </>
   );
-}
+};
+
+export default WizardLayout;

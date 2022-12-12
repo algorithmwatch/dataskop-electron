@@ -69,7 +69,7 @@ const DropFile = ({
             onChange={(e) => {
               handleFiles([{ path: e.target.value }]);
             }}
-          ></input>
+          />
         )}
       </label>
     </div>

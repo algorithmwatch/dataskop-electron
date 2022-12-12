@@ -110,12 +110,9 @@ test.describe.serial(() => {
     // Scrape done. Now show viz.
     await page.click("text=weiter");
 
-    const exportDir =
-      process.env.EXPORT_PATH +
-      "/" +
-      new Date().getTime() +
-      "_" +
-      path.parse(process.env.DUMP_PATH).name;
+    const exportDir = `${process.env.EXPORT_PATH}/${new Date().getTime()}_${
+      path.parse(process.env.DUMP_PATH).name
+    }`;
 
     if (!fs.existsSync(process.env.EXPORT_PATH))
       fs.mkdirSync(process.env.EXPORT_PATH);
