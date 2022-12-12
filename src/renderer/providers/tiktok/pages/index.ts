@@ -1,17 +1,17 @@
-import DonationChoicePage from "./1000DonationChoicePage";
-import StartPage from "./100StartPage";
-import DonationUploadPage from "./1100DonationUploadPage";
-import NewsletterPage from "./1200NewsletterPage";
-import ThankYouPage from "./1300ThankYouPage";
-import IntroductionPage from "./200IntroductionPage";
-import TutorialPage from "./300TutorialPage";
-import BeforeLoginPage from "./400BeforeLoginPage";
-import ImportDataExportPage from "./450ImportDataExportPage";
-import WaitingPage from "./500WaitingPage";
-import WaitingDonePage from "./600WaitingDonePage";
-import VizOnePage from "./700VizOnePage";
-import VizTwoPage from "./800VizTwoPage";
-import VizThreePage from "./900VizThreePage";
+import StartPage from "./010StartPage";
+import IntroductionPage from "./020IntroductionPage";
+import TutorialPage from "./030TutorialPage";
+import BeforeLoginPage from "./040BeforeLoginPage";
+import ImportDataExportPage from "./045ImportDataExportPage";
+import WaitingPage from "./050WaitingPage";
+import WaitingDonePage from "./060WaitingDonePage";
+import VizOnePage from "./070VizOnePage";
+import VizTwoPage from "./080VizTwoPage";
+import VizThreePage from "./090VizThreePage";
+import DonationChoicePage from "./100DonationChoicePage";
+import DonationUploadPage from "./110DonationUploadPage";
+import NewsletterPage from "./120NewsletterPage";
+import ThankYouPage from "./130ThankYouPage";
 
 export {
   StartPage,
