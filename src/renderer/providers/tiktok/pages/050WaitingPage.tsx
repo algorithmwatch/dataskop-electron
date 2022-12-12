@@ -350,18 +350,6 @@ const WaitingPage = (): JSX.Element => {
             allowReset
           />
         )}
-        {[
-          "error-captcha-required",
-          "data-pending-error-unable-to-check",
-        ].includes(status.status) && (
-          // duplicate default messsage
-          <StatusContent
-            title="DSGVO-Daten angefordert"
-            body="Bitte habe noch etwas Geduld. Deine DSGVO-Daten wurden angefordert, aber TikTok bietet sie noch nicht zum Download an."
-            helpButtons
-            fancyNotificationText
-          />
-        )}
         {["data-error-request"].includes(status.status) && (
           <StatusContent
             title="DSGVO-Anfrage fehlgeschlagen"
