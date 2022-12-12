@@ -40,6 +40,10 @@ const BaseLayoutSwitch = ({
     // eslint-disable-next-line @typescript-eslint/no-shadow
     const campaign = localActiveCampaings[autoSelectCampaign];
 
+    window.electron.log.info(
+      `Choosing local campaign with autoSelectCampaign=${autoSelectCampaign}`,
+    );
+
     dispatch({
       type: "set-campaign",
       campaign,

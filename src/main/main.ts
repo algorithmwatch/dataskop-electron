@@ -1,5 +1,5 @@
-/* eslint global-require: off, no-console: off */
-
+/* eslint-disable no-new */
+/* eslint-disable global-require */
 /**
  * This module executes inside of electron's main process. You can start
  * electron renderer process from here and communicate with the other processes
@@ -84,6 +84,9 @@ class AppUpdater {
 // send update-related events to renderer
 autoUpdater.on("update-available", () => {
   mainWindow?.webContents.send("update-available");
+});
+autoUpdater.on("update-not-available", () => {
+  mainWindow?.webContents.send("update-check-done");
 });
 autoUpdater.on("update-downloaded", () => {
   mainWindow?.webContents.send("update-downloaded");
@@ -234,9 +237,7 @@ const createWindow = async () => {
 
   mainWindow.loadURL(resolveHtmlPath("index.html"));
 
-  // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-  mainWindow.webContents.on("did-finish-load", () => {
+  mainWindow.on("ready-to-show", () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
@@ -251,6 +252,9 @@ const createWindow = async () => {
         y: Math.floor(height * 0.05),
       });
       mainWindow.show();
+
+      // Only check for update after the first time rendered
+      new AppUpdater();
     }
   });
 
@@ -279,12 +283,6 @@ const createWindow = async () => {
     shell.openExternal(url);
     return { action: "deny" };
   });
-
-  // Wait a second until checkin for new update to let the app initialize.
-  setTimeout(() => {
-    // eslint-disable-next-line no-new
-    new AppUpdater();
-  }, 1000);
 
   // Allow scraping to happend in brackground
   powerSaveBlocker.start("prevent-app-suspension");

@@ -100,13 +100,10 @@ const validOnChannels = [
   "update-available",
   "update-downloaded",
   "update-error",
+  "update-check-done",
   "monitoring-pending",
 ];
-const validremoveAllChannels = [
-  "update-available",
-  "update-downloaded",
-  "close-action",
-];
+const validremoveAllChannels = ["close-action"];
 
 contextBridge.exposeInMainWorld("electron", {
   log: log.scope("renderer"),
@@ -115,6 +112,16 @@ contextBridge.exposeInMainWorld("electron", {
       if (validOnChannels.includes(channel)) {
         // Deliberately strip event as it includes `sender`
         ipcRenderer.on(channel, (_event, ...args) => func(...args));
+      } else {
+        log.warn(
+          `The channel is not included in the list of valid options: ${channel}`,
+        );
+      }
+    },
+    once(channel: string, func: (arg0: any) => void) {
+      if (validOnChannels.includes(channel)) {
+        // Deliberately strip event as it includes `sender`
+        ipcRenderer.once(channel, (_event, ...args) => func(...args));
       } else {
         log.warn(
           `The channel is not included in the list of valid options: ${channel}`,

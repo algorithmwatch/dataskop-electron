@@ -37,10 +37,12 @@ type Action =
     }
   | { type: "show-advanced-menu" }
   | { type: "set-debug"; isDebug: boolean }
-  | { type: "set-user-config"; newValues: any };
+  | { type: "set-user-config"; newValues: any }
+  | { type: "update-check-done" };
 type Dispatch = (action: Action) => void;
 type State = {
   version: string;
+  updateCheckDone: boolean;
   isMac: boolean;
   isPlaywrightTesing: boolean;
   isDebug: boolean;
@@ -83,6 +85,13 @@ const configReducer = (state: State, action: Action): State => {
       };
     }
 
+    case "update-check-done": {
+      return {
+        ...state,
+        updateCheckDone: true,
+      };
+    }
+
     default: {
       throw new Error(`Unhandled action type: ${action}`);
     }
@@ -93,6 +102,7 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
   // initial values get overriden with `useEffect` when the component gets mounten
   const [state, dispatch] = React.useReducer(configReducer, {
     version: "loading...",
+    updateCheckDone: false,
     isMac: false,
     isDebug: false,
     showAdvancedMenu: false,
@@ -106,6 +116,10 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
 
   useEffect(() => {
     (async () => {
+      window.electron.ipc.once("update-check-done", () =>
+        dispatch({ type: "update-check-done" }),
+      );
+
       const { env, version, isMac } = await window.electron.ipc.invoke(
         "get-info",
       );

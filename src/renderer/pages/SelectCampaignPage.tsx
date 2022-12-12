@@ -16,7 +16,13 @@ export default function SelectCampaignPage(): JSX.Element {
   } = useScraping();
 
   const {
-    state: { platformUrl, seriousProtection, autoSelectCampaign },
+    state: {
+      platformUrl,
+      seriousProtection,
+      updateCheckDone,
+      userConfig,
+      isPlaywrightTesing,
+    },
     sendEvent,
   } = useConfig();
 
@@ -51,7 +57,21 @@ export default function SelectCampaignPage(): JSX.Element {
   };
 
   const setActiveCampaign = async () => {
-    if (platformUrl == null) return;
+    if (platformUrl == null || userConfig == null) return;
+
+    // Wait until the update check is completed or monitoring step active. Not
+    // active for dev and testing.
+    if (
+      !isPlaywrightTesing && // testing
+      !module.hot && // dev
+      !userConfig.monitoring &&
+      !updateCheckDone
+    ) {
+      window.electron.log(
+        `Not fetching active campaings from backend yet. Monitoring:${userConfig.monitoring} UpdateCheckDone:${updateCheckDone}`,
+      );
+      return;
+    }
 
     try {
       const campaigns = await getActiveCampaigns(
@@ -88,28 +108,26 @@ export default function SelectCampaignPage(): JSX.Element {
 
   useEffect(() => {
     setActiveCampaign();
-  }, [platformUrl, seriousProtection]);
+  }, [platformUrl, seriousProtection, updateCheckDone, userConfig?.monitoring]);
 
   if (availableCampaigns.length === 0) return <div />;
 
   return (
-    <>
-      <div className="mx-auto flex flex-col h-full text-center">
-        <div className="hl-4xl mb-6">Wähle eine Untersuchung aus</div>
-        <div className="space-x-4">
-          {availableCampaigns.map((x, i) => (
-            <button
-              key={x.id}
-              type="button"
-              className="p-5 mt-5 border-solid border-4 border-yellow-700"
-              onClick={() => handleCampaignClick(i)}
-            >
-              <div className="hl-xl">{x.title}</div>
-              <div>{x.description}</div>
-            </button>
-          ))}
-        </div>
+    <div className="mx-auto flex flex-col h-full text-center">
+      <div className="hl-4xl mb-6">Wähle eine Untersuchung aus</div>
+      <div className="space-x-4">
+        {availableCampaigns.map((x, i) => (
+          <button
+            key={x.id}
+            type="button"
+            className="p-5 mt-5 border-solid border-4 border-yellow-700"
+            onClick={() => handleCampaignClick(i)}
+          >
+            <div className="hl-xl">{x.title}</div>
+            <div>{x.description}</div>
+          </button>
+        ))}
       </div>
-    </>
+    </div>
   );
 }
