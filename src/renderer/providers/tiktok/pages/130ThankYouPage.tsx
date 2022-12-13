@@ -14,7 +14,7 @@ import {
 import { faCog, faEnvelope } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import WizardLayout from "renderer/components/WizardLayout";
 import Content from "renderer/providers/tiktok/components/Content";
 
@@ -94,6 +94,10 @@ const ThankYouPage = (): JSX.Element => {
       </div>,
     ],
   };
+
+  useEffect(() => {
+    window.reachedEnd = true;
+  }, []);
 
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>

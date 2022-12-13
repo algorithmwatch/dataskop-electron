@@ -199,6 +199,8 @@ const createWindow = async () => {
     return path.join(RESOURCES_PATH, ...paths);
   };
 
+  const startMinimized = !!(process.env.START_MINIMIZED || doingMonitoring);
+
   mainWindow = new BrowserWindow({
     show: false,
     width: 1280,
@@ -206,9 +208,7 @@ const createWindow = async () => {
     minWidth: 800,
     minHeight: 600,
     icon: getAssetPath("icon.png"),
-    // skipTaskbar: true,
-    // Remove app from Taskbar on macOS and Windows. We are currently to get it
-    // run with out this option. If we manage to do so, we may come back.
+    skipTaskbar: startMinimized,
     webPreferences: {
       preload:
         process.env.NODE_ENV === "development"
@@ -225,7 +225,7 @@ const createWindow = async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
-    if (process.env.START_MINIMIZED || doingMonitoring) {
+    if (startMinimized) {
       mainWindow.minimize();
     } else {
       const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -260,7 +260,17 @@ const createWindow = async () => {
   // Only build OS menu on MacOS
   if (process.platform === "darwin") buildMenu(mainWindow);
 
-  buildTray(doMonitoring, configStore, getAssetPath("icon.png"));
+  const createOrBringToFocus = () => {
+    if (mainWindow === null) createWindow();
+    else mainWindow.show();
+  };
+
+  buildTray(
+    createOrBringToFocus,
+    doMonitoring,
+    configStore,
+    getAssetPath("icon.png"),
+  );
 
   // Open URLs in the user's browser
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
@@ -290,7 +300,12 @@ const createWindow = async () => {
 
 ipcMain.handle(
   "close-main-window",
-  (_e, isCurrentlyScraping: boolean, cleanupData: boolean) => {
+  (
+    _e,
+    isCurrentlyScraping: boolean,
+    cleanupData: boolean,
+    reachedEnd: boolean,
+  ) => {
     log.debug("called handle close-main-window", mainWindow == null);
     if (mainWindow === null) return;
 
@@ -314,7 +329,12 @@ ipcMain.handle(
       clearData();
     }
 
-    mainWindow.destroy();
+    if (reachedEnd) {
+      app.exit();
+    } else {
+      mainWindow.setSkipTaskbar(true);
+      mainWindow.destroy();
+    }
   },
 );
 
@@ -380,3 +400,35 @@ ipcMain.handle("restart", () => {
   app.relaunch();
   app.exit();
 });
+
+const appFolder = path.dirname(process.execPath);
+const updateExe = path.resolve(appFolder, "..", "Update.exe");
+const exeName = path.basename(process.execPath);
+
+// https://www.electronjs.org/docs/latest/api/app#appsetloginitemsettingssettings-macos-windows
+const pathArgs = {
+  path: updateExe,
+  args: [
+    "--processStart",
+    `"${exeName}"`,
+    "--process-start-args",
+    `"--hidden"`,
+  ],
+};
+
+const setOpenAtLogin = (value: boolean) => {
+  if (app.getLoginItemSettings(pathArgs).openAtLogin == value) return;
+
+  app.setLoginItemSettings({
+    openAtLogin: value,
+    openAsHidden: true,
+    ...pathArgs,
+  });
+};
+
+// run once on init
+setOpenAtLogin(configStore.get("openAtLogin"));
+
+configStore.onDidChange("openAtLogin", (newValue) =>
+  setOpenAtLogin(!!newValue),
+);

@@ -9,7 +9,6 @@ import log from "electron-log";
 import Store from "electron-store";
 import _ from "lodash";
 import path from "path";
-import { setOpenAtLogin } from "./tray";
 import { addMainHandler } from "./utils";
 
 const DB_FOLDER = path.join(app.getPath("userData"), "databases");
@@ -47,13 +46,6 @@ const configStore = new Store({
     htmlLogging: isAlpha,
   },
 });
-
-// run once on init
-setOpenAtLogin(configStore.get("openAtLogin"));
-
-configStore.onDidChange("openAtLogin", (newValue) =>
-  setOpenAtLogin(!!newValue),
-);
 
 const getLookups = (keys?: string[]) => {
   if (keys === undefined) return lookupStore.store;

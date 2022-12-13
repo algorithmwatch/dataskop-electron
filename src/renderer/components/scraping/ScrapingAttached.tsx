@@ -30,9 +30,10 @@ const ScrapingAttached = () => {
         "close-main-window",
         scrapingProgress.isActive,
         window.hasDonated !== null,
+        !!window.reachedEnd,
       );
     });
-  }, [scrapingProgress.isActive, window.hasDonated]);
+  }, [scrapingProgress.isActive, window.hasDonated, window.reachedEnd]);
 
   // Only render scraping manger when the campaign is set to avoid tedious guard clauses.
   if (isAttached && campaign && userConfig)

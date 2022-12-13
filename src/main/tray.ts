@@ -1,15 +1,32 @@
-import { app, Menu, nativeImage, Tray } from "electron";
+import { Menu, nativeImage, Tray } from "electron";
 import log from "electron-log";
-import path from "path";
+import _ from "lodash";
+import dayjs from "./dayjs";
+import { getAllStati } from "./db";
+
+const getLastTimeUpdated = () => {
+  const all = getAllStati();
+  if (all.length === 0) return "";
+  const {
+    fields: { status, scrapedAt },
+  } = _.last(all);
+  return { status, updatedAt: dayjs(scrapedAt).fromNow() };
+};
 
 let moniInter: ReturnType<typeof setInterval> | null = null;
 let tray: Tray | null = null;
 
-const buildTray = (doMonitoring: () => any, configStore: any, icon: string) => {
+const buildTray = (
+  createWindow,
+  doMonitoring: () => any,
+  configStore: any,
+  icon: string,
+) => {
   if (tray != null) return;
 
   const image = nativeImage.createFromPath(icon);
   tray = new Tray(image.resize({ width: 25, height: 25 }));
+  tray.setToolTip("DataSkop");
 
   const INTERVAL_SECONDS = 60 * 60 * 1000;
 
@@ -34,9 +51,8 @@ const buildTray = (doMonitoring: () => any, configStore: any, icon: string) => {
 
   handleMonitoring({ checked: handleMonitoring }, null, null);
 
-  // Context Menu
-  const contextMenu = Menu.buildFromTemplate([
-    { label: "Über DataSkop", role: "about" },
+  const baseTemplate = [
+    { label: "DataSkop öffnen", click: createWindow },
     { label: "Separator", type: "separator" },
     {
       label: "Stündliches Monitoring",
@@ -46,37 +62,26 @@ const buildTray = (doMonitoring: () => any, configStore: any, icon: string) => {
       click: handleMonitoring,
     },
     { label: "Datenexport überprüfen", click: doMonitoring },
+    { label: "", enabled: false },
+    { label: "", enabled: false },
     { label: "Separator", type: "separator" },
     { label: "Schließen", role: "quit" },
-  ]);
+  ];
 
-  tray.setToolTip("DataSkop");
+  // Context Menu
+  let contextMenu = Menu.buildFromTemplate(baseTemplate);
   tray.setContextMenu(contextMenu);
-};
 
-const appFolder = path.dirname(process.execPath);
-const updateExe = path.resolve(appFolder, "..", "Update.exe");
-const exeName = path.basename(process.execPath);
+  tray.on("click", () => {
+    const last = getLastTimeUpdated();
 
-// https://www.electronjs.org/docs/latest/api/app#appsetloginitemsettingssettings-macos-windows
-const pathArgs = {
-  path: updateExe,
-  args: [
-    "--processStart",
-    `"${exeName}"`,
-    "--process-start-args",
-    `"--hidden"`,
-  ],
-};
+    baseTemplate[4].label = `Status: ${last.status}`;
+    baseTemplate[5].label = last.updatedAt;
 
-const setOpenAtLogin = (value: boolean) => {
-  if (app.getLoginItemSettings(pathArgs).openAtLogin == value) return;
-
-  app.setLoginItemSettings({
-    openAtLogin: value,
-    openAsHidden: true,
-    ...pathArgs,
+    // Rebuild menu
+    contextMenu = Menu.buildFromTemplate(baseTemplate);
+    tray.setContextMenu(contextMenu);
   });
 };
 
-export { buildTray, setOpenAtLogin };
+export { buildTray };

@@ -6,6 +6,7 @@ declare global {
     persistEmail: string;
     hasDonated: boolean | null;
     notEligibleToDonate: true | null;
+    reachedEnd: true | null;
   }
 }
 export {};
