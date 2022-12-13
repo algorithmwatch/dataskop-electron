@@ -34,6 +34,7 @@ import registerExportHandlers from "./export";
 import { buildMenu } from "./menu";
 import registerTiktokDataHandlers from "./providers/tiktok/data";
 import registerTiktokScrapingHandlers from "./providers/tiktok/scraping";
+import { isLastStatusPending } from "./providers/tiktok/status";
 import registerYoutubeHandlers from "./providers/youtube";
 import registerScrapingHandlers from "./scraping";
 import { buildTray } from "./tray";
@@ -132,21 +133,7 @@ const installExtensions = async () => {
 let doingMonitoring = false;
 
 const doMonitoring = async () => {
-  const isPendingStatus: Promise<boolean> = new Promise((resolve) => {
-    if (mainWindow === null) {
-      resolve(false);
-      return;
-    }
-
-    const contents = mainWindow.webContents;
-    // Check if the current status requires monitoring.
-    contents.send("monitoring-pending");
-    ipcMain.handleOnce("monitoring-pending-reply", (_event, pending) => {
-      resolve(pending);
-    });
-  });
-
-  if (!(await isPendingStatus)) {
+  if (!isLastStatusPending()) {
     log.info(
       `The current status does not require monitoring. Not doing monitoring.`,
     );

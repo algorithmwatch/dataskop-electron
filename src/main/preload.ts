@@ -12,7 +12,7 @@ const mainChannels = [
   "restart",
 ];
 
-const monitoringChannels = ["monitoring-done", "monitoring-pending-reply"];
+const monitoringChannels = ["monitoring-done"];
 
 // scraping.ts
 const scrapingChannels = [
@@ -65,6 +65,7 @@ const dbChannels = [
   "db-get-lookups",
   "db-set-lookups",
   "db-clear-lookups",
+  "db-get-all-stati",
 ];
 
 const youtubeChannels = [
@@ -101,7 +102,6 @@ const validOnChannels = [
   "update-downloaded",
   "update-error",
   "update-check-done",
-  "monitoring-pending",
 ];
 const validremoveAllChannels = ["close-action"];
 

@@ -122,6 +122,17 @@ const WaitingPage = (): JSX.Element => {
     })();
   }, []);
 
+  const endMonitoringStep = async () => {
+    if (userConfig && userConfig.monitoring) {
+      window.electron.log.info(`Monitoring step from tray is done`);
+      configDispatch({
+        type: "set-user-config",
+        newValues: { monitoring: false },
+      });
+      await window.electron.ipc.invoke("monitoring-done");
+    }
+  };
+
   const handleDownloadActionRequired = async () => {
     dispatch({
       type: "set-attached",
@@ -167,6 +178,7 @@ const WaitingPage = (): JSX.Element => {
       window.electron.log.info(
         "Not checking for GDPR status because scraping has already started.",
       );
+      await endMonitoringStep();
       return;
     }
 
@@ -207,14 +219,7 @@ const WaitingPage = (): JSX.Element => {
         dispatch({ type: "reset-scraping" });
         dispatch({ type: "set-attached", attached: false, visible: false });
 
-        if (userConfig && userConfig.monitoring) {
-          window.electron.log.info(`Monitoring step from tray is done`);
-          configDispatch({
-            type: "set-user-config",
-            newValues: { monitoring: false },
-          });
-          await window.electron.ipc.invoke("monitoring-done");
-        }
+        await endMonitoringStep();
         await currentDelay();
       }
 
@@ -246,6 +251,7 @@ const WaitingPage = (): JSX.Element => {
           window.electron.log.info(
             "Not checking for status because the last status was set recently.",
           );
+          endMonitoringStep();
         }
       }
     })();
@@ -309,7 +315,7 @@ const WaitingPage = (): JSX.Element => {
         <StatusSwitch status={status} />
       </WizardLayout>
     ),
-    [status, footerButtonsAreVisible, surveyIsComplete],
+    [status, footerButtonsAreVisible, surveyIsComplete, isScrapingFinished],
   );
 
   return (

@@ -90,6 +90,15 @@ const addLookupsToUpload = (keys: string[]) => {
   dataStore.set("lookupsToUploads", newValues);
 };
 
+const getAllStati = () => {
+  const data = dataStore.get("data");
+  const rows = _.get(data, "scrapingResults", []) as {
+    fields?: { status?: string };
+  }[];
+  const statusRows = rows.filter((x) => x.fields && x.fields.status);
+  return _.orderBy(statusRows, "scrapedAt");
+};
+
 export default async function registerDbHandlers() {
   addMainHandler("db-write", (_e: any, data: any) => {
     dataStore.set("data", data);
@@ -98,6 +107,8 @@ export default async function registerDbHandlers() {
   addMainHandler("db-read", () => {
     return dataStore.get("data");
   });
+
+  addMainHandler("db-get-all-stati", getAllStati);
 
   addMainHandler("db-set-lookups", (_e: any, lookups: any) => {
     return addLookups(lookups);
@@ -128,4 +139,5 @@ export {
   addLookups,
   addLookupsToUpload,
   clearData,
+  getAllStati,
 };

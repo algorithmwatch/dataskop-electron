@@ -1,7 +1,7 @@
 import { Dayjs } from "dayjs";
 import _ from "lodash";
 import dayjs from "renderer/lib/dayjs";
-import { addScrapingResult, getScrapingResults } from "renderer/lib/db";
+import { addScrapingResult } from "renderer/lib/db";
 
 const STATUS = {
   // TikTok data was requested and TikTok is busy, It didn't fail yet
@@ -100,10 +100,8 @@ const STATUS = {
 
 type StatusKey = keyof typeof STATUS;
 
-const getAllStati = async () => {
-  const rows = await getScrapingResults();
-  const statusRows = rows.filter((x) => x.fields && x.fields.status);
-  return statusRows;
+const getAllStati = () => {
+  return window.electron.ipc.invoke("db-get-all-stati");
 };
 
 const getStatus = async (): Promise<{ status: string; updatedAt: Dayjs }> => {
@@ -118,6 +116,7 @@ const getStatus = async (): Promise<{ status: string; updatedAt: Dayjs }> => {
   };
 };
 
+// keep in sync with main/tiktok/status.ts
 const isStatusPending = (status: string) => {
   return [
     "data-pending",
@@ -126,11 +125,6 @@ const isStatusPending = (status: string) => {
     "error-captcha-required", // still keep looking even though an error occured
     "data-pending-error-unable-to-check", // as well
   ].includes(status);
-};
-
-const isLastStatusPending = async () => {
-  const { status } = await getStatus();
-  return isStatusPending(status);
 };
 
 const shouldJumpToWaitingPage = async () => {
@@ -153,18 +147,10 @@ const addStatusReset = () => {
   );
 };
 
-window.electron.ipc.on("monitoring-pending", async () => {
-  window.electron.ipc.invoke(
-    "monitoring-pending-reply",
-    await isLastStatusPending(),
-  );
-});
-
 export {
   getStatus,
   getAllStati,
   isStatusPending,
-  isLastStatusPending,
   shouldJumpToWaitingPage,
   StatusKey,
   STATUS,
