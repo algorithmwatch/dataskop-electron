@@ -1,6 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unneeded-ternary */
 /* eslint-disable jsx-a11y/label-has-associated-control */
+import _ from "lodash";
 import {
   ChangeEvent,
   useCallback,
@@ -40,19 +41,39 @@ const SurveyTextInput = ({
     }
   }, [answer, onUpdate, value]);
 
+  let optionals = {};
+
+  if (question.inputParams) optionals = { ...question.inputParams };
+
   return (
     <input
       ref={inputRef}
       type={question.type}
       required={question.required}
       value={value}
-      onChange={(e: ChangeEvent<HTMLInputElement>) => setValue(e.target.value)}
+      onChange={(e: ChangeEvent<HTMLInputElement>) => {
+        const v = _.toNumber(e.target.value);
+        if (
+          question.inputParams &&
+          question.inputParams.min &&
+          v < question.inputParams.min
+        )
+          return;
+        if (
+          question.inputParams &&
+          question.inputParams.max &&
+          v > question.inputParams.max
+        )
+          return;
+        setValue(v.toString());
+      }}
       placeholder={
         question.type === "text"
           ? "Gibt deine Antwort hier ein"
           : "Gib eine Zahl ein"
       }
       className="w-60 rounded border border-black py-1.5 px-2.5 text-lg"
+      {...optionals}
     />
   );
 };

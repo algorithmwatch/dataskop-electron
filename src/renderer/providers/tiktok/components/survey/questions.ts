@@ -29,7 +29,8 @@ export const questions: QuestionTypes[] = [
     label:
       "Was sind die ersten zwei Stellen der Postleitzahl Deines Hauptwohnsitzes?",
     name: "plz-wohnort",
-    type: "textarea",
+    type: "number",
+    inputParams: { min: 10, max: 99, step: 1 },
     required: true,
   },
   {
@@ -48,9 +49,10 @@ export const questions: QuestionTypes[] = [
     ],
   },
   {
-    label: "Tatsächliches Alter",
+    label: "Tatsächliches Alter (in Jahren)",
     name: "tatsächliches-alter",
     type: "number",
+    inputParams: { min: 6, max: 130, step: 1 },
     visibleIf: {
       name: "altersangabe-stimmt",
       hasValue: "nein",
@@ -391,11 +393,13 @@ export const questions: QuestionTypes[] = [
     label: "Wie viele Stunden verbringst Du am Tag auf TikTok?",
     name: "einschätzung-nutzunszeit",
     type: "number",
+    inputParams: { min: 0, max: 24, step: 1 },
   },
   {
     label: "Wie oft öffnest Du die App am Tag?",
     type: "number",
     name: "einschätzung-wie-oft-geöffnet",
+    inputParams: { min: 0, max: 1000, step: 1 },
   },
   {
     label: "Zu welcher Tages- oder Nachtzeit bist Du am Meisten auf TikTok?",
@@ -403,12 +407,12 @@ export const questions: QuestionTypes[] = [
     type: "radio-group",
     choices: [
       {
-        label: "Morgens",
-        value: "morgens",
+        label: "Vormittags",
+        value: "vormittags",
       },
       {
-        label: "Mittags",
-        value: "mittags",
+        label: "Nachmittags",
+        value: "nachmittags",
       },
       {
         label: "Abends",

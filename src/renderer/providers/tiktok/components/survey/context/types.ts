@@ -26,6 +26,7 @@ export type QuestionTextAreaType = Question & {
 
 export type QuestionNumberType = Question & {
   type: "number";
+  inputParams?: any;
 };
 
 export type QuestionCheckboxType = Question & {
