@@ -55,24 +55,23 @@ configStore.onDidChange("openAtLogin", (newValue) =>
   setOpenAtLogin(!!newValue),
 );
 
-const addLookups = (lookups: any, dontOverrideError = false) => {
-  if (dontOverrideError) {
-    // Don't override existing lookups with faulty ones (e.g. when importing).
-    const goodLookups: { [key: string]: any } = {};
-    for (const k of Object.keys(lookups)) {
-      const existing = lookupStore.get(k, null) as null | { error?: any };
-
-      if (!existing || !("error" in existing) || existing.error !== null) {
-        goodLookups[k] = lookups[k];
-      }
-    }
-    lookupStore.set(goodLookups);
-  } else lookupStore.set(lookups);
-};
-
 const getLookups = (keys?: string[]) => {
   if (keys === undefined) return lookupStore.store;
   return _.pick(lookupStore.store, _.uniq(keys));
+};
+
+const addLookups = (lookups: any, addOnlyMissing = false) => {
+  if (addOnlyMissing) {
+    const keys = Object.keys(lookups);
+    const existingKeys = Object.keys(getLookups(keys));
+    const missingLookups = _.pick(lookups, _.difference(keys, existingKeys));
+    log.info(
+      `Only importing ${Object.keys(missingLookups).length} of ${
+        keys.length
+      } because we only add missing values.`,
+    );
+    lookupStore.set(missingLookups);
+  } else lookupStore.set(lookups);
 };
 
 const clearLookups = () => {
