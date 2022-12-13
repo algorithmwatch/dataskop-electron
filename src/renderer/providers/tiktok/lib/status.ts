@@ -100,9 +100,14 @@ const STATUS = {
 
 type StatusKey = keyof typeof STATUS;
 
-const getStatus = async (): Promise<{ status: string; updatedAt: Dayjs }> => {
+const getAllStati = async () => {
   const rows = await getScrapingResults();
   const statusRows = rows.filter((x) => x.fields && x.fields.status);
+  return statusRows;
+};
+
+const getStatus = async (): Promise<{ status: string; updatedAt: Dayjs }> => {
+  const statusRows = await getAllStati();
   if (statusRows.length === 0)
     return { status: "status-not-available", updatedAt: dayjs() };
 
@@ -157,6 +162,7 @@ window.electron.ipc.on("monitoring-pending", async () => {
 
 export {
   getStatus,
+  getAllStati,
   isStatusPending,
   isLastStatusPending,
   shouldJumpToWaitingPage,

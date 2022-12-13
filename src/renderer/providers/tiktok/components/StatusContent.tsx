@@ -1,14 +1,32 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import { faLoader, IconDefinition } from "@fortawesome/pro-regular-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "renderer/components/Button";
 import Modal from "renderer/components/Modal";
 import { useConfig } from "renderer/contexts";
+import dayjs from "renderer/lib/dayjs";
 import HelpButton from "renderer/providers/tiktok/components/HelpButton";
-import { addStatusReset } from "../lib/status";
-
+import { addStatusReset, getAllStati } from "../lib/status";
 import Content from "./Content";
 
+const RelativeTime = ({ time }) => {
+  const [curTime, setCurTime] = useState(new Date());
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurTime(new Date());
+    }, 1000 * 30);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  return <span id={curTime.toISOString()}>{time.fromNow()}</span>;
+};
+
 const StatusContent = ({
+  status,
   title,
   body,
   icon = faLoader,
@@ -16,6 +34,7 @@ const StatusContent = ({
   fancyNotificationText,
   allowReset,
 }: {
+  status: any;
   title: string;
   body: string;
   icon?: IconDefinition;
@@ -27,8 +46,25 @@ const StatusContent = ({
     state: { isMac },
   } = useConfig();
 
+  const [statusRows, setSR] = useState<any[]>([]);
+
+  useEffect(() => {
+    // eslint-disable-next-line promise/catch-or-return
+    (async () => {
+      const res = await getAllStati();
+
+      setSR(
+        res.map((x) => ({
+          status: x.fields.status as string,
+          updatedAt: dayjs(x.scrapedAt as number),
+        })),
+      );
+    })();
+  }, []);
+
   const [modal1IsOpen, setModal1IsOpen] = useState(false);
   const [modal2IsOpen, setModal2IsOpen] = useState(false);
+  const [modal3IsOpen, setModal3IsOpen] = useState(false);
 
   return (
     <>
@@ -59,6 +95,22 @@ const StatusContent = ({
             werden dir verschiedene interaktive Grafiken präsentiert, die dein
             Nutzungsverhalten auf TikTok visualisieren und einordnen.
           </p>
+        </div>
+      </Modal>
+      <Modal
+        theme="tiktok"
+        isOpen={modal3IsOpen}
+        closeModal={() => setModal3IsOpen(false)}
+      >
+        <div className="text-center">
+          <h1 className="hl-2xl mb-4">Zeitleiste der Statusänderungen</h1>
+          <div className="max-h-[40vh] overflow-auto text-left">
+            {statusRows.map((x) => (
+              <p key={x.updatedAt.format()}>{`${x.updatedAt.format(
+                "L LT",
+              )} Uhr: ${x.status}`}</p>
+            ))}
+          </div>
         </div>
       </Modal>
 
@@ -108,6 +160,14 @@ const StatusContent = ({
               </div>
             </span>
           </div>
+        )}
+        {status && status.updatedAt && (
+          <p
+            className="absolute right-10 bottom-2 text-sm text-gray-600 cursor-pointer"
+            onClick={() => setModal3IsOpen(true)}
+          >
+            Letzte Änderung: <RelativeTime time={status.updatedAt} />
+          </p>
         )}
       </Content>
     </>
