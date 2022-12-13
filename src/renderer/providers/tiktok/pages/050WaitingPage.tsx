@@ -101,6 +101,10 @@ const WaitingPage = (): JSX.Element => {
         true,
       );
     }
+
+    // The modal was open when the scraping was finished. Only push now after the user closed the modal.
+    if (!surveyModalIsOpen && status.status === "scraping-done")
+      history.push("/tiktok/waiting_done");
   }, [surveyModalIsOpen]);
 
   useEffect(() => {
@@ -215,7 +219,8 @@ const WaitingPage = (): JSX.Element => {
       }
 
       if (newStatus.status === "scraping-done") {
-        history.push("/tiktok/waiting_done");
+        // Only go to next page is the model is closed
+        if (!surveyModalIsOpen) history.push("/tiktok/waiting_done");
         return;
       }
 
