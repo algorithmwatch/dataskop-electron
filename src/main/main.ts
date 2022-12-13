@@ -181,9 +181,8 @@ ipcMain.handle("monitoring-done", () => {
 });
 
 // Main function to initialize a window
-
 const createWindow = async () => {
-  log.debug("called createWindow", mainWindow == null);
+  log.debug(`Creating main window mainWindow=${mainWindow !== null}`);
 
   if (DEBUG) {
     await installExtensions();
@@ -191,11 +190,9 @@ const createWindow = async () => {
 
   // The 'unsafe-eval' is required to execute custom JavaScript in the scraper view. When not allowed it,
   // the browser view ist not using a custom user agent (that is required to scrape YouTube).
-  // `https://ssl.gstatic.com` to allow Google Login to work.
-
-  // HOTFIX: allow all HTTPS traffic because there were issues with google login
+  // Allow all HTTPS traffic since platforms rely on various internal services.
   const cspString =
-    "script-src 'self' 'unsafe-eval' 'unsafe-inline' http://localhost:1212 https://dataskop.net https://*.dataskop.net https://ssl.gstatic.com https:";
+    "script-src 'self' 'unsafe-eval' 'unsafe-inline' http://localhost:1212 https:";
 
   if (process.env)
     session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
@@ -357,7 +354,6 @@ app.on("activate", () => {
 });
 
 // Expose certain information to the renderer
-
 ipcMain.handle("get-info", (e) => {
   // Expose configs done via .env to the renderer. The keys have to explicitly
   // specified as follows (right now).
@@ -378,19 +374,21 @@ ipcMain.handle("get-info", (e) => {
 });
 
 // Handle notifications from the renderer
-
 ipcMain.handle("show-notification", (_e, title, body) => {
   log.info(`Notification: ${title}, ${body}`);
-  const n = new Notification({
+  const notification = new Notification({
     title,
     body,
   });
-  n.show();
-  n.on("click", () => {
-    createWindow();
+  notification.show();
+  notification.on("click", () => {
+    log.info(`Clicking on notification, mainWindow=${mainWindow !== null}`);
+    // Create window when there is none
+    if (mainWindow === null) createWindow();
   });
 });
 
+// Restart the app
 ipcMain.handle("restart", () => {
   app.relaunch();
   app.exit();
