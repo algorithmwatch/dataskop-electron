@@ -255,7 +255,7 @@ const VizOne = ({
           className="text-center text-gray-400 rotate-[270deg] absolute"
           style={{ top: chartHeight / 2 - 20 }}
         >
-          Minuten
+          {graph === "watchtime" ? "Videos" : "Minuten"}
         </div>
       </div>
       <div className="text-center text-gray-400 pt-3 2xl:pt-5 mb-5">
