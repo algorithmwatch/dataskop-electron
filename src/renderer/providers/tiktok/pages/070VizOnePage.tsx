@@ -34,7 +34,7 @@ const VizOnePage = (): JSX.Element => {
   const footerSlots: FooterSlots = {
     start: [
       <Button
-        className="mt-3"
+        className="mt-2 lg:mt-3"
         theme="text"
         size="sm"
         key="1"
@@ -44,7 +44,7 @@ const VizOnePage = (): JSX.Element => {
         Über diese Grafik
       </Button>,
       <Button
-        className="mt-3"
+        className="mt-2 lg:mt-3"
         theme="text"
         key="2"
         size="sm"
@@ -116,7 +116,7 @@ const VizOnePage = (): JSX.Element => {
       </Modal>
       <WizardLayout className="text-center" footerSlots={footerSlots}>
         <div
-          className="mt-12 flex flex-col mx-16"
+          className="mt-3 lg:mt-9 2xl:mt-12 flex flex-col 2xl:mx-16"
           id="dataskop-export-screenshot-outer"
         >
           {dump && (

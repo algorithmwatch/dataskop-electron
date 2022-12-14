@@ -118,7 +118,7 @@ const StatusContent = ({
         <p>{body}</p>
 
         {helpButtons && (
-          <div className="mt-14 space-x-6">
+          <div className="mt-7 xl:mt-14 space-x-6">
             <HelpButton onClick={() => setModal1IsOpen(true)}>
               Wie lange dauert das?
             </HelpButton>
@@ -129,7 +129,7 @@ const StatusContent = ({
         )}
 
         {allowReset && (
-          <div className="mt-5">
+          <div className="mt-2 xl:mt-5">
             <Button
               // theme="outline"
               onClick={async () => {
@@ -146,7 +146,7 @@ const StatusContent = ({
         )}
 
         {fancyNotificationText && (
-          <div className="mt-12 lg:mt-24 text-base font-medium relative whitespace-nowrap">
+          <div className="mt-12 xl:mt-24 text-base font-medium relative whitespace-nowrap">
             <span className="absolute inset-0 animate-fade1 flex items-center justify-center">
               <div className="rounded-full bg-white/50 px-5 py-4">
                 Du erhältst eine Benachrichtigung, sobald es weitergehen kann.
@@ -163,7 +163,7 @@ const StatusContent = ({
         )}
         {status && status.updatedAt && (
           <p
-            className="absolute right-10 bottom-2 text-sm text-gray-600 cursor-pointer"
+            className="absolute right-5 bottom-2 text-sm 2xl:text-base text-gray-600 cursor-pointer"
             onClick={() => setModal3IsOpen(true)}
           >
             Letzte Änderung: <RelativeTime time={status.updatedAt} />

@@ -206,7 +206,7 @@ const createWindow = async () => {
     width: 1280,
     height: 800,
     minWidth: 800,
-    minHeight: 600,
+    minHeight: 700,
     icon: getAssetPath("icon.png"),
     skipTaskbar: startMinimized,
     webPreferences: {

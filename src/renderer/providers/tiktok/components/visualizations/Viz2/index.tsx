@@ -22,7 +22,7 @@ const VizTwo = ({ gdprData, metadata }) => {
 
   return (
     <>
-      <div className="mx-auto flex items-center text-2xl mb-6">
+      <div className="mx-auto flex items-center text-2xl mb-3 lg:mb-6">
         <div className="">Deine Top Hashtags und Kategorien</div>
       </div>
 

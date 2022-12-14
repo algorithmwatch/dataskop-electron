@@ -81,7 +81,7 @@ const ImportDataExportPage = (): JSX.Element => {
           Datenexport heruntergeladen hast, kannst du ihn hier einfügen. Die
           DSGVO-Daten werden dann nicht erneut beantragt.
         </p>
-        <div className="flex min-h-[16rem]">
+        <div className="flex min-h-[8rem] lg:min-h-[10rem] xl:min-h-[12rem] 2xl:min-h-[16rem]">
           <DropFile handleFiles={handleFiles} isDoppable={importIsValid}>
             {!inputTouched && !importIsValid && (
               <>

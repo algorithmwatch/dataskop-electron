@@ -57,7 +57,7 @@ const VizOne = ({
       [graph, range.value],
     );
 
-  const smallerScreen = window.outerHeight <= 1000;
+  const smallerScreen = window.outerHeight <= 1200;
 
   const chartHeight =
     Math.round(height * (smallerScreen ? 0.5 : 0.7)) +
@@ -68,7 +68,7 @@ const VizOne = ({
     "Date",
   ).map((x) => x.Date);
 
-  const ticks = chooseTicks(uniqDates, smallerScreen);
+  const ticks = chooseTicks(uniqDates, window.outerWidth);
 
   const commonProps = {
     width,
@@ -220,7 +220,7 @@ const VizOne = ({
 
   return (
     <>
-      <div className="mx-auto flex items-center text-2xl mb-6">
+      <div className="mx-auto flex items-center text-2xl mb-3 lg:mb-6">
         <div className="">Deine Nutzungszeit</div>
         <div>
           <SelectInput

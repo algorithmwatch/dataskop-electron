@@ -131,7 +131,7 @@ export default function Beeswarm({ data }) {
           type: "band",
           ticks: chooseTicks(
             _.orderBy(_.uniq(data.map((x) => x.day)), "date"),
-            window.outerHeight < 1000,
+            window.outerWidth,
           ),
           domain: _.orderBy(_.uniq(data.map((x) => x.day)), "date"),
 

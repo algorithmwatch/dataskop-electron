@@ -26,7 +26,7 @@ const WizardLayout = ({
         {children}
       </div>
       {footerSlots && (
-        <nav className="z-10 h-28 shrink-0 px-6 grid grid-cols-7">
+        <nav className="z-10 h-20 xl:h-24 2xl:h-28 shrink-0 px-6 grid grid-cols-7">
           <div className="flex items-start justify-start space-x-4 col-span-2 pt-2">
             {footerSlots.start}
           </div>

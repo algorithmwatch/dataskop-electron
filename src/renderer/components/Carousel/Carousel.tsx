@@ -61,7 +61,10 @@ export const Carousel = forwardRef(
           </div>
         )}
         {showBullets && (
-          <div className="glide__bullets" data-glide-el="controls[nav]">
+          <div
+            className="glide__bullets sm:max-lg:mb-5"
+            data-glide-el="controls[nav]"
+          >
             {Array.from(Array(children.length).keys()).map((index) => (
               <button
                 key={index}

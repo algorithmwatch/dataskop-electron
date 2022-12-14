@@ -27,9 +27,9 @@ const themes = {
 
 const sizes = {
   xs: "px-3 h-8 text-xs rounded",
-  sm: "px-3.5 h-10 text-sm rounded-md",
-  md: "px-5 h-[3.75rem] text-xl rounded-md",
-  lg: "px-6 h-16 text-2xl rounded-lg",
+  sm: "px-3 h-8 lg:px-3.5 lg:h-10 text-xs lg:text-sm rounded-md",
+  md: "px-4 h-[3rem] lg:text-lg lg:px-5 lg:h-[3.75rem] lg:text-xl rounded-md",
+  lg: "px-5 h-14 text-xl lg:px-6 lg:h-16 lg:text-2xl rounded-lg",
 };
 
 const iconSizes = {
@@ -93,7 +93,7 @@ export const Button = forwardRef(
             className="shrink-0"
           />
         )}
-        {children && <span className="max-w-lg truncate">{children}</span>}
+        {children && <span>{children}</span>}
         {endIcon && (
           <FontAwesomeIcon
             icon={endIcon}

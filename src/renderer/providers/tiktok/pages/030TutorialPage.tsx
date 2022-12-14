@@ -50,7 +50,7 @@ const TutorialSlide = ({
   return (
     <div
       className={clsx(
-        "w-[55rem] mx-auto rounded-5xl p-2 mb-3 shadow-flat",
+        "w-[40rem] lg:w-[50rem] xl:w-[55rem] 2xl:w-[70rem] mx-auto rounded-5xl p-2 mb-3 shadow-flat",
         themes[theme].parent,
       )}
     >
@@ -65,7 +65,7 @@ const TutorialSlide = ({
           className={clsx("mt-24", themes[theme].icon)}
         />
         <h2 className="hl-3xl mt-8 mb-8">{title}</h2>
-        <div className="text-xl max-w-prose min-h-[190px] px-10">
+        <div className="text-xl max-w-prose min-h-[70px] lg:min-h-[90px] 2xl:min-h-[120px] px-10">
           {children}
         </div>
       </div>

@@ -31,7 +31,7 @@ const VizTwoPage = (): JSX.Element => {
   const footerSlots: FooterSlots = {
     start: [
       <Button
-        className="mt-3"
+        className="mt-2 lg:mt-3"
         theme="text"
         size="sm"
         key="1"
@@ -41,7 +41,7 @@ const VizTwoPage = (): JSX.Element => {
         Über diese Grafik
       </Button>,
       <Button
-        className="mt-3"
+        className="mt-2 lg:mt-3"
         theme="text"
         key="2"
         size="sm"
@@ -110,7 +110,7 @@ const VizTwoPage = (): JSX.Element => {
       </Modal>
       <WizardLayout className="text-center" footerSlots={footerSlots}>
         <div
-          className="mt-12 flex flex-col w-full grow"
+          className="mt-4 lg:mt-8 xl:mt-12 flex flex-col w-full grow"
           id="dataskop-export-screenshot-outer"
         >
           {dump && lookups && <VizTwo gdprData={dump} metadata={lookups} />}

@@ -12,7 +12,7 @@ const TabBar = ({ datasource, setDatasource, options }) => {
               key={x[0]}
               onClick={() => setDatasource(x[0])}
               className={`
-            min-w-[12rem] grow rounded-l-md py-2 flex flex-col items-center capitalize
+            min-w-[12rem] grow rounded-l-md py-1 lg:py-2 flex flex-col items-center capitalize text-sm lg:text-base
         ${
           datasource === x[0]
             ? "bg-gradient-to-b from-white via-white to-transparent font-semibold"

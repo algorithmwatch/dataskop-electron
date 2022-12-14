@@ -140,7 +140,7 @@ const ThankYouPage = (): JSX.Element => {
           </p>
         )}
 
-        <h2 className="hl-2xl mt-16 mb-3">Sag es weiter</h2>
+        <h2 className="hl-2xl mt-4 xl:mt-8 2xl:mt-16 mb-3">Sag es weiter</h2>
         <p>Wir würden uns freuen, wenn du anderen von DataSkop erzählst.</p>
         <div className="flex items-center justify-center space-x-4 mt-8">
           <ShareButton
