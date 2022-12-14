@@ -8,7 +8,8 @@ const getLastTimeUpdated = () => {
   const all = getAllStati();
   if (all.length === 0) return "";
   const {
-    fields: { status, scrapedAt },
+    fields: { status },
+    scrapedAt,
   } = _.last(all);
   return { status, updatedAt: dayjs(scrapedAt).fromNow() };
 };
