@@ -22,15 +22,6 @@ const scrapeWatchedVideos = async (
   return "scraping-done";
 };
 
-const scrapeVideosTimeFrame = async (
-  config: any,
-  procedureArgs: ProcedureArgs,
-): Promise<string> => {
-  return scrapeWatchedVideos(config, procedureArgs);
-  // const dump = await window.electron.ipc.invoke("downloads-get");
-  // return "scraping-done";
-};
-
 // eslint-disable-next-line require-yield
 async function* scrapingProcedure(
   getHtml: GetHtmlFunction,
@@ -41,7 +32,6 @@ async function* scrapingProcedure(
 ) {
   const funs = {
     "tt-scrape-watched-videos": scrapeWatchedVideos,
-    "tt-scrape-all-videos-for-time-frame": scrapeVideosTimeFrame,
   };
   const { slug }: { slug: keyof typeof funs } = config;
 

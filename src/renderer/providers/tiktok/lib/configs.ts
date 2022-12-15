@@ -16,12 +16,10 @@ const defaultConfig: TikTokScrapingConfig = {
     {
       type: "scraping",
       slug: "tt-scrape-watched-videos",
-      maxVideos: 2000,
-      maxScraping: 1000,
+      maxVideos: 1000,
+      maxScraping: 500,
       minWatchedSeconds: 5,
     },
-    // The next line is commented out because we are not doing Viz3 for the launch.
-    // { type: "scraping", slug: "tt-scrape-all-videos-for-time-frame", max: 200 },
   ],
   demoData: [],
 };
