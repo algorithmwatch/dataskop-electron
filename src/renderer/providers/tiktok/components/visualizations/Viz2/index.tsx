@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import _ from "lodash";
 import { useMemo, useState } from "react";
 import TabBar from "../TabBar";
 import { VizBoxRow } from "../VizBox";
@@ -19,6 +20,15 @@ const VizTwo = ({ gdprData, metadata }) => {
   window.electron.log.info(
     `Displayin Viz2 with ${datasource} for ${data.length} videos`,
   );
+
+  const tooltip = (x) =>
+    `${
+      _.isString(x.datum.author) ? x.datum.author : x.datum.author.nickname
+    }: ${
+      datasource === `hashtags`
+        ? x.datum.hashtags.join(" ")
+        : x.datum.diversificationLabels.join(", ")
+    }`;
 
   return (
     <>
@@ -47,7 +57,7 @@ const VizTwo = ({ gdprData, metadata }) => {
             ["kategorien", "kategorien"],
           ]}
         />
-        <Beeswarm data={data} />
+        <Beeswarm data={data} tooltipFun={tooltip} />
       </main>
     </>
   );

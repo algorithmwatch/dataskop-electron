@@ -109,7 +109,7 @@ function on(mark, listeners = {}) {
   return mark;
 }
 
-const Beeswarm = ({ data }) => {
+const Beeswarm = ({ data, tooltipFun }) => {
   const [rect, beeRef] = useRect();
   const [tooltip, setTooltip] = useState(null);
 
@@ -172,7 +172,7 @@ const Beeswarm = ({ data }) => {
                 setTooltip({
                   x,
                   y,
-                  label: d.datum.desc,
+                  label: tooltipFun(d),
                 });
                 // d.children.nodes().forEach((c, ii) => {
                 //   if (d.y == d.channels.title[ii]) {
