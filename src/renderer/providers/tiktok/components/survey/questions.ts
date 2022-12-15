@@ -30,7 +30,7 @@ export const questions: QuestionTypes[] = [
       "Was sind die ersten zwei Stellen der Postleitzahl Deines Hauptwohnsitzes?",
     name: "plz-wohnort",
     type: "number",
-    inputParams: { min: 10, max: 99, step: 1 },
+    inputParams: { min: 0, max: 99, step: 1 },
     required: true,
   },
   {
@@ -52,7 +52,7 @@ export const questions: QuestionTypes[] = [
     label: "Tatsächliches Alter (in Jahren)",
     name: "tatsächliches-alter",
     type: "number",
-    inputParams: { min: 6, max: 130, step: 1 },
+    inputParams: { min: 0, max: 130, step: 1 },
     visibleIf: {
       name: "altersangabe-stimmt",
       hasValue: "nein",
