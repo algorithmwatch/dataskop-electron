@@ -22,7 +22,7 @@ const isValidTag = (tag) => !excludeTags.has(tag);
 const transformData = (gdprData, metadata) => {
   const history = gdprData.Activity["Video Browsing History"].VideoList.map(
     (d) => ({
-      id: d.VideoLink.split("/").reverse()[1],
+      id: (d.Link ?? d.VideoLink).split("/").reverse()[1],
       date: new Date(d.Date),
       ...d,
     }),
