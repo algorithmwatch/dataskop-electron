@@ -5,7 +5,7 @@ const VizBox = ({ head, label }: { head: number | string; label: string }) => {
         <div className="font-bold text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl mx-4 whitespace-nowrap">
           {head}
         </div>
-        <p className="text-gray-700 text-base lg:text-lg">{label}</p>
+        <p className="text-gray-700 text-base lg:text-lg px-1">{label}</p>
       </div>
     </div>
   );

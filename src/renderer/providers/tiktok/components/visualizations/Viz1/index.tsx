@@ -60,7 +60,7 @@ const VizOne = ({
   const smallerScreen = window.outerHeight <= 1200;
 
   const chartHeight =
-    Math.round(height * (smallerScreen ? 0.5 : 0.7)) +
+    Math.round(height * (smallerScreen ? 0.4 : 0.7)) +
     (graph === "default" ? 0 : -45);
 
   const uniqDates = _.orderBy(
@@ -74,7 +74,7 @@ const VizOne = ({
     width,
     height: chartHeight,
     marginBottom: smallerScreen ? 50 : 75,
-    marginTop: 0,
+    marginTop: 3,
     marginLeft: smallerScreen ? 55 : 70,
     marginRight: smallerScreen ? 50 : 60,
     style: {
@@ -99,6 +99,7 @@ const VizOne = ({
     y: {
       grid: true,
       label: null,
+      ticks: 10,
     },
     color: {
       legend: graph === "timeslots",
@@ -248,7 +249,7 @@ const VizOne = ({
       <div className="relative">
         <div
           ref={toggleRef}
-          className="pl-16 2xl:pl-20 w-full mt-6"
+          className="pl-16 2xl:pl-20 w-full h-full mt-6"
           id="dataskop-export-screenshot-inner"
         />
         <div
