@@ -2,8 +2,8 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import {
   faFileContract,
-  faInfoCircle,
   faPaperPlane,
+  faQuestionCircle,
   faUserSecret,
 } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -37,12 +37,19 @@ export const Menu = ({
 
   const menuItems = [
     {
-      label: "Über",
-      icon: faInfoCircle,
+      label: "FAQ",
+      icon: faQuestionCircle,
       onClick: () => {
-        window.open("https://dataskop.net/ueber/");
+        window.open("https://dataskop.net/faq/");
       },
     },
+    // {
+    //   label: "Über",
+    //   icon: faInfoCircle,
+    //   onClick: () => {
+    //     window.open("https://dataskop.net/ueber/");
+    //   },
+    // },
     {
       label: "Kontakt",
       icon: faPaperPlane,
