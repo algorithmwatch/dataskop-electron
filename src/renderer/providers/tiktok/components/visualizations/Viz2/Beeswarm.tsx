@@ -12,6 +12,9 @@ import { useEffect, useMemo, useState } from "react";
 import { chooseTicks } from "../utils/ticks";
 import { useRect } from "../utils/useRect";
 
+const forceStrengthX = 0.8;
+const forceStrengthY = 0.4;
+
 function beeswarm(
   data,
   { gap = 1, ticks = 40, dynamic, direction = "y", ...options },
@@ -37,8 +40,8 @@ function beeswarm(
       nodes.push(node);
     }
     const force = forceSimulation(nodes)
-      .force("x", forceX((d) => d[x]).strength(0.8))
-      .force("y", forceY((d) => d[y]).strength(0.05))
+      .force("x", forceX((d) => d[x]).strength(forceStrengthX))
+      .force("y", forceY((d) => d[y]).strength(forceStrengthY))
       .force(
         "collide",
 
@@ -62,7 +65,7 @@ function beeswarm(
 }
 
 function on(mark, listeners = {}) {
-  const render = mark.render;
+  const { render } = mark;
   mark.render = function (facet, { x, y }, channels, dimensions, context) {
     // 🌶 I'd like to be allowed to read the facet
     // …  mutable debug = fx.domain()??
@@ -70,7 +73,7 @@ function on(mark, listeners = {}) {
     // 🌶 data[i] may or may not be the datum, depending on transforms
     // (at this stage we only have access to the materialized channels we requested)
     // but in simple cases it works
-    const data = this.data;
+    const { data } = this;
 
     // 🌶 since a point or band scale doesn't have an inverse, create one from its domain and range
     if (x && x.invert === undefined)
@@ -106,20 +109,23 @@ function on(mark, listeners = {}) {
   return mark;
 }
 
-export default function Beeswarm({ data }) {
+const Beeswarm = ({ data }) => {
   const [rect, beeRef] = useRect();
   const [tooltip, setTooltip] = useState(null);
 
   const { width, height } = rect;
+
+  let dotRadius = 4;
+  if (height > 600 && width > 800) dotRadius = 5;
 
   const beeSvg = useMemo(
     () =>
       width &&
       height &&
       Plot.plot({
-        width: width,
-        height: height,
-        marginTop: 30,
+        width,
+        height,
+        marginTop: 35,
         marginBottom: 53,
         marginLeft: 220,
         style: {
@@ -141,16 +147,14 @@ export default function Beeswarm({ data }) {
         marks: [
           on(
             beeswarm(data, {
-              marginTop: 50,
-              marginLeft: 50,
               dynamic: true,
-              //title: (d) => d.label,
+              // title: (d) => d.label,
               x: (d) => d.day,
               y: (d) => d.label,
               fill: (d) => d.label,
               stroke: "none",
-              //r: (d) => 5,
               gap: 0.5,
+              r: dotRadius,
             }),
             {
               pointerenter(event, d) {
@@ -159,7 +163,7 @@ export default function Beeswarm({ data }) {
                   .style("fill", "black");
 
                 let x = event.clientX + 10;
-                let y = event.clientY + 10;
+                const y = event.clientY + 10;
 
                 if (x + 300 > width) {
                   x = width - 300;
@@ -214,4 +218,6 @@ export default function Beeswarm({ data }) {
       )}
     </div>
   );
-}
+};
+
+export default Beeswarm;
