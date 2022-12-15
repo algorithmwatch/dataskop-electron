@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.5.0-alpha.22] - 2022-12-15
+
+- We fixed a bug with downloading the ready dump from TikTok. Please update asap if you have requested your GDPR dump.
+- We make the app work on smaller screens.
+- We reduced the amount of videos a user has to scrape from 1000 too 500. This should give results faster. If you want to visualize 1000 videos. You have import the data again.
+
 ## [v0.5.0-alpha.21] - 2022-12-13
 
 - Tray: We show in the tray information about the most recent status update.
