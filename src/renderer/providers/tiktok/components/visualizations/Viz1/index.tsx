@@ -60,7 +60,7 @@ const VizOne = ({
   const smallerScreen = window.outerHeight <= 1200;
 
   const chartHeight =
-    Math.round(height * (smallerScreen ? 0.4 : 0.7)) +
+    Math.round(height * (smallerScreen ? 0.4 : 0.6)) +
     (graph === "default" ? 0 : -45);
 
   const uniqDates = _.orderBy(
