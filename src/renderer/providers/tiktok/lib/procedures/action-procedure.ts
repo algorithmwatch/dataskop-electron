@@ -106,6 +106,7 @@ const getDataExport = async (
   const downloadData = await clickDownloadButton(
     getCurrentHtml,
     lastStatusPending,
+    true,
   );
 
   if (downloadData.buttonAvailable) {

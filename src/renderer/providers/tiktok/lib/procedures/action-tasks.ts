@@ -65,6 +65,7 @@ const clickOnDownloadTab = async (getCurrentHtml: GetCurrentHtml) => {
  */
 const downloadDump = async (
   click: () => Promise<void>,
+  activeUser = false,
 ): Promise<{
   filePath?: string;
   status:
@@ -101,14 +102,31 @@ const downloadDump = async (
 
   await click();
 
+  if (activeUser) {
+    window.electron.log.info("Displayig the scraping window to the user");
+    // Make the window full screen. This is hacky because the state in the context is wrong.
+    window.electron.ipc.invoke("scraping-set-bounds", {
+      width: window.innerWidth,
+      height: window.innerHeight,
+      x: 0,
+      y: 0,
+    });
+  }
+
   // Wait until a download is finished
   // eslint-disable-next-line no-constant-condition
   while (true) {
     await currentDelay();
-    if (filePath != null) return { filePath, status: "download-success" };
+    if (filePath != null) {
+      // The scraping window is still open but it will get closed in a while later on.
+      return { filePath, status: "download-success" };
+    }
     if (error) return { status: "download-error" };
 
-    if (new Date().getTime() - lastReceived > ACTION_REQUIRED_SECONDS * 1000) {
+    if (
+      !activeUser &&
+      new Date().getTime() - lastReceived > ACTION_REQUIRED_SECONDS * 1000
+    ) {
       // If the download didn't even start, TikTok requires attention
       if (!started) return { status: "download-action-required" };
     }
@@ -142,6 +160,7 @@ const isDumpCreationPending = async (getCurrentHtml: GetCurrentHtml) => {
 const clickDownloadButton = async (
   getCurrentHtml: GetCurrentHtml,
   lastStatusPending: boolean,
+  activeUser = false,
 ) => {
   let numTry = 0;
   // eslint-disable-next-line no-constant-condition
@@ -172,8 +191,9 @@ const clickDownloadButton = async (
       return { buttonAvailable };
     }
 
-    const data = await downloadDump(() =>
-      clickOnElementIframe(downloadButton, $html),
+    const data = await downloadDump(
+      () => clickOnElementIframe(downloadButton, $html),
+      activeUser,
     );
     return { buttonAvailable, ...data };
   }

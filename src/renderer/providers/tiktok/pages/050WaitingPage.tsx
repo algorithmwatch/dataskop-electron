@@ -134,10 +134,12 @@ const WaitingPage = (): JSX.Element => {
   };
 
   const handleDownloadActionRequired = async () => {
+    // Start with the hidden scraping window. It will be shown as soon as user
+    // action is required.
     dispatch({
       type: "set-attached",
       attached: true,
-      visible: true,
+      visible: false,
     });
 
     await currentDelay("longer");
@@ -229,7 +231,10 @@ const WaitingPage = (): JSX.Element => {
         return;
       }
 
-      if (newStatus.status === "monitoring-download-action-required") {
+      if (
+        newStatus.status === "monitoring-download-action-required" ||
+        newStatus.status === "download-action-required"
+      ) {
         handleDownloadActionRequired();
       }
 

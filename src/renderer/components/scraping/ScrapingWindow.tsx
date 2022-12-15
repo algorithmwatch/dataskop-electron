@@ -38,48 +38,51 @@ const ScrapingWindow = ({ forceReload = 0 }: { forceReload: number }) => {
     window.electron.ipc.invoke("scraping-set-muted", isMuted);
   }, [isMuted]);
 
+  const windowDimensions = () => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    const leftOverSpace = 1 - initSizeFactorHeight;
+    const leftOverSpaceWidth = 1 - initSizeFactorWidth;
+
+    const res = {
+      width: round(width * initSizeFactorWidth),
+      height: round(height * initSizeFactorHeight),
+      x: round(width * leftOverSpaceWidth),
+      y: round(height * leftOverSpace),
+    };
+
+    if (initPositionWindow === "center") {
+      res.x = round(width * leftOverSpaceWidth * 0.5);
+      res.y = round(height * leftOverSpace * 0.5);
+    }
+
+    if (initPositionWindow === "center-top") {
+      res.x = round(width * leftOverSpaceWidth * 0.5);
+      res.y = margin;
+    }
+
+    return res;
+  };
+
   useEffect(() => {
     if (visibleWindow) {
-      const b = { ...bounds };
+      const b = windowDimensions();
       b.height -= margin * 2;
       b.width -= margin * 2;
       b.x += margin;
       b.y += margin;
       window.electron.ipc.invoke("scraping-set-bounds", b);
     } else {
-      const b = { ...bounds, width: 0, height: 0 };
+      // const b = { ...bounds, width: 0, height: 0 };
+
+      // Set off screen. TikTok wasn't working otherwise
+      const b = { ...bounds, x: 10000, y: 10000 };
       window.electron.ipc.invoke("scraping-set-bounds", b);
     }
   }, [bounds, visibleWindow]);
 
   useEffect(() => {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-
-    const windowDimensions = () => {
-      const leftOverSpace = 1 - initSizeFactorHeight;
-      const leftOverSpaceWidth = 1 - initSizeFactorWidth;
-
-      const res = {
-        width: round(width * initSizeFactorWidth),
-        height: round(height * initSizeFactorHeight),
-        x: round(width * leftOverSpaceWidth),
-        y: round(height * leftOverSpace),
-      };
-
-      if (initPositionWindow === "center") {
-        res.x = round(width * leftOverSpaceWidth * 0.5);
-        res.y = round(height * leftOverSpace * 0.5);
-      }
-
-      if (initPositionWindow === "center-top") {
-        res.x = round(width * leftOverSpaceWidth * 0.5);
-        res.y = margin;
-      }
-
-      return res;
-    };
-
     setBounds(windowDimensions());
   }, [
     initPositionWindow,

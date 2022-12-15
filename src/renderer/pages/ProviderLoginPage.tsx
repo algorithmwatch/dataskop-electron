@@ -11,7 +11,7 @@ import { Button } from "renderer/components/Button";
 import WizardLayout from "renderer/components/WizardLayout";
 import { useConfig, useNavigation, useScraping } from "../contexts";
 
-export default function ProviderLoginPage(): JSX.Element {
+const ProviderLoginPage = (): JSX.Element => {
   const { getNextPage } = useNavigation();
   const history = useHistory();
   const {
@@ -74,7 +74,9 @@ export default function ProviderLoginPage(): JSX.Element {
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>
       <h1 className="hl-4xl mb-20">Login bei Provider</h1>
-      <div className="flex flex-col space-y-4"></div>
+      <div className="flex flex-col space-y-4" />
     </WizardLayout>
   );
-}
+};
+
+export default ProviderLoginPage;

@@ -5,7 +5,7 @@
  *
  * @module
  */
-import { range } from "lodash";
+import _, { range } from "lodash";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import {
@@ -167,11 +167,14 @@ const ScrapingManager = ({
   // start scraping when `isScrapingStarted` was set to true
   useEffect(() => {
     const startScraping = async () => {
-      // create a uuid every time you hit start scraping
       const { config } = campaign;
-      if (filterSteps) config.steps = config.steps.filter(filterSteps);
+      // Nasty bug: Don't filter on the orginal config!
+      const copyConfig = _.cloneDeep(config);
+      if (filterSteps) copyConfig.steps = copyConfig.steps.filter(filterSteps);
+
       window.electron.log.info("Start data gathering", JSON.stringify(config));
 
+      // create a uuid every time you hit start scraping
       // eslint-disable-next-line @typescript-eslint/no-shadow
       const sessionId = uuidv4();
 
@@ -179,7 +182,7 @@ const ScrapingManager = ({
       const lastStatus = await getStatus();
 
       const gen = createScrapingGenerator(
-        config,
+        copyConfig,
         provider.deserializeMapping,
         makeGetHtml(userConfig.htmlLogging),
         getHtmlLazy,
@@ -254,6 +257,7 @@ const ScrapingManager = ({
   // Initialize & clean up
 
   const initScraper = async (): Promise<void> => {
+    window.electron.log.info("Init scraping manager");
     await window.electron.ipc.invoke("scraping-init-view", {
       muted: isMuted,
       allowInput: !disableInput,
@@ -274,6 +278,7 @@ const ScrapingManager = ({
   };
 
   const cleanUpScraper = () => {
+    window.electron.log.info("Clean up scraping manager");
     window.electron.ipc.removeListener(CALLBACK_NAV, checkLoginCb);
     window.electron.ipc.invoke("scraping-remove-view");
   };

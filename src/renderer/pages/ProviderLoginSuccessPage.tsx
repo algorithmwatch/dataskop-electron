@@ -10,7 +10,7 @@ import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import StatusContent from "renderer/providers/tiktok/components/StatusContent";
 import { useNavigation, useScraping } from "../contexts";
 
-export default function ProviderLoginSuccessPage(): JSX.Element {
+const ProviderLoginSuccessPage = (): JSX.Element => {
   const {
     state: { isScrapingFinished },
     dispatch,
@@ -41,7 +41,10 @@ export default function ProviderLoginSuccessPage(): JSX.Element {
       <StatusContent
         title="Einen Moment, bitte"
         body="Wir beantragen gerade deine Daten bei TikTok."
+        status={null}
       />
     </WizardLayout>
   );
-}
+};
+
+export default ProviderLoginSuccessPage;
