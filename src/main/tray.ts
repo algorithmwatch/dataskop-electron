@@ -1,4 +1,4 @@
-import { Menu, nativeImage, Tray } from "electron";
+import { Menu, MenuItemConstructorOptions, nativeImage, Tray } from "electron";
 import log from "electron-log";
 import _ from "lodash";
 import dayjs from "./dayjs";
@@ -6,19 +6,19 @@ import { getAllStati } from "./db";
 
 const getLastTimeUpdated = () => {
   const all = getAllStati();
-  if (all.length === 0) return "";
+  if (all.length === 0) return null;
   const {
     fields: { status },
     scrapedAt,
-  } = _.last(all);
-  return { status, updatedAt: dayjs(scrapedAt).fromNow() };
+  } = _.last(all) as any;
+  return { status, date: dayjs(scrapedAt).fromNow() };
 };
 
-let moniInter: ReturnType<typeof setInterval> | null = null;
+let monitoringInterval: ReturnType<typeof setInterval> | null = null;
 let tray: Tray | null = null;
 
 const buildTray = (
-  createWindow,
+  createOrBringToFocus: () => void,
   doMonitoring: () => any,
   configStore: any,
   icon: string,
@@ -29,59 +29,78 @@ const buildTray = (
   tray = new Tray(image.resize({ width: 25, height: 25 }));
   tray.setToolTip("DataSkop");
 
-  const INTERVAL_SECONDS = 60 * 60 * 1000;
+  // 1 hour
+  const MONITORING_INTERVAL_SECONDS = 60 * 60 * 1000;
 
-  const handleMonitoring = (menuItem, browserWindow, event) => {
+  const handleMonitoringInterval = (active: boolean) => {
     if (process.env.NODE_ENV === "development") {
       log.debug("Skipping interval monitoring in development");
       return;
     }
-    if (menuItem.checked && moniInter === null) {
-      log.info("Adding interval for monitoring");
-      moniInter = setInterval(doMonitoring, INTERVAL_SECONDS);
+
+    if (active && monitoringInterval === null) {
+      log.info("Set interval for monitoring");
+      monitoringInterval = setInterval(
+        doMonitoring,
+        MONITORING_INTERVAL_SECONDS,
+      );
     }
 
-    if (!menuItem.checked && moniInter !== null) {
+    if (!active && monitoringInterval !== null) {
       log.info("Removing interval for monitoring");
-      clearInterval(moniInter);
-      moniInter = null;
+      clearInterval(monitoringInterval);
+      monitoringInterval = null;
     }
   };
 
-  const monitoringActive = configStore.get("monitoringInterval");
+  let activeMonitoring = configStore.get("monitoringInterval");
+  handleMonitoringInterval(activeMonitoring);
 
-  handleMonitoring({ checked: handleMonitoring }, null, null);
-
-  const baseTemplate = [
-    { label: "DataSkop öffnen", click: createWindow },
+  const baseTemplate: MenuItemConstructorOptions[] = [
+    { label: "DataSkop öffnen", click: createOrBringToFocus },
     { label: "Separator", type: "separator" },
     {
       label: "Stündliches Monitoring",
       id: "monitoring",
       type: "checkbox",
-      checked: monitoringActive,
-      click: handleMonitoring,
+      checked: activeMonitoring,
+      click: (menuItem) => {
+        activeMonitoring = menuItem.checked;
+        handleMonitoringInterval(menuItem.checked);
+        // Persist change
+        configStore.set("monitoringInterval", menuItem.checked);
+      },
     },
     { label: "Datenexport überprüfen", click: doMonitoring },
-    { label: "", enabled: false },
-    { label: "", enabled: false },
+    { label: "", enabled: false, visible: false },
+    { label: "", enabled: false, visible: false },
     { label: "Separator", type: "separator" },
     { label: "Schließen", role: "quit" },
   ];
 
-  // Context Menu
   let contextMenu = Menu.buildFromTemplate(baseTemplate);
   tray.setContextMenu(contextMenu);
 
+  // Fetch recent status when clicking on tray icon
   tray.on("click", () => {
+    baseTemplate[2].checked = activeMonitoring;
+
     const last = getLastTimeUpdated();
 
-    baseTemplate[4].label = `Status: ${last.status}`;
-    baseTemplate[5].label = last.updatedAt;
+    if (last === null) {
+      baseTemplate[4].visible = false;
+      baseTemplate[5].visible = false;
+      log.info("Clicked on tray icon but there is no status to display");
+    } else {
+      baseTemplate[4].label = `Status: ${last.status}`;
+      baseTemplate[5].label = last.date;
+      baseTemplate[4].visible = true;
+      baseTemplate[5].visible = true;
+    }
 
-    // Rebuild menu
+    // Rebuild menu to update it
     contextMenu = Menu.buildFromTemplate(baseTemplate);
-    tray.setContextMenu(contextMenu);
+    tray?.setContextMenu(contextMenu);
   });
 };
 

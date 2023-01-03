@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- We fixed various bugs regarding the tray (menu bar)
+
 ## [v0.5.0-alpha.22] - 2022-12-15
 
 - We fixed a bug with downloading the ready dump from TikTok. Please update asap if you have requested your GDPR dump.
