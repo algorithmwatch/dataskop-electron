@@ -417,11 +417,14 @@ const pathArgs = {
 };
 
 const setOpenAtLogin = (value: boolean) => {
-  if (app.getLoginItemSettings(pathArgs).openAtLogin == value) return;
+  if (app.getLoginItemSettings(pathArgs).openAtLogin === value) {
+    log.info(`Not updating \`openAtLogin\`, the value is already: ${value}`);
+    return;
+  }
 
+  log.info(`Updating \`openAtLogin\` to: ${value}`);
   app.setLoginItemSettings({
     openAtLogin: value,
-    openAsHidden: true,
     ...pathArgs,
   });
 };

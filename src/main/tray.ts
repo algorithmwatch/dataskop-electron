@@ -52,9 +52,10 @@ const buildTray = (
       monitoringInterval = null;
     }
   };
+  configStore.onDidChange("monitoringInterval", handleMonitoringInterval);
 
-  let activeMonitoring = configStore.get("monitoringInterval");
-  handleMonitoringInterval(activeMonitoring);
+  const initConfigMonitoring = configStore.get("monitoringInterval");
+  handleMonitoringInterval(initConfigMonitoring);
 
   const baseTemplate: MenuItemConstructorOptions[] = [
     { label: "DataSkop öffnen", click: createOrBringToFocus },
@@ -63,10 +64,8 @@ const buildTray = (
       label: "Stündliches Monitoring",
       id: "monitoring",
       type: "checkbox",
-      checked: activeMonitoring,
+      checked: initConfigMonitoring,
       click: (menuItem) => {
-        activeMonitoring = menuItem.checked;
-        handleMonitoringInterval(menuItem.checked);
         // Persist change
         configStore.set("monitoringInterval", menuItem.checked);
       },
@@ -75,16 +74,31 @@ const buildTray = (
     { label: "", enabled: false, visible: false },
     { label: "", enabled: false, visible: false },
     { label: "Separator", type: "separator" },
+    {
+      label: "DataSkop automatisch starten",
+      type: "checkbox",
+      checked: configStore.get("openAtLogin"),
+      click: (menuItem) => {
+        // Persist change
+        configStore.set("openAtLogin", menuItem.checked);
+      },
+    },
+    {
+      label: "Separator",
+      type: "separator",
+    },
     { label: "Schließen", role: "quit" },
   ];
 
   let contextMenu = Menu.buildFromTemplate(baseTemplate);
   tray.setContextMenu(contextMenu);
 
-  // Fetch recent status when clicking on tray icon
   tray.on("click", () => {
-    baseTemplate[2].checked = activeMonitoring;
+    // Get most recent values from disk because they may have been changed
+    baseTemplate[2].checked = configStore.get("monitoringInterval");
+    baseTemplate[7].checked = configStore.get("openAtLogin");
 
+    // Fetch recent status when clicking on tray icon
     const last = getLastTimeUpdated();
 
     if (last === null) {
