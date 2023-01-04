@@ -18,6 +18,7 @@ export type ProviderInformation = {
   persistScrapingBrowser: boolean;
   disableInputAfterLogin: boolean;
   navigation: { [key: string]: NavigationState };
+  demoData: { [key: string]: any };
   confirmCookies: () => Promise<void>;
   deserializeMapping: any;
 };
@@ -25,7 +26,7 @@ export type ProviderInformation = {
 export type DemoData = {
   title: string;
   // for the future: this can also be an url so the data may get fetched remotely
-  data: any;
+  data: string;
 };
 
 export interface ScrapingConfig {

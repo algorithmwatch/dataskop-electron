@@ -1,4 +1,4 @@
-function About() {
+const Terms = () => {
   return (
     <div className="space-y-4">
       <div className="hl-3xl">
@@ -294,6 +294,6 @@ function About() {
       <p>Berlin, Juli 2021</p>
     </div>
   );
-}
+};
 
-export default About;
+export default Terms;

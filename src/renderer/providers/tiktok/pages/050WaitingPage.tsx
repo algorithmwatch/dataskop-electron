@@ -10,7 +10,7 @@ import { Transition } from "@headlessui/react";
 import _ from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
-import AdvancedMenu from "renderer/components/admin/AdvancedMenu";
+import AdminMenu from "renderer/components/admin/AdminMenu";
 import { Button } from "renderer/components/Button";
 import Modal from "renderer/components/Modal";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
@@ -298,7 +298,7 @@ const WaitingPage = (): JSX.Element => {
       ],
       end: [
         isDebug && (
-          <AdvancedMenu
+          <AdminMenu
             key="2"
             menuLabel="DEBUG only: Set Status"
             menuItems={Object.keys(STATUS).map((x) => ({

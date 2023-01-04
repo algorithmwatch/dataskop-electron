@@ -19,13 +19,9 @@ import {
 import Modal from "./Modal";
 import ProcessIndicator from "./ProcessIndicator";
 import ScrapingProgressBar from "./ScrapingProgressBar";
-import Sidebar from "./Sidebar";
+import SidebarMenu from "./SidebarMenu";
 
-export default function Base({
-  children,
-}: {
-  children: ReactNode;
-}): JSX.Element {
+const BaseLayout = ({ children }: { children: ReactNode }): JSX.Element => {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const [sectionKey, setSectionKey] = useState("");
   const { pathname } = useLocation();
@@ -112,7 +108,7 @@ export default function Base({
       <Modal />
       <header
         className={classNames("flex items-center py-4 px-6 z-20 h-[4.375rem]", {
-          "opacity-0": pathname === "/yt/start",
+          "opacity-0": pathname === "/youtube/start",
         })}
       >
         <div>
@@ -144,7 +140,7 @@ export default function Base({
         </div>
       </header>
 
-      <Sidebar
+      <SidebarMenu
         menuItems={sidebarMenu}
         isOpen={menuIsOpen}
         onIsOpenChange={(val: boolean) => setMenuIsOpen(val)}
@@ -161,4 +157,6 @@ export default function Base({
       </footer>
     </div>
   );
-}
+};
+
+export default BaseLayout;

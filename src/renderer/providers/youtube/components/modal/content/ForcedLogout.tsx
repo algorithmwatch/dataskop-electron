@@ -1,4 +1,4 @@
-function ForcedLogout() {
+const ForcedLogout = () => {
   return (
     <div className="space-y-4">
       <h1 className="hl-4xl my-6">Opps, hier ist was schief gelaufen.</h1>
@@ -10,6 +10,6 @@ function ForcedLogout() {
       <p>Anschließend starte die App und melde dich erneut an.</p>
     </div>
   );
-}
+};
 
 export default ForcedLogout;

@@ -19,41 +19,41 @@ import {
 import StartPage from "../pages/StartPage";
 
 const ytRoutes = [
-  { path: "/yt/donation-success", comp: DonationSuccessPage },
-  { path: "/yt/donation2", comp: DonationPage2 },
-  { path: "/yt/donation1", comp: DonationPage1 },
-  { path: "/yt/questionnaire", comp: QuestionnairePage },
-  { path: "/yt/my-data", comp: MyDataPage },
+  { path: "/youtube/donation-success", comp: DonationSuccessPage },
+  { path: "/youtube/donation2", comp: DonationPage2 },
+  { path: "/youtube/donation1", comp: DonationPage1 },
+  { path: "/youtube/questionnaire", comp: QuestionnairePage },
+  { path: "/youtube/my-data", comp: MyDataPage },
   {
-    path: "/yt/visualization/search",
+    path: "/youtube/visualization/search",
     comp: VisualizationSearchPage,
   },
   {
-    path: "/yt/visualization/news",
+    path: "/youtube/visualization/news",
     comp: VisualizationNewsPage,
   },
   {
-    path: "/yt/visualization/autoplay-chain",
+    path: "/youtube/visualization/autoplay-chain",
     comp: VisualizationAutoplayChainPage,
   },
-  { path: "/yt/research-info", comp: ResearchInfoPage },
+  { path: "/youtube/research-info", comp: ResearchInfoPage },
   {
-    path: "/yt/visualization/profile",
+    path: "/youtube/visualization/profile",
     comp: VisualizationProfilePage,
   },
   {
-    path: "/yt/scraping-explanation",
+    path: "/youtube/scraping-explanation",
     comp: ScrapingExplanationPage,
   },
   {
-    path: "/yt/interface-tutorial",
+    path: "/youtube/interface-tutorial",
     comp: InterfaceTutorialPage,
   },
-  { path: "/yt/onboarding2", comp: OnboardingPage2 },
-  { path: "/yt/onboarding1", comp: OnboardingPage1 },
-  { path: "/yt/intro", comp: IntroductionPage },
-  { path: "/yt/select-demo", comp: SelectDemoPage },
-  { path: "/yt/start", comp: StartPage },
+  { path: "/youtube/onboarding2", comp: OnboardingPage2 },
+  { path: "/youtube/onboarding1", comp: OnboardingPage1 },
+  { path: "/youtube/intro", comp: IntroductionPage },
+  { path: "/youtube/select-demo", comp: SelectDemoPage },
+  { path: "/youtube/start", comp: StartPage },
 ];
 
 export default ytRoutes;

@@ -1,6 +1,6 @@
 import { ReactNode, useState } from "react";
 import Header from "renderer/components/Header";
-import { Menu } from "renderer/components/Menu";
+import SidebarMenu from "renderer/components/SidebarMenu";
 import { useNavigation } from "renderer/contexts";
 
 const BaseLayout = ({ children }: { children: ReactNode }): JSX.Element => {
@@ -16,7 +16,7 @@ const BaseLayout = ({ children }: { children: ReactNode }): JSX.Element => {
       {showHeader && (
         <>
           <Header toggleMenu={toggleMenu} />
-          <Menu isOpen={menuIsOpen} setIsOpen={setMenuIsOpen} />
+          <SidebarMenu isOpen={menuIsOpen} setIsOpen={setMenuIsOpen} />
         </>
       )}
 

@@ -4,10 +4,11 @@ import { IconDefinition } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
 import { useState } from "react";
-import AdvancedMenu from "renderer/components/admin/AdvancedMenu";
-import { useConfig } from "renderer/contexts";
+import AdminMenu from "renderer/components/admin/AdminMenu";
+import { useConfig, useScraping } from "renderer/contexts";
+import { clearData } from "renderer/lib/db";
 
-export default function Sidebar({
+const SidebarMenu = ({
   menuItems = [],
   isOpen = false,
   onIsOpenChange,
@@ -19,11 +20,12 @@ export default function Sidebar({
   }[];
   isOpen?: boolean;
   onIsOpenChange: (value: boolean) => void;
-}): JSX.Element | null {
+}): JSX.Element | null => {
   const {
     state: { version, showAdvancedMenu },
     dispatch,
   } = useConfig();
+  const { dispatch: scrapingDispatch } = useScraping();
 
   // click the version to unlock the advanced menu
   const [versionClicked, setVersionClicked] = useState(0);
@@ -78,20 +80,34 @@ export default function Sidebar({
         <div className="pl-8 mb-4 relative">
           {showAdvancedMenu && (
             <div className="absolute right-8 bottom-0">
-              <AdvancedMenu
+              <AdminMenu
                 onItemClicked={() => onIsOpenChange(false)}
                 menuItems={[
-                  { label: "start", to: "/yt/start" },
+                  { label: "Start YouTube", to: "/select_campaign/youtube" },
+                  { label: "Start TikTok", to: "/select_campaign/tiktok" },
                   {
-                    label: "advanced scraping",
+                    label: "Advanced scraping",
                     to: "/admin/scraping/advanced",
                   },
                   {
-                    label: "scraping config editor",
+                    label: "Scraping config editor",
                     to: "/admin/scraping/editor",
                   },
-                  { label: "results", to: "/admin/results" },
-                  { label: "settings", to: "/admin/settings" },
+                  { label: "Results", to: "/admin/results" },
+                  { label: "Settings", to: "/admin/settings" },
+                  {
+                    label: "Reset scraping window",
+                    click: () => {
+                      window.electron.ipc.invoke("scraping-clear-storage");
+                      scrapingDispatch({ type: "reset-scraping" });
+                    },
+                  },
+                  {
+                    label: "Clear results and sessions",
+                    click: () => {
+                      clearData();
+                    },
+                  },
                 ]}
               />
             </div>
@@ -119,4 +135,6 @@ export default function Sidebar({
       )}
     </div>
   );
-}
+};
+
+export default SidebarMenu;

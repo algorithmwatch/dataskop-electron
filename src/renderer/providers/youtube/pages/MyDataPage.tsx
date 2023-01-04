@@ -57,7 +57,7 @@ export default function MyDataPage(): JSX.Element {
                 Wenn Du Dataskop mit einer Datenspende unterstützen möchtest,
               </span>{" "}
               <Link
-                to="/yt/onboarding1"
+                to="/youtube/onboarding1"
                 className="underline hover:no-underline text-blue-600"
               >
                 melde Dich bitte mit deinem YouTube-Konto an

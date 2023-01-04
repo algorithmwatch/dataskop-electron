@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
 import React, { useState } from "react";
 
-export default function Explainer({
+const Explainer = ({
   isOpen = false,
   onIsOpenChange,
   children,
@@ -14,7 +14,7 @@ export default function Explainer({
   isOpen?: boolean;
   onIsOpenChange: (value: boolean) => void;
   children: React.ReactNode;
-}): JSX.Element | null {
+}): JSX.Element | null => {
   const [isToggleHover, setIsToggleHover] = useState(false);
 
   return (
@@ -78,4 +78,6 @@ export default function Explainer({
       )}
     </div>
   );
-}
+};
+
+export default Explainer;

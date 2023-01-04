@@ -99,7 +99,7 @@ type State = {
 type ScrapingProviderProps = { children: React.ReactNode };
 
 const ScrapingStateContext = React.createContext<
-  { state: State; dispatch: Dispatch; getEtaUntil: any } | undefined
+  { state: State; dispatch: Dispatch } | undefined
 >(undefined);
 
 const initialState: State = {
@@ -270,36 +270,7 @@ const scrapingReducer = (state: State, action: Action): State => {
 const ScrapingProvider = ({ children }: ScrapingProviderProps) => {
   const [state, dispatch] = React.useReducer(scrapingReducer, initialState);
 
-  /**
-   * A quick and dirty way to compute an ETA based on the demo data.
-   */
-  const getEtaUntil = (checkUntilStep = null) => {
-    const { startedAt, finishedTasks, demoData } = state;
-
-    if (demoData === null) return null;
-    if (startedAt === null) return null;
-
-    const untilIndex = checkUntilStep || demoData.data.results.length - 1;
-
-    const finishedFixed =
-      finishedTasks - 1 < demoData.data.results.length
-        ? finishedTasks - 1
-        : demoData.data.results.length - 1;
-
-    const demoStartedAt = demoData.data.results[0].scrapedAt - 10000; // ~ 10 seconds
-    const demoTime = demoData.data.results[finishedFixed].scrapedAt;
-    const demoDuration = demoTime - demoStartedAt;
-    const demoRemaining =
-      demoData.data.results[untilIndex].scrapedAt - demoTime;
-
-    const ourTime = Date.now() - startedAt;
-
-    const etaRemaining = (ourTime / demoDuration) * demoRemaining;
-
-    return etaRemaining;
-  };
-
-  const value = { state, dispatch, getEtaUntil };
+  const value = { state, dispatch };
 
   return (
     <ScrapingStateContext.Provider value={value}>

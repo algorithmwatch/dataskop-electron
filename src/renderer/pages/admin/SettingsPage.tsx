@@ -4,7 +4,7 @@ import { humanFileSize } from "renderer/lib/utils/strings";
 import Button from "renderer/providers/youtube/components/Button";
 import { useConfig } from "../../contexts";
 
-export default function SettingsPage(): JSX.Element {
+const SettingsPage = (): JSX.Element => {
   const {
     state: { platformUrl, userConfig },
     dispatch: dipatchConfig,
@@ -126,4 +126,6 @@ export default function SettingsPage(): JSX.Element {
       </div>
     </div>
   );
-}
+};
+
+export default SettingsPage;

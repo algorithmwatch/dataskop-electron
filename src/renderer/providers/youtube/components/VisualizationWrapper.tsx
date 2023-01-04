@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { providerInfo } from "renderer/providers/info";
 import { useScraping } from "../../../contexts";
 import { getScrapingResultsBySession } from "../../../lib/db";
 import AutoplayChain from "./visualizations/AutoplayChain";
@@ -7,36 +8,37 @@ import NewsTop5 from "./visualizations/NewsTop5";
 import Profile from "./visualizations/profile";
 import SearchResultsCompare from "./visualizations/SearchResultsCompare";
 
-export default function VisualizationWrapper({ name }: { name: string }) {
+const VisualizationWrapper = ({ name }: { name: string }) => {
   const [data, setData] = useState<any>(null);
 
   const {
-    state: { sessionId, scrapingProgress, demoMode, demoData },
+    state: { sessionId, scrapingProgress, demoMode, demoData, campaign },
   } = useScraping();
 
   useEffect(() => {
-    const loadData = async () => {
-      if (demoData) {
+    (async () => {
+      if (demoData && campaign) {
+        const demoDataObj =
+          providerInfo[campaign.config.provider].demoData[demoData.data];
+
         // migrate outdated lookup format
-        if (
-          "lookups" in demoData.data &&
-          Array.isArray(demoData.data.lookups)
-        ) {
+        if ("lookups" in demoDataObj && Array.isArray(demoDataObj.lookups)) {
           const transformed = Object.assign(
             {},
-            ...demoData.data.lookups.map((x) => ({
+            ...demoDataObj.lookups.map((x) => ({
               [x.info.videoId]: { data: x.info },
             })),
           );
-          setData({ results: demoData.data.results, lookups: transformed });
-        } else setData(demoData.data);
+          setData({ results: demoDataObj.results, lookups: transformed });
+        } else {
+          setData(demoDataObj);
+        }
       } else if (sessionId) {
         const results = await getScrapingResultsBySession(sessionId);
         const lookups = await window.electron.ipc.invoke("db-get-lookups");
         setData({ results, lookups });
       }
-    };
-    loadData();
+    })();
   }, [
     demoMode,
     demoData,
@@ -64,4 +66,6 @@ export default function VisualizationWrapper({ name }: { name: string }) {
   }
 
   return null;
-}
+};
+
+export default VisualizationWrapper;

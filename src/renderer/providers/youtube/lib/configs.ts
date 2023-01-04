@@ -1,5 +1,4 @@
 import { Campaign } from "../../types";
-import ytDefaultDemoData from "../static/yt-default-demo.json";
 import {
   ActionProcedureConfig,
   ProfileProcedureConfig,
@@ -106,7 +105,7 @@ const defaultConfig: YtScrapingConfig = {
     logOutVideoScraperStep,
     searchStep,
   ],
-  demoData: [{ title: "YouTube Default Demo", data: ytDefaultDemoData }],
+  demoData: [{ title: "YouTube Default Demo", data: "yt-default-demo" }],
 };
 
 const defaultCampaign: Campaign = {
@@ -171,14 +170,15 @@ const testCampaign: Campaign = {
   config: testConfig,
 };
 
-const demoConfig: YtScrapingConfig = {
+// A unfished config to have multiple demos to choose from
+const eduConfig: YtScrapingConfig = {
   ...defaultConfig,
   navigation: "yt-education-demo",
   demoData: [
-    { title: "Persona 1", data: ytDefaultDemoData },
-    { title: "Persona 2", data: ytDefaultDemoData },
-    { title: "Persona 3", data: ytDefaultDemoData },
-    { title: "Persona 4", data: ytDefaultDemoData },
+    { title: "Persona 1", data: "yt-default-demo" },
+    { title: "Persona 2", data: "yt-default-demo" },
+    { title: "Persona 3", data: "yt-default-demo" },
+    { title: "Persona 4", data: "yt-default-demo" },
   ],
 };
 
@@ -187,7 +187,7 @@ const educationDemoCampaign: Campaign = {
   slug: "yt-edu-demo",
   title: "YouTube Demo für den Bildungsbereich",
   description: "Wir arbeiten gerade noch dieser Version.",
-  config: demoConfig,
+  config: eduConfig,
   featured: true,
 };
 

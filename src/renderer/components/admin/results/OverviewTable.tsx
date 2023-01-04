@@ -15,7 +15,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function OverviewTable({ rows }: { rows: any }) {
+const OverviewTable = ({ rows }: { rows: any }) => {
   const classes = useStyles();
   const history = useHistory();
 
@@ -58,4 +58,6 @@ export default function OverviewTable({ rows }: { rows: any }) {
       </Table>
     </TableContainer>
   );
-}
+};
+
+export default OverviewTable;

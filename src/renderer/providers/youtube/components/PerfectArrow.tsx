@@ -2,7 +2,7 @@ import { ArrowOptions, getArrow } from "perfect-arrows";
 
 type Point = { x: number; y: number };
 
-export function PerfectArrow({
+const PerfectArrow = ({
   p1,
   p2,
   width,
@@ -14,7 +14,7 @@ export function PerfectArrow({
   width: number;
   height: number;
   options?: ArrowOptions;
-}) {
+}) => {
   const defaultOptions = {};
   const arrow = getArrow(p1.x, p1.y, p2.x, p2.y, {
     ...defaultOptions,
@@ -44,4 +44,6 @@ export function PerfectArrow({
       />
     </svg>
   );
-}
+};
+
+export default PerfectArrow;

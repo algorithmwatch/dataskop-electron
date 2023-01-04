@@ -17,7 +17,7 @@ export interface ButtonProps {
   children?: ReactNode;
 }
 
-export default function Button({
+const Button = ({
   type = "button",
   size = "medium",
   theme = "outline",
@@ -28,7 +28,7 @@ export default function Button({
   tippyOptions,
   onClick,
   children,
-}: ButtonProps) {
+}: ButtonProps) => {
   // set button content
   const buttonContent = [];
 
@@ -85,6 +85,7 @@ export default function Button({
       type={type}
       className={`inline-flex flex-nowrap items-center leading-none font-semibold transition duration-150 ease-in-out ${buttonSize[size]} ${buttonTheme[theme]} ${classNames}`}
       disabled={disabled}
+      tabIndex={0}
       onClick={onClick}
     >
       {buttonContent}
@@ -98,9 +99,7 @@ export default function Button({
       // eslint-disable-next-line react/jsx-props-no-spreading
       <Tippy {...tippyOptions}>
         {disabled ? (
-          <span tabIndex={0} className="focus:outline-none">
-            {button}
-          </span>
+          <span className="focus:outline-none">{button}</span>
         ) : (
           button
         )}
@@ -109,4 +108,6 @@ export default function Button({
   }
 
   return button;
-}
+};
+
+export default Button;

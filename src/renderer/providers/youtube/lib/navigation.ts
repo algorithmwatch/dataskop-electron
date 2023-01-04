@@ -4,84 +4,84 @@ const ytDefaultNav: NavigationState = {
   pageIndex: 0,
   pages: [
     {
-      path: "/yt/start",
+      path: "/youtube/start",
       sectionKey: null,
     },
     {
-      path: "/yt/intro",
+      path: "/youtube/intro",
       sectionKey: null,
     },
     {
-      path: "/yt/onboarding1",
+      path: "/youtube/onboarding1",
       sectionKey: null,
     },
     {
-      path: "/yt/onboarding2",
+      path: "/youtube/onboarding2",
       sectionKey: null,
     },
     {
-      path: "/yt/interface-tutorial",
-      sectionKey: "/yt/interface-tutorial",
+      path: "/youtube/interface-tutorial",
+      sectionKey: "/youtube/interface-tutorial",
     },
     {
-      path: "/yt/scraping-explanation",
-      sectionKey: "/yt/scraping-explanation",
+      path: "/youtube/scraping-explanation",
+      sectionKey: "/youtube/scraping-explanation",
     },
     {
-      path: "/yt/visualization/profile",
-      sectionKey: "/yt/visualization/profile",
+      path: "/youtube/visualization/profile",
+      sectionKey: "/youtube/visualization/profile",
     },
     {
-      path: "/yt/research-info",
-      sectionKey: "/yt/research-info",
+      path: "/youtube/research-info",
+      sectionKey: "/youtube/research-info",
     },
     {
-      path: "/yt/visualization/autoplay-chain",
-      sectionKey: "/yt/visualization/autoplay-chain",
+      path: "/youtube/visualization/autoplay-chain",
+      sectionKey: "/youtube/visualization/autoplay-chain",
     },
     {
-      path: "/yt/visualization/news",
-      sectionKey: "/yt/visualization/news",
+      path: "/youtube/visualization/news",
+      sectionKey: "/youtube/visualization/news",
     },
     {
-      path: "/yt/visualization/search",
-      sectionKey: "/yt/visualization/search",
+      path: "/youtube/visualization/search",
+      sectionKey: "/youtube/visualization/search",
     },
     {
-      path: "/yt/my-data",
-      sectionKey: "/yt/my-data",
+      path: "/youtube/my-data",
+      sectionKey: "/youtube/my-data",
     },
     {
-      path: "/yt/questionnaire",
-      sectionKey: "/yt/questionnaire",
+      path: "/youtube/questionnaire",
+      sectionKey: "/youtube/questionnaire",
     },
     {
-      path: "/yt/donation1",
-      sectionKey: "/yt/donation1",
+      path: "/youtube/donation1",
+      sectionKey: "/youtube/donation1",
     },
     {
-      path: "/yt/donation2",
+      path: "/youtube/donation2",
       sectionKey: null,
     },
     {
-      path: "/yt/donation-success",
-      sectionKey: "/yt/donation-success",
+      path: "/youtube/donation-success",
+      sectionKey: "/youtube/donation-success",
     },
   ],
   sections: {
-    "/yt/interface-tutorial": { label: "Die Benutzeroberfläche" },
-    "/yt/scraping-explanation": {
+    "/youtube/interface-tutorial": { label: "Die Benutzeroberfläche" },
+    "/youtube/scraping-explanation": {
       label: "Wie funktioniert Scraping?",
     },
-    "/yt/visualization/profile": { label: "Mein YouTube-Profil" },
-    "/yt/research-info": { label: "Was wir untersuchen" },
-    "/yt/visualization/autoplay-chain": { label: "AutoPlay Viz" },
-    "/yt/visualization/news": { label: "News Viz" },
-    "/yt/visualization/search": { label: "Search Viz" },
-    "/yt/my-data": { label: "Meine Daten" },
-    "/yt/questionnaire": { label: "Umfrage" },
-    "/yt/donation1": { label: "Die Datenspende" },
-    "/yt/donation-success": { label: "Ende" },
+    "/youtube/visualization/profile": { label: "Mein YouTube-Profil" },
+    "/youtube/research-info": { label: "Was wir untersuchen" },
+    "/youtube/visualization/autoplay-chain": { label: "AutoPlay Viz" },
+    "/youtube/visualization/news": { label: "News Viz" },
+    "/youtube/visualization/search": { label: "Search Viz" },
+    "/youtube/my-data": { label: "Meine Daten" },
+    "/youtube/questionnaire": { label: "Umfrage" },
+    "/youtube/donation1": { label: "Die Datenspende" },
+    "/youtube/donation-success": { label: "Ende" },
   },
 };
 
@@ -89,43 +89,43 @@ const ytEduDemoNav = {
   pageIndex: 0,
   pages: [
     {
-      path: "/yt/start",
+      path: "/youtube/start",
       sectionKey: null,
     },
     {
-      path: "/yt/scraping-explanation",
-      sectionKey: "/yt/scraping-explanation",
+      path: "/youtube/scraping-explanation",
+      sectionKey: "/youtube/scraping-explanation",
     },
     {
-      path: "/yt/visualization/profile",
-      sectionKey: "/yt/visualization/profile",
+      path: "/youtube/visualization/profile",
+      sectionKey: "/youtube/visualization/profile",
     },
     {
-      path: "/yt/visualization/autoplay-chain",
-      sectionKey: "/yt/visualization/autoplay-chain",
+      path: "/youtube/visualization/autoplay-chain",
+      sectionKey: "/youtube/visualization/autoplay-chain",
     },
     {
-      path: "/yt/visualization/news",
-      sectionKey: "/yt/visualization/news",
+      path: "/youtube/visualization/news",
+      sectionKey: "/youtube/visualization/news",
     },
     {
-      path: "/yt/visualization/news",
-      sectionKey: "/yt/visualization/news",
+      path: "/youtube/visualization/news",
+      sectionKey: "/youtube/visualization/news",
     },
     {
-      path: "/yt/visualization/search",
-      sectionKey: "/yt/visualization/search",
+      path: "/youtube/visualization/search",
+      sectionKey: "/youtube/visualization/search",
     },
   ],
   sections: {
-    "/yt/scraping-explanation": {
+    "/youtube/scraping-explanation": {
       label: "Wie funktioniert Scraping?",
     },
-    "/yt/visualization/profile": { label: "Mein YouTube-Profil" },
-    "/yt/visualization/autoplay-chain": { label: "AutoPlay Viz" },
-    "/yt/visualization/news": { label: "News Viz" },
-    "/yt/visualization/search": { label: "Search Viz" },
-    "/yt/visualization/my-data": { label: "Meine Daten" },
+    "/youtube/visualization/profile": { label: "Mein YouTube-Profil" },
+    "/youtube/visualization/autoplay-chain": { label: "AutoPlay Viz" },
+    "/youtube/visualization/news": { label: "News Viz" },
+    "/youtube/visualization/search": { label: "Search Viz" },
+    "/youtube/visualization/my-data": { label: "Meine Daten" },
   },
 };
 

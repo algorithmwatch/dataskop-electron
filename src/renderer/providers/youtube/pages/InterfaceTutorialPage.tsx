@@ -7,9 +7,9 @@ import { useNavigation, useScraping } from "renderer/contexts";
 import FooterNav, {
   FooterNavItem,
 } from "renderer/providers/youtube/components/FooterNav";
-import { PerfectArrow } from "renderer/providers/youtube/components/PerfectArrow";
+import PerfectArrow from "renderer/providers/youtube/components/PerfectArrow";
 
-export default function InterfaceTutorialPage(): JSX.Element {
+const InterfaceTutorialPage = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
   const {
     state: { isScrapingStarted, isUserLoggedIn, demoMode },
@@ -108,15 +108,10 @@ export default function InterfaceTutorialPage(): JSX.Element {
             Diese Leiste zeigt an, wo du Dich im Ablauf von DataSkop befindest.
           </div>
         </div>
-
-        {/* <div className="p-6 max-w-lg mx-auto mb-10 text-center">
-          <div>
-            <div className="text-xl font-medium">Interface Tutorial</div>
-            <p>Hier kommt das Interface-Tutorial</p>
-          </div>
-        </div> */}
       </div>
       <FooterNav items={footerNavItems} />
     </>
   );
-}
+};
+
+export default InterfaceTutorialPage;

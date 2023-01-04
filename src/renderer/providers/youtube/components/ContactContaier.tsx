@@ -1,4 +1,4 @@
-function ContactContainer() {
+const ContactContainer = () => {
   return (
     <div className="border border-yellow-600 py-6 space-y-2">
       <div className="hl-xl mb-1">Bleibe auf dem Laufenden:</div>
@@ -24,6 +24,6 @@ function ContactContainer() {
       </div>
     </div>
   );
-}
+};
 
 export default ContactContainer;

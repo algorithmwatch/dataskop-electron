@@ -4,7 +4,7 @@ import Tippy, { TippyProps } from "@tippyjs/react";
 import _ from "lodash";
 import dayjs from "renderer/lib/dayjs";
 
-export default function VideoThumbnail({
+const VideoThumbnail = ({
   videoId,
   url,
   type = 0,
@@ -24,7 +24,7 @@ export default function VideoThumbnail({
   onClickCallback?: () => void;
   onMouseOverCallback?: () => void;
   onMouseOutCallback?: () => void;
-}) {
+}) => {
   if (!videoId && !url) {
     return null;
   }
@@ -61,7 +61,7 @@ export default function VideoThumbnail({
         </div>
       );
     }
-    return <div></div>;
+    return <div />;
   })();
 
   return (
@@ -74,7 +74,9 @@ export default function VideoThumbnail({
       )}
     </div>
   );
-}
+};
+
+export default VideoThumbnail;
 
 export interface TooltipContentType {
   title: string;
@@ -85,11 +87,11 @@ export interface TooltipContentType {
   downvotes?: number | null;
 }
 
-export function TooltipContent({
+export const TooltipContent = ({
   video,
 }: {
   video: TooltipContentType;
-}): JSX.Element {
+}): JSX.Element => {
   const tooltipContent = [];
 
   if (video.title) {
@@ -118,4 +120,4 @@ export function TooltipContent({
   }
 
   return <>{tooltipContent}</>;
-}
+};

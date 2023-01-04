@@ -3,17 +3,50 @@ import { faSpinnerThird } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useScraping } from "renderer/contexts";
+import { providerInfo } from "renderer/providers/info";
 
-export default function ScrapingProgressBar() {
+const ScrapingProgressBar = () => {
   const {
     state: {
+      campaign,
       visibleWindow,
       scrapingProgress: { isActive, value },
+      startedAt,
       finishedTasks,
+      demoData,
     },
     dispatch,
-    getEtaUntil,
   } = useScraping();
+
+  /**
+   * A quick and dirty way to compute an ETA based on the demo data.
+   */
+  const getEtaUntil = (checkUntilStep = null) => {
+    if (campaign === null) return null;
+    if (demoData === null) return null;
+    if (startedAt === null) return null;
+
+    const demoDataObj =
+      providerInfo[campaign.config.provider].demoData[demoData.data];
+
+    const untilIndex = checkUntilStep || demoDataObj.results.length - 1;
+
+    const finishedFixed =
+      finishedTasks - 1 < demoDataObj.results.length
+        ? finishedTasks - 1
+        : demoDataObj.results.length - 1;
+
+    const demoStartedAt = demoDataObj.results[0].scrapedAt - 10000; // ~ 10 seconds
+    const demoTime = demoDataObj.results[finishedFixed].scrapedAt;
+    const demoDuration = demoTime - demoStartedAt;
+    const demoRemaining = demoDataObj.results[untilIndex].scrapedAt - demoTime;
+
+    const ourTime = Date.now() - startedAt;
+
+    const etaRemaining = (ourTime / demoDuration) * demoRemaining;
+
+    return etaRemaining;
+  };
 
   const [etaMin, setEtaMin] = useState("15 Minuten");
 
@@ -60,4 +93,6 @@ export default function ScrapingProgressBar() {
       </div>
     </div>
   );
-}
+};
+
+export default ScrapingProgressBar;

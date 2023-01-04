@@ -1,5 +1,5 @@
 import { faAngleLeft } from "@fortawesome/pro-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { RouteComponentProps, useHistory } from "react-router-dom";
 import { useConfig, useNavigation, useScraping } from "renderer/contexts";
 import Button from "renderer/providers/youtube/components/Button";
@@ -8,8 +8,7 @@ import FooterNav, {
   FooterNavItem,
 } from "renderer/providers/youtube/components/FooterNav";
 
-export default function OnboardingPage1(): JSX.Element {
-  const [_showLoginWindow, setShowLoginWindow] = useState(false);
+const OnboardingPage1 = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
   const {
     state: { isUserLoggedIn, campaign },
@@ -60,7 +59,6 @@ export default function OnboardingPage1(): JSX.Element {
             <div className="mt-4">
               <Button
                 onClick={() => {
-                  setShowLoginWindow(true);
                   dispatch({
                     type: "set-attached",
                     attached: true,
@@ -91,7 +89,7 @@ export default function OnboardingPage1(): JSX.Element {
                     demoData: campaign.config.demoData[0],
                   });
                   sendEvent(campaign, "clicked use demo data");
-                  hist.push("/yt/onboarding2");
+                  hist.push("/youtube/onboarding2");
                 }}
               >
                 Demo starten
@@ -103,4 +101,6 @@ export default function OnboardingPage1(): JSX.Element {
       <FooterNav items={footerNavItems} />
     </>
   );
-}
+};
+
+export default OnboardingPage1;

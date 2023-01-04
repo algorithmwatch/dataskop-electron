@@ -11,6 +11,9 @@
         "description": {
           "type": "string"
         },
+        "featured": {
+          "type": "boolean"
+        },
         "id": {
           "type": "number"
         },
@@ -21,13 +24,15 @@
           "type": "string"
         }
       },
-      "required": ["id", "title", "slug", "description", "config"],
+      "required": ["id", "title", "slug", "description", "config", "featured"],
       "type": "object"
     },
     "DemoData": {
       "additionalProperties": false,
       "properties": {
-        "data": {},
+        "data": {
+          "type": "string"
+        },
         "title": {
           "type": "string"
         }

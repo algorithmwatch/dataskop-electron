@@ -2,7 +2,7 @@ import { Button, Menu, MenuItem } from "@material-ui/core";
 import React from "react";
 import { useHistory } from "react-router-dom";
 
-export default function AdvancedMenu({
+const AdminMenu = ({
   menuItems,
   onItemClicked,
   menuLabel,
@@ -10,7 +10,7 @@ export default function AdvancedMenu({
   menuItems: any[];
   onItemClicked: any;
   menuLabel?: string;
-}) {
+}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const history = useHistory();
 
@@ -76,4 +76,6 @@ export default function AdvancedMenu({
       </Menu>
     </div>
   );
-}
+};
+
+export default AdminMenu;

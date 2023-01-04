@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 
-export default function Stepper({ steps, currentStepIndex = 0, updateIndex }) {
+const Stepper = ({ steps, currentStepIndex = 0, updateIndex }) => {
   const [stepIndex, setStepIndex] = useState(0);
   const currentStep = steps[stepIndex];
 
@@ -39,4 +39,6 @@ export default function Stepper({ steps, currentStepIndex = 0, updateIndex }) {
       </div>
     </div>
   );
-}
+};
+
+export default Stepper;

@@ -36,6 +36,10 @@ const routes = [
     comp: SettingsPage,
   },
   {
+    path: "/select_campaign/:forceProvider",
+    comp: SelectCampaignPage,
+  },
+  {
     path: "/select_campaign",
     comp: SelectCampaignPage,
   },

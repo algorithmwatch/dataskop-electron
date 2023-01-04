@@ -8,13 +8,13 @@ import {
 } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import AdvancedMenu from "renderer/components/admin/AdvancedMenu";
+import AdminMenu from "renderer/components/admin/AdminMenu";
 import Drawer from "renderer/components/Drawer";
 import { useConfig, useScraping } from "renderer/contexts";
 import { clearData } from "renderer/lib/db";
 import tiktokRoutes from "renderer/providers/tiktok/lib/routes";
 
-export const Menu = ({
+const SidebarMenu = ({
   isOpen,
   setIsOpen,
 }: {
@@ -110,19 +110,11 @@ export const Menu = ({
         <div className="pl-8 mb-4 relative">
           {showAdvancedMenu && (
             <div className="absolute right-8 bottom-0">
-              <AdvancedMenu
+              <AdminMenu
                 onItemClicked={() => setIsOpen(false)}
                 menuItems={[
-                  { label: "Start TikTok", to: "/tiktok/start" },
-                  { label: "Start YouTube", to: "/yt/start" },
-                  {
-                    label: "Advanced scraping",
-                    to: "/admin/scraping/advanced",
-                  },
-                  {
-                    label: "Scraping config editor",
-                    to: "/admin/scraping/editor",
-                  },
+                  { label: "Start TikTok", to: "/select_campaign/tiktok" },
+                  { label: "Start YouTube", to: "/select_campaign/youtube" },
                   { label: "Results", to: "/admin/results" },
                   { label: "Settings", to: "/admin/settings" },
                   {
@@ -140,8 +132,8 @@ export const Menu = ({
                   },
                 ]}
               />
-              <AdvancedMenu
-                menuLabel="TikTok routes"
+              <AdminMenu
+                menuLabel="TikTok pages"
                 onItemClicked={() => setIsOpen(false)}
                 menuItems={tiktokRoutes.map(({ path }) => ({
                   label: path,
@@ -161,3 +153,5 @@ export const Menu = ({
     </Drawer>
   );
 };
+
+export default SidebarMenu;

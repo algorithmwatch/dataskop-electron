@@ -4,16 +4,18 @@
  * @module
  */
 import { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { getActiveCampaigns } from "renderer/lib/networking";
 import { providerInfo } from "renderer/providers/info";
 import { useConfig, useNavigation, useScraping } from "../contexts";
 
-export default function SelectCampaignPage(): JSX.Element {
+const SelectCampaignPage = (): JSX.Element => {
   const {
     state: { availableCampaigns },
     dispatch,
   } = useScraping();
+
+  const { forceProvider }: { forceProvider: string } = useParams();
 
   const {
     state: {
@@ -81,13 +83,22 @@ export default function SelectCampaignPage(): JSX.Element {
 
       // only use campaigns that have a valid provider configuration
       const filteredCampaigns = campaigns.filter(
-        (x) => x.config && x.config.provider,
+        (x) =>
+          x.config &&
+          x.config.provider &&
+          (!forceProvider || forceProvider === x.config.provider),
       );
 
       // if a featured campaign exists, skip over the campaign selection page
       const featuredCampaigns = filteredCampaigns.filter((x) => x.featured);
       if (featuredCampaigns.length === 1) {
         handleCampaignChange(featuredCampaigns[0]);
+        return;
+      }
+
+      // Check if there is maybe only one non-featured campaign
+      if (filteredCampaigns.length === 1) {
+        handleCampaignChange(filteredCampaigns[0]);
         return;
       }
 
@@ -130,4 +141,6 @@ export default function SelectCampaignPage(): JSX.Element {
       </div>
     </div>
   );
-}
+};
+
+export default SelectCampaignPage;

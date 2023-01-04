@@ -1,4 +1,4 @@
-function Privacy() {
+const Privacy = () => {
   return (
     <div className="space-y-4">
       <div className="hl-3xl">
@@ -398,6 +398,6 @@ function Privacy() {
       <p>Berlin, Juli 2021</p>
     </div>
   );
-}
+};
 
 export default Privacy;

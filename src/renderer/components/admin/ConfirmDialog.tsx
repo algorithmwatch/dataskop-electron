@@ -6,7 +6,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import React from "react";
 import Button from "../../providers/youtube/components/Button";
 
-export default function ConfirmDialog({
+const ConfirmDialog = ({
   title,
   text,
   handleConfirm,
@@ -14,7 +14,7 @@ export default function ConfirmDialog({
   title: string;
   text: string;
   handleConfirm: any;
-}) {
+}) => {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -56,4 +56,6 @@ export default function ConfirmDialog({
       </Dialog>
     </>
   );
-}
+};
+
+export default ConfirmDialog;

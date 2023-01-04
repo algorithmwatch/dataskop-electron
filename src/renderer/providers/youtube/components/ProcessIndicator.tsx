@@ -3,7 +3,7 @@ import Tippy, { TippyProps } from "@tippyjs/react";
 import classNames from "classnames";
 import React from "react";
 
-function ProcessIndicator({
+const ProcessIndicator = ({
   currentStep,
   steps,
 }: {
@@ -14,7 +14,7 @@ function ProcessIndicator({
       description?: string;
     };
   };
-}): JSX.Element {
+}): JSX.Element => {
   const stepsKeys = Object.keys(steps);
   const stepsValues = Object.values(steps);
   const stepsCount = stepsKeys.length;
@@ -68,6 +68,6 @@ function ProcessIndicator({
       </div>
     </div>
   );
-}
+};
 
 export default React.memo(ProcessIndicator);

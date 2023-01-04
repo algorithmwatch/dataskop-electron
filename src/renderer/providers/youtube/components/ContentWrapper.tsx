@@ -1,13 +1,13 @@
 import classNames from "classnames";
 import { ReactNode } from "react";
 
-function ContentWrapper({
+const ContentWrapper = ({
   centerY,
   children,
 }: {
   centerY?: boolean;
   children: ReactNode;
-}) {
+}) => {
   return (
     <div
       className={classNames(
@@ -18,6 +18,6 @@ function ContentWrapper({
       <div>{children}</div>
     </div>
   );
-}
+};
 
 export default ContentWrapper;

@@ -8,7 +8,7 @@ import FooterNav, {
   FooterNavItem,
 } from "renderer/providers/youtube/components/FooterNav";
 
-export default function SelectDemoPage(): JSX.Element {
+const SelectDemoPage = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
   const {
     state: { campaign },
@@ -72,4 +72,6 @@ export default function SelectDemoPage(): JSX.Element {
       <FooterNav items={footerNavItems} />
     </>
   );
-}
+};
+
+export default SelectDemoPage;

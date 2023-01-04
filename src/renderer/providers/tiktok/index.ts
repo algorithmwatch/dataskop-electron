@@ -13,6 +13,7 @@ const tiktokInfo: ProviderInformation = {
   // The user needs to able to interact with the site
   disableInputAfterLogin: false,
   navigation: ttNavigation,
+  demoData: {},
   confirmCookies,
   deserializeMapping,
 };

@@ -2,7 +2,7 @@ import { faLightbulb, IconDefinition } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReactNode } from "react";
 
-export default function Infobox({
+const Infobox = ({
   icon = faLightbulb,
   classname = "",
   children,
@@ -10,7 +10,7 @@ export default function Infobox({
   icon?: IconDefinition;
   classname?: string;
   children: ReactNode;
-}) {
+}) => {
   return (
     <div className={`flex border-2 border-blue-200 px-5 py-5 ${classname}`}>
       <div className="mr-5 mt-1.5 text-blue-400">
@@ -19,4 +19,6 @@ export default function Infobox({
       <div>{children}</div>
     </div>
   );
-}
+};
+
+export default Infobox;

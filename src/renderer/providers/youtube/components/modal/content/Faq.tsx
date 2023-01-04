@@ -1,4 +1,4 @@
-function About() {
+const Faq = () => {
   return (
     <div className="space-y-4">
       <div className="hl-3xl">FAQ</div>
@@ -50,6 +50,6 @@ function About() {
       </p>
     </div>
   );
-}
+};
 
-export default About;
+export default Faq;

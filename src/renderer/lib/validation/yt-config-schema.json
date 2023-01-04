@@ -20,7 +20,9 @@
     "DemoData": {
       "additionalProperties": false,
       "properties": {
-        "data": {},
+        "data": {
+          "type": "string"
+        },
         "title": {
           "type": "string"
         }

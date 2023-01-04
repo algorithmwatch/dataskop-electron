@@ -6,7 +6,7 @@ import ModalContentComponents from "./modal/ModalContentComponents";
 // https://github.com/reactjs/react-modal/issues/632#issuecomment-378755186
 if (process.env.NODE_ENV !== "test") ReactModal.setAppElement("#root");
 
-function Modal() {
+const Modal = () => {
   const {
     state: { isOpen, componentName },
     dispatch,
@@ -47,6 +47,6 @@ function Modal() {
       </div>
     </ReactModal>
   );
-}
+};
 
 export default Modal;
