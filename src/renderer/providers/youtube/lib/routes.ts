@@ -11,12 +11,12 @@ import {
   ResearchInfoPage,
   ScrapingExplanationPage,
   SelectDemoPage,
+  StartPage,
   VisualizationAutoplayChainPage,
   VisualizationNewsPage,
   VisualizationProfilePage,
   VisualizationSearchPage,
 } from "../pages";
-import StartPage from "../pages/StartPage";
 
 const ytRoutes = [
   { path: "/youtube/donation-success", comp: DonationSuccessPage },
