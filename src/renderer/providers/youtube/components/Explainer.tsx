@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/mouse-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import {
   faChevronLeft,
   faChevronRight,
@@ -41,7 +44,6 @@ const Explainer = ({
             "-right-2": !isOpen,
           })}
         >
-          {/* eslint-disable-next-line jsx-a11y/mouse-events-have-key-events */}
           <button
             type="button"
             onClick={() => onIsOpenChange(!isOpen)}
@@ -69,7 +71,6 @@ const Explainer = ({
 
       {/* Backdrop */}
       {isOpen && (
-        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
         <div
           tabIndex={-1}
           className="fixed inset-0 h-full z-10"

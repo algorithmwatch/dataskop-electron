@@ -15,7 +15,7 @@ import mplogo from "../../../static/images/logos/mp-logo.png";
 import uplogo from "../../../static/images/logos/up-logo.png";
 import FooterNav, { FooterNavItem } from "../components/FooterNav";
 
-export default function StartPage(): JSX.Element {
+const StartPage = (): JSX.Element => {
   const { getNextPage } = useNavigation();
 
   const footerNavItems: FooterNavItem[] = [
@@ -76,4 +76,6 @@ export default function StartPage(): JSX.Element {
       <FooterNav items={footerNavItems} />
     </>
   );
-}
+};
+
+export default StartPage;

@@ -1,13 +1,13 @@
 /**
- * A page with a basic questionnaire. The form was initially built with formik
+ * A page with a basic questionnaire.
+ *
+ * The form was initially built with formik
  * but ported to react-form-hook. If this component gets ever used again, ensure
  * that it works. The limit for the checkboxes needs to get implemented.
  *
  * @module
  */
 
-// @ts-nocheck
-/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { constants } from "@algorithmwatch/harke";
 import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
@@ -20,7 +20,7 @@ import FooterNav, {
   FooterNavItem,
 } from "renderer/providers/youtube/components/FooterNav";
 
-export default function QuestionnairePage(): JSX.Element {
+const QuestionnairePage = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
 
   const {
@@ -89,7 +89,7 @@ export default function QuestionnairePage(): JSX.Element {
               <div className="p-3">
                 <div>
                   <input type="checkbox" id="contactCheck" name="contact" />
-                  <label className="font-medium pl-3" for="contactCheck">
+                  <label className="font-medium pl-3" htmlFor="contactCheck">
                     Ja, mich dürfen die beteiligten Forscher*innen oder
                     Journalist*innen mit Nachfragen kontaktieren.
                   </label>
@@ -218,4 +218,6 @@ export default function QuestionnairePage(): JSX.Element {
       <FooterNav items={footerNavItems} />
     </>
   );
-}
+};
+
+export default QuestionnairePage;

@@ -8,7 +8,7 @@ import FooterNav, {
 } from "renderer/providers/youtube/components/FooterNav";
 import VisualizationWrapper from "../components/VisualizationWrapper";
 
-export default function MyDataPage(): JSX.Element {
+const MyDataPage = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
   const {
     state: { demoMode },
@@ -77,4 +77,6 @@ export default function MyDataPage(): JSX.Element {
       <FooterNav items={footerNavItems} />
     </>
   );
-}
+};
+
+export default MyDataPage;

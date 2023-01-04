@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { faIdCard } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRef, useState } from "react";
@@ -13,7 +11,7 @@ import Beeswarm from "./Beeswarm";
 import Loading from "./Loading";
 import { useData } from "./useData";
 
-function Badge({ title, value, unit, small = false }) {
+const Badge = ({ title, value, unit, small = false }) => {
   return (
     <div className="flex flex-col shadow rounded-lg text-center w-45 overflow-hidden">
       <div className="p-2 backdrop-filter backdrop-contrast-125 backdrop-brightness-110 backdrop-saturate-200 flex justify-center items-center flex-grow flex-row">
@@ -27,15 +25,15 @@ function Badge({ title, value, unit, small = false }) {
       </div>
     </div>
   );
-}
+};
 
-export default function ProfileVis({
+const ProfileVis = ({
   data,
   lookups,
 }: {
   data: Array<ScrapingResult>;
   lookups: LookupMap;
-}) {
+}) => {
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
   const [waitExport, setWaitExport] = useState(false);
   const db = useData(data, lookups);
@@ -164,8 +162,8 @@ export default function ProfileVis({
         <div className="mt-7 text-center">
           <Button
             disabled={waitExport}
-            theme={"link"}
-            size={"small"}
+            theme="link"
+            size="small"
             onClick={async () => {
               setWaitExport(true);
               await exportWatchHistoryCsv(db.history);
@@ -180,4 +178,6 @@ export default function ProfileVis({
       </div>
     </>
   );
-}
+};
+
+export default ProfileVis;

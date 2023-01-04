@@ -1,6 +1,3 @@
-// @ts-nocheck
-
-/* eslint-disable react/no-danger */
 import * as Plot from "@observablehq/plot";
 import { sum } from "d3-array";
 import {
@@ -61,7 +58,7 @@ function beeswarm(
   return dots;
 }
 
-export default function Beeswarm({ data }) {
+const Beeswarm = ({ data }) => {
   const beeRef = useRef(null);
   const sumRef = useRef(null);
 
@@ -117,7 +114,7 @@ export default function Beeswarm({ data }) {
         y: {
           label: null,
           axis: "left",
-          //domain: d3.groupSort(watchHistory, g => -d3.sum(g, d => d.watchTime), d => d.category)
+          // domain: d3.groupSort(watchHistory, g => -d3.sum(g, d => d.watchTime), d => d.category)
         },
         x: {
           grid: false,
@@ -140,7 +137,7 @@ export default function Beeswarm({ data }) {
               { y: "category", fill: (d) => d.category, x: "watchTime" },
             ),
           ),
-          //Plot.ruleX([0])
+          // Plot.ruleX([0])
         ],
       }),
     [data],
@@ -161,4 +158,6 @@ export default function Beeswarm({ data }) {
       <div ref={beeRef} />
     </div>
   );
-}
+};
+
+export default Beeswarm;

@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import {
   faChevronCircleLeft,
   faChevronCircleRight,
@@ -14,7 +12,6 @@ import React, {
   useImperativeHandle,
   useRef,
 } from "react";
-import { Options } from "./types";
 
 const ArrowButton = ({
   icon,
@@ -47,7 +44,7 @@ export const Carousel = forwardRef(
       options,
       children,
     }: {
-      options: Options;
+      options: any;
       children: React.ReactNode;
     },
     ref,

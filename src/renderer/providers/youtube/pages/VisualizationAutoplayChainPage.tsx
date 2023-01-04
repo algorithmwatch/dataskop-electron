@@ -1,11 +1,10 @@
 import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
 import { RouteComponentProps } from "react-router-dom";
-import { useScraping } from "../../../contexts";
-import { useNavigation } from "../../../contexts/navigation";
+import { useNavigation, useScraping } from "../../../contexts";
 import FooterNav, { FooterNavItem } from "../components/FooterNav";
 import VisualizationWrapper from "../components/VisualizationWrapper";
 
-export default function VisualizationAutoplayChainPage() {
+const VisualizationAutoplayChainPage = () => {
   const { getNextPage, getPreviousPage } = useNavigation();
   const {
     state: { isScrapingFinished, demoMode },
@@ -46,4 +45,6 @@ export default function VisualizationAutoplayChainPage() {
       <FooterNav items={footerNavItems} />
     </>
   );
-}
+};
+
+export default VisualizationAutoplayChainPage;

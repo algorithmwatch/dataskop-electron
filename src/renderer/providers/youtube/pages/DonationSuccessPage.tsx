@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ContactContainer from "renderer/providers/youtube/components/ContactContaier";
 import ContentWrapper from "renderer/providers/youtube/components/ContentWrapper";
 
-export default function DonationSuccessPage(): JSX.Element {
+const DonationSuccessPage = (): JSX.Element => {
   // const { getPreviousPage } = useNavigation();
   // const footerNavItems: FooterNavItem[] = [
   //   {
@@ -42,4 +42,6 @@ export default function DonationSuccessPage(): JSX.Element {
       {/* <FooterNav items={footerNavItems} /> */}
     </>
   );
-}
+};
+
+export default DonationSuccessPage;

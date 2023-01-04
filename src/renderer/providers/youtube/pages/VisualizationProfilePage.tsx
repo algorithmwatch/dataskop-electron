@@ -1,14 +1,13 @@
 import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { useScraping } from "renderer/contexts";
-import { useNavigation } from "renderer/contexts/navigation";
+import { useNavigation, useScraping } from "renderer/contexts";
 import FooterNav, {
   FooterNavItem,
 } from "renderer/providers/youtube/components/FooterNav";
 import VisualizationWrapper from "../components/VisualizationWrapper";
 
-export default function VisualizationProfilePage(): JSX.Element {
+const VisualizationProfilePage = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
   const [nextButtonIsDisabled, setNextButtonIsDisabled] = useState(true);
 
@@ -65,4 +64,6 @@ export default function VisualizationProfilePage(): JSX.Element {
       <FooterNav items={footerNavItems} />
     </>
   );
-}
+};
+
+export default VisualizationProfilePage;

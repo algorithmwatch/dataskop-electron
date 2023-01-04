@@ -9,7 +9,7 @@ import FooterNav, {
 import { providerInfo } from "../../info";
 import whatsHappening from "../static/images/start/img_was_passiert.jpg";
 
-export default function OnboardingPage2(): JSX.Element {
+const OnboardingPage2 = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
   const {
     state: { campaign, isScrapingStarted, isScrapingFinished },
@@ -109,4 +109,6 @@ export default function OnboardingPage2(): JSX.Element {
       <FooterNav items={footerNavItems} />
     </>
   );
-}
+};
+
+export default OnboardingPage2;

@@ -8,7 +8,6 @@ import { Placement } from "tippy.js";
 import { ScrapingResultSaved } from "../../../../lib/db/types";
 import { exportNewsCsv } from "../../lib/export";
 import { Carousel, Slide } from "../Carousel";
-import { Options } from "../Carousel/types";
 import Explainer from "../Explainer";
 import Infobox from "../Infobox";
 import VideoThumbnail, { TooltipContent } from "../VideoThumbnail";
@@ -24,13 +23,13 @@ interface NewsTop5DataItem {
   signedOutVideos: RecommendedVideo[];
 }
 
-function VideoList({
+const VideoList = ({
   items,
   tippyPlacement,
 }: {
   items: RecommendedVideo[];
   tippyPlacement: Placement;
-}) {
+}) => {
   return (
     <div className="space-y-2">
       {items.map(({ channelName, id, title }) => (
@@ -50,9 +49,9 @@ function VideoList({
       ))}
     </div>
   );
-}
+};
 
-function Visual({ session }: { session: NewsTop5DataItem }) {
+const Visual = ({ session }: { session: NewsTop5DataItem }) => {
   const displayCount = 10;
 
   return (
@@ -99,9 +98,9 @@ function Visual({ session }: { session: NewsTop5DataItem }) {
       </div>
     </div>
   );
-}
+};
 
-export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
+const NewsTop5 = ({ data }: { data: ScrapingResultSaved[] }) => {
   const filtered = (() => {
     const signedInData = data.filter(
       (x) =>
@@ -227,8 +226,8 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
       <div className="mt-7 mx-auto">
         <Button
           disabled={waitExport}
-          theme={"link"}
-          size={"small"}
+          theme="link"
+          size="small"
           onClick={async () => {
             setWaitExport(true);
             await exportNewsCsv(transformed);
@@ -242,4 +241,6 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
       </div>
     </>
   );
-}
+};
+
+export default NewsTop5;

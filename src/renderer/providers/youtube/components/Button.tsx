@@ -1,3 +1,4 @@
+/* eslint-disable react/button-has-type */
 import { IconDefinition } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Tippy, { TippyProps } from "@tippyjs/react";
@@ -81,7 +82,6 @@ const Button = ({
 
   const button = (
     <button
-      // eslint-disable-next-line react/button-has-type
       type={type}
       className={`inline-flex flex-nowrap items-center leading-none font-semibold transition duration-150 ease-in-out ${buttonSize[size]} ${buttonTheme[theme]} ${classNames}`}
       disabled={disabled}
@@ -96,7 +96,6 @@ const Button = ({
     // disabled elements need to be wrapped in order for Tippy to work
     // accesibility issues. see: https://atomiks.github.io/tippyjs/v6/constructor/#disabled-elements
     return (
-      // eslint-disable-next-line react/jsx-props-no-spreading
       <Tippy {...tippyOptions}>
         {disabled ? (
           <span className="focus:outline-none">{button}</span>

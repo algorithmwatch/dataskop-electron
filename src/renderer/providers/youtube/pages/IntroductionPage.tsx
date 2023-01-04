@@ -7,7 +7,7 @@ import FooterNav, {
 } from "renderer/providers/youtube/components/FooterNav";
 import visual from "../static/images/start/visual.svg";
 
-export default function IntroductionPage(): JSX.Element {
+const IntroductionPage = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
 
   const footerNavItems: FooterNavItem[] = [
@@ -74,4 +74,6 @@ export default function IntroductionPage(): JSX.Element {
       <FooterNav items={footerNavItems} />
     </>
   );
-}
+};
+
+export default IntroductionPage;

@@ -8,7 +8,7 @@ import FooterNav, {
 import explainImage1 from "../static/images/scraping-explanation/scraper1.png";
 import explainImage2 from "../static/images/scraping-explanation/scraper2.png";
 
-export default function ScrapingExplanationPage(): JSX.Element {
+const ScrapingExplanationPage = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
 
   const footerNavItems: FooterNavItem[] = [
@@ -85,4 +85,6 @@ export default function ScrapingExplanationPage(): JSX.Element {
       <FooterNav items={footerNavItems} />
     </>
   );
-}
+};
+
+export default ScrapingExplanationPage;

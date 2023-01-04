@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import Tippy, { TippyProps } from "@tippyjs/react";
 import classNames from "classnames";
 import React from "react";

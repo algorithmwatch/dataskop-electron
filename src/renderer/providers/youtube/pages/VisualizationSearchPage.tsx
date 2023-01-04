@@ -4,7 +4,7 @@ import { useNavigation } from "../../../contexts/navigation";
 import FooterNav, { FooterNavItem } from "../components/FooterNav";
 import VisualizationWrapper from "../components/VisualizationWrapper";
 
-export default function VisualizationSearchPage() {
+const VisualizationSearchPage = () => {
   const { getNextPage, getPreviousPage } = useNavigation();
 
   const footerNavItems: FooterNavItem[] = [
@@ -31,4 +31,6 @@ export default function VisualizationSearchPage() {
       <FooterNav items={footerNavItems} />
     </>
   );
-}
+};
+
+export default VisualizationSearchPage;

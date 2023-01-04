@@ -12,7 +12,7 @@ import FooterNav, {
 import { postDonation } from "../../../lib/networking";
 import { redactWatchHistory } from "../lib/utils";
 
-export default function DonationPage2(): JSX.Element {
+const DonationPage2 = (): JSX.Element => {
   const [status, setStatus] = useState("");
   const [results, setResults] = useState<any>(null);
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -127,4 +127,6 @@ export default function DonationPage2(): JSX.Element {
       <FooterNav items={footerNavItems} />
     </>
   );
-}
+};
+
+export default DonationPage2;

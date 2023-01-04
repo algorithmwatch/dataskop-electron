@@ -6,7 +6,7 @@ import FooterNav, {
 } from "renderer/providers/youtube/components/FooterNav";
 import VisualizationWrapper from "../components/VisualizationWrapper";
 
-export default function VisualizationNewsPage() {
+const VisualizationNewsPage = () => {
   const { getNextPage, getPreviousPage } = useNavigation();
 
   const footerNavItems: FooterNavItem[] = [
@@ -33,4 +33,6 @@ export default function VisualizationNewsPage() {
       <FooterNav items={footerNavItems} />
     </>
   );
-}
+};
+
+export default VisualizationNewsPage;

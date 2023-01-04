@@ -64,7 +64,7 @@ const SeedVideoMenu = React.memo(function SeedVideoMenu({
   );
 });
 
-function ViewSwitcherItem({
+const ViewSwitcherItem = ({
   label,
   icon,
   menuIsOpen = false,
@@ -76,7 +76,7 @@ function ViewSwitcherItem({
   menuIsOpen?: boolean;
   isSelected: boolean;
   onSelect: () => void;
-}) {
+}) => {
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
@@ -100,7 +100,7 @@ function ViewSwitcherItem({
       </div>
     </div>
   );
-}
+};
 
 const ViewSwitcher = React.memo(function ViewSwitcher({
   modeIndex,
@@ -160,11 +160,7 @@ const ViewSwitcher = React.memo(function ViewSwitcher({
   );
 });
 
-export default function AutoplayChain({
-  data,
-}: {
-  data: ScrapingResultSaved[];
-}) {
+const AutoplayChain = ({ data }: { data: ScrapingResultSaved[] }) => {
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
   const groups = useMemo(
     () =>
@@ -403,8 +399,8 @@ export default function AutoplayChain({
             </div>
             <div className="mt-7 text-center">
               <Button
-                theme={"link"}
-                size={"small"}
+                theme="link"
+                size="small"
                 onClick={() => exportAutoplaychainCsv(groups)}
               >
                 CSV exportieren
@@ -415,4 +411,6 @@ export default function AutoplayChain({
       </div>
     </>
   );
-}
+};
+
+export default AutoplayChain;

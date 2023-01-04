@@ -9,7 +9,7 @@ import FooterNav, {
 } from "renderer/providers/youtube/components/FooterNav";
 import visual from "../static/images/research-info/visual.svg";
 
-export default function ResearchInfoPage(): JSX.Element {
+const ResearchInfoPage = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
   const [nextButtonIsDisabled, setNextButtonIsDisabled] = useState(true);
   const {
@@ -131,4 +131,6 @@ export default function ResearchInfoPage(): JSX.Element {
       <FooterNav items={footerNavItems} />
     </>
   );
-}
+};
+
+export default ResearchInfoPage;
