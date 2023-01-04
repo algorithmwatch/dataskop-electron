@@ -6,10 +6,10 @@ import { RouteComponentProps } from "react-router-dom";
 import FooterNav, {
   FooterNavItem,
 } from "renderer/providers/youtube/components/FooterNav";
-import { useModal } from "../../../contexts";
 import { useNavigation } from "../../../contexts/navigation";
+import { useModal } from "../components/modal/context";
 
-export default function DonationPage1(): JSX.Element {
+const DonationPage1 = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
   const { dispatch: dispatchModal } = useModal();
 
@@ -124,4 +124,6 @@ export default function DonationPage1(): JSX.Element {
       <FooterNav items={footerNavItems} />
     </>
   );
-}
+};
+
+export default DonationPage1;

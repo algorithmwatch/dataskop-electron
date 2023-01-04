@@ -8,12 +8,7 @@
 import _, { range } from "lodash";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import {
-  useConfig,
-  useModal,
-  UserConfig,
-  useScraping,
-} from "renderer/contexts";
+import { useConfig, UserConfig, useScraping } from "renderer/contexts";
 import { currentDelay } from "renderer/lib/delay";
 import { createScrapingGenerator } from "renderer/lib/scraping";
 import { delay } from "renderer/lib/utils/time";
@@ -63,7 +58,6 @@ const ScrapingManager = ({
     dispatch,
   } = useScraping();
 
-  const { dispatch: dispatchModal } = useModal();
   const history = useHistory();
 
   const provider = providerInfo[campaign.config.provider];
@@ -139,10 +133,7 @@ const ScrapingManager = ({
 
             await resetScraping();
 
-            dispatchModal({
-              type: "set-modal-options",
-              options: { isOpen: true, componentName: "logout" },
-            });
+            dispatch({ type: "user-was-forcefully-logged-out" });
 
             // go to start after some time
             setTimeout(() => {

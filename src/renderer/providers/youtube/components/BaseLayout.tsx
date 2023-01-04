@@ -10,18 +10,18 @@ import classNames from "classnames";
 import { ReactNode, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import logo from "renderer/static/images/logos/dslogo.svg";
-import {
-  useConfig,
-  useModal,
-  useNavigation,
-  useScraping,
-} from "../../../contexts";
+import { useConfig, useNavigation, useScraping } from "../../../contexts";
 import Modal from "./Modal";
+import { ModalProvider, useModal } from "./modal/context";
 import ProcessIndicator from "./ProcessIndicator";
 import ScrapingProgressBar from "./ScrapingProgressBar";
 import SidebarMenu from "./SidebarMenu";
 
-const BaseLayout = ({ children }: { children: ReactNode }): JSX.Element => {
+const BaseLayoutInner = ({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element => {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const [sectionKey, setSectionKey] = useState("");
   const { pathname } = useLocation();
@@ -31,7 +31,7 @@ const BaseLayout = ({ children }: { children: ReactNode }): JSX.Element => {
   } = useNavigation();
   const { dispatch: dispatchModal } = useModal();
   const {
-    state: { demoMode },
+    state: { demoMode, userWasForcefullyLoggedOut },
   } = useScraping();
   const {
     state: { version },
@@ -57,19 +57,9 @@ const BaseLayout = ({ children }: { children: ReactNode }): JSX.Element => {
         });
       },
     },
-    // {
-    //   label: 'FAQ',
-    //   icon: faQuestionCircle,
-    //   onClick: () => {
-    //     dispatchModal({
-    //       type: 'set-modal-options',
-    //       options: { isOpen: true, componentName: 'faq' },
-    //     });
-    //   },
-    // },
     {
       label: "Datenspendevertrag",
-      icon: faFileContract, // faFileSignatur
+      icon: faFileContract,
       onClick: () => {
         dispatchModal({
           type: "set-modal-options",
@@ -102,6 +92,15 @@ const BaseLayout = ({ children }: { children: ReactNode }): JSX.Element => {
       }
     }
   }, [pageIndex]);
+
+  useEffect(() => {
+    if (userWasForcefullyLoggedOut) {
+      dispatchModal({
+        type: "set-modal-options",
+        options: { isOpen: true, componentName: "logout" },
+      });
+    }
+  }, [userWasForcefullyLoggedOut]);
 
   return (
     <div className="relative flex flex-col h-screen justify-between bg-yellow-100 bg-[url('renderer/providers/youtube/static/images/bg.png')] bg-[length:90%] dark:bg-blue-900 overflow-hidden text-yellow-1500">
@@ -158,5 +157,11 @@ const BaseLayout = ({ children }: { children: ReactNode }): JSX.Element => {
     </div>
   );
 };
+
+const BaseLayout = ({ children }) => (
+  <ModalProvider>
+    <BaseLayoutInner>{children}</BaseLayoutInner>
+  </ModalProvider>
+);
 
 export default BaseLayout;

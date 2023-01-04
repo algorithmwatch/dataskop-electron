@@ -1,7 +1,7 @@
 const ForcedLogout = () => {
   return (
     <div className="space-y-4">
-      <h1 className="hl-4xl my-6">Opps, hier ist was schief gelaufen.</h1>
+      <h1 className="hl-4xl my-6">Oops, hier ist was schief gelaufen.</h1>
       <p>
         Du wurdest vorzeitig ausgeloggt. Bitte öffne deine E-Mails und
         bestätige, dass du dich auf einem neuen Gerät anmelden möchtest. (Für

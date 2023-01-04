@@ -1,6 +1,6 @@
 import ReactModal from "react-modal";
-import { useModal } from "renderer/contexts";
 import Button from "./Button";
+import { useModal } from "./modal/context";
 import ModalContentComponents from "./modal/ModalContentComponents";
 
 // https://github.com/reactjs/react-modal/issues/632#issuecomment-378755186

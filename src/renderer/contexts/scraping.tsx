@@ -48,6 +48,7 @@ type Action =
   | { type: "start-scraping"; filterSteps?: FilterSteps }
   | { type: "set-scraping-paused"; paused: boolean }
   | { type: "scraping-has-finished" }
+  | { type: "user-was-forcefully-logged-out" }
   | { type: "set-muted"; muted: boolean }
   | { type: "set-fixed-window"; fixedWindow: boolean }
   | { type: "set-visible-window"; visibleWindow: boolean }
@@ -80,6 +81,7 @@ type State = {
   filterSteps: null | FilterSteps;
   isScrapingPaused: boolean;
   isScrapingFinished: boolean;
+  userWasForcefullyLoggedOut: boolean;
   scrapingError: Error | null;
   // create a generation to be able to hold/resumee a scraping proccess
   stepGenerator: AsyncGenerator | null;
@@ -117,6 +119,7 @@ const initialState: State = {
   filterSteps: null,
   isScrapingPaused: false,
   isScrapingFinished: false,
+  userWasForcefullyLoggedOut: false,
   scrapingError: null,
   stepGenerator: null,
   isMuted: true,
@@ -205,6 +208,13 @@ const scrapingReducer = (state: State, action: Action): State => {
       };
     }
 
+    case "user-was-forcefully-logged-out": {
+      return {
+        ...state,
+        userWasForcefullyLoggedOut: true,
+      };
+    }
+
     case "scraping-has-started": {
       return {
         ...state,
@@ -213,6 +223,7 @@ const scrapingReducer = (state: State, action: Action): State => {
         isScrapingStarted: true,
         isScrapingFinished: false,
         isScrapingPaused: false,
+        userWasForcefullyLoggedOut: false,
         scrapingProgress: { isActive: true, value: 0, step: 0 },
         startedAt: Date.now(),
       };
