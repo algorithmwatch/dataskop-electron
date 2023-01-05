@@ -57,26 +57,26 @@ class MenuBuilder {
       label: "Electron",
       submenu: [
         {
-          label: "About DataSkop",
+          label: "Über DataSkop",
           selector: "orderFrontStandardAboutPanel:",
         },
         { type: "separator" },
-        { label: "Services", submenu: [] },
+        // { label: "Services", submenu: [] },
         { type: "separator" },
         {
-          label: "Hide DataSkop",
+          label: "DataSkop ausblenden",
           accelerator: "Command+H",
           selector: "hide:",
         },
         {
-          label: "Hide Others",
+          label: "Andere ausblenden",
           accelerator: "Command+Shift+H",
           selector: "hideOtherApplications:",
         },
-        { label: "Show All", selector: "unhideAllApplications:" },
+        { label: "Alle einblenden", selector: "unhideAllApplications:" },
         { type: "separator" },
         {
-          label: "Quit",
+          label: "Beenden",
           accelerator: "Command+Q",
           click: () => {
             app.quit();
@@ -84,17 +84,15 @@ class MenuBuilder {
         },
       ],
     };
+    // The copy & paste commands are important to be able to e.g. paste the password.
     const subMenuEdit: DarwinMenuItemConstructorOptions = {
-      label: "Edit",
+      label: "Bearbeiten",
       submenu: [
-        { label: "Undo", accelerator: "Command+Z", selector: "undo:" },
-        { label: "Redo", accelerator: "Shift+Command+Z", selector: "redo:" },
-        { type: "separator" },
-        { label: "Cut", accelerator: "Command+X", selector: "cut:" },
-        { label: "Copy", accelerator: "Command+C", selector: "copy:" },
-        { label: "Paste", accelerator: "Command+V", selector: "paste:" },
+        { label: "Ausschneiden", accelerator: "Command+X", selector: "cut:" },
+        { label: "Kopieren", accelerator: "Command+C", selector: "copy:" },
+        { label: "Einfügen", accelerator: "Command+V", selector: "paste:" },
         {
-          label: "Select All",
+          label: "Alles auswählen",
           accelerator: "Command+A",
           selector: "selectAll:",
         },
@@ -127,10 +125,10 @@ class MenuBuilder {
       ],
     };
     const subMenuViewProd: MenuItemConstructorOptions = {
-      label: "View",
+      label: "Darstellung",
       submenu: [
         {
-          label: "Toggle Full Screen",
+          label: "Vollbildmodus",
           accelerator: "Ctrl+Command+F",
           click: () => {
             this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
@@ -139,45 +137,41 @@ class MenuBuilder {
       ],
     };
     const subMenuWindow: DarwinMenuItemConstructorOptions = {
-      label: "Window",
+      label: "Fenster",
       submenu: [
         {
-          label: "Minimize",
+          label: "Minimieren",
           accelerator: "Command+M",
           selector: "performMiniaturize:",
         },
-        { label: "Close", accelerator: "Command+W", selector: "performClose:" },
+        {
+          label: "Schließen",
+          accelerator: "Command+W",
+          selector: "performClose:",
+        },
         { type: "separator" },
-        { label: "Bring All to Front", selector: "arrangeInFront:" },
+        { label: "Alle nach vorne bringen", selector: "arrangeInFront:" },
       ],
     };
     const subMenuHelp: MenuItemConstructorOptions = {
-      label: "Help",
+      label: "Hilfe",
       submenu: [
         {
-          label: "Learn More",
+          label: "Unsere Webseite",
           click() {
-            shell.openExternal("https://electronjs.org");
+            shell.openExternal("https://dataskop.net");
           },
         },
         {
-          label: "Documentation",
+          label: "FAQ",
           click() {
-            shell.openExternal(
-              "https://github.com/electron/electron/tree/main/docs#readme",
-            );
+            shell.openExternal("https://dataskop.net/faq/");
           },
         },
         {
-          label: "Community Discussions",
+          label: "Technischen Support",
           click() {
-            shell.openExternal("https://www.electronjs.org/community");
-          },
-        },
-        {
-          label: "Search Issues",
-          click() {
-            shell.openExternal("https://github.com/electron/electron/issues");
+            shell.openExternal("https://dataskop.net/kontakt/");
           },
         },
       ],
@@ -189,28 +183,29 @@ class MenuBuilder {
         ? subMenuViewDev
         : subMenuViewProd;
 
-    // return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
-    return [subMenuAbout, subMenuView, subMenuWindow];
+    return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
   }
 
+  // This menu currently doesn't get used. If you want to add a menu for win/linux
+  // change it here.
   buildDefaultTemplate() {
     const templateDefault = [
-      // {
-      //   label: "&File",
-      //   submenu: [
-      //     {
-      //       label: "&Open",
-      //       accelerator: "Ctrl+O",
-      //     },
-      //     {
-      //       label: "&Close",
-      //       accelerator: "Ctrl+W",
-      //       click: () => {
-      //         this.mainWindow.close();
-      //       },
-      //     },
-      //   ],
-      // },
+      {
+        label: "&File",
+        submenu: [
+          {
+            label: "&Open",
+            accelerator: "Ctrl+O",
+          },
+          {
+            label: "&Close",
+            accelerator: "Ctrl+W",
+            click: () => {
+              this.mainWindow.close();
+            },
+          },
+        ],
+      },
       {
         label: "&View",
         submenu:
@@ -253,37 +248,37 @@ class MenuBuilder {
                 },
               ],
       },
-      // {
-      //   label: "Help",
-      //   submenu: [
-      //     {
-      //       label: "Learn More",
-      //       click() {
-      //         shell.openExternal("https://electronjs.org");
-      //       },
-      //     },
-      //     {
-      //       label: "Documentation",
-      //       click() {
-      //         shell.openExternal(
-      //           "https://github.com/electron/electron/tree/main/docs#readme",
-      //         );
-      //       },
-      //     },
-      //     {
-      //       label: "Community Discussions",
-      //       click() {
-      //         shell.openExternal("https://www.electronjs.org/community");
-      //       },
-      //     },
-      //     {
-      //       label: "Search Issues",
-      //       click() {
-      //         shell.openExternal("https://github.com/electron/electron/issues");
-      //       },
-      //     },
-      //   ],
-      // },
+      {
+        label: "Help",
+        submenu: [
+          {
+            label: "Learn More",
+            click() {
+              shell.openExternal("https://electronjs.org");
+            },
+          },
+          {
+            label: "Documentation",
+            click() {
+              shell.openExternal(
+                "https://github.com/electron/electron/tree/main/docs#readme",
+              );
+            },
+          },
+          {
+            label: "Community Discussions",
+            click() {
+              shell.openExternal("https://www.electronjs.org/community");
+            },
+          },
+          {
+            label: "Search Issues",
+            click() {
+              shell.openExternal("https://github.com/electron/electron/issues");
+            },
+          },
+        ],
+      },
     ];
 
     return templateDefault;
@@ -291,6 +286,12 @@ class MenuBuilder {
 }
 
 export const buildMenu = (mainWindow: BrowserWindow) => {
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+  // Only show OS menu on MacOS
+  if (process.platform === "darwin") {
+    const menuBuilder = new MenuBuilder(mainWindow);
+    menuBuilder.buildMenu();
+  } else {
+    // Hide Menu on Windows & Linux
+    Menu.setApplicationMenu(null);
+  }
 };

@@ -257,8 +257,7 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
-  // Only build OS menu on MacOS
-  if (process.platform === "darwin") buildMenu(mainWindow);
+  buildMenu(mainWindow);
 
   const createOrBringToFocus = () => {
     if (mainWindow === null) createWindow();
