@@ -221,7 +221,10 @@ const createWindow = async () => {
 
   mainWindow.loadURL(resolveHtmlPath("index.html"));
 
-  mainWindow.on("ready-to-show", () => {
+  // Use `once` instead of `on` so it only fires the first time.
+  // Otherwise this fires multiple times.
+  mainWindow.once("ready-to-show", () => {
+    log.info("Main window: ready-to-show fired");
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }

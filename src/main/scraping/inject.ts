@@ -1,4 +1,5 @@
 import { BrowserView } from "electron";
+import log from "electron-log";
 import _ from "lodash";
 
 /**
@@ -25,10 +26,14 @@ const extractHtml = async (view: BrowserView): Promise<string> => {
 
   const htmlArr = [html];
   for (const i of _.range(numIframes)) {
-    const frameHtml = await view.webContents.executeJavaScript(
-      `document.getElementsByTagName('iframe')[${i}].contentWindow.document.body.outerHTML`,
-    );
-    htmlArr.push(frameHtml);
+    try {
+      const frameHtml = await view.webContents.executeJavaScript(
+        `document.getElementsByTagName('iframe')[${i}].contentWindow.document.body.outerHTML`,
+      );
+      htmlArr.push(frameHtml);
+    } catch (err) {
+      log.info(`Could not read the content from the iframe: ${i}`);
+    }
   }
   return htmlArr.map((x) => x.replace(/\s\s+/g, " ").trim()).join("\n\n");
 };

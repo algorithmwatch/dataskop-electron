@@ -45,8 +45,6 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         })}`,
       );
 
-      let loaded = false;
-
       if (scrapingView !== null) {
         try {
           mainWindow?.removeBrowserView(scrapingView);
@@ -106,14 +104,8 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
         // Not sure if this is necessary but better to disable user input asap (before did-finish-load fires)
         newView.webContents.on("did-finish-load", () => {
-          loaded = true;
-          newView.webContents.on("before-input-event", (event) =>
-            event.preventDefault(),
-          );
           newView.webContents.insertCSS(preventInputCss);
         });
-      } else {
-        loaded = true;
       }
 
       // Download items to user data directory
@@ -170,13 +162,8 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         },
       );
 
-      while (true) {
-        await delay(1000);
-        if (loaded) {
-          scrapingView = newView;
-          break;
-        }
-      }
+      scrapingView = newView;
+      log.info("Scraping view was successfully initalized");
     },
   );
 
@@ -258,14 +245,13 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
       await waitUntilIdle(scrapingView);
 
       const html = await extractHtml(scrapingView);
-      const joinedHtml = html;
-      const hash = crypto.createHash("md5").update(joinedHtml).digest("hex");
+      const hash = crypto.createHash("md5").update(html).digest("hex");
 
       if (htmlLogging) {
         if (!fs.existsSync(HTML_FOLDER)) fs.mkdirSync(HTML_FOLDER);
         const url = scrapingView.webContents.getURL();
         const fn = `${getNowString()}-${stripNonAscii(url)}-${hash}.html`;
-        fs.writeFileSync(path.join(HTML_FOLDER, fn), joinedHtml);
+        fs.writeFileSync(path.join(HTML_FOLDER, fn), html);
       }
 
       return { html, hash };
