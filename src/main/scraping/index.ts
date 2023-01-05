@@ -308,6 +308,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     "scraping-set-bounds",
     async (_event: any, bounds: Electron.Rectangle) => {
       scrapingView?.setBounds(bounds);
+      log.info(`Set bound of scraping view to ${JSON.stringify(bounds)}`);
     },
   );
 

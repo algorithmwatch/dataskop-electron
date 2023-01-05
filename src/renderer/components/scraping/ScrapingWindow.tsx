@@ -67,11 +67,11 @@ const ScrapingWindow = ({ forceReload = 0 }: { forceReload: number }) => {
 
   useEffect(() => {
     if (visibleWindow) {
-      const b = windowDimensions();
+      const b = bounds;
       b.height -= margin * 2;
       b.width -= margin * 2;
       b.x += margin;
-      b.y += margin;
+      b.y += margin * 2;
       window.electron.ipc.invoke("scraping-set-bounds", b);
     } else {
       // const b = { ...bounds, width: 0, height: 0 };
