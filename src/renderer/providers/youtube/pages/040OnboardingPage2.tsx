@@ -1,12 +1,10 @@
 import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
 import { RouteComponentProps } from "react-router-dom";
-import { goToUrl } from "renderer/components/scraping/ipc";
 import { useNavigation, useScraping } from "renderer/contexts";
 import ContentWrapper from "renderer/providers/youtube/components/ContentWrapper";
 import FooterNav, {
   FooterNavItem,
 } from "renderer/providers/youtube/components/FooterNav";
-import { providerInfo } from "../../info";
 import whatsHappening from "../static/images/start/img_was_passiert.jpg";
 
 const OnboardingPage2 = (): JSX.Element => {
@@ -17,9 +15,7 @@ const OnboardingPage2 = (): JSX.Element => {
   } = useScraping();
   const resetScraping = async () => {
     if (campaign === null) return;
-    await goToUrl(providerInfo[campaign.config.provider].loginUrl, {
-      clear: true,
-    });
+    await window.electron.ipc.invoke("scraping-clear-storage");
     dispatch({ type: "reset-scraping" });
   };
   const footerNavItems: FooterNavItem[] = [

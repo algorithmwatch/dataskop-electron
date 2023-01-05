@@ -186,58 +186,43 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     return session.fromPartition("persist:scraping").clearStorageData();
   });
 
-  addMainHandler(
-    "scraping-load-url",
-    async (
-      _event: any,
-      url: string,
-      { withHtml = false, clear = false }: any,
-    ) => {
-      const view = scrapingView;
+  addMainHandler("scraping-load-url", async (_event: any, url: string) => {
+    const view = scrapingView;
 
-      if (view == null) {
-        throw new Error("scraping-load-url was called while the view is null");
+    if (view == null) {
+      throw new Error("scraping-load-url was called while the view is null");
+    }
+
+    // try 5 times and then give up
+    for (const i of _.range(5)) {
+      try {
+        await view.webContents.loadURL(url, {
+          userAgent: getUserAgent(process.platform),
+        });
+      } catch (error) {
+        log.log("There is an error with `.loadError`, retry...", error);
+        await delay(2000);
+        continue;
       }
 
-      if (clear) {
-        view.webContents.session.clearStorageData();
-      }
+      try {
+        await waitUntilIdle(view);
 
-      // try 5 times and then give up
-      for (const i of _.range(5)) {
-        try {
-          await view.webContents.loadURL(url, {
-            userAgent: getUserAgent(process.platform),
-          });
-        } catch (error) {
-          log.log("There is an error with `.loadError`, retry...", error);
-          await delay(2000);
-          continue;
+        if (url.includes("youtube")) {
+          await postLoadUrlYoutube(view);
         }
 
-        try {
-          await waitUntilIdle(view);
-
-          if (url.includes("youtube")) {
-            await postLoadUrlYoutube(view);
-          }
-
-          if (withHtml) {
-            return await extractHtml(view);
-          }
-
-          return null;
-        } catch (error) {
-          log.log(`strange error, retry...${error}`);
-          await delay(1000 * i);
-        }
+        return null;
+      } catch (error) {
+        log.log(`strange error, retry...${error}`);
+        await delay(1000 * i);
       }
+    }
 
-      throw new Error(
-        `failed at main/scraping.ts to extract html from given url: ${url}`,
-      );
-    },
-  );
+    throw new Error(
+      `failed at main/scraping.ts to extract html from given url: ${url}`,
+    );
+  });
 
   addMainHandler("scraping-get-cookies", () => {
     return scrapingView?.webContents.session.cookies.get({});

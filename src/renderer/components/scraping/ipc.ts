@@ -6,8 +6,8 @@ const extractHtml = (htmlLogging = false) => {
   return window.electron.ipc.invoke("scraping-get-current-html", htmlLogging);
 };
 
-const goToUrl = (url: string, options = {}): Promise<string> => {
-  return window.electron.ipc.invoke("scraping-load-url", url, options);
+const goToUrl = (url: string): Promise<string> => {
+  return window.electron.ipc.invoke("scraping-load-url", url);
 };
 
 const clearStorage = () => window.electron.ipc.invoke("scraping-clear-storage");

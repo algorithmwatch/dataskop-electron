@@ -109,9 +109,7 @@ const ScrapingManager = ({
 
   const resetScraping = async () => {
     dispatch({ type: "reset-scraping" });
-    await goToUrl(provider.loginUrl, {
-      clear: true,
-    });
+    await window.electron.ipc.invoke("scraping-clear-storage");
     return window.electron.ipc.invoke("scraping-remove-view");
   };
 
