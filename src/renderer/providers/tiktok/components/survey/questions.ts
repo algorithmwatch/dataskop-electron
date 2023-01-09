@@ -30,6 +30,7 @@ export const questions: QuestionTypes[] = [
       "Was sind die ersten zwei Stellen der Postleitzahl Deines Hauptwohnsitzes?",
     name: "plz-wohnort",
     type: "number",
+    charLength: 2,
     inputParams: { min: 0, max: 99, step: 1 },
     required: true,
   },

@@ -155,9 +155,8 @@ export const SurveyProvider = ({
         return true;
       }
     } else if (typeof value === "string" && value.length) {
-      // Hotfix
-      if (currentQuestion.name === "plz-wohnort") {
-        return value.length === 2;
+      if (currentQuestion.type === "number" && currentQuestion.charLength) {
+        return value.length === currentQuestion.charLength;
       }
       return true;
     }
