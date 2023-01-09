@@ -11,6 +11,7 @@ We did the following:
 - Fixed various bugs regarding the tray (task bar)
 - Fixed a bug that re-positioned the window to the initial position
 - Fixed a bug where the auto-update in the wrong situations (and possibly broke the auto-update process)
+- Fixed a bug with viz3 when a user didn't have any favorite videos
 
 ## [v0.5.0-alpha.22] - 2022-12-15
 

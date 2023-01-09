@@ -13,26 +13,24 @@ const transformData = (gdprData, metadata) => {
     return { ...d, id, ...item, author, nickname };
   };
 
-  const favList = gdprData.Activity["Favorite Videos"].FavoriteVideoList.map(
-    addData,
-  )
+  const favList = (gdprData.Activity["Favorite Videos"].FavoriteVideoList ?? [])
+    .map(addData)
     .map((d) => ({ ...d, slot: "favorite" }))
     .filter((d) => d.author);
 
-  const shareList = gdprData.Activity["Share History"].ShareHistoryList.map(
-    addData,
-  )
+  const shareList = (gdprData.Activity["Share History"].ShareHistoryList ?? [])
+    .map(addData)
     .map((d) => ({ ...d, slot: "share" }))
     .filter((d) => d.author);
 
-  const likeList = gdprData.Activity["Like List"].ItemFavoriteList.map(addData)
+  const likeList = (gdprData.Activity["Like List"].ItemFavoriteList ?? [])
+    .map(addData)
     .map((d) => ({ ...d, slot: "like" }))
     .filter((d) => d.author);
 
   // const viewList = entriesExpanded.map((d) => ({ ...d, slot: "view" }));
-  const viewList = gdprData.Activity["Video Browsing History"].VideoList.map(
-    addData,
-  )
+  const viewList = (gdprData.Activity["Video Browsing History"].VideoList ?? [])
+    .map(addData)
     .map((d) => ({ ...d, slot: "view" }))
     .filter((d) => d.author);
 
