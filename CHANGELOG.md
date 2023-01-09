@@ -2,7 +2,15 @@
 
 ## Unreleased
 
-- We fixed various bugs regarding the tray (menu bar)
+We did the following:
+
+- You can turn off the auto-start
+- Fixed "copy & paste" on macOS
+- Translated & improved the macOS Menu bar
+- Removed unnnessary Menubar on Windows & Linux
+- Fixed various bugs regarding the tray (task bar)
+- Fixed a bug that re-positioned the window to the initial position
+- Fixed a bug where the auto-update in the wrong situations (and possibly broke the auto-update process)
 
 ## [v0.5.0-alpha.22] - 2022-12-15
 
