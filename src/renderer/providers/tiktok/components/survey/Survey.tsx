@@ -11,6 +11,7 @@ import {
   useState,
 } from "react";
 import { Button } from "renderer/components/Button";
+import ProgressBar from "renderer/components/ProgressBar";
 import {
   QuestionCheckboxType,
   QuestionMultiRadioGroupsType,
@@ -382,6 +383,7 @@ export const Survey = ({
     canGoBackward,
     goToNextQuestion,
     goToPreviousQuestion,
+    progress,
   } = useSurvey();
   const backButtonIsEnabled = canGoBackward();
   const nextButtonIsEnabled = canGoForward();
@@ -393,6 +395,7 @@ export const Survey = ({
     <div className="flex h-full flex-col justify-between px-8 py-6 text-center">
       {!isComplete ? (
         <>
+          <ProgressBar value={progress} />
           <div className="hl-xl flex min-h-[5.25rem] max-w-prose items-center justify-center">
             {currentQuestion.label}
           </div>

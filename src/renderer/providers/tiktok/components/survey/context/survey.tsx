@@ -23,6 +23,7 @@ type SurveyContextType = {
   saveAnswer: (name: QuestionName, value: AnswerValueType) => void;
   answers: AnswerType[];
   compileResult: () => void;
+  progress: number;
 };
 export type AnswerValueType =
   | QuestionChoiceValue["value"]
@@ -251,6 +252,7 @@ export const SurveyProvider = ({
         saveAnswer,
         answers,
         compileResult,
+        progress: currentIndex / questions.length,
       }}
     >
       {children}
