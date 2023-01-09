@@ -4,13 +4,19 @@
 
 We did the following:
 
-- You can turn off the auto-start
-- Fixed "copy & paste" on macOS
+Changes:
+
+- When the app crashes, the user gets informed via modal. No more blank screen. The user can report the error by sending us an email.
+- You can turn off the auto-start via the tray
 - Translated & improved the macOS Menu bar
-- Removed unnnessary Menubar on Windows & Linux
+- Removed the unnnessary menubar on Windows & Linux
+
+Bug fixes:
+
+- Fixed "copy & paste" on macOS
 - Fixed various bugs regarding the tray (task bar)
 - Fixed a bug that re-positioned the window to the initial position
-- Fixed a bug where the auto-update in the wrong situations (and possibly broke the auto-update process)
+- Fixed a bug where the auto-update was initiated in the wrong situations (and possibly broke the auto-update process)
 - Fixed a bug with viz3 when a user didn't have any favorite videos
 
 ## [v0.5.0-alpha.22] - 2022-12-15

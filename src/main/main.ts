@@ -40,6 +40,39 @@ import registerScrapingHandlers from "./scraping";
 import { buildTray } from "./tray";
 import { delay, isFromLocalhost, resolveHtmlPath } from "./utils";
 
+const handleProdException = (message: string, stack: string) => {
+  const clicked = dialog.showMessageBoxSync({
+    title: "Fehler",
+    message: "Es ist ein Fehler aufgetreten 😔",
+    detail: `${message},${stack}`,
+    type: "error",
+    buttons: ["Ignorieren", "Fehler melden", "Beenden"],
+  });
+
+  if (clicked === 1) {
+    shell.openExternal(
+      `mailto:support@dataskop.net?subject=Fehler in der DataSkop-App ${
+        process.platform
+      } ${app.getVersion()}&body=${message},${stack}`,
+    );
+  }
+
+  if (clicked === 2) {
+    app.quit();
+  }
+};
+
+log.catchErrors({
+  showDialog: false,
+  onError(error) {
+    handleProdException(error.message, error.stack ?? "");
+  },
+});
+
+ipcMain.handle("show-renderer-error-modal", (event, message, stack) => {
+  handleProdException(message, stack);
+});
+
 // https://github.com/electron/electron/issues/23756#issuecomment-651287598
 app.commandLine.appendSwitch(
   "disable-features",

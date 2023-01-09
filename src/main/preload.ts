@@ -4,6 +4,7 @@ import log from "electron-log";
 // export main functions to renderer
 // main.ts
 const mainChannels = [
+  "show-renderer-error-modal",
   "get-info",
   "close-main-window",
   "update-check-beta",
