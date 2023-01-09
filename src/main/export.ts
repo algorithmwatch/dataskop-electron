@@ -6,6 +6,7 @@ import { readdir, stat } from "fs/promises";
 import path from "path";
 import { getNowString } from "../renderer/lib/utils/time";
 import { DB_FOLDER } from "./db";
+import { DOWNLOADS_FOLDER } from "./downloads";
 import { HTML_FOLDER } from "./scraping";
 import { addMainHandler } from "./utils";
 
@@ -116,6 +117,9 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
         archive.pipe(output);
         archive.directory(LOG_FOLDER, "logs");
         archive.directory(DB_FOLDER, "databases");
+
+        if (fs.existsSync(DOWNLOADS_FOLDER))
+          archive.directory(DOWNLOADS_FOLDER, "downloads");
 
         if (fs.existsSync(HTML_FOLDER)) archive.directory(HTML_FOLDER, "html");
 
