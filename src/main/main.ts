@@ -221,10 +221,10 @@ const createWindow = async () => {
 
   mainWindow.loadURL(resolveHtmlPath("index.html"));
 
-  // Use `once` instead of `on` so it only fires the first time.
-  // Otherwise this fires multiple times.
-  mainWindow.once("ready-to-show", () => {
-    log.info("Main window: ready-to-show fired");
+  // Don't use `ready-to-show` since it fire more often, e.g., it looks like it fires
+  // every time the scraping window changes.
+  mainWindow.webContents.on("did-finish-load", () => {
+    log.info("Main window: did-finish-load fired");
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
