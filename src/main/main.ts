@@ -41,6 +41,11 @@ import { buildTray } from "./tray";
 import { delay, isFromLocalhost, resolveHtmlPath } from "./utils";
 
 const handleProdException = (message: string, stack: string) => {
+  if (process.env.NODE_ENV !== "production") {
+    log.info("Not showing exception modal when not in prod");
+    return;
+  }
+
   const clicked = dialog.showMessageBoxSync({
     title: "Fehler",
     message: "Es ist ein Fehler aufgetreten 😔",
