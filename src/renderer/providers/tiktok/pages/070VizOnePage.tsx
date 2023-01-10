@@ -23,7 +23,9 @@ import { useData } from "../lib/useData";
 const VizOnePage = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
-  const [aboutModalIsOpen, setAboutModalIsOpen] = useState(false);
+  const [aboutModalIsOpen, setAboutModalIsOpen] = useState(
+    !window.viz1modalHide,
+  );
 
   const [graph, setGraph] = useState("");
 
@@ -106,12 +108,21 @@ const VizOnePage = (): JSX.Element => {
       <Modal
         theme="tiktok"
         isOpen={aboutModalIsOpen}
-        closeModal={() => setAboutModalIsOpen(false)}
+        closeModal={() => {
+          if (!window.viz1modalHide) window.viz1modalHide = true;
+          setAboutModalIsOpen(false);
+        }}
       >
         <div className="text-center">
-          <h1 className="hl-2xl mb-4">Über diese Grafik</h1>
-          <p className="">Schalalalala!</p>
-          <p className="">Graph: {graph}</p>
+          <h1 className="hl-2xl mb-4">Über diese Grafiken</h1>
+          <p className="">
+            Die Visualisierung zur Nutzungszeit zeigt Dir, wann und wie du in
+            der TikTok-App aktiv warst. Du kannst zwischen „Aktivität“ (wieviele
+            Minuten an welchem Tag), „Tageszeit“ (welcher Zeitraum an welchem
+            Tag), sowie „Übersprungen“ (Anteil der gesehenen Videos, die du
+            kürzer oder länger als zwei Sekunden geschaut hast) auswählen.
+          </p>
+          {/* <p className="">Graph: {graph}</p> */}
         </div>
       </Modal>
       <WizardLayout className="text-center" footerSlots={footerSlots}>

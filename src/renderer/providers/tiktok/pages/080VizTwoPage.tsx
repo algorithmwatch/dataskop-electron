@@ -26,7 +26,9 @@ const VizTwoPage = (): JSX.Element => {
   const { dump, lookups } = useData({
     dumpPicks: ["Activity.Video Browsing History"],
   });
-  const [aboutModalIsOpen, setAboutModalIsOpen] = useState(false);
+  const [aboutModalIsOpen, setAboutModalIsOpen] = useState(
+    !window.viz2modalHide,
+  );
 
   const footerSlots: FooterSlots = {
     start: [
@@ -101,11 +103,20 @@ const VizTwoPage = (): JSX.Element => {
       <Modal
         theme="tiktok"
         isOpen={aboutModalIsOpen}
-        closeModal={() => setAboutModalIsOpen(false)}
+        closeModal={() => {
+          if (!window.viz2modalHide) window.viz2modalHide = true;
+          setAboutModalIsOpen(false);
+        }}
       >
         <div className="text-center">
-          <h1 className="hl-2xl mb-4">Über diese Grafik</h1>
-          <p className="">Schalalalala!</p>
+          <h1 className="hl-2xl mb-4">Über diese Grafiken</h1>
+          <p className="">
+            Die Visualisierung zu Hashtags und Kategorien zeigt dir, welche
+            Inhalte bei dir besonders beliebt waren. Du kannst zwischen
+            „Hashtags“ (von Creatorn vergeben) und „Kategorien“ (von TikTok
+            vergeben) auswählen. Die Anzahl der Punkte repräsentiert die Zahl
+            der Videos, die du länger als fünf Sekunden geschaut hast.
+          </p>
         </div>
       </Modal>
       <WizardLayout className="text-center" footerSlots={footerSlots}>

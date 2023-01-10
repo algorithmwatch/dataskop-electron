@@ -30,7 +30,9 @@ const VizThreePage = (): JSX.Element => {
       "Activity.Like List",
     ],
   });
-  const [aboutModalIsOpen, setAboutModalIsOpen] = useState(false);
+  const [aboutModalIsOpen, setAboutModalIsOpen] = useState(
+    !window.viz3modalHide,
+  );
 
   const footerSlots: FooterSlots = {
     start: [
@@ -104,11 +106,20 @@ const VizThreePage = (): JSX.Element => {
       <Modal
         theme="tiktok"
         isOpen={aboutModalIsOpen}
-        closeModal={() => setAboutModalIsOpen(false)}
+        closeModal={() => {
+          if (!window.viz3modalHide) window.viz3modalHide = true;
+          setAboutModalIsOpen(false);
+        }}
       >
         <div className="text-center">
           <h1 className="hl-2xl mb-4">Über diese Grafik</h1>
-          <p className="">Schalalalala!</p>
+          <p className="">
+            Die Visualisierung zu Interaktionen mit Anderen zeigt Dir, mit wem
+            du auf TikTok am meisten zu tun hattest. Wessen Videos du geteilt
+            hast, wessen Videos favorisiert wurden, welche Videos Du gelinkt und
+            wessen Videos du angesehen hast. Die Größe der Punkte bestimmt dabei
+            die Anzahl der Interaktionen.
+          </p>
         </div>
       </Modal>
       <WizardLayout className="text-center" footerSlots={footerSlots}>

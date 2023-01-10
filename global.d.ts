@@ -7,6 +7,9 @@ declare global {
     hasDonated: boolean | null;
     notEligibleToDonate: true | null;
     reachedEnd: true | null;
+    viz1modalHide: true | undefined;
+    viz2modalHide: true | undefined;
+    viz3modalHide: true | undefined;
   }
 }
 export {};
