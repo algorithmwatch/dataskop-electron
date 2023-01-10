@@ -38,9 +38,7 @@ const StatusSwitch = ({ status }: { status: Status }): JSX.Element => {
         <StatusContent
           status={status}
           title="Daten werden verarbeitet"
-          body="Es dauert nicht mehr lange! Deine TikTok-Daten wurden heruntergeladen und werden nun verarbeitet."
-          helpButtons
-          fancyNotificationText
+          body="Deine TikTok-Daten werden nun verarbeitet. Dazu reichern wir deine Daten mit weiteren Informationen an, um aussagekräftige Visualiserungen zu erzeugen."
         />
       )}
       {[
