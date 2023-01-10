@@ -1,15 +1,19 @@
 # Changelog
 
-## Unreleased
+## [v0.5.0-alpha.23] - 2023-01-10
 
-We did the following:
+Thanks to all the testers for their feedback.
+With this release, we mostly fixed bugs but also added some small features.
+We highlight some changes and bug fixes.
 
 Changes:
 
-- When the app crashes, the user gets informed via modal. No more blank screen. The user can report the error by sending us an email.
-- You can turn off the auto-start via the tray
+- When the app crashes, the user gets informed via a modal with an error description (no more blank screen). The user can report the error by sending an email to us.
+- You can turn off the auto-start via the tray.
 - Translated & improved the macOS Menu bar
-- Removed the unnnessary menubar on Windows & Linux
+- Removed the unnecessary menubar on Windows & Linux
+- Improve the status text when a user imports a dump
+- Added a progress bar to the survey
 
 Bug fixes:
 
@@ -17,7 +21,9 @@ Bug fixes:
 - Fixed various bugs regarding the tray (task bar)
 - Fixed a bug that re-positioned the window to the initial position
 - Fixed a bug where the auto-update was initiated in the wrong situations (and possibly broke the auto-update process)
-- Fixed a bug with viz3 when a user didn't have any favorite videos
+- Fixed negative values in viz1
+- Fixed image export for viz1
+- Fixed a bug with crashing viz3 when a user didn't have any favorite videos
 
 ## [v0.5.0-alpha.22] - 2022-12-15
 
