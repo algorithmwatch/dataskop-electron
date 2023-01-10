@@ -89,7 +89,6 @@ function addTimeOfDay(
   const result = [];
 
   let datePrev = new Date(ogVidData[0].Date);
-  let timePrev = datePrev.getTime();
 
   // compute date you want to stop looping
   const dateToStop = new Date(
@@ -98,6 +97,7 @@ function addTimeOfDay(
 
   for (const entry of ogVidData) {
     const dateCurr = new Date(entry.Date);
+    const timePrev = datePrev.getTime();
 
     // stop looping when you reach end selected range
     if (dateCurr < dateToStop) {
@@ -125,7 +125,6 @@ function addTimeOfDay(
       }
     }
     datePrev = dateCurr;
-    timePrev = timeCurr;
   }
 
   // to add the last entry
@@ -362,7 +361,12 @@ export const arrangeDataVizOne = (
   let result;
   let aggregates;
 
-  const ogVidData = dump.Activity["Video Browsing History"].VideoList;
+  // The browsing history is not always ordered.
+  const ogVidData = _.orderBy(
+    dump.Activity["Video Browsing History"].VideoList,
+    "Date",
+    "desc",
+  );
   const ogLoginData = dump.Activity["Login History"].LoginHistoryList;
 
   const loginObj = makeLoginObj(ogLoginData);
