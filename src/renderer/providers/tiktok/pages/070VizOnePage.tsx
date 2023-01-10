@@ -57,9 +57,15 @@ const VizOnePage = (): JSX.Element => {
           const outer = window.document.querySelector(
             "#dataskop-export-screenshot-outer",
           );
-          const inner = window.document.querySelector(
-            "#dataskop-export-screenshot-inner svg",
+          let inner = window.document.querySelector(
+            "#dataskop-export-screenshot-inner figure > svg",
           );
+
+          if (!inner) {
+            inner = window.document.querySelector(
+              "#dataskop-export-screenshot-inner svg",
+            );
+          }
 
           if (!outer || !inner) return;
 
@@ -72,7 +78,7 @@ const VizOnePage = (): JSX.Element => {
 
           doScreenshot(
             { width, height, y: 0, x: 0 },
-            "DataSkop_TikTok_Viz_1.jpg",
+            `DataSkop_TikTok_Viz_1_${graph}.jpg`,
           );
         }}
       >
