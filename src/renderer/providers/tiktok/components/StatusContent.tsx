@@ -140,7 +140,7 @@ const StatusContent = ({
                 window.electron.ipc.invoke("restart");
               }}
             >
-              Status zurücksetzen & Neustarten
+              Status zurücksetzen & neu starten
             </Button>
           </div>
         )}

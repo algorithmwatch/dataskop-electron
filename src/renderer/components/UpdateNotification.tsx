@@ -44,7 +44,7 @@ const UpdateNotification = (): JSX.Element | null => {
             <Button
               onClick={() => window.electron.ipc.invoke("update-restart-app")}
             >
-              Neustarten
+              Neu starten
             </Button>
           </>
         )}
