@@ -134,7 +134,7 @@ const Beeswarm = ({ data }) => {
                   )} minutes`;
                 },
               },
-              { y: "category", fill: (d) => d.category, x: "watchTime" },
+              { y: "category", fill: (d) => d.category, x: "skipped" },
             ),
           ),
           // Plot.ruleX([0])

@@ -56,7 +56,7 @@ const VizOne = ({
 
   const toggleRef = useRef<null | HTMLDivElement>(null);
   const [range, setRange] = useState(startOption);
-  const [graph, setGraph] = useState<"default" | "timeslots" | "watchtime">(
+  const [graph, setGraph] = useState<"default" | "timeslots" | "skipped">(
     "default",
   );
 
@@ -215,7 +215,7 @@ const VizOne = ({
     }));
   }
 
-  if (graph === "watchtime") {
+  if (graph === "skipped") {
     headValues = [
       { head: totActivity, label: "Aktivität" },
       { head: avgMinsPerDay, label: "pro Tag" },
@@ -252,7 +252,7 @@ const VizOne = ({
         options={[
           ["default", "Aktivität"],
           ["timeslots", "Tageszeiten"],
-          ["watchtime", "Übersprungen"],
+          ["skipped", "Übersprungen"],
         ]}
       />
 
@@ -267,7 +267,7 @@ const VizOne = ({
           className="text-center text-gray-400 rotate-[270deg] absolute"
           style={{ top: chartHeight / 2 - 20 }}
         >
-          {graph === "watchtime" ? "Videos" : "Minuten"}
+          {graph === "skipped" ? "Videos" : "Minuten"}
         </div>
       </div>
       <div className="text-center text-gray-400 pt-3 2xl:pt-5 mb-5">

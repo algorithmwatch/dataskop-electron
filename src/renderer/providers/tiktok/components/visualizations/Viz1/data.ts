@@ -327,7 +327,7 @@ function getNumAppOpen(ogLoginData: any, timeRange: number) {
 
 // converts times to hours + mins if the times are over 60 mins, input is in mins
 function convertTime(tot: number, graph: string) {
-  if (graph === "watchtime") return `${formatNumber(tot)} Videos`; // watchtime boxes fix (2): delete this line of code
+  if (graph === "skipped") return `${formatNumber(tot)} Videos`; // watchtime boxes fix (2): delete this line of code
   if (tot < 60) return `${Math.round(tot)}m`;
   const mins = tot % 60;
   const hrs = Math.floor(tot / 60);
@@ -337,7 +337,7 @@ function convertTime(tot: number, graph: string) {
 
 export const arrangeDataVizOne = (
   dump: any,
-  graph: "timeslots" | "watchtime" | "default",
+  graph: "timeslots" | "skipped" | "default",
   timeRange: number,
 ): [
   string,
@@ -378,7 +378,7 @@ export const arrangeDataVizOne = (
       timeRange,
       loginObj,
     );
-  } else if (graph === "watchtime") {
+  } else if (graph === "skipped") {
     [result, totActivity, coreTimeArray, aggregates] = makeWatchtimeData(
       ogVidData,
       timeRange,
@@ -403,8 +403,8 @@ export const arrangeDataVizOne = (
   // make totActivity & avgMinsPerDay into hour if > 60 mins
   const totActivityString = convertTime(totActivity, graph);
   const avgMinsPerDayString = convertTime(
-    // graph === "watchtime" ? avgMinsPerDay : avgMinsPerDay,
-    graph === "watchtime" ? Math.round(avgMinsPerDay) : avgMinsPerDay,
+    // graph === "skipped" ? avgMinsPerDay : avgMinsPerDay,
+    graph === "skipped" ? Math.round(avgMinsPerDay) : avgMinsPerDay,
     graph,
   );
   return [
