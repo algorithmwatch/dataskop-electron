@@ -132,7 +132,7 @@ const VizOnePage = (): JSX.Element => {
             der TikTok-App aktiv warst. Du kannst zwischen „Aktivität“ (wieviele
             Minuten an welchem Tag), „Tageszeit“ (welcher Zeitraum an welchem
             Tag), sowie „Übersprungen“ (Anteil der gesehenen Videos, die du
-            kürzer oder länger als zwei Sekunden geschaut hast) auswählen.
+            kürzer oder länger als drei Sekunden geschaut hast) auswählen.
           </p>
           {/* <p className="">Graph: {graph}</p> */}
         </div>

@@ -190,7 +190,7 @@ function makeWatchtimeData(
       totActivity += 1; // watchtime boxes fix (1): can change this to be "totActivity += gap / 60" to make boxes show time activity rather than number of vids watched
       result.push({
         Date: withoutTime(datePrev),
-        GapLabel: gap > 2 ? "über 2 Sekunden" : "unter 2 Sekunden",
+        GapLabel: gap >= 3 ? "min. 3 Sekunden" : "unter 3 Sekunden",
         GapLength: gap / 60, // might not need this... possibly should delete
       });
     }
@@ -203,8 +203,9 @@ function makeWatchtimeData(
   let total = 0;
 
   result.forEach((x) => {
-    const val = _.get(aggregates, x.GapLabel, 0);
-    _.set(aggregates, x.GapLabel, val + 1);
+    const labelFixed = x.GapLabel.replace(".", "");
+    const val = _.get(aggregates, labelFixed, 0);
+    _.set(aggregates, labelFixed, val + 1);
     total += 1;
   });
 

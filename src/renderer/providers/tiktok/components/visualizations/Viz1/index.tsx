@@ -124,7 +124,9 @@ const VizOne = ({
           title:
             graph === "timeslots"
               ? (d) =>
-                  `<strong>${d.TimeOfDay}</strong> (${rangeOfTime(
+                  `<strong>${d.TotalTime.toFixed(0)} Min.</strong> ${
+                    d.TimeOfDay
+                  } (${rangeOfTime(
                     d.TimeOfDay,
                   )}) aktiv, am ${d.Date.toLocaleString("de-de", {
                     weekday: "long",
@@ -218,12 +220,12 @@ const VizOne = ({
       { head: totActivity, label: "Aktivität" },
       { head: avgMinsPerDay, label: "pro Tag" },
       {
-        head: `${Math.round(headValue["über 2 Sekunden"]) ?? 0}%`,
-        label: "> 2 Sekunden",
+        head: `${Math.round(headValue["min 3 Sekunden"]) ?? 0}%`,
+        label: "min. 3 Sekunden",
       },
       {
-        head: `${Math.round(headValue["unter 2 Sekunden"] ?? 0)}%`,
-        label: "< 2 Sekunden",
+        head: `${Math.round(headValue["unter 3 Sekunden"] ?? 0)}%`,
+        label: "unter 3 Sekunden",
       },
     ];
   }
