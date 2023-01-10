@@ -9,11 +9,13 @@ import {
   faImage,
   faInfoCircle,
 } from "@fortawesome/pro-solid-svg-icons";
-import { useState } from "react";
+import _ from "lodash";
+import { useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useWindowSize } from "react-use";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
+import dayjs from "renderer/lib/dayjs";
 import Modal from "../../../components/Modal";
 import { useNavigation } from "../../../contexts";
 import { VizOne } from "../components/visualizations";
@@ -103,6 +105,16 @@ const VizOnePage = (): JSX.Element => {
 
   const { width, height } = useWindowSize();
 
+  const maxRange = useMemo(() => {
+    if (dump === null) return 365;
+    const dates = dump["Activity"]["Video Browsing History"]["VideoList"].map(
+      (x) => x.Date,
+    );
+    const min = _.min(dates) as string;
+    const max = _.max(dates) as string;
+    return dayjs(max).diff(dayjs(min), "day");
+  }, [dump]);
+
   return (
     <>
       <Modal
@@ -136,6 +148,7 @@ const VizOnePage = (): JSX.Element => {
               width={width}
               height={height}
               onGraphChange={setGraph}
+              maxRange={maxRange}
             />
           )}
         </div>

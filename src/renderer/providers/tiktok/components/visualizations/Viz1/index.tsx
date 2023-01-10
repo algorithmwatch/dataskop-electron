@@ -26,27 +26,36 @@ function rangeOfTime(timeofday: string) {
   }
 }
 
-const rangeOptions = [
-  { id: "1", label: "letzte 14 Tage", value: 14 },
-  { id: "2", label: "letzte 30 Tage", value: 30 },
-  { id: "3", label: "letzte 90 Tage", value: 90 },
-  { id: "4", label: "letzte 180 Tage", value: 180 },
-  { id: "5", label: "letzte 365 Tage", value: 365 },
-];
-
 const VizOne = ({
   gdprData,
   height,
   width,
   onGraphChange,
+  maxRange,
 }: {
   gdprData: any;
   height: number;
   width: number;
   onGraphChange: (x: string) => void;
+  maxRange: number;
 }) => {
+  const allRangeOptions = [
+    { id: "1", label: "letzte 14 Tage", value: 14 },
+    { id: "2", label: "letzte 30 Tage", value: 30 },
+    { id: "3", label: "letzte 90 Tage", value: 90 },
+    { id: "4", label: "letzte 180 Tage", value: 180 },
+    { id: "5", label: "letzte 365 Tage", value: 365 },
+  ];
+
+  const rangeOptions = allRangeOptions.slice(
+    0,
+    allRangeOptions.filter((x) => x.value < maxRange).length + 1,
+  );
+
+  const startOption = rangeOptions[_.floor(rangeOptions.length / 2)];
+
   const toggleRef = useRef<null | HTMLDivElement>(null);
-  const [range, setRange] = useState(rangeOptions[2]);
+  const [range, setRange] = useState(startOption);
   const [graph, setGraph] = useState<"default" | "timeslots" | "watchtime">(
     "default",
   );
