@@ -1,5 +1,5 @@
 import Tippy, { TippyProps } from "@tippyjs/react";
-import classNames from "classnames";
+import clsx from "clsx";
 import React from "react";
 
 const ProcessIndicator = ({
@@ -24,7 +24,7 @@ const ProcessIndicator = ({
   return (
     <div className="px-12">
       <div
-        className={classNames(
+        className={clsx(
           "relative h-2 w-full transition-opacity",
           !currentStep.length ? "opacity-0" : "opacity-100",
         )}

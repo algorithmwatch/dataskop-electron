@@ -1,6 +1,6 @@
 # Packages
 
-An overview of the used NPM packages. (TODO)
+An overview over some NPM packages in use.
 
 ## Zip archives
 
@@ -27,10 +27,32 @@ An overview of the used NPM packages. (TODO)
 
 ## Data
 
-- `lowdb`
 - `lodash`
+- `d3-*`: Several d3 utility packages
+- `electron-store`
+- `lowdb`: deprecated
+
+## Design
+
+- `tailwind`
+- `clsx`
+- `fortawesome`
 
 ## Utilies
 
 - `uuid`
 - `base-64`
+
+## Component libraries
+
+- `@headlessui/react`
+- `@materialui/core`: only for internal screens, using an old version
+
+## Logs
+
+- `sentry`: only for alpha & betas
+- `electron-log`
+
+## Modal
+
+- `react-modal`: deprecated, w used it only for YouTube.

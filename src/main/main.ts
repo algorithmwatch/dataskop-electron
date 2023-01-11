@@ -26,7 +26,6 @@ import {
 import log from "electron-log";
 import { autoUpdater } from "electron-updater";
 import path from "path";
-import "regenerator-runtime/runtime";
 import registerBackgroundScrapingHandlers from "./background-scraping";
 import registerDbHandlers, { clearData, configStore } from "./db";
 import registerDownloadsHandlers, { clearDownloads } from "./downloads";

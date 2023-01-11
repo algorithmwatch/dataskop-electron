@@ -11,7 +11,7 @@ import {
 } from "@fortawesome/pro-regular-svg-icons";
 import { faAngleDown, faChevronRight } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import classNames from "classnames";
+import clsx from "clsx";
 import _ from "lodash";
 import debounce from "lodash/debounce";
 import React, { useMemo, useState } from "react";
@@ -39,7 +39,7 @@ const SeedVideoMenu = React.memo(function SeedVideoMenu({
       {seedVideos.map((video: VideoPage, index: number) => (
         <div
           key={`seed-${video.id}`}
-          className={classNames("p-2 h-full flex items-center", {
+          className={clsx("p-2 h-full flex items-center", {
             "bg-yellow-700": index === currentVideoIndex,
           })}
         >
@@ -81,7 +81,7 @@ const ViewSwitcherItem = ({
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
       key={label}
-      className={classNames(
+      className={clsx(
         "w-full h-20 flex flex-col items-center justify-center hover:bg-yellow-400 transition-all",
         {
           "bg-yellow-200": !menuIsOpen,
@@ -92,7 +92,7 @@ const ViewSwitcherItem = ({
     >
       <FontAwesomeIcon icon={icon} size="2x" />
       <div
-        className={classNames("text-sm select-none", {
+        className={clsx("text-sm select-none", {
           underline: isSelected,
         })}
       >
@@ -124,7 +124,7 @@ const ViewSwitcher = React.memo(function ViewSwitcher({
         <FontAwesomeIcon icon={faAngleDown} />
       </div>
       <div
-        className={classNames("absolute inset-0", {
+        className={clsx("absolute inset-0", {
           "overflow-hidden": !isOpen,
           "h-max ring ring-yellow-700": isOpen,
         })}
@@ -322,7 +322,7 @@ const AutoplayChain = ({ data }: { data: ScrapingResultSaved[] }) => {
                         onMouseOutCallback={() =>
                           setHoveringVideoIdDebounced(null)
                         }
-                        className={classNames({
+                        className={clsx({
                           "opacity-40":
                             hoveringVideoId &&
                             hoveringVideoId !== scrapeResult.fields.id,

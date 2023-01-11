@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 
 const Stepper = ({ steps, currentStepIndex = 0, updateIndex }) => {
@@ -29,7 +29,7 @@ const Stepper = ({ steps, currentStepIndex = 0, updateIndex }) => {
             aria-label="Weiter"
             key={key}
             onClick={() => updateStepIndex(key)}
-            className={classNames({
+            className={clsx({
               "w-5 h-5 rounded-full border focus:outline-none": true,
               "border-yellow-500 bg-yellow-500": currentStep.key === key,
               "border-yellow-500": currentStep.key !== key,

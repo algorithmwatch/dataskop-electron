@@ -6,7 +6,7 @@ import {
   faUserSecret,
 } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import classNames from "classnames";
+import clsx from "clsx";
 import { ReactNode, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import logo from "renderer/static/images/logos/dslogo.svg";
@@ -106,7 +106,7 @@ const BaseLayoutInner = ({
     <div className="relative flex flex-col h-screen justify-between bg-yellow-100 bg-[url('renderer/providers/youtube/static/images/bg.png')] bg-[length:90%] dark:bg-blue-900 overflow-hidden text-yellow-1500">
       <Modal />
       <header
-        className={classNames("flex items-center py-4 px-6 z-20 h-[4.375rem]", {
+        className={clsx("flex items-center py-4 px-6 z-20 h-[4.375rem]", {
           "opacity-0": pathname === "/youtube/start",
         })}
       >

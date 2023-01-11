@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import clsx from "clsx";
 import { ReactNode } from "react";
 
 const ContentWrapper = ({
@@ -10,7 +10,7 @@ const ContentWrapper = ({
 }) => {
   return (
     <div
-      className={classNames(
+      className={clsx(
         "mx-auto max-w-prose flex flex-col justify-center",
         centerY ? "h-full" : "my-10",
       )}

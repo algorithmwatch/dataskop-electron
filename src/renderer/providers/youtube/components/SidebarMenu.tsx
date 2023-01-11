@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { IconDefinition } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import classNames from "classnames";
+import clsx from "clsx";
 import { useState } from "react";
 import AdminMenu from "renderer/components/admin/AdminMenu";
 import { useConfig, useScraping } from "renderer/contexts";
@@ -35,7 +35,7 @@ const SidebarMenu = ({
     } else setVersionClicked(versionClicked + 1);
   };
 
-  const sidebarClasses = classNames({
+  const sidebarClasses = clsx({
     "w-80 fixed inset-y-0 bg-yellow-300 z-50": true,
     "transition-all duration-200 ease-in-out": true,
     "flex flex-col justify-between": true,

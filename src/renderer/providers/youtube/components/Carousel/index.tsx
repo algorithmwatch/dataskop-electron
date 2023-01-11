@@ -5,7 +5,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Glide from "@glidejs/glide";
-import classNames from "classnames";
+import clsx from "clsx";
 import React, {
   forwardRef,
   useEffect,
@@ -23,7 +23,7 @@ const ArrowButton = ({
   return (
     <button
       type="button"
-      className={classNames({
+      className={clsx({
         glide__arrow: true,
         "absolute flex top-2/4 z-10 opacity-100 cursor-pointer transition-shadow -translate-y-1/2 focus:outline-none active:outline-none select-none bg-white rounded-full":
           true,
