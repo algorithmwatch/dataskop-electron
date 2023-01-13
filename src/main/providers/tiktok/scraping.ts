@@ -8,11 +8,13 @@ import {
   idToTiktokUrl,
   scrapeAuthorAvatar,
 } from "@algorithmwatch/schaufel-core";
+import dayjs, { Dayjs } from "dayjs";
 import { BrowserWindow } from "electron";
 import log from "electron-log";
 import _ from "lodash";
 import pLimit from "p-limit";
 import PQueue from "p-queue";
+import path from "path";
 import { addLookups, addLookupsToUpload, getLookups } from "../../db";
 import { HTML_FOLDER } from "../../scraping";
 import { addMainHandler, delay, fetchBackend } from "../../utils";
@@ -20,10 +22,17 @@ import { addMainHandler, delay, fetchBackend } from "../../utils";
 const BACKEND_CHUNK_SIZE = 50;
 const SCRAPE_CHUNK_SIZE = 20;
 const SCRAPE_CONCURRENCY = 2;
+// Artifically add some time to dampen the first too optimistic etas
+const ETA_BASE_CORRECTION_MINUTES = 0.5;
 
 const brokenHtmlFolder = path.join(HTML_FOLDER, "broken-html");
 
 const queue = new PQueue();
+
+let scrapingDone = 0;
+let scrapingTodo = 0;
+let scrapingStartedAt: null | Dayjs = null;
+let rendererWindow: null | BrowserWindow = null;
 
 // Avoid race conditions by saving the scraped files via a single worker queue
 const persistsDoneScraping = async (videos: any) => {
@@ -31,6 +40,19 @@ const persistsDoneScraping = async (videos: any) => {
 
   // save keys to upload them later
   addLookupsToUpload(_.keys(videos));
+
+  if (scrapingStartedAt && rendererWindow) {
+    scrapingDone += 1;
+    const prog = scrapingDone / scrapingTodo;
+    const eta =
+      (ETA_BASE_CORRECTION_MINUTES +
+        dayjs().diff(scrapingStartedAt, "minute", true)) *
+      (1 / prog);
+
+    log.info(`Scraping progress: ${prog} eta: ${eta}`);
+
+    rendererWindow.webContents.send("set-progress", [prog, _.ceil(eta)]);
+  }
 
   // Add some delay because it's unclear how electron-store handles multiple
   // writes within a short timeframe
@@ -80,6 +102,7 @@ export default function registerTiktokScrapingHandlers(
       maxScraping: null | number = null,
       htmlLogging = false,
     ): Promise<any> => {
+      rendererWindow = mainWindow;
       // check local lookups
       const existing = Object.entries(getLookups(ids)).filter(
         (x) => x[1] != null && isResultSane(x[1]),
@@ -121,9 +144,12 @@ export default function registerTiktokScrapingHandlers(
       const todoLimited = maxScraping ? todo.slice(0, maxScraping) : todo;
 
       const limit = pLimit(SCRAPE_CONCURRENCY);
+      scrapingDone = 0;
+      scrapingStartedAt = dayjs();
       const pScrapes = _.chunk(todoLimited, SCRAPE_CHUNK_SIZE).map((x) =>
         limit(() => scrapeVideos(x, htmlLogging)),
       );
+      scrapingTodo = pScrapes.length;
       const scrapedDone = (await Promise.all(pScrapes)).flat();
 
       if (onlyScrape) return {};

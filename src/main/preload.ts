@@ -103,6 +103,7 @@ const validOnChannels = [
   "update-downloaded",
   "update-error",
   "update-check-done",
+  "set-progress",
 ];
 const validremoveAllChannels = ["close-action"];
 

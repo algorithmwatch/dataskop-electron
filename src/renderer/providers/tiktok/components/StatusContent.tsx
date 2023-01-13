@@ -4,6 +4,7 @@ import { faLoader, IconDefinition } from "@fortawesome/pro-regular-svg-icons";
 import { useEffect, useState } from "react";
 import { Button } from "renderer/components/Button";
 import Modal from "renderer/components/Modal";
+import ProgressBar from "renderer/components/ProgressBar";
 import { useConfig } from "renderer/contexts";
 import dayjs from "renderer/lib/dayjs";
 import HelpButton from "renderer/providers/tiktok/components/HelpButton";
@@ -46,6 +47,7 @@ const StatusContent = ({
     state: { isMac },
   } = useConfig();
 
+  const [progress, setProgress] = useState([0, 0]);
   const [statusRows, setSR] = useState<any[]>([]);
 
   useEffect(() => {
@@ -60,6 +62,10 @@ const StatusContent = ({
         })),
       );
     })();
+
+    window.electron.ipc.on("set-progress", setProgress);
+    return () =>
+      window.electron.ipc.removeListener("set-progress", setProgress);
   }, []);
 
   const [modal1IsOpen, setModal1IsOpen] = useState(false);
@@ -161,13 +167,17 @@ const StatusContent = ({
             </span>
           </div>
         )}
-        {status && status.updatedAt && (
+        {progress[0] === 0 && status && status.updatedAt && (
           <p
             className="absolute right-5 bottom-2 text-sm 2xl:text-base text-gray-600 cursor-pointer"
             onClick={() => setModal3IsOpen(true)}
           >
             Letzte Änderung: <RelativeTime time={status.updatedAt} />
           </p>
+        )}
+
+        {progress[0] !== 0 && (
+          <ProgressBar value={progress[0]} eta={progress[1]} />
         )}
       </Content>
     </>
