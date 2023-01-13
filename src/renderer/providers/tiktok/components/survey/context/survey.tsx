@@ -90,7 +90,7 @@ export const SurveyProvider = ({
     ) as QuestionsWithChoicesTypes | undefined;
 
     if (!dependentQuestion) {
-      throw new Error("Could not find dependent question");
+      throw new Error(`Could not find dependent question ${questionName}`);
     }
 
     const wantedValue = question.visibleIf.hasValue;

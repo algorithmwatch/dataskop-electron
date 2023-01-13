@@ -19,12 +19,13 @@ import dayjs from "renderer/lib/dayjs";
 import { addScrapingResult, getScrapingResults } from "renderer/lib/db";
 import { currentDelay } from "renderer/lib/delay";
 import {
+  QuestionTypes,
   SurveyProvider,
   useSurvey,
 } from "renderer/providers/tiktok/components/survey/context";
 import { Survey } from "renderer/providers/tiktok/components/survey/Survey";
 import StatusSwitch from "../components/StatusSwitch";
-import { questions } from "../components/survey/questions";
+import questions from "../components/survey/questions.json";
 import { getStatus, isStatusPending, STATUS } from "../lib/status";
 
 const SurveyModal = ({
@@ -325,7 +326,7 @@ const WaitingPage = (): JSX.Element => {
 
   return (
     <>
-      <SurveyProvider questions={questions}>
+      <SurveyProvider questions={questions.questions as QuestionTypes[]}>
         <SurveyModal
           isOpen={surveyModalIsOpen}
           toggle={() => {
