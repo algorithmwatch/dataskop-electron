@@ -85,7 +85,7 @@ app.commandLine.appendSwitch(
 
 // https://stackoverflow.com/a/65863174/4028896
 if (process.platform === "win32") {
-  app.setAppUserModelId(app.getName());
+  app.setAppUserModelId("DataSkop");
 }
 
 // read .env files for development
