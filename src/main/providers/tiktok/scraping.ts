@@ -21,9 +21,7 @@ const BACKEND_CHUNK_SIZE = 50;
 const SCRAPE_CHUNK_SIZE = 20;
 const SCRAPE_CONCURRENCY = 2;
 
-// Set ENV to save broken schaufel html to this very folder
-// FIXME: not working right now
-process.env.SCHAUFEL_DIR = HTML_FOLDER;
+const brokenHtmlFolder = path.join(HTML_FOLDER, "broken-html");
 
 const queue = new PQueue();
 
@@ -55,7 +53,7 @@ const scrapeVideos = async (
     true,
     false,
     false,
-    htmlLogging,
+    htmlLogging ? brokenHtmlFolder : false,
     0,
     log.scope("schaufel").info,
   );
