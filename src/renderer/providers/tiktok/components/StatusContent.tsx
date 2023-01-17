@@ -8,7 +8,7 @@ import ProgressBar from "renderer/components/ProgressBar";
 import { useConfig } from "renderer/contexts";
 import dayjs from "renderer/lib/dayjs";
 import HelpButton from "renderer/providers/tiktok/components/HelpButton";
-import { addStatusReset, getAllStati } from "../lib/status";
+import { addStatusReset, getAllStati, getPrintStatus } from "../lib/status";
 import Content from "./Content";
 
 const RelativeTime = ({ time }) => {
@@ -114,7 +114,7 @@ const StatusContent = ({
             {statusRows.map((x) => (
               <p key={x.updatedAt.format()}>{`${x.updatedAt.format(
                 "L LT",
-              )} Uhr: ${x.status}`}</p>
+              )} Uhr: ${getPrintStatus(x.status)}`}</p>
             ))}
           </div>
         </div>
