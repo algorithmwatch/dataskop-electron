@@ -1,5 +1,19 @@
 # Changelog
 
+## [v0.5.0-alpha.26] - 2023-01-17
+
+- Fixed a bug that resulted in an unnessary error modal
+- Status texts in the tray are now translated to German
+
+## [v0.5.0-alpha.25] - 2023-01-13
+
+- Added a progress bar (with estimated time of complettion)
+- Survey was changed
+
+## [v0.5.0-alpha.24] - 2023-01-10
+
+- Fixed an error when building for macOS on CI
+
 ## [v0.5.0-alpha.23] - 2023-01-10
 
 Thanks to all the testers for their feedback.
