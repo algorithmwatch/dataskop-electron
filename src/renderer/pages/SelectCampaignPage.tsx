@@ -69,7 +69,7 @@ const SelectCampaignPage = (): JSX.Element => {
       !userConfig.monitoring &&
       !updateCheckDone
     ) {
-      window.electron.log(
+      window.electron.log.info(
         `Not fetching active campaings from backend yet. Monitoring:${userConfig.monitoring} UpdateCheckDone:${updateCheckDone}`,
       );
       return;
