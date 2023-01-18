@@ -3,6 +3,7 @@
 ## [unreleased] - 2023-01-xx
 
 - Fixed a bug where the list of last stati was no updated on status change
+- Windows only: Fixed the annoying bug that created a modal with "can't open bytedance url".
 
 ## [v0.5.0-alpha.26] - 2023-01-17
 

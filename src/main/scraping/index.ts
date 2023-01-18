@@ -74,6 +74,32 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         },
       });
 
+      /*
+      Set some CSP headers to disallow what content can get executed in the scraping window.
+      1) 'unsafe-eval' is required to execute custom JavaScript in the scraper
+      view. When not allowed it, the browser view ist not using a custom user
+      agent (that is required to for scraping).
+
+      2) Allow all HTTPS traffic since platforms rely on various internal services.
+
+      3) Frames and nested frames can ony be loaded from https resources.
+      Tiktok was using a nested iframe with a custem uri scheme "bytedate://xxx".
+      On windows, this caused a modal that no app was found to open the uri "bytedance".
+      */
+
+      session
+        .fromPartition(partition)
+        .webRequest.onHeadersReceived((details, callback) => {
+          callback({
+            responseHeaders: {
+              ...details.responseHeaders,
+              "Content-Security-Policy": [
+                "script-src 'self' 'unsafe-eval' 'unsafe-inline' https: ; frame-src 'self' https: ; frame-ancestors 'self' https:",
+              ],
+            },
+          });
+        });
+
       mainWindow?.setBrowserView(newView);
 
       // Prevent new windows and instead use the scraping window

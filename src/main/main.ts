@@ -20,7 +20,6 @@ import {
   Notification,
   powerSaveBlocker,
   screen,
-  session,
   shell,
 } from "electron";
 import log from "electron-log";
@@ -211,22 +210,6 @@ const createWindow = async () => {
   if (DEBUG) {
     await installExtensions();
   }
-
-  // The 'unsafe-eval' is required to execute custom JavaScript in the scraper view. When not allowed it,
-  // the browser view ist not using a custom user agent (that is required to scrape YouTube).
-  // Allow all HTTPS traffic since platforms rely on various internal services.
-  const cspString =
-    "script-src 'self' 'unsafe-eval' 'unsafe-inline' http://localhost:1212 https:";
-
-  if (process.env)
-    session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-      callback({
-        responseHeaders: {
-          ...details.responseHeaders,
-          "Content-Security-Policy": [cspString],
-        },
-      });
-    });
 
   const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, "assets")
