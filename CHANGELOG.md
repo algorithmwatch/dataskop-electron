@@ -2,12 +2,12 @@
 
 ## [v0.5.0-alpha.26] - 2023-01-17
 
-- Fixed a bug that resulted in an unnessary error modal
+- Fixed a bug that resulted in an unnecessary error modal
 - Status texts in the tray are now translated to German
 
 ## [v0.5.0-alpha.25] - 2023-01-13
 
-- Added a progress bar (with estimated time of complettion)
+- Added a progress bar (with estimated time of completion)
 - Survey was changed
 
 ## [v0.5.0-alpha.24] - 2023-01-10
@@ -43,12 +43,12 @@ Bug fixes:
 
 - We fixed a bug with downloading the ready dump from TikTok. Please update asap if you have requested your GDPR dump.
 - We make the app work on smaller screens.
-- We reduced the amount of videos a user has to scrape from 1000 too 500. This should give results faster. If you want to visualize 1000 videos. You have import the data again.
+- We reduced the number of videos a user has to scrape from 1000 to 500. This should give results faster. If you want to visualize 1000 videos. You have to import the data again.
 
 ## [v0.5.0-alpha.21] - 2022-12-13
 
 - Tray: We show in the tray information about the most recent status update.
-- MacOS only: We fixed a bug where the status of a GDPR request not be checked.
+- macOS only: We fixed a bug where the status of a GDPR request not be checked.
 
 ## [v0.5.0-alpha.20] - 2022-12-13
 
