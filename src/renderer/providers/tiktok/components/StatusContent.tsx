@@ -51,6 +51,13 @@ const StatusContent = ({
   const [statusRows, setSR] = useState<any[]>([]);
 
   useEffect(() => {
+    window.electron.ipc.on("set-progress", setProgress);
+    return () =>
+      window.electron.ipc.removeListener("set-progress", setProgress);
+  }, []);
+
+  // Load all stati when there is an status change
+  useEffect(() => {
     // eslint-disable-next-line promise/catch-or-return
     (async () => {
       const res = await getAllStati();
@@ -62,11 +69,7 @@ const StatusContent = ({
         })),
       );
     })();
-
-    window.electron.ipc.on("set-progress", setProgress);
-    return () =>
-      window.electron.ipc.removeListener("set-progress", setProgress);
-  }, []);
+  }, [status && status.updatedAt]);
 
   const [modal1IsOpen, setModal1IsOpen] = useState(false);
   const [modal2IsOpen, setModal2IsOpen] = useState(false);

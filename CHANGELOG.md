@@ -1,5 +1,9 @@
 # Changelog
 
+## [unreleased] - 2023-01-xx
+
+- Fixed a bug where the list of last stati was no updated on status change
+
 ## [v0.5.0-alpha.26] - 2023-01-17
 
 - Fixed a bug that resulted in an unnecessary error modal
