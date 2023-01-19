@@ -114,7 +114,6 @@ const downloadDump = async (
   }
 
   // Wait until a download is finished
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     await currentDelay();
     if (filePath != null) {
@@ -163,7 +162,6 @@ const clickDownloadButton = async (
   activeUser = false,
 ) => {
   let numTry = 0;
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const html = await getReadyHtmlIframe(getCurrentHtml);
     const $html = cheerio.load(html);

@@ -51,6 +51,7 @@ module.exports = {
     "no-continue": "off",
     "consistent-return": "off",
     "no-param-reassign": ["error", { props: false }],
+    "no-constant-condition": ["error", { checkLoops: false }],
   },
   settings: {
     "import/resolver": {

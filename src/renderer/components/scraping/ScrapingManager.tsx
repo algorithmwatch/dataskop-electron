@@ -90,7 +90,6 @@ const ScrapingManager = ({
         await delay(10);
       }
 
-      // eslint-disable-next-line no-constant-condition
       while (true) {
         const html = await extractHtml();
         // FIXME: not needed to check this every time, find a better way
