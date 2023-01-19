@@ -114,9 +114,9 @@ const VizThreePage = (): JSX.Element => {
         <div className="text-center">
           <h1 className="hl-2xl mb-4">Über diese Grafik</h1>
           <p className="">
-            Die Visualisierung zu Interaktionen mit Anderen zeigt Dir, mit wem
-            du auf TikTok am meisten zu tun hattest. Wessen Videos du geteilt
-            hast, wessen Videos favorisiert wurden, welche Videos Du gelinkt und
+            Die Visualisierung zu Interaktionen mit anderen zeigt dir, mit wem
+            du auf TikTok am meisten zu tun hattest: wessen Videos du geteilt
+            hast, wessen Videos favorisiert wurden, welche Videos du gelikt und
             wessen Videos du angesehen hast. Die Größe der Punkte bestimmt dabei
             die Anzahl der Interaktionen.
           </p>

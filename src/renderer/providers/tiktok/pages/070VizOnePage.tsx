@@ -134,13 +134,12 @@ const VizOnePage = (): JSX.Element => {
         <div className="text-center">
           <h1 className="hl-2xl mb-4">Über diese Grafiken</h1>
           <p className="">
-            Die Visualisierung zur Nutzungszeit zeigt Dir, wann und wie du in
-            der TikTok-App aktiv warst. Du kannst zwischen „Aktivität“ (wieviele
-            Minuten an welchem Tag), „Tageszeit“ (welcher Zeitraum an welchem
-            Tag), sowie „Übersprungen“ (Anteil der gesehenen Videos, die du
+            Die Visualisierung zur Nutzungszeit zeigt dir, wann und wie du in
+            der TikTok-App aktiv warst. Du kannst zwischen „Aktivität“ (wie
+            viele Minuten an welchem Tag), „Tageszeit“ (welcher Zeitraum an
+            welchem Tag) und „Übersprungen“ (Anteil der gesehenen Videos, die du
             kürzer oder länger als drei Sekunden geschaut hast) auswählen.
           </p>
-          {/* <p className="">Graph: {graph}</p> */}
         </div>
       </Modal>
       <WizardLayout className="text-center" footerSlots={footerSlots}>

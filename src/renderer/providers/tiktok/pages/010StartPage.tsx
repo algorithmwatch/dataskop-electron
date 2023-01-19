@@ -93,7 +93,7 @@ const StartPage = (): JSX.Element => {
         </div>
         <div className="text-center h-10 flex items-center justify-center">
           <div className="text-gray-600 text-sm bg-gray-100 rounded-t-md px-3 py-2">
-            Wir verarbeiten Deine Daten entsprechend unserer{" "}
+            Wir verarbeiten deine Daten entsprechend unserer{" "}
             <a
               href="https://dataskop.net/datenschutzerklaerung/"
               target="_blank"

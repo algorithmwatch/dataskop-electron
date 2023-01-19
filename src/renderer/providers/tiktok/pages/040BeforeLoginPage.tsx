@@ -53,12 +53,12 @@ const BeforeLoginPage = (): JSX.Element => {
         <div className="text-center">
           <h1 className="hl-2xl mb-4">Was sind DSGVO-Daten?</h1>
           <p>
-            DSGVO-Daten sind die Daten, die eine Plattform über Dich speichert
+            DSGVO-Daten sind Daten, die eine Plattform über dich speichert
             (sogenannte personenbezogene Daten). Das können z.B. Informationen
-            darüber sein, wem Du folgst, was Du likest, oder nach was Du gesucht
-            hast. Laut DSGVO (Datenschutz-Grundverordnung) hast Du ein
-            Auskunftsrecht: die Plattform muss Dir sagen, welche Daten dort über
-            Dich gespeichert oder verarbeitet werden.{" "}
+            darüber sein, wem du folgst, was du likst oder wonach du gesucht
+            hast. Laut DSGVO (Datenschutz-Grundverordnung) hast du ein
+            Auskunftsrecht: Die Plattform muss dir sagen, welche Daten dort über
+            dich gespeichert oder verarbeitet werden.{" "}
             <a
               href="https://dataskop.net"
               target="_blank"
@@ -78,11 +78,11 @@ const BeforeLoginPage = (): JSX.Element => {
         <div className="text-center">
           <h1 className="hl-2xl mb-4">Was geschieht mit meinen Daten? </h1>
           <p>
-            Bevor Du Deine Daten spendest, entfernen wir sensible und nicht für
+            Bevor du deine Daten spendest, entfernen wir sensible und nicht für
             die Analyse relevante Informationen. Das sind z.B. die Nutzernamen
-            deiner Follower, den Text deiner Kommentare oder Inhalte von Chats.
-            Deine bereinigten Daten werden Algorithmwatch und ggf.
-            Partnerinstitutionen als Datenspende zur Verfügung gestellt.{" "}
+            deiner Follower, deine Kommentare oder Chats. Deine bereinigten
+            Daten werden Algorithmwatch und ggf. Partnerinstitutionen als
+            Datenspende zur Verfügung gestellt.{" "}
             <a
               href="https://dataskop.net"
               target="_blank"

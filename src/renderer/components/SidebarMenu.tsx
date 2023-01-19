@@ -95,7 +95,7 @@ const SidebarMenu = ({
           ))}
 
           <div className="border border-black/50 text-sm text-gray-600 p-3">
-            <strong>Hast Du technische Probleme?</strong> Schreibe eine Mail an{" "}
+            <strong>Hast du technische Probleme?</strong> Schreibe eine Mail an{" "}
             <a
               href="mailto:support@dataskop.net"
               className="underline hover:no-underline"

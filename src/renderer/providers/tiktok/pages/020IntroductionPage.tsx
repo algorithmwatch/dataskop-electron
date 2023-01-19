@@ -55,9 +55,9 @@ const IntroductionPage = (): JSX.Element => {
           </p>
 
           <p>
-            Am Ende hast du die Möglichkeit, diese Daten an uns zu spenden.
-            Darüber würden wir uns sehr freuen, denn mit deiner Datenspende tust
-            du etwas Gutes für die Wissenschaft.
+            Am Ende hast du die Möglichkeit, uns diese Daten zu spenden. Darüber
+            würden wir uns sehr freuen, denn mit deiner Datenspende tust du
+            etwas Gutes für die Wissenschaft.
           </p>
         </div>
       </Content>

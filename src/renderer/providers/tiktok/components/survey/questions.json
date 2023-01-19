@@ -1,7 +1,7 @@
 {
   "questions": [
     {
-      "label": "Wie lautet Dein Geschlecht?",
+      "label": "Welchem Geschlecht ordnest du dich zu?",
       "name": "geschlecht",
       "type": "radio-group",
       "required": true,
@@ -25,7 +25,7 @@
       ]
     },
     {
-      "label": "Was sind die ersten zwei Stellen der Postleitzahl Deines Hauptwohnsitzes?",
+      "label": "Was sind die ersten zwei Zahlen der Postleitzahl deines Hauptwohnsitzes?",
       "name": "plz-wohnort",
       "type": "number",
       "charLength": 2,
@@ -33,7 +33,7 @@
       "required": true
     },
     {
-      "label": "Stimmt Deine Altersangabe auf TikTok?",
+      "label": "Stimmt deine Altersangabe auf TikTok?",
       "name": "altersangabe-stimmt",
       "type": "radio-group",
       "choices": [
@@ -48,7 +48,7 @@
       ]
     },
     {
-      "label": "Tatsächliches Alter (in Jahren)",
+      "label": "Tatsächliches Alter (in Jahren):",
       "name": "tatsächliches-alter",
       "type": "number",
       "inputParams": { "min": 0, "max": 130, "step": 1 },
@@ -58,7 +58,7 @@
       }
     },
     {
-      "label": "Wann hast Du Deinen TikTok-Account erstellt?",
+      "label": "Wann hast du deinen TikTok-Account erstellt?",
       "name": "account-erstellt-am",
       "type": "multiple-select",
       "required": true,
@@ -152,7 +152,7 @@
       ]
     },
     {
-      "label": "Hast Du in Deiner TikTok App mehrere eigene TikTok-Accounts verknüpft?",
+      "label": "Hast du in deiner TikTok-App mehrere eigene TikTok-Accounts verknüpft?",
       "name": "mehrere-accounts-verknüpft",
       "type": "radio-group",
       "required": true,
@@ -168,7 +168,7 @@
       ]
     },
     {
-      "label": "Welche Themen bzw. Interessen ordnet TikTok Dir Deiner Ansicht nach auf der Für-Dich-Seite zu?",
+      "label": "Welche Themen bzw. Interessen ordnet TikTok dir deiner Ansicht nach auf der Für-Dich-Seite zu?",
       "name": "themen-interessen-zuordnunug",
       "type": "checkbox",
       "required": true,
@@ -178,7 +178,7 @@
           "value": "unterhaltung"
         },
         {
-          "label": "Menschen & Vlogs)",
+          "label": "Menschen & Vlogs",
           "value": "vlogs"
         },
         {
@@ -212,7 +212,7 @@
       ]
     },
     {
-      "label": "Denkst Du Deine Für-Dich-Seite enthält besonders schutzwürdige personenbezogene Daten über Dich?",
+      "label": "Denkst du deine Für-Dich-Seite enthält besonders schutzwürdige personenbezogene Daten über dich?",
       "name": "zuordnug-betrifft-persönliche-daten",
       "type": "radio-group",
       "choices": [
@@ -227,7 +227,7 @@
       ]
     },
     {
-      "label": "Die Datenschutzgrundverordnung (DSGVO) definiert verschiedene Kategorien besonders schutzwürdiger Daten: Herkunft, politische und religiöse Einstellung, Gewerkschaftszugehörigkeit, Angaben zu Gesundheit und Sexualität. Welche dieser Kategorien denkst Du betreffen die Daten aus Deiner Für-Dich-Seite?",
+      "label": "Die Datenschutzgrundverordnung (DSGVO) definiert verschiedene Kategorien besonders schutzwürdiger Daten: Herkunft, politische und religiöse Einstellung, Gewerkschaftszugehörigkeit, Angaben zu Gesundheit und Sexualität. Welche dieser Kategorien denkst du betreffen die Daten aus deiner Für-Dich-Seite?",
       "name": "zuordnug-betrifft-persönliche-daten-bereiche",
       "type": "checkbox",
       "visibleIf": {
@@ -258,7 +258,7 @@
       ]
     },
     {
-      "label": "Hast Du TikToks Digital Wellbeing Funktionen aktiviert?",
+      "label": "Hast du TikToks Digital Wellbeing-Funktionen aktiviert?",
       "name": "wellbeing-funktion-aktiviert",
       "type": "radio-group",
       "choices": [
@@ -277,13 +277,13 @@
       ]
     },
     {
-      "label": "Wie viele Stunden verbringst Du am Tag auf TikTok?",
+      "label": "Wie viele Stunden verbringst du am Tag auf TikTok?",
       "name": "einschätzung-nutzunszeit",
       "type": "number",
       "inputParams": { "min": 0, "max": 24, "step": 1 }
     },
     {
-      "label": "Zu welcher Tages- oder Nachtzeit bist Du am Meisten auf TikTok?",
+      "label": "Zu welcher Tages- oder Nachtzeit bist du am meisten auf TikTok?",
       "name": "einschätzung-nutzungszeit-tageszeit",
       "type": "radio-group",
       "choices": [
@@ -306,7 +306,7 @@
       ]
     },
     {
-      "label": "Hast Du TikTok erlaubt, Dir personalisierte Werbung zu zeigen?",
+      "label": "Hast du TikTok erlaubt, dir personalisierte Werbung zu zeigen?",
       "name": "personalisierte-werbung-aktiviert",
       "type": "radio-group",
       "choices": [
@@ -317,11 +317,15 @@
         {
           "label": "Nein",
           "value": "nein"
+        },
+        {
+          "label": "Weiß ich nicht",
+          "value": "weiß-ich-nicht"
         }
       ]
     },
     {
-      "label": "Welche Informationen denkst Du hat TikTok über Dich?",
+      "label": "Was denkst du: Welche Informationen hat TikTok über dich?",
       "name": "welche-infos-hat-tiktok",
       "type": "checkbox",
       "choices": [
@@ -340,7 +344,7 @@
       ]
     },
     {
-      "label": "Warum nutzt Du TikTok?",
+      "label": "Warum nutzt du TikTok?",
       "name": "warum-tiktok-nutzung",
       "type": "checkbox",
       "choices": [
@@ -367,7 +371,7 @@
       ]
     },
     {
-      "label": "Wie bewertest Du Deine Erfahrung auf TikTok?",
+      "label": "Wie bewertest du deine Erfahrung auf TikTok?",
       "name": "erfahrung-tiktok-bewertung",
       "type": "radio-group",
       "choices": [
@@ -414,12 +418,12 @@
       ]
     },
     {
-      "label": "Wie sehr vertraust Du TikToks Datenschutz?",
+      "label": "Wie sehr vertraust du TikToks Datenschutz?",
       "name": "vertrauen-in-datenschutz",
       "type": "radio-group",
       "choices": [
         {
-          "label": "1 = Sehr schlecht",
+          "label": "1 = Gar nicht",
           "value": "1"
         },
         {
@@ -455,13 +459,13 @@
           "value": "9"
         },
         {
-          "label": "10 = Sehr gut",
+          "label": "10 = Sehr",
           "value": "10"
         }
       ]
     },
     {
-      "label": "Wie bewertest Du TikToks Auswahl an Inhalten für Dich auf der Für-Dich-Seite?",
+      "label": "Wie bewertest du TikToks Auswahl an Inhalten für dich auf der Für-Dich-Seite?",
       "name": "bewertung-recommender",
       "type": "radio-group",
       "choices": [
@@ -508,13 +512,13 @@
       ]
     },
     {
-      "label": "Was beschreibt Deine Assoziationen mit dem Empfehlungsalgorithmus auf TikTok am besten? Der TikTok-Empfehlungsalgorithmus ist:",
+      "label": "Was beschreibt deine Assoziationen mit dem Empfehlungsalgorithmus auf TikTok am besten? Der TikTok-Empfehlungsalgorithmus ist:",
       "name": "assoziationen-recommender",
       "type": "muiltiple-radio-groups",
       "choices": [
         [
           {
-            "label": "1 = Gewöhnlich",
+            "label": "1 = Normal",
             "value": "antwort-1-1"
           },
           {
@@ -556,7 +560,7 @@
         ],
         [
           {
-            "label": "1 = Schön",
+            "label": "1 = Nachvollziehbar",
             "value": "antwort-2-1"
           },
           {
@@ -640,7 +644,7 @@
         ],
         [
           {
-            "label": "1 = Detailiert",
+            "label": "1 = Detailliert",
             "value": "antwort-4-1"
           },
           {
@@ -725,12 +729,12 @@
       ]
     },
     {
-      "label": "Hast Du auf Deiner Für-Dich-Seite schon einmal etwas gesehen, das Du lieber nicht gesehen hättest, oder eine andere schlechte Erfahrung mit der Plattform gemacht? Hier kannst Du uns davon erzählen:",
+      "label": "Hast du auf deiner Für-Dich-Seite schon einmal etwas gesehen, das du lieber nicht gesehen hättest, oder eine andere schlechte Erfahrung mit der Plattform gemacht? Hier kannst du uns davon erzählen:",
       "type": "textarea",
       "name": "freitext-erfahrungen-auf-tiktok"
     },
     {
-      "label": "Wenn Du uns noch etwas zu unserem Projekt oder diesem Fragebogen mitteilen möchtest, kannst Du dies hier tun:",
+      "label": "Wenn du uns noch etwas zu unserem Projekt oder diesem Fragebogen mitteilen möchtest, kannst du dies hier tun:",
       "type": "textarea",
       "name": "freitext-feedback-abschluss"
     }
