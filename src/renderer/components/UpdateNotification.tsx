@@ -15,10 +15,6 @@ const UpdateNotification = (): JSX.Element | null => {
     window.electron.ipc.once("update-downloaded", () => {
       setShowRestartButton(true);
     });
-
-    window.electron.ipc.on("update-error", (_event: any, error: Error) => {
-      window.electron.log.error(`Update error ${JSON.stringify(error)}`);
-    });
   }, []);
 
   if (!isUpdateAvailable) return null;

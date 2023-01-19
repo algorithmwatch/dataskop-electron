@@ -101,7 +101,6 @@ const validOnChannels = [
   "close-action",
   "update-available",
   "update-downloaded",
-  "update-error",
   "update-check-done",
   "set-progress",
 ];

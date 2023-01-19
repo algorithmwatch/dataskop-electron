@@ -12,6 +12,7 @@
 // Do not (!) change the import to: `import Sentry from '@sentry/electron'`
 import * as Sentry from "@sentry/electron/main";
 import "core-js/stable";
+import dns from "dns";
 import {
   app,
   BrowserWindow,
@@ -128,8 +129,10 @@ autoUpdater.on("update-not-available", () => {
 autoUpdater.on("update-downloaded", () => {
   mainWindow?.webContents.send("update-downloaded");
 });
-autoUpdater.on("error", async (_event, error) => {
-  mainWindow?.webContents.send("update-error", error);
+autoUpdater.on("error", (error) => {
+  log.error(`Error with auto-updater: ${error}`);
+  // Proceed even if an error occured
+  mainWindow?.webContents.send("update-check-done");
 });
 
 // handle update-related events from renderer
@@ -239,12 +242,26 @@ const createWindow = async () => {
     },
   });
 
+  // Only launch if the computer is connected to the internet.
+  // Resolve always sends a DNS request.
+  while (true) {
+    try {
+      await dns.promises.resolve("datenspende.dataskop.net");
+      log.info("Connected to the internet. Let's go!");
+      break;
+    } catch (e) {
+      await delay(1000);
+      log.info("Checking network connection...");
+    }
+  }
+
   mainWindow.loadURL(resolveHtmlPath("index.html"));
 
   // Don't use `ready-to-show` since it fire more often, e.g., it looks like it fires
   // every time the scraping window changes.
   mainWindow.webContents.on("did-finish-load", () => {
     log.info("Main window: did-finish-load fired");
+
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
@@ -260,7 +277,7 @@ const createWindow = async () => {
       });
       mainWindow.show();
 
-      // Only check for update after the first time rendered
+      // Only check for update after the renderer window was initialized
       new AppUpdater();
     }
   });

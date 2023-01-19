@@ -1,5 +1,9 @@
 # Changelog
 
+## [unreleased] - 2023-01-xx
+
+- Fixed a bug that crashed the app when starting without network connection
+
 ## [v0.5.0-alpha.27] - 2023-01-18
 
 - Fixed a bug where the list of last stati wasn't updated on status change
