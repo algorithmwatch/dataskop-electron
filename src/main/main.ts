@@ -440,23 +440,11 @@ ipcMain.handle("restart", () => {
   app.exit();
 });
 
-const appFolder = path.dirname(process.execPath);
-const updateExe = path.resolve(appFolder, "..", "Update.exe");
-const exeName = path.basename(process.execPath);
-
+// You can ignore the steps for squirrel builds because we don't use squirrel
 // https://www.electronjs.org/docs/latest/api/app#appsetloginitemsettingssettings-macos-windows
-const pathArgs = {
-  path: updateExe,
-  args: [
-    "--processStart",
-    `"${exeName}"`,
-    "--process-start-args",
-    `"--hidden"`,
-  ],
-};
 
 const setOpenAtLogin = (value: boolean) => {
-  if (app.getLoginItemSettings(pathArgs).openAtLogin === value) {
+  if (app.getLoginItemSettings().openAtLogin === value) {
     log.info(`Not updating \`openAtLogin\`, the value is already: ${value}`);
     return;
   }
@@ -464,7 +452,6 @@ const setOpenAtLogin = (value: boolean) => {
   log.info(`Updating \`openAtLogin\` to: ${value}`);
   app.setLoginItemSettings({
     openAtLogin: value,
-    ...pathArgs,
   });
 };
 

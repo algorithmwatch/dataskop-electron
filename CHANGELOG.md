@@ -3,6 +3,7 @@
 ## [unreleased] - 2023-01-xx
 
 - Fixed a bug that crashed the app when starting without network connection
+- Window only: Make `launch on computer start` actually work
 
 ## [v0.5.0-alpha.27] - 2023-01-18
 
