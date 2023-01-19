@@ -85,7 +85,7 @@ const StatusContent = ({
         <div className="text-center">
           <h1 className="hl-2xl mb-4">Wie lange dauert das?</h1>
           <p className="">
-            Es kann bis zu vier Tage dauern, bis TikTok die DSGVO-Daten
+            Es kann bis zu einer Woche Tage dauern, bis TikTok die DSGVO-Daten
             bereitstellt. Es ist deshalb wichtig, dass du die DataSkop-App nicht
             schließt und sie im Hintergrund geöffnet bleibt. Du erhältst eine
             Benachrichtigung, sobald es weitergehen kann.
