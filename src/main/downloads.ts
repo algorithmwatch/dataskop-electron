@@ -43,10 +43,14 @@ const handleImportDataSkop = (filePath: string) => {
 export const postDownloadFileProcessing = async (filePath: string) => {
   let filePathExtracted = filePath;
 
+  // TikTok started to export files like this _somenime.zip_.
+  // So try to extract the file even if the .zip is somewhere in the filename.
+  // Also remove all underscores in the extraced file
+
   if (filePath.endsWith(".zip")) {
     log.info("Unzipping downloaded file");
 
-    filePathExtracted = filePath.replace(/\.zip$/, "");
+    filePathExtracted = filePath.replace("_", "").replace(/\.zip$/, "");
 
     // some delay is needed to prevent a race condition
     await delay(1000);

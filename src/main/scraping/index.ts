@@ -164,7 +164,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
           item.once("done", async (_event, state) => {
             if (state === "completed") {
-              log.info("Download successfully");
+              log.info(`Download successfully: ${filePath}`);
 
               try {
                 filePathExtracted = await postDownloadFileProcessing(filePath);
