@@ -1,9 +1,11 @@
 # Changelog
 
-## [unreleased] - 2023-01-xx
+## [v0.5.0-alpha.28] - 2023-01-19
 
+- Improved texts and survey
+- Improved download handling for edge cases
 - Fixed a bug that crashed the app when starting without network connection
-- Window only: Make `launch on computer start` actually work
+- Windows only: Make `launch on computer start` actually work
 
 ## [v0.5.0-alpha.27] - 2023-01-18
 
