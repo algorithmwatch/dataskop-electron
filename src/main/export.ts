@@ -132,6 +132,14 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
     return Promise.all([HTML_FOLDER, LOG_FOLDER].map(dirSize));
   });
 
+  addMainHandler("export-read-log", async () => {
+    // Currently, everything gets written to `main.log`.
+    const logFile = path.join(LOG_FOLDER, "main.log");
+    const logContent = fs.readFileSync(logFile, "utf8");
+
+    return [logContent.slice(-100000), logFile];
+  });
+
   addMainHandler("export-debug-clean", async () => {
     return [HTML_FOLDER, LOG_FOLDER].map((dir) =>
       fs.readdirSync(dir).forEach((f) => fs.rmSync(`${dir}/${f}`)),

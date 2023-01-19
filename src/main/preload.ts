@@ -54,6 +54,7 @@ const exportChannels = [
   "export-screenshot",
   "export-debug-archive",
   "export-debug-size",
+  "export-read-log",
   "export-debug-clean",
 ];
 
