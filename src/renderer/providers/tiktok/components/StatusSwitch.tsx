@@ -73,14 +73,15 @@ const StatusSwitch = ({ status }: { status: Status }): JSX.Element => {
       {[
         "monitoring-error-nothing-found",
         "monitoring-error-tab-not-found",
+        "data-pending-error-unable-to-check",
         "data-error-tab-not-found",
+        "error-captcha-required",
         "status-not-available",
       ].includes(status.status) && (
         <StatusContent
           status={status}
-          title="Fehler beim Download"
-          body="Wir konnten den Status deines DSGVO-Downloads nicht überprüfen. Besuche Tiktok.com im Browser und lade dir die DSGVO-Daten in deinem Benutzerkonto herunter. Anschließend kannst du sie in der DataSkop-App importieren."
-          allowReset
+          title="Status konnte nicht überprüft werden"
+          body="Wir konnten den Status deines DSGVO-Exports nicht überprüfen. Wir versuchen es noch mal. Alternativ kannst du auch Tiktok.com im Browser besuchen und dir deine DSGVO-Daten in deinem Benutzerkonto herunterladen. Anschließend kannst du sie in der DataSkop-App importieren."
         />
       )}
     </>
