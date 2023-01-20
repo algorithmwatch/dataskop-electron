@@ -1,5 +1,4 @@
 import { Dayjs } from "dayjs";
-import { isStatusPending } from "../lib/status";
 import StatusContent from "./StatusContent";
 
 interface Status {
@@ -11,7 +10,9 @@ const StatusSwitch = ({ status }: { status: Status }): JSX.Element => {
   /* scraping-done: Keine Anzeige notwendig */
   return (
     <>
-      {isStatusPending(status.status) && (
+      {["data-pending", "monitoring-pending", "data-request-success"].includes(
+        status.status,
+      ) && (
         <StatusContent
           status={status}
           title="DSGVO-Daten angefordert"
