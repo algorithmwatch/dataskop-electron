@@ -54,6 +54,7 @@ const ScrapingManager = ({
       filterSteps,
       stepGenerator,
       isUserLoggedIn,
+      visibleWindow,
     },
     dispatch,
   } = useScraping();
@@ -250,6 +251,7 @@ const ScrapingManager = ({
       muted: isMuted,
       allowInput: !disableInput,
       persist: provider.persistScrapingBrowser,
+      visibleWindow,
     });
 
     await setNavigationCallback(CALLBACK_NAV);

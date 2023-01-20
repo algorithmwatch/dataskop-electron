@@ -105,12 +105,16 @@ const downloadDump = async (
   if (activeUser) {
     window.electron.log.info("Displayig the scraping window to the user");
     // Make the window full screen. This is hacky because the state in the context is wrong.
-    window.electron.ipc.invoke("scraping-set-bounds", {
-      width: window.innerWidth,
-      height: window.innerHeight,
-      x: 0,
-      y: 0,
-    });
+    window.electron.ipc.invoke(
+      "scraping-set-bounds",
+      {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        x: 0,
+        y: 0,
+      },
+      true,
+    );
   }
 
   // Wait until a download is finished

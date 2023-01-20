@@ -72,13 +72,13 @@ const ScrapingWindow = ({ forceReload = 0 }: { forceReload: number }) => {
       b.width -= margin * 2;
       b.x += margin;
       b.y += margin * 2;
-      window.electron.ipc.invoke("scraping-set-bounds", b);
+      window.electron.ipc.invoke("scraping-set-bounds", b, true);
     } else {
       // const b = { ...bounds, width: 0, height: 0 };
 
       // Set off screen. TikTok wasn't working otherwise
-      const b = { height: 1500, width: 2000, x: 0, y: window.outerHeight + 2 };
-      window.electron.ipc.invoke("scraping-set-bounds", b);
+      const b = { height: 1500, width: 2000, x: 0, y: 0 };
+      window.electron.ipc.invoke("scraping-set-bounds", b, false);
     }
   }, [bounds, visibleWindow]);
 

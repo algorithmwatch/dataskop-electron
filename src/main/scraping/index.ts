@@ -20,6 +20,7 @@ import {
 import { getUserAgent } from "./user-agent";
 
 let scrapingView: BrowserView | null = null;
+let hiddenScrapingView = true;
 
 export const HTML_FOLDER = path.join(app.getPath("userData"), "html");
 
@@ -33,7 +34,12 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     "scraping-init-view",
     async (
       _eventInit: any,
-      { muted = true, allowInput = true, persist = false }: any,
+      {
+        muted = true,
+        allowInput = true,
+        persist = false,
+        visibleWindow = false,
+      }: any,
     ) => {
       log.debug(
         `Called scraping-init-view ${JSON.stringify({
@@ -42,6 +48,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
           muted,
           allowInput,
           persist,
+          visibleWindow,
         })}`,
       );
 
@@ -100,7 +107,12 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
           });
         });
 
-      mainWindow?.setBrowserView(newView);
+      if (visibleWindow) {
+        mainWindow?.setBrowserView(newView);
+        hiddenScrapingView = false;
+      } else {
+        hiddenScrapingView = true;
+      }
 
       // Prevent new windows and instead use the scraping window
       newView.webContents.setWindowOpenHandler(({ url }) => {
@@ -318,9 +330,23 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
   addMainHandler(
     "scraping-set-bounds",
-    async (_event: any, bounds: Electron.Rectangle) => {
+    async (_event: any, bounds: Electron.Rectangle, show: boolean) => {
+      log.info(
+        `Set bound of scraping view to ${JSON.stringify(
+          bounds,
+        )}, ${show}, ${hiddenScrapingView}`,
+      );
       scrapingView?.setBounds(bounds);
-      log.info(`Set bound of scraping view to ${JSON.stringify(bounds)}`);
+
+      if (show && hiddenScrapingView) {
+        mainWindow.setBrowserView(scrapingView);
+        hiddenScrapingView = false;
+      }
+
+      if (!show && !hiddenScrapingView && scrapingView !== null) {
+        mainWindow.removeBrowserView(scrapingView);
+        hiddenScrapingView = true;
+      }
     },
   );
 
