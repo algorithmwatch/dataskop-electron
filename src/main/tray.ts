@@ -1,9 +1,12 @@
 import { Menu, MenuItemConstructorOptions, nativeImage, Tray } from "electron";
 import log from "electron-log";
 import _ from "lodash";
+import process from "process";
 import dayjs from "./dayjs";
 import { getAllStati } from "./db";
 import { getPrintStatus } from "./providers/tiktok/status";
+
+const isLinux = process.platform === "linux";
 
 const getLastTimeUpdated = () => {
   const all = getAllStati();
@@ -74,9 +77,10 @@ const buildTray = (
     { label: "Datenexport überprüfen", click: doMonitoring },
     { label: "", enabled: false, visible: false },
     { label: "", enabled: false, visible: false },
-    { label: "Separator", type: "separator" },
+    { label: "Separator", type: "separator", visible: !isLinux },
     {
       label: "DataSkop automatisch starten",
+      visible: !isLinux,
       type: "checkbox",
       checked: configStore.get("openAtLogin"),
       click: (menuItem) => {
