@@ -151,7 +151,11 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         "will-download",
         (_eventDownload, item) => {
           // Set the save path, making Electron not to prompt a save dialog.
-          const filePath = path.join(DOWNLOADS_FOLDER, item.getFilename());
+          const filePath = path.join(
+            DOWNLOADS_FOLDER,
+            getNowString(),
+            item.getFilename(),
+          );
           item.setSavePath(filePath);
 
           mainWindow.webContents.send("scraping-download-started");

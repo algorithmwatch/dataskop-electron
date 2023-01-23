@@ -47,10 +47,10 @@ export const postDownloadFileProcessing = async (filePath: string) => {
   // So try to extract the file even if the .zip is somewhere in the filename.
   // Also remove all underscores in the extraced file
 
-  if (filePath.endsWith(".zip")) {
+  if (filePath.includes(".zip")) {
     log.info("Unzipping downloaded file");
 
-    filePathExtracted = filePath.replace("_", "").replace(/\.zip$/, "");
+    filePathExtracted = filePath.replaceAll("_", "").replace(/\.zip$/, "");
 
     // some delay is needed to prevent a race condition
     await delay(1000);
