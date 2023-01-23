@@ -212,12 +212,7 @@ const WaitingPage = (): JSX.Element => {
 
       // On status changes, do some logic
 
-      if (
-        isScrapingFinished &&
-        newStatus.status !== "monitoring-download-action-required" &&
-        newStatus.status !== "download-success" &&
-        newStatus.status !== "monitoring-download-success"
-      ) {
+      if (isScrapingFinished) {
         window.electron.log.info(`Data gathering is finished. Cleaning up.`);
         dispatch({ type: "reset-scraping" });
         dispatch({ type: "set-attached", attached: false, visible: false });
@@ -234,7 +229,9 @@ const WaitingPage = (): JSX.Element => {
 
       if (
         newStatus.status === "monitoring-download-action-required" ||
-        newStatus.status === "download-action-required"
+        newStatus.status === "download-action-required" ||
+        newStatus.status === "monitoring-download-timeout" ||
+        newStatus.status === "download-timeout"
       ) {
         handleDownloadActionRequired();
       }
@@ -251,7 +248,7 @@ const WaitingPage = (): JSX.Element => {
       }
 
       if (isStatusPending(newStatus.status)) {
-        if (dayjs().diff(newStatus.updatedAt, "minute") > 1) {
+        if (dayjs().diff(newStatus.updatedAt, "minute") >= 1) {
           handlePending();
         } else {
           window.electron.log.info(

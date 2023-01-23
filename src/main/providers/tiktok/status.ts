@@ -4,13 +4,15 @@ import { getAllStati } from "../../db";
 
 // keep the following two methods in sync with renderer/providers/tiktok/lib/status.ts
 const isStatusPending = (status: string) => {
-  return [
-    "data-pending",
-    "monitoring-pending",
-    "data-request-success",
-    "error-captcha-required", // still keep looking even though an error occured
-    "data-pending-error-unable-to-check", // as well
-  ].includes(status);
+  if (
+    ["data-pending", "monitoring-pending", "data-request-success"].includes(
+      status,
+    )
+  )
+    return true;
+
+  // still keep looking even though an error occured
+  return status.includes("error");
 };
 
 const getPrintStatus = (status: string) => {
@@ -38,10 +40,10 @@ const getPrintStatus = (status: string) => {
     "download-action-required": "Download: Handlung erforderlich",
     "download-success": "Download erfolgreich",
     "download-error": "Fehler beim Download",
-    "download-error-timeout": "Fehler beim Download: Timeout",
+    "download-timeout": "Fehler beim Download: Timeout",
     "scraping-done": "Scraping abgeschlossen",
     "files-imported": "Daten wurden importiert",
-    "status-not-available": "Status nicht vorhanden",
+    "status-not-available": "Status (noch) nicht vorhanden",
     "status-reset": "Status erfolgreich zurückgesetzt",
   };
 

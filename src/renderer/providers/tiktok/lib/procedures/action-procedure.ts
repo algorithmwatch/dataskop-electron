@@ -148,6 +148,8 @@ async function* actionProcedure(
 ) {
   const { slug } = config;
 
+  // Get the last status to prevent requesting a new dump because we couldn't
+  // check for the current status, e.g., because of an error.
   const lastStatusPending = isStatusPending(procedureArgs.lastStatus.status);
 
   if (slug === "tt-data-export") {

@@ -72,12 +72,12 @@ const downloadDump = async (
     | "download-success"
     | "download-error"
     | "download-action-required"
-    | "download-error-timeout";
+    | "download-timeout";
 }> => {
   let started = false;
   let error = false;
   let filePath = null;
-  const DOWNLOAD_TIMEOUT_SECONDS = 60;
+  const DOWNLOAD_TIMEOUT_SECONDS = 60 * 5;
   const ACTION_REQUIRED_SECONDS = 5;
 
   let lastReceived = new Date().getTime();
@@ -103,18 +103,16 @@ const downloadDump = async (
   await click();
 
   if (activeUser) {
-    window.electron.log.info("Displayig the scraping window to the user");
+    window.electron.log.info("Showing the scraping window to the user");
     // Make the window full screen. This is hacky because the state in the context is wrong.
-    window.electron.ipc.invoke(
-      "scraping-set-bounds",
-      {
-        width: window.innerWidth,
-        height: window.innerHeight,
-        x: 0,
-        y: 0,
-      },
-      true,
-    );
+    window.electron.ipc.invoke("scraping-set-bounds", {
+      width: window.innerWidth,
+      height: window.innerHeight,
+      x: 0,
+      y: 0,
+    });
+  } else {
+    window.electron.log.info("Not showing the scraping window");
   }
 
   // Wait until a download is finished
@@ -130,14 +128,15 @@ const downloadDump = async (
       !activeUser &&
       new Date().getTime() - lastReceived > ACTION_REQUIRED_SECONDS * 1000
     ) {
-      // If the download didn't even start, TikTok requires attention
+      // If the download didn't even start, TikTok requires the user's attention.
       if (!started) return { status: "download-action-required" };
     }
 
     if (new Date().getTime() - lastReceived > DOWNLOAD_TIMEOUT_SECONDS * 1000) {
-      // The download has started but it looks like there is an error.
-      // "Downloading time exceeded: no updates for over 60 seconds",
-      return { status: "download-error-timeout" };
+      // The download button clicked but nothing happend for an substancial amount of time.
+      // It looks like the user has not interacted with the tool.
+      // This case should never happend in monitoring mode since "download-action-required" should fire.
+      return { status: "download-timeout" };
     }
   }
 };
@@ -167,6 +166,9 @@ const clickDownloadButton = async (
 ) => {
   let numTry = 0;
   while (true) {
+    // scroll down to trigger lazy loading
+    await window.electron.ipc.invoke("scraping-scroll-down");
+
     const html = await getReadyHtmlIframe(getCurrentHtml);
     const $html = cheerio.load(html);
 

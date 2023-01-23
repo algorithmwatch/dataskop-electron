@@ -24,10 +24,12 @@ const StatusSwitch = ({ status }: { status: Status }): JSX.Element => {
       {[
         "monitoring-download-action-required",
         "download-action-required",
+        "monitoring-download-timeout",
+        "download-timeout",
       ].includes(status.status) && (
         <StatusContent
           status={status}
-          title="Aktion erforderlich"
+          title="Handlung erforderlich"
           body="Deine Hilfe ist erforderlich, um die Daten herunterzuladen. Bitte warte einen kurzen Moment und folge den Anweisungen. Es kann z. B. sein, dass du einen Code eingeben musst, der an dein Telefon gesendet wurde."
         />
       )}
@@ -42,12 +44,9 @@ const StatusSwitch = ({ status }: { status: Status }): JSX.Element => {
           body="Deine TikTok-Daten werden nun verarbeitet. Dazu reichern wir deine Daten mit weiteren Informationen an, um aussagekräftige Visualiserungen zu erzeugen."
         />
       )}
-      {[
-        "monitoring-download-error",
-        "monitoring-download-error-timeout",
-        "download-error",
-        "download-error-timeout",
-      ].includes(status.status) && (
+      {["monitoring-download-error", "download-error"].includes(
+        status.status,
+      ) && (
         <StatusContent
           status={status}
           title="Fehler beim Download"

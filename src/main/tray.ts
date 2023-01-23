@@ -111,7 +111,7 @@ const buildTray = (
       baseTemplate[5].visible = false;
       log.info("Clicked on tray icon but there is no status to display");
     } else {
-      baseTemplate[4].label = `Status: ${getPrintStatus(last.status)}`;
+      baseTemplate[4].label = getPrintStatus(last.status);
       baseTemplate[5].label = last.date;
       baseTemplate[4].visible = true;
       baseTemplate[5].visible = true;

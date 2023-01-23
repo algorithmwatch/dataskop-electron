@@ -20,7 +20,6 @@ import {
 import { getUserAgent } from "./user-agent";
 
 let scrapingView: BrowserView | null = null;
-let hiddenScrapingView = true;
 
 export const HTML_FOLDER = path.join(app.getPath("userData"), "html");
 
@@ -107,12 +106,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
           });
         });
 
-      if (visibleWindow) {
-        mainWindow?.setBrowserView(newView);
-        hiddenScrapingView = false;
-      } else {
-        hiddenScrapingView = true;
-      }
+      mainWindow?.setBrowserView(newView);
 
       // Prevent new windows and instead use the scraping window
       newView.webContents.setWindowOpenHandler(({ url }) => {
@@ -334,29 +328,26 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
 
   addMainHandler(
     "scraping-set-bounds",
-    async (_event: any, bounds: Electron.Rectangle, show: boolean) => {
+    async (_event: any, bounds: Electron.Rectangle) => {
       log.info(
-        `Set bound of scraping view to ${JSON.stringify(
-          bounds,
-        )}, ${show}, ${hiddenScrapingView}`,
+        `Set bound of scraping view to ${JSON.stringify(bounds)},  ${
+          scrapingView !== null
+        }`,
       );
+
       scrapingView?.setBounds(bounds);
-
-      if (show && hiddenScrapingView) {
-        mainWindow.setBrowserView(scrapingView);
-        hiddenScrapingView = false;
-      }
-
-      if (!show && !hiddenScrapingView && scrapingView !== null) {
-        mainWindow.removeBrowserView(scrapingView);
-        hiddenScrapingView = true;
-      }
     },
   );
 
   addMainHandler("scraping-submit-form", async (_event: any, selector: any) => {
     await scrapingView?.webContents.executeJavaScript(
       `document.querySelector("${selector}").submit()`,
+    );
+  });
+
+  addMainHandler("scraping-scroll-down", async (_event: any) => {
+    await scrapingView?.webContents.executeJavaScript(
+      `window.scrollTo(0, document.body.scrollHeight);`,
     );
   });
 

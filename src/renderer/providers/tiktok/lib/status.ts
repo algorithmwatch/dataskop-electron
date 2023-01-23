@@ -7,14 +7,14 @@ const STATUS = {
   // TikTok data was requested and TikTok is busy, It didn't fail yet
   "monitoring-pending": {
     notification: {
-      title: "DSGVO-Daten angefordert",
+      title: "Warte auf DSGVO-Daten",
       body: "Es kann eine Weile dauern, bis TikTok die Daten bereitstellt.",
     },
   },
   // The download could not happen in the background, we need action from the user
   "monitoring-download-action-required": {
     notification: {
-      title: "Aktion erforderlich",
+      title: "Handlung erforderlich",
       body: "Bitte öffne die DataSkop-App, um fortzufahren.",
     },
   },
@@ -25,9 +25,9 @@ const STATUS = {
       body: "Bitte öffne die DataSkop-App, um fortzufahren.",
     },
   },
-  "monitoring-download-error-timeout": {
+  "monitoring-download-timeout": {
     notification: {
-      title: "Fehler beim Download",
+      title: "Handlung erforderlich",
       body: "Bitte öffne die DataSkop-App, um fortzufahren.",
     },
   },
@@ -39,28 +39,13 @@ const STATUS = {
     },
   },
   // Error, the HTML may have changed
-  "monitoring-error-nothing-found": {
-    notification: {
-      title: "Fehler",
-      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
-    },
-  },
+  "monitoring-error-nothing-found": {},
   // Error, the HTML may have changed
-  "monitoring-error-tab-not-found": {
-    notification: {
-      title: "Fehler",
-      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
-    },
-  },
+  "monitoring-error-tab-not-found": {},
   // Should prompt user to fill out captcha form
   "error-captcha-required": {},
   // Error, the HTML may have changed
-  "data-error-tab-not-found": {
-    notification: {
-      title: "Fehler",
-      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
-    },
-  },
+  "data-error-tab-not-found": {},
   // Waiting until TikTok created the dump
   "data-pending": {},
   // The data request should either be pending or done but we couldn't verfiy the
@@ -75,22 +60,27 @@ const STATUS = {
       body: "Bitte öffne die DataSkop-App, um fortzufahren.",
     },
   },
-  "download-action-required": {},
-  "download-success": {},
-  "download-error": {
+  "download-action-required": {
     notification: {
-      title: "Fehler beim Download",
+      title: "Handlung erforderlich",
       body: "Bitte öffne die DataSkop-App, um fortzufahren.",
     },
   },
-  "download-error-timeout": {
+  "download-success": {},
+  "download-error": {},
+  "download-timeout": {
     notification: {
-      title: "Fehler beim Download",
+      title: "Handlung erforderlich",
       body: "Bitte öffne die DataSkop-App, um fortzufahren.",
     },
   },
   // A scraping step was finished
-  "scraping-done": {},
+  "scraping-done": {
+    notification: {
+      title: "Alle Daten sind da",
+      body: "Bitte öffne die DataSkop-App, um dir die Visualisierungen anzusehen.",
+    },
+  },
   // A user imported a dump
   "files-imported": {},
 };
@@ -136,8 +126,8 @@ const getPrintStatus = (status: string) => {
       "Download (im Hintergrund): Handlung erforderlich",
     "monitoring-download-success": "Download erfolgreich (im Hintergrund)",
     "monitoring-download-error": "Fehler beim Download (im Hintergrund)",
-    "monitoring-download-error-timeout":
-      "Fehler beim Download: Timeout (im Hintergrund)",
+    "monitoring-download-timeout":
+      "Download: Handlung erforderlich (Timeout im Hintergrund)",
     "monitoring-download-expired":
       "Fehler: Download abgelaufen (im Hintergrund)",
     "monitoring-error-nothing-found":
@@ -154,7 +144,7 @@ const getPrintStatus = (status: string) => {
     "download-action-required": "Download: Handlung erforderlich",
     "download-success": "Download erfolgreich",
     "download-error": "Fehler beim Download",
-    "download-error-timeout": "Fehler beim Download: Timeout",
+    "download-timeout": "Download: Handlung erforderlich (Timeout)",
     "scraping-done": "Scraping abgeschlossen",
     "files-imported": "Daten wurden importiert",
     "status-not-available": "Status (noch) nicht vorhanden",
