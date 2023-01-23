@@ -294,6 +294,8 @@ const createWindow = async () => {
   });
 
   mainWindow.on("closed", () => {
+    // Reset monitoring in case something went wrong (e.g. a crash)
+    configStore.set("monitoring", false);
     mainWindow = null;
   });
 
