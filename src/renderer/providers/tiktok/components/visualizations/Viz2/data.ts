@@ -1,5 +1,6 @@
 import { ascending, extent, flatGroup, group } from "d3-array";
 import dayjs from "dayjs";
+import _ from "lodash";
 
 const topNum = 10;
 
@@ -86,8 +87,9 @@ const transformData = (gdprData, metadata) => {
   const dateExtent = extent(entriesExpanded, (d) => d.date);
 
   const stats = {
-    topHashtag: topHashtags[0][0],
-    topLabel: topDiversificationLabels[0].label,
+    topHashtag:
+      topHashtags.length && topHashtags[0].length ? topHashtags[0][0] : "-",
+    topLabel: _.get(topDiversificationLabels[0], "label", "-"),
     totalVideos: entries.length,
     totalDays: Math.round(
       (dateExtent[1].getTime() - dateExtent[0].getTime()) / 1000 / 60 / 60 / 24,
