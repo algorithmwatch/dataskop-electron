@@ -1,5 +1,28 @@
 # Changelog
 
+## [v0.5.0-alpha.33] - 2023-01-24
+
+- Add 'reset' & 'export archive' to the sidebar
+- Improve status handling
+- Add advanced tools
+
+## [v0.5.0-alpha.32] - 2023-01-23
+
+- Improve status handling
+- Trying to fix issues with internal browser view
+
+## [v0.5.0-alpha.31] - 2023-01-20
+
+- Fixing non-building of previous version
+
+## [v0.5.0-alpha.30] - 2023-01-20
+
+- Improve status handling
+
+## [v0.5.0-alpha.29] - 2023-01-20
+
+- Trying to fix issues with internal browser view
+
 ## [v0.5.0-alpha.28] - 2023-01-19
 
 - Improved texts and survey
