@@ -1,6 +1,8 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import {
+  faArrowRotateBack,
   faFileContract,
   faPaperPlane,
   faQuestionCircle,
@@ -8,11 +10,14 @@ import {
 } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import AdminMenu from "renderer/components/admin/AdminMenu";
 import Drawer from "renderer/components/Drawer";
 import { useConfig, useScraping } from "renderer/contexts";
 import { clearData } from "renderer/lib/db";
 import tiktokRoutes from "renderer/providers/tiktok/lib/routes";
+import { Button } from "./Button";
+import Modal from "./Modal";
 
 const SidebarMenu = ({
   isOpen,
@@ -26,6 +31,9 @@ const SidebarMenu = ({
     dispatch: configDispatch,
   } = useConfig();
   const { dispatch: scrapingDispatch } = useScraping();
+  const history = useHistory();
+
+  const [modal1IsOpen, setModal1IsOpen] = useState(false);
 
   // click the version to unlock the advanced menu
   const [versionClicked, setVersionClicked] = useState(0);
@@ -71,10 +79,52 @@ const SidebarMenu = ({
         window.open("https://dataskop.net/datenschutzerklaerung/");
       },
     },
+    {
+      label: "Zurücksetzen",
+      icon: faArrowRotateBack,
+      onClick: () => {
+        setModal1IsOpen(true);
+      },
+    },
   ];
 
   return (
     <Drawer isOpen={isOpen} setIsOpen={setIsOpen}>
+      <Modal
+        theme="tiktok"
+        isOpen={modal1IsOpen}
+        closeModal={() => setModal1IsOpen(false)}
+        buttons={[
+          <Button
+            theme="outline"
+            className="mr-5"
+            onClick={() => setModal1IsOpen(false)}
+          >
+            Schließen
+          </Button>,
+          <Button
+            onClick={async () => {
+              await clearData();
+              await window.electron.ipc.invoke("scraping-clear-storage");
+              await scrapingDispatch({ type: "reset-scraping" });
+              history.push("/select_campaign/tiktok");
+              setModal1IsOpen(false);
+              setIsOpen(false);
+            }}
+          >
+            Zurücksetzen
+          </Button>,
+        ]}
+      >
+        <div className="text-center">
+          <h1 className="hl-2xl mb-4">Willst du DataSkop zurücksetzen?</h1>
+          <p className="">
+            Du kannst DataSkop zurücksetzen, um dich z. B. aus deinem Account
+            auszuloggen. Anschließend kannst du dich neu anmelden oder Daten
+            importieren.
+          </p>
+        </div>
+      </Modal>
       <div className="flex flex-col h-full justify-between">
         {/* main menu */}
         <div className="px-8 mt-16 flex flex-col space-y-6 items-start">
@@ -101,7 +151,16 @@ const SidebarMenu = ({
               className="underline hover:no-underline"
             >
               support@dataskop.net
-            </a>
+            </a>{" "}
+            und exportiere ein Archiv deiner Daten{" "}
+            <span
+              className="hover:cursor-pointer underline"
+              onClick={() => {
+                window.electron.ipc.invoke("export-debug-archive");
+              }}
+            >
+              hier
+            </span>
             .
           </div>
         </div>
