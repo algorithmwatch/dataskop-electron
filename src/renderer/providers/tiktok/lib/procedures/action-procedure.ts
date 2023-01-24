@@ -2,7 +2,12 @@ import cheerio from "cheerio";
 import _ from "lodash";
 import { ProcedureArgs } from "renderer/lib/scraping";
 import { GetHtmlFunction, GetHtmlLazyFunction } from "renderer/providers/types";
-import { isStatusPending, STATUS, StatusKey } from "../status";
+import {
+  isStatusDownloadActionRequired,
+  isStatusPending,
+  STATUS,
+  StatusKey,
+} from "../status";
 import {
   clickDownloadButton,
   clickOnDownloadTab,
@@ -30,10 +35,10 @@ const GET_DATA_URL =
  */
 const monitorDataExport = async (
   getHtml: GetHtmlFunction,
-  lastStatusPending: boolean,
+  dataRequestWasStarted: boolean,
 ): ActionReturn => {
   window.electron.log.info(
-    `Started \`monitorDataExport\` with \`lastStatusPending\`:${lastStatusPending}`,
+    `Started \`monitorDataExport\` with \`dataRequestWasStarted\`:${dataRequestWasStarted}`,
   );
 
   const getCurrentHtml = await getHtml(GET_DATA_URL);
@@ -54,7 +59,7 @@ const monitorDataExport = async (
 
   const downloadData = await clickDownloadButton(
     getCurrentHtml,
-    lastStatusPending,
+    dataRequestWasStarted,
   );
 
   if (downloadData.buttonAvailable) {
@@ -84,10 +89,10 @@ const monitorDataExport = async (
  */
 const getDataExport = async (
   getHtml: GetHtmlFunction,
-  lastStatusPending: boolean,
+  dataRequestWasStarted: boolean,
 ): ActionReturn => {
   window.electron.log.info(
-    `Started \`getDataExport\` with \`lastStatusPending\`:${lastStatusPending}`,
+    `Started \`getDataExport\` with \`dataRequestWasStarted\`:${dataRequestWasStarted}`,
   );
 
   const getCurrentHtml = await getHtml(GET_DATA_URL);
@@ -105,7 +110,7 @@ const getDataExport = async (
   window.electron.log.info("Looking for download button");
   const downloadData = await clickDownloadButton(
     getCurrentHtml,
-    lastStatusPending,
+    dataRequestWasStarted,
     true,
   );
 
@@ -119,7 +124,7 @@ const getDataExport = async (
   }
 
   // Only request a new dump if we can be sure that we don't overwrite an old dump.
-  if (lastStatusPending) {
+  if (dataRequestWasStarted) {
     if (isCaptcha(cheerio.load((await getCurrentHtml()).html))) {
       return { status: "error-captcha-required" };
     }
@@ -150,13 +155,15 @@ async function* actionProcedure(
 
   // Get the last status to prevent requesting a new dump because we couldn't
   // check for the current status, e.g., because of an error.
-  const lastStatusPending = isStatusPending(procedureArgs.lastStatus.status);
+  const dataRequestWasStarted =
+    isStatusPending(procedureArgs.lastStatus.status) ||
+    isStatusDownloadActionRequired(procedureArgs.lastStatus.status);
 
   if (slug === "tt-data-export") {
     try {
       const data = await (procedureArgs.monitoring
         ? monitorDataExport
-        : getDataExport)(getHtml, lastStatusPending);
+        : getDataExport)(getHtml, dataRequestWasStarted);
 
       // Only show notifications for a subset of status
       const status = STATUS[data.status];

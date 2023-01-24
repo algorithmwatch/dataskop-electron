@@ -31,7 +31,6 @@ const scrapingChannels = [
   "scraping-click-element",
   "scraping-submit-form",
   "scraping-element-exists",
-  "scraping-scroll-down",
 ];
 
 const downloadsChannels = [

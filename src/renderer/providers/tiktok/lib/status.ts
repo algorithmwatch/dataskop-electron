@@ -106,6 +106,15 @@ const getStatus = async (): Promise<{ status: string; updatedAt: Dayjs }> => {
   };
 };
 
+const isStatusDownloadActionRequired = (status: string) => {
+  return [
+    "monitoring-download-action-required",
+    "download-action-required",
+    "monitoring-download-timeout",
+    "download-timeout",
+  ].includes(status);
+};
+
 // keep the following two functions in sync with main/providers/tiktok/status.ts
 const isStatusPending = (status: string) => {
   if (
@@ -179,6 +188,7 @@ export {
   getStatus,
   getAllStati,
   isStatusPending,
+  isStatusDownloadActionRequired,
   shouldJumpToWaitingPage,
   StatusKey,
   STATUS,

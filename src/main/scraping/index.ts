@@ -345,12 +345,6 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
     );
   });
 
-  addMainHandler("scraping-scroll-down", async (_event: any) => {
-    await scrapingView?.webContents.executeJavaScript(
-      `window.scrollTo(0, document.body.scrollHeight);`,
-    );
-  });
-
   addMainHandler(
     "scraping-element-exists",
     async (

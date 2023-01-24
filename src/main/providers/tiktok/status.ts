@@ -22,8 +22,8 @@ const getPrintStatus = (status: string) => {
       "Download (im Hintergrund): Handlung erforderlich",
     "monitoring-download-success": "Download erfolgreich (im Hintergrund)",
     "monitoring-download-error": "Fehler beim Download (im Hintergrund)",
-    "monitoring-download-error-timeout":
-      "Fehler beim Download: Timeout (im Hintergrund)",
+    "monitoring-download-timeout":
+      "Download: Handlung erforderlich (Timeout im Hintergrund)",
     "monitoring-download-expired":
       "Fehler: Download abgelaufen (im Hintergrund)",
     "monitoring-error-nothing-found":
@@ -40,7 +40,7 @@ const getPrintStatus = (status: string) => {
     "download-action-required": "Download: Handlung erforderlich",
     "download-success": "Download erfolgreich",
     "download-error": "Fehler beim Download",
-    "download-timeout": "Fehler beim Download: Timeout",
+    "download-timeout": "Download: Handlung erforderlich (Timeout)",
     "scraping-done": "Scraping abgeschlossen",
     "files-imported": "Daten wurden importiert",
     "status-not-available": "Status (noch) nicht vorhanden",

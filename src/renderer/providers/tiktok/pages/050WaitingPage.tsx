@@ -26,7 +26,12 @@ import {
 import { Survey } from "renderer/providers/tiktok/components/survey/Survey";
 import StatusSwitch from "../components/StatusSwitch";
 import questions from "../components/survey/questions.json";
-import { getStatus, isStatusPending, STATUS } from "../lib/status";
+import {
+  getStatus,
+  isStatusDownloadActionRequired,
+  isStatusPending,
+  STATUS,
+} from "../lib/status";
 
 const SurveyModal = ({
   isOpen,
@@ -227,12 +232,7 @@ const WaitingPage = (): JSX.Element => {
         return;
       }
 
-      if (
-        newStatus.status === "monitoring-download-action-required" ||
-        newStatus.status === "download-action-required" ||
-        newStatus.status === "monitoring-download-timeout" ||
-        newStatus.status === "download-timeout"
-      ) {
+      if (isStatusDownloadActionRequired(newStatus.status)) {
         handleDownloadActionRequired();
       }
 

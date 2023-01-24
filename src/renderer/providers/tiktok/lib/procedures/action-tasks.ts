@@ -1,6 +1,8 @@
 import cheerio from "cheerio";
+import { range } from "lodash";
 import { currentDelay } from "renderer/lib/delay";
 import { clickOnElement, getReadyHtml } from "renderer/lib/scraping";
+import { delay } from "renderer/lib/utils/time";
 import { GetCurrentHtml } from "renderer/providers/types";
 
 const GDPR_RESULTS_HTML_SELECTOR = "div[role=tabpanel]";
@@ -161,13 +163,19 @@ const isDumpCreationPending = async (getCurrentHtml: GetCurrentHtml) => {
  */
 const clickDownloadButton = async (
   getCurrentHtml: GetCurrentHtml,
-  lastStatusPending: boolean,
+  dataRequestWasStarted: boolean,
   activeUser = false,
 ) => {
+  const maxtries = dataRequestWasStarted ? 5 : 3;
   let numTry = 0;
+
   while (true) {
-    // scroll down to trigger lazy loading
-    await window.electron.ipc.invoke("scraping-scroll-down");
+    // eslint-disable-next-line no-empty-pattern
+    for (const {} of range(5)) {
+      // scroll down to trigger lazy loading
+      await window.electron.ipc.invoke("scraping-scroll-down");
+      await delay(200);
+    }
 
     const html = await getReadyHtmlIframe(getCurrentHtml);
     const $html = cheerio.load(html);
@@ -180,11 +188,7 @@ const clickDownloadButton = async (
     window.electron.log.info(`Download button available: ${buttonAvailable}`);
 
     if (!buttonAvailable) {
-      if (
-        numTry < 5 &&
-        lastStatusPending &&
-        !(await isDumpCreationPending(getCurrentHtml))
-      ) {
+      if (numTry < maxtries && !(await isDumpCreationPending(getCurrentHtml))) {
         window.electron.log.warn(
           "Something went wrong. There should either a `Download` or `Pending` button. Retry.",
         );
