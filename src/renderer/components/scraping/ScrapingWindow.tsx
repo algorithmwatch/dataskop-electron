@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { pick, round } from "lodash";
 import { useEffect } from "react";
 import { Rnd } from "react-rnd";
-import { Bounds, useScraping } from "renderer/contexts";
+import { Bounds, useConfig, useScraping } from "renderer/contexts";
 
 const ScrapingWindow = ({ forceReload = 0 }: { forceReload: number }) => {
   const margin = 30;
@@ -29,6 +29,10 @@ const ScrapingWindow = ({ forceReload = 0 }: { forceReload: number }) => {
     },
     dispatch,
   } = useScraping();
+
+  const {
+    state: { userConfig },
+  } = useConfig();
 
   const setBounds = (newBounds: Bounds) => {
     dispatch({ type: "set-bounds", bounds: newBounds });
@@ -66,7 +70,7 @@ const ScrapingWindow = ({ forceReload = 0 }: { forceReload: number }) => {
   };
 
   useEffect(() => {
-    if (visibleWindow) {
+    if (visibleWindow || (!!userConfig && userConfig.scrapingForceOpen)) {
       const b = bounds;
       b.height -= margin * 2;
       b.width -= margin * 2;

@@ -252,6 +252,7 @@ const ScrapingManager = ({
       allowInput: !disableInput,
       persist: provider.persistScrapingBrowser,
       visibleWindow,
+      openDevTools: userConfig.scrapingOpenDevTools,
     });
 
     await setNavigationCallback(CALLBACK_NAV);

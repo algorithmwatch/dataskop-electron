@@ -19,6 +19,8 @@ export type UserConfig = {
   monitoring: boolean;
   monitoringInterval: boolean;
   openAtLogin: boolean;
+  scrapingForceOpen: boolean;
+  scrapingOpenDevTools: boolean;
 };
 
 type Action =

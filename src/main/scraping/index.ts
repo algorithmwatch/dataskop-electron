@@ -38,6 +38,7 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         allowInput = true,
         persist = false,
         visibleWindow = false,
+        openDevTools = false,
       }: any,
     ) => {
       log.debug(
@@ -120,8 +121,10 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         return { action: "deny" };
       });
 
-      // Uncomment to open the debug console in the scraping window
-      // newView.webContents.openDevTools();
+      // Open the debug console in the scraping window
+      if (openDevTools) {
+        newView.webContents.openDevTools();
+      }
 
       if (muted) newView.webContents?.setAudioMuted(true);
 

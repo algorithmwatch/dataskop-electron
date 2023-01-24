@@ -88,6 +88,41 @@ const SettingsPage = (): JSX.Element => {
             </Button>
           </div>
           <div className="m-5">
+            <div>
+              scrapingForceOpen: {userConfig.scrapingForceOpen ? "yes" : "no"}
+            </div>
+            <Button
+              onClick={() =>
+                dipatchConfig({
+                  type: "set-user-config",
+                  newValues: {
+                    scrapingForceOpen: !userConfig.scrapingForceOpen,
+                  },
+                })
+              }
+            >
+              Toggle
+            </Button>
+          </div>
+          <div className="m-5">
+            <div>
+              scrapingOpenDevTools:{" "}
+              {userConfig.scrapingOpenDevTools ? "yes" : "no"}
+            </div>
+            <Button
+              onClick={() =>
+                dipatchConfig({
+                  type: "set-user-config",
+                  newValues: {
+                    scrapingOpenDevTools: !userConfig.scrapingOpenDevTools,
+                  },
+                })
+              }
+            >
+              Toggle
+            </Button>
+          </div>
+          <div className="m-5">
             <div>Monitoring: {userConfig.monitoring ? "yes" : "no"}</div>
           </div>
           <div className="m-5">

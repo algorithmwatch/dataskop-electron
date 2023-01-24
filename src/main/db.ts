@@ -44,6 +44,8 @@ const configStore = new Store({
     monitoringInterval: true,
     debugLogging: isAlpha,
     htmlLogging: isAlpha,
+    scrapingForceOpen: false,
+    scrapingOpenDevTools: false,
   },
 });
 
