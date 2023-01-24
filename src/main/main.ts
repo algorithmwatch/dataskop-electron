@@ -294,8 +294,6 @@ const createWindow = async () => {
   });
 
   mainWindow.on("closed", () => {
-    // Reset monitoring in case something went wrong (e.g. a crash)
-    configStore.set("monitoring", false);
     mainWindow = null;
   });
 
@@ -380,6 +378,14 @@ ipcMain.handle(
 );
 
 app.on("window-all-closed", () => {
+  if (configStore.get("monitoring")) {
+    log.warn(
+      "Detected faulty value `true` for `monitoring`. Setting to `false` now.",
+    );
+    // Reset monitoring in case something went wrong (e.g. a crash)
+    configStore.set("monitoring", false);
+  }
+
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
   if (process.platform !== "darwin") {
