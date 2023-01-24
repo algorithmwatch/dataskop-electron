@@ -15,6 +15,7 @@ import AdminMenu from "renderer/components/admin/AdminMenu";
 import Drawer from "renderer/components/Drawer";
 import { useConfig, useScraping } from "renderer/contexts";
 import { clearData } from "renderer/lib/db";
+import { delay } from "renderer/lib/utils/time";
 import tiktokRoutes from "renderer/providers/tiktok/lib/routes";
 import { Button } from "./Button";
 import Modal from "./Modal";
@@ -107,9 +108,8 @@ const SidebarMenu = ({
               await clearData();
               await window.electron.ipc.invoke("scraping-clear-storage");
               await scrapingDispatch({ type: "reset-scraping" });
-              history.push("/select_campaign/tiktok");
-              setModal1IsOpen(false);
-              setIsOpen(false);
+              await delay(1000);
+              window.electron.ipc.invoke("restart");
             }}
           >
             Zurücksetzen
