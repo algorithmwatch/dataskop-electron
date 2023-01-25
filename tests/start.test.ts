@@ -40,6 +40,20 @@ test.describe.serial(() => {
     });
     console.log(appPath);
 
+    await page.locator("button").first().click();
+    await page.waitForTimeout(1000);
+
+    // Click four times until advanced menu appears
+    await page.click("div >> text=/Version: \\d+.\\d+.\\d+/");
+    await page.click("div >> text=/Version: \\d+.\\d+.\\d+/");
+    await page.click("div >> text=/Version: \\d+.\\d+.\\d+/");
+    await page.click("div >> text=/Version: \\d+.\\d+.\\d+/");
+
+    await page.click("text=Advanced");
+    await page.click("text=Clear results and sessions");
+    await page.click("text=Start TikTok");
+    await page.waitForTimeout(1000);
+
     await expect(page).toHaveTitle("DataSkop");
     await expect(page.locator("text=Start")).toBeVisible();
 
@@ -49,7 +63,7 @@ test.describe.serial(() => {
     await page.keyboard.down("Enter");
     await page.waitForTimeout(1000);
 
-    await expect(page.locator("button", { hasText: "Über" })).toBeVisible();
+    await expect(page.locator("button", { hasText: "Kontakt" })).toBeVisible();
     await expect(
       page.locator("div >> text=/Version: \\d+.\\d+.\\d+/"),
     ).toBeVisible();
@@ -57,6 +71,6 @@ test.describe.serial(() => {
     await page.keyboard.down("Escape");
     await page.waitForTimeout(1000);
 
-    await expect(page.locator("button", { hasText: "Über" })).toBeHidden();
+    await expect(page.locator("button", { hasText: "Kontakt" })).toBeHidden();
   });
 });

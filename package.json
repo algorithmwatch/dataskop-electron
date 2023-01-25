@@ -17,7 +17,7 @@
     "start:main": "cross-env NODE_ENV=development electron -r ts-node/register/transpile-only .",
     "start:preload": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
     "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
-    "test": "npx playwright test",
+    "test": "npx playwright test --workers 1",
     "cross-env": "cross-env",
     "format": "prettier --write .",
     "schema": "./scripts/create_schema.sh",

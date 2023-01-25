@@ -81,11 +81,9 @@ test.describe.serial(() => {
     await page.locator("button").first().click();
     await page.waitForTimeout(1000);
 
-    await page.click("text=TikTok routes");
-    await page.click("text=/.tiktok.start/");
-    await page.keyboard.down("Escape");
+    await page.click("text=Advanced");
+    await page.click("text=Start TikTok");
 
-    await page.keyboard.down("Escape");
     await page.waitForTimeout(1000);
 
     await page.click("text=Start");
@@ -120,20 +118,22 @@ test.describe.serial(() => {
     fs.mkdirSync(exportDir);
 
     // Viz 1
-
-    await page.waitForTimeout(2000);
+    await page.click("text=Schließen");
     await page.screenshot({
       path: `${exportDir}/viz1.png`,
     });
 
     await page.locator("text=Als Bild speichern").click();
     await page.waitForTimeout(1000);
-    fs.renameSync("DataSkop_TikTok_Viz_1.jpg", `${exportDir}/viz1_export.jpg`);
+    fs.renameSync(
+      "DataSkop_TikTok_Viz_1_default.jpg",
+      `${exportDir}/viz1_export.jpg`,
+    );
 
     await page.click("text=weiter");
 
     // Viz 2
-    await page.waitForTimeout(5000);
+    await page.click("text=Schließen");
     await page.screenshot({
       path: `${exportDir}/viz2_1.png`,
     });
@@ -148,7 +148,7 @@ test.describe.serial(() => {
     // Click on other tab
     await page.locator("button", { hasText: "Kategorien" }).click();
 
-    await page.waitForTimeout(5000);
+    await page.waitForTimeout(1000);
     await page.screenshot({
       path: `${exportDir}/viz2_2.png`,
     });
@@ -163,15 +163,14 @@ test.describe.serial(() => {
     await page.click("text=weiter");
 
     // Viz 3
-
-    await page.waitForTimeout(5000);
+    await page.click("text=Schließen");
 
     await page.screenshot({
       path: `${exportDir}/viz3.png`,
     });
 
     page.locator("text=Als Bild speichern").click();
-    await page.waitForTimeout(5000);
+    await page.waitForTimeout(1000);
     fs.renameSync("DataSkop_TikTok_Viz_3.jpg", `${exportDir}/viz3_export.jpg`);
 
     await page.click("text=weiter");
@@ -186,12 +185,12 @@ test.describe.serial(() => {
     await expect(page.locator("text=Danke für deine Teilnahme")).toBeVisible();
 
     await page.locator("text=hier").click();
-    await page.waitForTimeout(5000);
+    await page.waitForTimeout(1000);
 
     const exportFile = fs
       .readdirSync(".")
       .filter(
-        (fn) => fn.includes("dataskop-tiktok-2022") && fn.endsWith(".json"),
+        (fn) => fn.includes("dataskop-tiktok-202") && fn.endsWith(".json"),
       )[0];
 
     fs.renameSync(exportFile, `${exportDir}/export_dump.json`);

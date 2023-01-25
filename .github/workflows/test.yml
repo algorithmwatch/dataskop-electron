@@ -16,8 +16,9 @@ jobs:
 
     strategy:
       matrix:
+        # Broken on ubuntu right now
         # os: [macos-latest, windows-latest, ubuntu-latest]
-        os: [ubuntu-latest]
+        os: [macos-latest, windows-latest]
 
     steps:
       - uses: actions/checkout@v2
@@ -40,7 +41,7 @@ jobs:
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_PACKAGES_TOKEN }}" >> ~/.npmrc
 
       - name: Install dependencies
-        run: cat ~/.npmrc && npm ci --ignore-scripts --verbose
+        run: cat ~/.npmrc && npm ci --verbose
 
       - name: Setup dotenv files
         shell: bash
@@ -56,12 +57,17 @@ jobs:
       - name: Install Playwright
         run: npx playwright install
 
-      - name: Build package and run tests
+      - name: Build package
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm run build
-          npm test
+        run: npm run build:playwright
+
+      - name: Run tests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DUMP_PATH: "./tests/test_dump_01.json"
+          EXPORT_PATH: "test_runs"
+        run: npm test
 
       - name: Archive npm logs
         uses: actions/upload-artifact@v2
