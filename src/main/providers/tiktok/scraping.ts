@@ -44,11 +44,11 @@ const persistsDoneScraping = async (videos: any) => {
   if (scrapingStartedAt && rendererWindow) {
     scrapingDone += 1;
     const prog = scrapingDone / scrapingTodo;
-    const eta =
-      (ETA_BASE_CORRECTION_MINUTES +
-        dayjs().diff(scrapingStartedAt, "minute", true)) *
-      (1 / prog);
+    const now = dayjs();
+    const diffMin = now.diff(scrapingStartedAt, "minute", true);
+    const eta = (ETA_BASE_CORRECTION_MINUTES + diffMin) * (1 / prog) - diffMin;
 
+    log.debug(`Now: ${now}, startedAt: ${scrapingStartedAt}`);
     log.info(`Scraping progress: ${prog} eta: ${eta}`);
 
     rendererWindow.webContents.send("set-progress", [prog, _.ceil(eta)]);
