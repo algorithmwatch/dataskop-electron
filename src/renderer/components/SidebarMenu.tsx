@@ -119,9 +119,9 @@ const SidebarMenu = ({
         <div className="text-center">
           <h1 className="hl-2xl mb-4">Willst du DataSkop zurücksetzen?</h1>
           <p className="">
-            Du kannst DataSkop zurücksetzen, um dich z. B. aus deinem Account
-            auszuloggen. Anschließend kannst du dich neu anmelden oder Daten
-            importieren.
+            Du kannst DataSkop zurücksetzen, um dich zum Beispiel aus deinem
+            Account auszuloggen. Anschließend kannst du dich neu anmelden oder
+            Daten importieren.
           </p>
         </div>
       </Modal>

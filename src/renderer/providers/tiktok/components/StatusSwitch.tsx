@@ -30,7 +30,7 @@ const StatusSwitch = ({ status }: { status: Status }): JSX.Element => {
         <StatusContent
           status={status}
           title="Handlung erforderlich"
-          body="Deine Hilfe ist erforderlich, um die Daten herunterzuladen. Bitte warte einen kurzen Moment und folge den Anweisungen. Es kann z. B. sein, dass du einen Code eingeben musst, der an dein Telefon gesendet wurde."
+          body="Deine Hilfe ist erforderlich, um die Daten herunterzuladen. Bitte warte einen kurzen Moment und folge den Anweisungen. Es kann zum Beispiel sein, dass du dein Passwort oder einen Code eingeben musst, der an dein Telefon gesendet wurde."
         />
       )}
       {[
