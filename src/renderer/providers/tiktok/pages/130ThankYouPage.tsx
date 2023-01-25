@@ -31,12 +31,14 @@ const ShareButton = ({
 }) => {
   // `target="_blank" isn't necessary. All links are handled by the OS (Browser / Mail client)
   return (
-    <a
+    <span
       className={clsx(
-        "inline-flex items-center justify-center px-4 py-3 text-lg font-medium rounded-full bg-white shadow-sm focus:ring",
+        "inline-flex items-center justify-center px-4 py-3 text-lg font-medium rounded-full bg-white shadow-sm focus:ring hover:cursor-pointer",
         className,
       )}
-      href={url}
+      onClick={() => {
+        window.open(url);
+      }}
     >
       <FontAwesomeIcon
         icon={icon}
@@ -44,7 +46,7 @@ const ShareButton = ({
         className="shrink-0 mr-2 text-3xl"
       />
       {title}
-    </a>
+    </span>
   );
 };
 
@@ -85,7 +87,7 @@ const ThankYouPage = (): JSX.Element => {
   const facebookUrl = `https://www.facebook.com/sharer.php?u=${shareUrl}`;
   const twitterUrl = `https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}`;
   const mailUrl =
-    "mailto:m.mustermann@domain.de?subject=Mach%20mit%20bei%20der%20TikTok-Datenspende%21&body=Hallo%21%0A%0AIch%20habe%20gerade%20die%20DataSkop-App%20ausprobiert.%20Sie%20zeigt%20dir%2C%20was%20TikTok%20%C3%BCber%20dich%20wei%C3%9F.%20Mach%20mit%20bei%20der%20Datenspende-Aktion%20unter%20https%3A%2F%2Fdataskop.net%0A%0AGru%C3%9F";
+    "mailto:?subject=Mach%20mit%20bei%20der%20TikTok-Datenspende%21&body=Hallo%21%0A%0AIch%20habe%20gerade%20die%20DataSkop-App%20ausprobiert.%20Sie%20zeigt%20dir%2C%20was%20TikTok%20%C3%BCber%20dich%20wei%C3%9F.%20Mach%20mit%20bei%20der%20Datenspende-Aktion%20unter%20https%3A%2F%2Fdataskop.net%0A%0AGru%C3%9F";
 
   const footerSlots = {
     center: [
