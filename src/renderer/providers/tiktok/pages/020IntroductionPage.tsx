@@ -44,9 +44,10 @@ const IntroductionPage = (): JSX.Element => {
         <div className="space-y-6 text-xl max-w-prose">
           <p>
             TikTok sammelt viele Daten über dich. Weißt du auch welche? <br />
-            Sogenannte „personenbezogene Daten“ lassen Rückschlüsse auf die
-            Persönlichkeit oder Lebensführung zu. Doch den Nutzer*innen großer
-            Plattformen wie TikTok ist oft unklar, welche Daten das sind.
+            Sogenannte personenbezogene Daten („DSGVO-Daten“) lassen
+            Rückschlüsse auf die Persönlichkeit oder Lebensführung zu. Doch den
+            Nutzer*innen großer Plattformen wie TikTok ist oft unklar, welche
+            Daten das sind.
           </p>
 
           <p>

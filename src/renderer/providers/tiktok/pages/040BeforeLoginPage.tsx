@@ -60,7 +60,7 @@ const BeforeLoginPage = (): JSX.Element => {
             Auskunftsrecht: Die Plattform muss dir sagen, welche Daten dort über
             dich gespeichert oder verarbeitet werden.{" "}
             <a
-              href="https://dataskop.net"
+              href="https://dataskop.net/faq/"
               target="_blank"
               rel="noreferrer"
               className="text-east-blue-700 font-semibold"
@@ -84,7 +84,7 @@ const BeforeLoginPage = (): JSX.Element => {
             Daten werden Algorithmwatch und ggf. Partnerinstitutionen als
             Datenspende zur Verfügung gestellt.{" "}
             <a
-              href="https://dataskop.net"
+              href="https://dataskop.net/tiktok-daten/"
               target="_blank"
               rel="noreferrer"
               className="text-east-blue-700 font-semibold"
@@ -112,7 +112,7 @@ const BeforeLoginPage = (): JSX.Element => {
           <div className="absolute bottom-4 inset-x-4">
             <Link
               to="/tiktok/import_data_export"
-              className="text-east-blue-800 font-semibold hover:underline text-base"
+              className="text-east-blue-800 font-semibold hover:underline text-lg"
             >
               Ich habe die DSGVO-Daten bereits.
             </Link>
