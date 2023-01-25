@@ -1,10 +1,29 @@
-export default function BaseLayout({ children }): JSX.Element {
+import { ReactNode, useState } from "react";
+import Header from "renderer/components/Header";
+import SidebarMenu from "renderer/components/SidebarMenu";
+import { useNavigation } from "renderer/contexts";
+
+const BaseLayout = ({ children }: { children: ReactNode }): JSX.Element => {
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
+  const { getCurrentPage } = useNavigation();
+  const toggleMenu = () => {
+    setMenuIsOpen((old) => !old);
+  };
+  const showHeader = getCurrentPage("layoutProps")?.showHeader || true;
+
   return (
-    <div>
-      <h1>To be done</h1>
-      <main className="flex flex-grow flex-col justify-between overflow-auto pt-4 pb-2">
-        {children}
-      </main>
-    </div>
+    <>
+      {showHeader && (
+        <>
+          <Header toggleMenu={toggleMenu} />
+          <SidebarMenu isOpen={menuIsOpen} setIsOpen={setMenuIsOpen} />
+        </>
+      )}
+
+      {/* "relative" + "z-index": header is fixed and body starts from upper border. make body overlap header */}
+      <main className="relative min-h-full flex flex-col">{children}</main>
+    </>
   );
-}
+};
+
+export default BaseLayout;

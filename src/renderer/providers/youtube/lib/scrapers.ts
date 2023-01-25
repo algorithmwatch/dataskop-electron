@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import {
   buildSearchUrl,
   parsePlaylistPage,
@@ -7,33 +6,33 @@ import {
   parseSubscribedChannels,
   parseVideoPage,
   parseWatchHistory,
-} from '@algorithmwatch/harke';
-import _ from 'lodash';
-import { ScrapingResult } from 'renderer/lib/db/types';
-import { trySeveralTimes } from 'renderer/lib/scraping';
-import { delay } from 'renderer/lib/utils/time';
-import { GetHtmlFunction } from 'renderer/providers/types';
-import { lookupOrScrapeVideos } from './html-scrapers';
-import { ProfileScraper, SeedScraper, SeedVideo } from './types';
+} from "@algorithmwatch/harke";
+import _ from "lodash";
+import { ScrapingResult } from "renderer/lib/db/types";
+import { currentDelay } from "renderer/lib/delay";
+import { parseUntilDone } from "renderer/lib/scraping";
+import { GetHtmlFunction } from "renderer/providers/types";
+import { lookupOrScrapeVideos } from "./html-scrapers";
+import { ProfileScraper, SeedScraper, SeedVideo } from "./types";
 
 // play list of special lists
-const LIST_ID_POPULAR = 'PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-';
-const LIST_ID_NATIONAL_NEWS_TOP_STORIES = 'PLNjtpXOAJhQJYbpJxMnoLKCUPanyEfv_j';
-const LIST_ID_LIKED_VIDEOS = 'LL';
+const LIST_ID_POPULAR = "PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-";
+const LIST_ID_NATIONAL_NEWS_TOP_STORIES = "PLNjtpXOAJhQJYbpJxMnoLKCUPanyEfv_j";
+const LIST_ID_LIKED_VIDEOS = "LL";
 
 const scrapePlaylist = async (
   playlistId: string,
   getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
   const url = `https://www.youtube.com/playlist?list=${playlistId}`;
-  return trySeveralTimes(getHtml, url, parsePlaylistPage);
+  return parseUntilDone(getHtml, url, parsePlaylistPage);
 };
 
 const scrapePopularVideos = async (
   getHtml: GetHtmlFunction,
 ): Promise<ScrapingResult> => {
   const result = await scrapePlaylist(LIST_ID_POPULAR, getHtml);
-  result.slug += '-popular-videos';
+  result.slug += "-popular-videos";
   return result;
 };
 
@@ -44,7 +43,7 @@ const scrapeNationalNewsTopStories = async (
     LIST_ID_NATIONAL_NEWS_TOP_STORIES,
     getHtml,
   );
-  result.slug += '-national-news-top-stories';
+  result.slug += "-national-news-top-stories";
   return result;
 };
 
@@ -53,7 +52,7 @@ const scrapeLikedVideos = async (
   _enableLogging: boolean,
 ): Promise<ScrapingResult> => {
   const result = await scrapePlaylist(LIST_ID_LIKED_VIDEOS, getHtml);
-  result.slug += '-liked-videos';
+  result.slug += "-liked-videos";
   return result;
 };
 
@@ -65,14 +64,14 @@ const scrapeVideo = async (
 ): Promise<ScrapingResult> => {
   // comments are currently not implemented
   const url = `https://www.youtube.com/watch?v=${videoId}`;
-  return trySeveralTimes(
+  return parseUntilDone(
     getHtml,
     url,
     parseVideoPage,
     // at least 10 videos, still pass if timeout is reached
     (x, timeFrac) => {
       if (enableLogging)
-        window.electron.log.info('not done yet', JSON.stringify(x));
+        window.electron.log.info("not done yet", JSON.stringify(x));
       return x.fields.recommendedVideos.length > 10;
     },
     enableLogging,
@@ -84,8 +83,8 @@ const scrapeWatchedVideos = async (
   getHtml: GetHtmlFunction,
   enableLogging: boolean,
 ): Promise<ScrapingResult> => {
-  const url = 'https://www.youtube.com/feed/history';
-  const results = await trySeveralTimes(
+  const url = "https://www.youtube.com/feed/history";
+  const results = await parseUntilDone(
     getHtml,
     url,
     parseWatchHistory,
@@ -97,8 +96,10 @@ const scrapeWatchedVideos = async (
   );
 
   if (!results.success) {
-    console.error('there is a problem with scraping the watch history');
-    console.log(results);
+    window.electron.log.error(
+      "there is a problem with scraping the watch history",
+      results,
+    );
   }
 
   if (enableLogging) {
@@ -115,7 +116,7 @@ const scrapeWatchedVideos = async (
     enableLogging,
   );
 
-  await delay(5000);
+  await currentDelay("longer");
 
   return results;
 };
@@ -124,8 +125,8 @@ const scrapeSearchHistory = async (
   getHtml: GetHtmlFunction,
   _enableLogging: boolean,
 ): Promise<ScrapingResult> => {
-  const url = 'https://myactivity.google.com/activitycontrols/youtube';
-  return trySeveralTimes(getHtml, url, parseSearchHistory);
+  const url = "https://myactivity.google.com/activitycontrols/youtube";
+  return parseUntilDone(getHtml, url, parseSearchHistory);
 };
 
 // const scrapeCommentHistory = async (
@@ -141,15 +142,15 @@ const scrapeSubscriptions = async (
   getHtml: GetHtmlFunction,
   _enableLogging: boolean,
 ): Promise<ScrapingResult> => {
-  const url = 'https://www.youtube.com/feed/channels';
-  return trySeveralTimes(getHtml, url, parseSubscribedChannels);
+  const url = "https://www.youtube.com/feed/channels";
+  return parseUntilDone(getHtml, url, parseSubscribedChannels);
 };
 
 const scrapeVideoSearch = async (getHtml: GetHtmlFunction, query: string) => {
   const url = buildSearchUrl(query);
 
   // hard to parse query from rendered html so pass it to the parser
-  return trySeveralTimes(getHtml, url, (html) =>
+  return parseUntilDone(getHtml, url, (html) =>
     parseSearchResultsVideos(html, query),
   );
 };
@@ -171,7 +172,7 @@ async function* scrapeSeedVideosAndFollow(
     const dataFromSeed = await scrapeVideo(id, getHtml, comments);
     step += 1;
 
-    dataFromSeed.slug += '-seed-follow';
+    dataFromSeed.slug += "-seed-follow";
     // assign an unique ID to extract follow chains
     dataFromSeed.fields.followId = followChainId;
     dataFromSeed.fields.seedCreator = creator;
@@ -187,11 +188,11 @@ async function* scrapeSeedVideosAndFollow(
 
       // since we skip over some data, we may have reached the end already
       if (step >= maxSteps) {
-        window.electron.log.info('reached early end');
+        window.electron.log.info("reached early end");
         return [1, dataFromSeed];
       }
 
-      window.electron.log.info('skipping over following videos');
+      window.electron.log.info("skipping over following videos");
       // we have to continue because we should not try to get the following videos.
       // thus we yield here already
       yield [step / maxSteps, dataFromSeed];
@@ -215,7 +216,7 @@ async function* scrapeSeedVideosAndFollow(
         enableLogging,
       );
 
-      followVideo.slug += '-followed';
+      followVideo.slug += "-followed";
       followVideo.fields.followId = followChainId;
 
       step += 1;
@@ -251,7 +252,7 @@ async function* scrapeSeedVideosAndFollow(
     {
       success: false,
       fields: {},
-      errors: [{ message: errMessage, field: 'general error' }],
+      errors: [{ message: errMessage, field: "general error" }],
     },
   ];
 }
@@ -267,7 +268,7 @@ async function* scrapeSeedVideos(
   for (const { id, creator } of seedVideoIds) {
     const data = await scrapeVideo(id, getHtml, comments);
 
-    data.slug += '-seed-no-follow';
+    data.slug += "-seed-no-follow";
     data.fields.seedCreator = creator;
 
     step += 1;
@@ -289,7 +290,7 @@ async function* scrapeSeedVideos(
     {
       success: false,
       fields: {},
-      errors: [{ message: errMessage, field: 'general error' }],
+      errors: [{ message: errMessage, field: "general error" }],
     },
   ];
 }
@@ -300,18 +301,18 @@ export const profileScraperSlugToFun: {
     enableLogging: boolean,
   ) => Promise<ScrapingResult>;
 } = {
-  'yt-user-watch-history': scrapeWatchedVideos,
-  'yt-playlist-page-liked-videos': scrapeLikedVideos,
-  'yt-user-search-history': scrapeSearchHistory,
+  "yt-user-watch-history": scrapeWatchedVideos,
+  "yt-playlist-page-liked-videos": scrapeLikedVideos,
+  "yt-user-search-history": scrapeSearchHistory,
   // scrapeCommentHistory,
-  'yt-user-subscribed-channels': scrapeSubscriptions,
+  "yt-user-subscribed-channels": scrapeSubscriptions,
 };
 
 export const experimentScrapersSlugToFun: {
   [key in SeedScraper]: (arg0: GetHtmlFunction) => Promise<ScrapingResult>;
 } = {
-  'yt-playlist-page-popular-videos': scrapePopularVideos,
-  'yt-playlist-page-national-news-top-stories': scrapeNationalNewsTopStories,
+  "yt-playlist-page-popular-videos": scrapePopularVideos,
+  "yt-playlist-page-national-news-top-stories": scrapeNationalNewsTopStories,
 };
 
 export { scrapeVideoSearch, scrapeSeedVideos, scrapeSeedVideosAndFollow };

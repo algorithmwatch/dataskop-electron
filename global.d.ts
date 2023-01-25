@@ -3,6 +3,13 @@ declare global {
   interface Window {
     electron: any;
     log: any;
+    persistEmail: string;
+    hasDonated: boolean | null;
+    notEligibleToDonate: true | null;
+    reachedEnd: true | null;
+    viz1modalHide: true | undefined;
+    viz2modalHide: true | undefined;
+    viz3modalHide: true | undefined;
   }
 }
 export {};

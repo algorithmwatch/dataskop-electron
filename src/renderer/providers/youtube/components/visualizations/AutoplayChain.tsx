@@ -1,6 +1,6 @@
 /* eslint-disable react/no-array-index-key */
-import { RecommendedVideo, VideoPage } from '@algorithmwatch/harke';
-import { faPlayCircle } from '@fortawesome/pro-light-svg-icons';
+import { RecommendedVideo, VideoPage } from "@algorithmwatch/harke";
+import { faPlayCircle } from "@fortawesome/pro-light-svg-icons";
 import {
   faImages,
   faLongArrowDown,
@@ -8,20 +8,20 @@ import {
   faSpinnerThird,
   faUserHeadset,
   IconDefinition,
-} from '@fortawesome/pro-regular-svg-icons';
-import { faAngleDown, faChevronRight } from '@fortawesome/pro-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import classNames from 'classnames';
-import _ from 'lodash';
-import debounce from 'lodash/debounce';
-import React, { useMemo, useState } from 'react';
-import Button from 'renderer/providers/youtube/components/Button';
-import { ScrapingResultSaved } from '../../../../lib/db/types';
-import { exportAutoplaychainCsv } from '../../lib/export';
-import explainerImage from '../../static/images/autoplay-explainer.png';
-import Explainer from '../Explainer';
-import Infobox from '../Infobox';
-import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
+} from "@fortawesome/pro-regular-svg-icons";
+import { faAngleDown, faChevronRight } from "@fortawesome/pro-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import clsx from "clsx";
+import _ from "lodash";
+import debounce from "lodash/debounce";
+import React, { useMemo, useState } from "react";
+import Button from "renderer/providers/youtube/components/Button";
+import { ScrapingResultSaved } from "../../../../lib/db/types";
+import { exportAutoplaychainCsv } from "../../lib/export";
+import explainerImage from "../../static/images/autoplay-explainer.png";
+import Explainer from "../Explainer";
+import Infobox from "../Infobox";
+import VideoThumbnail, { TooltipContent } from "../VideoThumbnail";
 
 const SeedVideoMenu = React.memo(function SeedVideoMenu({
   seedVideos,
@@ -39,15 +39,15 @@ const SeedVideoMenu = React.memo(function SeedVideoMenu({
       {seedVideos.map((video: VideoPage, index: number) => (
         <div
           key={`seed-${video.id}`}
-          className={classNames('p-2 h-full flex items-center', {
-            'bg-yellow-700': index === currentVideoIndex,
+          className={clsx("p-2 h-full flex items-center", {
+            "bg-yellow-700": index === currentVideoIndex,
           })}
         >
           <VideoThumbnail
             videoId={video.id}
             tippyOptions={{
               content: <TooltipContent video={video} />,
-              theme: 'process-info',
+              theme: "process-info",
             }}
             className="cursor-pointer"
             onClickCallback={() => onSelect(index)}
@@ -64,7 +64,7 @@ const SeedVideoMenu = React.memo(function SeedVideoMenu({
   );
 });
 
-function ViewSwitcherItem({
+const ViewSwitcherItem = ({
   label,
   icon,
   menuIsOpen = false,
@@ -76,23 +76,23 @@ function ViewSwitcherItem({
   menuIsOpen?: boolean;
   isSelected: boolean;
   onSelect: () => void;
-}) {
+}) => {
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
       key={label}
-      className={classNames(
-        'w-full h-20 flex flex-col items-center justify-center hover:bg-yellow-400 transition-all',
+      className={clsx(
+        "w-full h-20 flex flex-col items-center justify-center hover:bg-yellow-400 transition-all",
         {
-          'bg-yellow-200': !menuIsOpen,
-          'bg-yellow-300': menuIsOpen,
+          "bg-yellow-200": !menuIsOpen,
+          "bg-yellow-300": menuIsOpen,
         },
       )}
       onClick={onSelect}
     >
       <FontAwesomeIcon icon={icon} size="2x" />
       <div
-        className={classNames('text-sm select-none', {
+        className={clsx("text-sm select-none", {
           underline: isSelected,
         })}
       >
@@ -100,7 +100,7 @@ function ViewSwitcherItem({
       </div>
     </div>
   );
-}
+};
 
 const ViewSwitcher = React.memo(function ViewSwitcher({
   modeIndex,
@@ -112,9 +112,9 @@ const ViewSwitcher = React.memo(function ViewSwitcher({
   const [isOpen, setIsOpen] = useState(false);
 
   const items = [
-    { label: 'Thumbnails', icon: faImages },
+    { label: "Thumbnails", icon: faImages },
     // { label: 'Kategorien', icon: faTags },
-    { label: 'Kanäle', icon: faUserHeadset },
+    { label: "Kanäle", icon: faUserHeadset },
   ];
   const selectedItem = items[modeIndex];
 
@@ -124,9 +124,9 @@ const ViewSwitcher = React.memo(function ViewSwitcher({
         <FontAwesomeIcon icon={faAngleDown} />
       </div>
       <div
-        className={classNames('absolute inset-0', {
-          'overflow-hidden': !isOpen,
-          'h-max ring ring-yellow-700': isOpen,
+        className={clsx("absolute inset-0", {
+          "overflow-hidden": !isOpen,
+          "h-max ring ring-yellow-700": isOpen,
         })}
       >
         <ViewSwitcherItem
@@ -160,11 +160,7 @@ const ViewSwitcher = React.memo(function ViewSwitcher({
   );
 });
 
-export default function AutoplayChain({
-  data,
-}: {
-  data: ScrapingResultSaved[];
-}) {
+const AutoplayChain = ({ data }: { data: ScrapingResultSaved[] }) => {
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
   const groups = useMemo(
     () =>
@@ -172,11 +168,11 @@ export default function AutoplayChain({
         .filter(
           (y) =>
             y.success === true &&
-            ['yt-video-page-seed-follow', 'yt-video-page-followed'].includes(
+            ["yt-video-page-seed-follow", "yt-video-page-followed"].includes(
               y.slug,
             ),
         )
-        .groupBy('fields.followId')
+        .groupBy("fields.followId")
         .values()
         .value(),
     [data],
@@ -185,7 +181,7 @@ export default function AutoplayChain({
     () =>
       groups
         .map((group) => group[0].fields)
-        .filter((x) => x.seedCreator === 'fixed'),
+        .filter((x) => x.seedCreator === "fixed"),
     [groups],
   ) as VideoPage[];
   const [currentSeedVideoIndex, setCurrentSeedVideoIndex] = useState(0);
@@ -318,7 +314,7 @@ export default function AutoplayChain({
                               }}
                             />
                           ),
-                          theme: 'process-info',
+                          theme: "process-info",
                         }}
                         onMouseOverCallback={() =>
                           setHoveringVideoIdDebounced(scrapeResult.fields.id)
@@ -326,8 +322,8 @@ export default function AutoplayChain({
                         onMouseOutCallback={() =>
                           setHoveringVideoIdDebounced(null)
                         }
-                        className={classNames({
-                          'opacity-40':
+                        className={clsx({
+                          "opacity-40":
                             hoveringVideoId &&
                             hoveringVideoId !== scrapeResult.fields.id,
                         })}
@@ -381,7 +377,7 @@ export default function AutoplayChain({
                                   }}
                                 />
                               ),
-                              theme: 'process-info',
+                              theme: "process-info",
                             }}
                             onMouseOverCallback={() =>
                               setHoveringVideoIdDebounced(video.id)
@@ -391,7 +387,7 @@ export default function AutoplayChain({
                             }
                             className={
                               hoveringVideoId && hoveringVideoId !== video.id
-                                ? 'opacity-40'
+                                ? "opacity-40"
                                 : undefined
                             }
                           />
@@ -403,8 +399,8 @@ export default function AutoplayChain({
             </div>
             <div className="mt-7 text-center">
               <Button
-                theme={'link'}
-                size={'small'}
+                theme="link"
+                size="small"
                 onClick={() => exportAutoplaychainCsv(groups)}
               >
                 CSV exportieren
@@ -415,4 +411,6 @@ export default function AutoplayChain({
       </div>
     </>
   );
-}
+};
+
+export default AutoplayChain;

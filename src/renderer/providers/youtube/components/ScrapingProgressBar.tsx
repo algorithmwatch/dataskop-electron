@@ -1,21 +1,55 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { faSpinnerThird } from '@fortawesome/pro-light-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect, useState } from 'react';
-import { useScraping } from 'renderer/contexts';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import { faSpinnerThird } from "@fortawesome/pro-light-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
+import { useScraping } from "renderer/contexts";
+import { providerInfo } from "renderer/providers/info";
 
-export default function ScrapingProgressBar() {
+const ScrapingProgressBar = () => {
   const {
     state: {
+      campaign,
       visibleWindow,
       scrapingProgress: { isActive, value },
+      startedAt,
       finishedTasks,
+      demoData,
     },
     dispatch,
-    getEtaUntil,
   } = useScraping();
 
-  const [etaMin, setEtaMin] = useState('15 Minuten');
+  /**
+   * A quick and dirty way to compute an ETA based on the demo data.
+   */
+  const getEtaUntil = (checkUntilStep = null) => {
+    if (campaign === null) return null;
+    if (demoData === null) return null;
+    if (startedAt === null) return null;
+
+    const demoDataObj =
+      providerInfo[campaign.config.provider].demoData[demoData.data];
+
+    const untilIndex = checkUntilStep || demoDataObj.results.length - 1;
+
+    const finishedFixed =
+      finishedTasks - 1 < demoDataObj.results.length
+        ? finishedTasks - 1
+        : demoDataObj.results.length - 1;
+
+    const demoStartedAt = demoDataObj.results[0].scrapedAt - 10000; // ~ 10 seconds
+    const demoTime = demoDataObj.results[finishedFixed].scrapedAt;
+    const demoDuration = demoTime - demoStartedAt;
+    const demoRemaining = demoDataObj.results[untilIndex].scrapedAt - demoTime;
+
+    const ourTime = Date.now() - startedAt;
+
+    const etaRemaining = (ourTime / demoDuration) * demoRemaining;
+
+    return etaRemaining;
+  };
+
+  const [etaMin, setEtaMin] = useState("15 Minuten");
 
   useEffect(() => {
     if (finishedTasks > 5) {
@@ -25,12 +59,12 @@ export default function ScrapingProgressBar() {
       if (minutes >= 2) {
         setEtaMin(`${minutes} Minuten`);
       } else if (minutes === 1) {
-        setEtaMin('eine Minute');
+        setEtaMin("eine Minute");
       } else {
-        setEtaMin('unter eine Minute');
+        setEtaMin("unter eine Minute");
       }
     } else {
-      setEtaMin('15 Minuten');
+      setEtaMin("15 Minuten");
     }
   }, [finishedTasks]);
 
@@ -39,11 +73,10 @@ export default function ScrapingProgressBar() {
   }
 
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
       className="w-64 h-10 relative flex items-center cursor-pointer group"
       onClick={() =>
-        dispatch({ type: 'set-visible-window', visibleWindow: !visibleWindow })
+        dispatch({ type: "set-visible-window", visibleWindow: !visibleWindow })
       }
     >
       <div className="z-20 w-full flex items-center justify-center px-2 space-x-2 text-yellow-1300 group-hover:text-yellow-1100">
@@ -60,4 +93,6 @@ export default function ScrapingProgressBar() {
       </div>
     </div>
   );
-}
+};
+
+export default ScrapingProgressBar;

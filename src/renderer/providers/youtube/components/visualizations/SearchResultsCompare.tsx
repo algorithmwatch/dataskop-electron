@@ -1,17 +1,16 @@
-import { RecommendedVideo } from '@algorithmwatch/harke';
-import { faSearch } from '@fortawesome/pro-light-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import _ from 'lodash';
-import { useState } from 'react';
-import Button from 'renderer/providers/youtube/components/Button';
-import { Placement } from 'tippy.js';
-import { ScrapingResultSaved } from '../../../../lib/db/types';
-import { exportSearchCsv } from '../../lib/export';
-import { Carousel, Slide } from '../Carousel';
-import { Options } from '../Carousel/types';
-import Explainer from '../Explainer';
-import Infobox from '../Infobox';
-import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
+import { RecommendedVideo } from "@algorithmwatch/harke";
+import { faSearch } from "@fortawesome/pro-light-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import _ from "lodash";
+import { useState } from "react";
+import Button from "renderer/providers/youtube/components/Button";
+import { Placement } from "tippy.js";
+import { ScrapingResultSaved } from "../../../../lib/db/types";
+import { exportSearchCsv } from "../../lib/export";
+import { Carousel, Slide } from "../Carousel";
+import Explainer from "../Explainer";
+import Infobox from "../Infobox";
+import VideoThumbnail, { TooltipContent } from "../VideoThumbnail";
 
 interface SearchResultsCompareDataItem {
   query: string;
@@ -19,13 +18,13 @@ interface SearchResultsCompareDataItem {
   signedOutVideos: RecommendedVideo[];
 }
 
-function VideoList({
+const VideoList = ({
   items,
   tippyPlacement,
 }: {
   items: RecommendedVideo[];
   tippyPlacement: Placement;
-}) {
+}) => {
   return (
     <div className="space-y-2">
       {items.map(({ channelName, id, title }) => (
@@ -39,15 +38,15 @@ function VideoList({
               />
             ),
             placement: tippyPlacement,
-            theme: 'process-info',
+            theme: "process-info",
           }}
         />
       ))}
     </div>
   );
-}
+};
 
-function Visual({ session }: { session: SearchResultsCompareDataItem }) {
+const Visual = ({ session }: { session: SearchResultsCompareDataItem }) => {
   const displayCount = 10;
 
   return (
@@ -95,16 +94,12 @@ function Visual({ session }: { session: SearchResultsCompareDataItem }) {
       </div>
     </div>
   );
-}
+};
 
-export default function SearchResultsCompare({
-  data,
-}: {
-  data: ScrapingResultSaved[];
-}) {
+const SearchResultsCompare = ({ data }: { data: ScrapingResultSaved[] }) => {
   const queryGroups = _(data)
-    .filter({ slug: 'yt-search-results-videos' })
-    .groupBy('fields.query')
+    .filter({ slug: "yt-search-results-videos" })
+    .groupBy("fields.query")
     .map((items, query) => ({
       query,
       signedInVideos: items[0]?.fields.videos,
@@ -203,8 +198,8 @@ export default function SearchResultsCompare({
       <div className="mt-7 mx-auto">
         <Button
           disabled={waitExport}
-          theme={'link'}
-          size={'small'}
+          theme="link"
+          size="small"
           onClick={async () => {
             setWaitExport(true);
             await exportSearchCsv(queryGroups);
@@ -212,10 +207,12 @@ export default function SearchResultsCompare({
           }}
         >
           {waitExport
-            ? 'Einen Moment bitte, der Export wird vorbereitet'
-            : 'CSV exportieren'}
+            ? "Einen Moment, bitte, der Export wird vorbereitet"
+            : "CSV exportieren"}
         </Button>
       </div>
     </>
   );
-}
+};
+
+export default SearchResultsCompare;

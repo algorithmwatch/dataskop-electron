@@ -1,61 +1,38 @@
-import { GetCurrentHtml, GetHtmlFunction } from 'renderer/providers/types';
+import { GetCurrentHtml, GetHtmlFunction } from "renderer/providers/types";
 
 // commands to communicate with the browser window in the main screen
 
-const extractHtml = async () => {
-  return window.electron.ipcRenderer.invoke('scraping-get-current-html');
+const extractHtml = (htmlLogging = false) => {
+  return window.electron.ipc.invoke("scraping-get-current-html", htmlLogging);
 };
 
-const goToUrl = async (url: string, options = {}): Promise<string> => {
-  return window.electron.ipcRenderer.invoke('scraping-load-url', url, options);
+const goToUrl = (url: string): Promise<string> => {
+  return window.electron.ipc.invoke("scraping-load-url", url);
 };
 
-const clearStorage = () =>
-  window.electron.ipcRenderer.invoke('scraping-clear-storage');
+const clearStorage = () => window.electron.ipc.invoke("scraping-clear-storage");
 
-const makeGetHtml = (logHtml: boolean): GetHtmlFunction => {
+const makeGetHtml = (htmlLogging: boolean): GetHtmlFunction => {
   const getHtml = async (url: string): Promise<GetCurrentHtml> => {
     await goToUrl(url);
-    if (logHtml)
-      return () => window.electron.ipcRenderer.invoke('scraping-log-html', url);
-    return extractHtml;
+    return () => extractHtml(htmlLogging);
   };
   return getHtml;
 };
 
-const getCookies = async (): Promise<Array<unknown>> => {
-  return window.electron.ipcRenderer.invoke('scraping-get-cookies');
+const getCookies = (): Promise<Array<unknown>> => {
+  return window.electron.ipc.invoke("scraping-get-cookies");
 };
 
-const setNavigationCallback = async (cbSlug: string, remove = false) => {
-  return window.electron.ipcRenderer.invoke(
-    'scraping-navigation-cb',
-    cbSlug,
-    remove,
-  );
+const setNavigationCallback = (cbSlug: string, remove = false) => {
+  return window.electron.ipc.invoke("scraping-navigation-cb", cbSlug, remove);
 };
 
-const scrollDown = async () => {
-  return window.electron.ipcRenderer.invoke('scraping-scroll-down');
-};
-
-const clickElement = async (selector: string) => {
-  return window.electron.ipcRenderer.invoke('scraping-click-element', selector);
-};
-
-const elementExists = async (selector: string) => {
-  return window.electron.ipcRenderer.invoke(
-    'scraping-element-exists',
-    selector,
-  );
-};
-
-const submitFormScraping = async (selector: string) => {
-  return window.electron.ipcRenderer.invoke('scraping-submit-form', selector);
+const scrollDown = () => {
+  return window.electron.ipc.invoke("scraping-scroll-down");
 };
 
 export {
-  submitFormScraping,
   clearStorage,
   makeGetHtml,
   getCookies,
@@ -63,6 +40,4 @@ export {
   scrollDown,
   extractHtml,
   goToUrl,
-  clickElement,
-  elementExists,
 };

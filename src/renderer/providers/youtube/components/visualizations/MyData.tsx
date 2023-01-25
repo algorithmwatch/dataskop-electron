@@ -7,21 +7,17 @@ import {
   faPlay,
   faSearch,
   faUser,
-} from '@fortawesome/pro-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import dayjs from 'dayjs';
-import React, { useMemo } from 'react';
-import { FixedSizeList as List } from 'react-window';
-import useDimensions from '../../../../components/hooks/useDimensions';
-import Button from '../Button';
+} from "@fortawesome/pro-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import dayjs from "dayjs";
+import React, { useMemo } from "react";
+import { useMeasure } from "react-use";
+import { FixedSizeList as List } from "react-window";
+import Button from "../Button";
 
 const invokeExport = async (data: any) => {
-  const filename = `dataskop-${dayjs().format('YYYY-MM-DD-HH-mm-s')}.json`;
-  window.electron.ipcRenderer.invoke(
-    'results-export',
-    JSON.stringify(data),
-    filename,
-  );
+  const filename = `dataskop-${dayjs().format("YYYY-MM-DD-HH-mm-s")}.json`;
+  window.electron.ipc.invoke("results-export", JSON.stringify(data), filename);
 };
 
 const Row = ({ index, style, data }: any) => {
@@ -30,19 +26,16 @@ const Row = ({ index, style, data }: any) => {
 };
 
 export default function MyData({ data }: any) {
-  console.log(data);
-  const [containerRef, containerDimensions] = useDimensions();
+  const [containerRef, containerDimensions] = useMeasure();
   const listRef = React.createRef();
-
-  // console.log(containerDimensions);
 
   const db = useMemo(() => {
     const history = data.results.find(
-      (x: any) => x.success && x.slug.includes('user-watch-history'),
+      (x: any) => x.success && x.slug.includes("user-watch-history"),
     )?.fields.videos;
 
     const scrapes = data.results.filter(
-      (x: any) => x.success && x.slug.includes('video-page-seed-follow'),
+      (x: any) => x.success && x.slug.includes("video-page-seed-follow"),
     );
 
     const scrapesResultsNum = scrapes.reduce((acc: any, curr: any) => {
@@ -50,11 +43,11 @@ export default function MyData({ data }: any) {
     }, 0);
 
     const channels = data.results.find(
-      (x: any) => x.success && x.slug.includes('subscribed-channels'),
+      (x: any) => x.success && x.slug.includes("subscribed-channels"),
     )?.fields.channels;
 
     const queries = data.results.find(
-      (x: any) => x.success && x.slug.includes('search-results-videos'),
+      (x: any) => x.success && x.slug.includes("search-results-videos"),
     )?.fields.videos;
 
     return {
@@ -68,7 +61,7 @@ export default function MyData({ data }: any) {
 
   const stringifiedData = useMemo(() => JSON.stringify(data, null, 2), [data]);
   const stringifiedDataSplit = useMemo(
-    () => stringifiedData.split('\n'),
+    () => stringifiedData.split("\n"),
     [stringifiedData],
   );
 
@@ -123,7 +116,7 @@ export default function MyData({ data }: any) {
                 // onClick={() => scrollTo('video-page-seed-follow')}
               >
                 <FontAwesomeIcon icon={faPlay} className="mr-3" size="lg" />
-                {db.scrapes.length} Videos mit insgesamt {db.scrapesResultsNum}{' '}
+                {db.scrapes.length} Videos mit insgesamt {db.scrapesResultsNum}{" "}
                 Empfehlung
               </div>
             )}

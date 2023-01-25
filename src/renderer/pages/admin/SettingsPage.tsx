@@ -1,77 +1,169 @@
-import { Button, Checkbox, FormControlLabel } from '@material-ui/core';
-import _ from 'lodash';
-import { useEffect, useState } from 'react';
-import { humanFileSize } from 'renderer/lib/utils/strings';
-import { useConfig, useScraping } from '../../contexts';
+import _ from "lodash";
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { humanFileSize } from "renderer/lib/utils/strings";
+import Button from "renderer/providers/youtube/components/Button";
+import { useConfig } from "../../contexts";
 
-export default function SettingsPage(): JSX.Element {
+const SettingsPage = (): JSX.Element => {
   const {
-    state: { logHtml },
-    dispatch,
-  } = useScraping();
-
-  const {
-    state: { platformUrl },
+    state: { platformUrl, userConfig },
+    dispatch: dipatchConfig,
   } = useConfig();
 
-  const handleLogHtmlChange = (event: any) => {
-    dispatch({ type: 'set-log-html', logHtml: event.target.checked });
-  };
+  const history = useHistory();
 
   const [exportOngoing, setExportOngoing] = useState(false);
-  const [storage, setStorage] = useState<string>('calculating...');
+  const [storage, setStorage] = useState<string>("Calculating...");
+  const [log, setLog] = useState(["Loading...", "Loading..."]);
 
   useEffect(() => {
-    (async () =>
+    (async () => {
       setStorage(
         humanFileSize(
-          _.sum(await window.electron.ipcRenderer.invoke('export-debug-size')),
+          _.sum(await window.electron.ipc.invoke("export-debug-size")),
         ),
-      ))();
+      );
+      setLog(await window.electron.ipc.invoke("export-read-log"));
+    })();
   }, []);
 
   return (
     <div className="m-10">
-      <h1>Settings</h1>
-      <div>Platform url: {platformUrl}</div>
+      <h1 className="text-5xl mb-5">Settings</h1>
+
+      <Button
+        onClick={() => {
+          history.goBack();
+        }}
+      >
+        Go back
+      </Button>
+
+      {userConfig && (
+        <div className="grid grid-cols-5 gap-4">
+          <div className="m-5">
+            <div>Start on login: {userConfig.openAtLogin ? "yes" : "no"}</div>
+            <Button
+              onClick={() =>
+                dipatchConfig({
+                  type: "set-user-config",
+                  newValues: {
+                    openAtLogin: !userConfig.openAtLogin,
+                  },
+                })
+              }
+            >
+              Toggle
+            </Button>
+          </div>
+          <div className="m-5" id="debug-logging">
+            <div>Debug logging: {userConfig.debugLogging ? "yes" : "no"}</div>
+            <Button
+              onClick={() =>
+                dipatchConfig({
+                  type: "set-user-config",
+                  newValues: {
+                    debugLogging: !userConfig.debugLogging,
+                  },
+                })
+              }
+            >
+              Toggle
+            </Button>
+          </div>
+          <div className="m-5" id="html-logging">
+            <div>HTML logging: {userConfig.htmlLogging ? "yes" : "no"}</div>
+            <Button
+              onClick={() =>
+                dipatchConfig({
+                  type: "set-user-config",
+                  newValues: {
+                    htmlLogging: !userConfig.htmlLogging,
+                  },
+                })
+              }
+            >
+              Toggle
+            </Button>
+          </div>
+          <div className="m-5">
+            <div>
+              scrapingForceOpen: {userConfig.scrapingForceOpen ? "yes" : "no"}
+            </div>
+            <Button
+              onClick={() =>
+                dipatchConfig({
+                  type: "set-user-config",
+                  newValues: {
+                    scrapingForceOpen: !userConfig.scrapingForceOpen,
+                  },
+                })
+              }
+            >
+              Toggle
+            </Button>
+          </div>
+          <div className="m-5">
+            <div>
+              scrapingOpenDevTools:{" "}
+              {userConfig.scrapingOpenDevTools ? "yes" : "no"}
+            </div>
+            <Button
+              onClick={() =>
+                dipatchConfig({
+                  type: "set-user-config",
+                  newValues: {
+                    scrapingOpenDevTools: !userConfig.scrapingOpenDevTools,
+                  },
+                })
+              }
+            >
+              Toggle
+            </Button>
+          </div>
+          <div className="m-5">
+            <div>Monitoring: {userConfig.monitoring ? "yes" : "no"}</div>
+          </div>
+          <div className="m-5">
+            <div>
+              Monitoring Interval:{" "}
+              {userConfig.monitoringInterval ? "yes" : "no"}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <hr />
+
+      <div className="pt-10">Platform url: {platformUrl}</div>
       <div className="pt-10 pb-10">
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() =>
-            window.electron.ipcRenderer.invoke('update-check-beta')
-          }
-        >
+        <Button onClick={() => window.electron.ipc.invoke("update-check-beta")}>
           Check beta update
         </Button>
       </div>
-      <div className="">
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={logHtml}
-              onChange={handleLogHtmlChange}
-              name="checkedB"
-              color="primary"
-            />
-          }
-          label="Enable logging"
-        />
+
+      <hr />
+
+      <div className="mt-5">Log: {log[1]}</div>
+      <div className="my-5 whitespace-pre-line overflow-y-auto h-64">
+        {log[0]}
       </div>
+
+      <hr />
+
       <div className="pt-10 pb-10">
         <Button
           disabled={exportOngoing}
-          variant="contained"
-          color="primary"
           onClick={async () => {
             setExportOngoing(true);
-            await window.electron.ipcRenderer.invoke('export-debug-archive');
+            await window.electron.ipc.invoke("export-debug-archive");
             setExportOngoing(false);
           }}
         >
           Export debug archive
         </Button>
-        {exportOngoing && 'Exporting...'}
+        {exportOngoing && "Exporting..."}
       </div>
 
       <div className="pb-20">Storage of debug files: {storage}</div>
@@ -80,10 +172,8 @@ export default function SettingsPage(): JSX.Element {
         DANGER!!!
         <div className="pt-10 pb-10">
           <Button
-            variant="contained"
-            color="primary"
             onClick={() => {
-              window.electron.ipcRenderer.invoke('export-debug-clean');
+              window.electron.ipc.invoke("export-debug-clean");
             }}
           >
             Remove debug files (logs, html)
@@ -92,4 +182,6 @@ export default function SettingsPage(): JSX.Element {
       </div>
     </div>
   );
-}
+};
+
+export default SettingsPage;

@@ -3,47 +3,52 @@
  *
  * @module
  */
-import React from 'react';
-import { providerInfo } from 'renderer/providers';
+import React from "react";
+import { providerInfo } from "renderer/providers/info";
+import { NavigationState, NavigationStatePage } from "./types";
 
 type Action =
-  | { type: 'set-page-index'; pageIndex: number }
+  | { type: "set-page-index"; pageIndex: number }
   | {
-      type: 'set-navigation-by-provider';
+      type: "set-navigation-by-provider";
       provider: string;
       navSlug: string;
-      skipCampaignSelection: boolean;
+      pathname?: string;
     };
 type Dispatch = (action: Action) => void;
-export type NavigationState = {
-  pageIndex: number;
-  pages: Array<{ path: string; sectionKey: null | string }>;
-  sections: { [key: string]: { label: string } };
-};
+
 type NavigationProviderProps = { children: React.ReactNode };
 
-const NavigationStateContext = React.createContext<
+type NavigationFunctionSignature = {
+  (propName: "path"): NavigationStatePage["path"];
+  (propName: "layoutProps"): NavigationStatePage["layoutProps"];
+  (propName: "sectionKey"): NavigationStatePage["sectionKey"];
+  (propname?: undefined): NavigationStatePage;
+};
+
+type NavigationStateContextType =
   | {
       state: NavigationState;
       dispatch: Dispatch;
-      getNextPage: any;
-      getPreviousPage: any;
-      getCurrentPage: any;
-      getPageIndexByPath: any;
+      getNextPage: NavigationFunctionSignature;
+      getPreviousPage: NavigationFunctionSignature;
+      getCurrentPage: NavigationFunctionSignature;
+      getPageIndexByPath: (path: NavigationStatePage["path"]) => number;
     }
-  | undefined
->(undefined);
+  | undefined;
+
+const NavigationStateContext =
+  React.createContext<NavigationStateContextType>(undefined);
 
 const initialNavigationState: NavigationState = {
   pageIndex: 0,
   pages: [
     {
-      path: '/start',
+      path: "/select_campaign",
       sectionKey: null,
-    },
-    {
-      path: '/select_campaign',
-      sectionKey: null,
+      layoutProps: {
+        showHeader: false,
+      },
     },
   ],
   sections: {},
@@ -54,22 +59,22 @@ const NavigationReducer = (
   action: Action,
 ): NavigationState => {
   switch (action.type) {
-    case 'set-page-index': {
+    case "set-page-index": {
       return { ...state, pageIndex: action.pageIndex };
     }
-    case 'set-navigation-by-provider': {
+    case "set-navigation-by-provider": {
       const navConfig =
         providerInfo[action.provider].navigation[action.navSlug];
 
-      let basePages = initialNavigationState.pages;
-
-      if (action.skipCampaignSelection) {
-        basePages = basePages.filter((x) => x.path !== '/select_campaign');
-      }
+      const basePages = initialNavigationState.pages;
+      const pages = basePages.concat(navConfig.pages);
+      const pageIndex = action.pathname
+        ? pages.findIndex((page) => page.path === action.pathname)
+        : initialNavigationState.pages.length;
 
       return {
-        pageIndex: state.pageIndex,
-        pages: basePages.concat(navConfig.pages),
+        pageIndex,
+        pages,
         sections: navConfig.sections,
       };
     }
@@ -85,7 +90,7 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
     initialNavigationState,
   );
 
-  const getNextPage = (propName?: string) => {
+  const getNextPage = ((propName) => {
     const nextIndex = state.pageIndex + 1;
 
     if (!state.pages[nextIndex]) {
@@ -95,19 +100,15 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
     const nextPageObj = state.pages[nextIndex];
 
     if (propName) {
-      if (!nextPageObj[propName]) {
-        throw new Error(
-          `Property "${propName}" does not exist on next page object`,
-        );
-      }
-      return nextPageObj[propName];
+      const result = nextPageObj[propName];
+      return result;
     }
 
     return nextPageObj;
-  };
+  }) as NavigationFunctionSignature;
 
-  const getPreviousPage = (propName?: string) => {
-    const prevIndex = state.pageIndex - 1;
+  const getPreviousPage = ((propName) => {
+    const prevIndex = state.pageIndex === 0 ? 0 : state.pageIndex - 1;
 
     if (!state.pages[prevIndex]) {
       throw new Error(`Previous page index "${prevIndex}" does not exist`);
@@ -116,18 +117,13 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
     const prevPageObj = state.pages[prevIndex];
 
     if (propName) {
-      if (!prevPageObj[propName]) {
-        throw new Error(
-          `Property "${propName}" does not exist on previous page object`,
-        );
-      }
       return prevPageObj[propName];
     }
 
     return prevPageObj;
-  };
+  }) as NavigationFunctionSignature;
 
-  const getCurrentPage = (propName?: string) => {
+  const getCurrentPage = ((propName) => {
     const currentIndex = state.pageIndex;
 
     if (!state.pages[currentIndex]) {
@@ -137,19 +133,20 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
     const currentPageObj = state.pages[currentIndex];
 
     if (propName) {
-      if (!currentPageObj[propName]) {
-        throw new Error(
-          `Property "${propName}" does not exist on current page object`,
-        );
-      }
       return currentPageObj[propName];
     }
 
     return currentPageObj;
-  };
+  }) as NavigationFunctionSignature;
 
-  const getPageIndexByPath = (path: string) =>
+  const getPageIndexByPath = (path: NavigationStatePage["path"]): number =>
     state.pages.findIndex((page) => page.path === path);
+
+  // const navigateTo = (value: number | NavigationStatePage["path"]) => {
+  //   const pageIndex =
+  //     typeof value === "number" ? value : getPageIndexByPath(value);
+  //   dispatch({ type: "set-page-index", pageIndex });
+  // };
 
   const value = {
     state,
@@ -171,7 +168,7 @@ const useNavigation = () => {
   const context = React.useContext(NavigationStateContext);
 
   if (context === undefined) {
-    throw new Error('useNavigation must be used within a NavigationProvider');
+    throw new Error("useNavigation must be used within a NavigationProvider");
   }
 
   return context;

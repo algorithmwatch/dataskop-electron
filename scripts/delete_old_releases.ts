@@ -8,14 +8,14 @@ import {
   DeleteObjectCommand,
   ListObjectsCommand,
   S3Client,
-} from '@aws-sdk/client-s3';
-import dayjs from 'dayjs';
-import * as _ from 'lodash';
-import { build } from '../package.json';
+} from "@aws-sdk/client-s3";
+import dayjs from "dayjs";
+import * as _ from "lodash";
+import { build } from "../package.json";
 
 const run = async () => {
-  if (!process.env.ACCESS || !process.env.SECRET) {
-    console.error('set env vars');
+  if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+    console.error("set env vars");
     return;
   }
 
@@ -23,8 +23,8 @@ const run = async () => {
     region: build.publish.region,
     endpoint: build.publish.endpoint,
     credentials: {
-      accessKeyId: process.env.ACCESS,
-      secretAccessKey: process.env.SECRET,
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     },
   });
 
@@ -40,19 +40,19 @@ const run = async () => {
         key: Key,
         lastMod: dayjs(LastModified),
       }))
-      .filter((x) => !x.key.endsWith('.yml'));
+      .filter((x) => !x.key.endsWith(".yml"));
 
-    const [beta, prod] = _.partition(objects, (x) => x.key.includes('beta'));
+    const [beta, prod] = _.partition(objects, (x) => x.key.includes("beta"));
 
     for (const arr of [beta, prod]) {
-      const ord = _.orderBy(arr, 'lastMod');
+      const ord = _.orderBy(arr, "lastMod");
       const recentPublished = ord[ord.length - 1];
       let numDeleted = 0;
 
       for (const x of arr) {
         // Delete objects that are at least 3 days older than the most recently
         // published object.
-        if (recentPublished.lastMod.diff(x.lastMod, 'day') > 2) {
+        if (recentPublished.lastMod.diff(x.lastMod, "day") > 2) {
           const delCommand = new DeleteObjectCommand({
             Bucket: build.publish.bucket,
             Key: x.key,

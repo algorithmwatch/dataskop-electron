@@ -1,17 +1,16 @@
-import { Channel, RecommendedVideo } from '@algorithmwatch/harke';
-import { faNewspaper } from '@fortawesome/pro-light-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import _ from 'lodash';
-import { useState } from 'react';
-import Button from 'renderer/providers/youtube/components/Button';
-import { Placement } from 'tippy.js';
-import { ScrapingResultSaved } from '../../../../lib/db/types';
-import { exportNewsCsv } from '../../lib/export';
-import { Carousel, Slide } from '../Carousel';
-import { Options } from '../Carousel/types';
-import Explainer from '../Explainer';
-import Infobox from '../Infobox';
-import VideoThumbnail, { TooltipContent } from '../VideoThumbnail';
+import { Channel, RecommendedVideo } from "@algorithmwatch/harke";
+import { faNewspaper } from "@fortawesome/pro-light-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import _ from "lodash";
+import { useState } from "react";
+import Button from "renderer/providers/youtube/components/Button";
+import { Placement } from "tippy.js";
+import { ScrapingResultSaved } from "../../../../lib/db/types";
+import { exportNewsCsv } from "../../lib/export";
+import { Carousel, Slide } from "../Carousel";
+import Explainer from "../Explainer";
+import Infobox from "../Infobox";
+import VideoThumbnail, { TooltipContent } from "../VideoThumbnail";
 
 interface NewsTop5DataItem {
   video: {
@@ -24,13 +23,13 @@ interface NewsTop5DataItem {
   signedOutVideos: RecommendedVideo[];
 }
 
-function VideoList({
+const VideoList = ({
   items,
   tippyPlacement,
 }: {
   items: RecommendedVideo[];
   tippyPlacement: Placement;
-}) {
+}) => {
   return (
     <div className="space-y-2">
       {items.map(({ channelName, id, title }) => (
@@ -44,15 +43,15 @@ function VideoList({
               />
             ),
             placement: tippyPlacement,
-            theme: 'process-info',
+            theme: "process-info",
           }}
         />
       ))}
     </div>
   );
-}
+};
 
-function Visual({ session }: { session: NewsTop5DataItem }) {
+const Visual = ({ session }: { session: NewsTop5DataItem }) => {
   const displayCount = 10;
 
   return (
@@ -99,18 +98,18 @@ function Visual({ session }: { session: NewsTop5DataItem }) {
       </div>
     </div>
   );
-}
+};
 
-export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
+const NewsTop5 = ({ data }: { data: ScrapingResultSaved[] }) => {
   const filtered = (() => {
     const signedInData = data.filter(
       (x) =>
-        x?.fields.seedCreator === 'yt-playlist-page-national-news-top-stories',
+        x?.fields.seedCreator === "yt-playlist-page-national-news-top-stories",
     );
     const signedOutData = data.filter(
       (x) =>
         x?.fields.seedCreator ===
-        'repeat: yt-playlist-page-national-news-top-stories',
+        "repeat: yt-playlist-page-national-news-top-stories",
     );
 
     return _.zip(signedInData, signedOutData);
@@ -129,8 +128,8 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
     }))
     .filter(
       (x) =>
-        typeof x.signedInVideos !== 'undefined' &&
-        typeof x.signedOutVideos !== 'undefined',
+        typeof x.signedInVideos !== "undefined" &&
+        typeof x.signedOutVideos !== "undefined",
     );
 
   // console.warn('filtered', filtered);
@@ -227,8 +226,8 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
       <div className="mt-7 mx-auto">
         <Button
           disabled={waitExport}
-          theme={'link'}
-          size={'small'}
+          theme="link"
+          size="small"
           onClick={async () => {
             setWaitExport(true);
             await exportNewsCsv(transformed);
@@ -236,10 +235,12 @@ export default function NewsTop5({ data }: { data: ScrapingResultSaved[] }) {
           }}
         >
           {waitExport
-            ? 'Einen Moment bitte, der Export wird vorbereitet'
-            : 'CSV exportieren'}
+            ? "Einen Moment, bitte, der Export wird vorbereitet"
+            : "CSV exportieren"}
         </Button>
       </div>
     </>
   );
-}
+};
+
+export default NewsTop5;

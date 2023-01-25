@@ -1,4 +1,4 @@
-import { ScrapingConfig } from '../../types';
+import { ScrapingConfig } from "../../types";
 
 export type SeedCreator = {
   maxVideos: number;
@@ -11,27 +11,27 @@ export type SeedVideoRepeat = {
 };
 
 export type ProfileScraper =
-  | 'yt-user-watch-history'
-  | 'yt-playlist-page-liked-videos'
-  | 'yt-user-search-history'
-  | 'yt-user-subscribed-channels';
+  | "yt-user-watch-history"
+  | "yt-playlist-page-liked-videos"
+  | "yt-user-search-history"
+  | "yt-user-subscribed-channels";
 
 export type SeedScraper =
-  | 'yt-playlist-page-popular-videos'
-  | 'yt-playlist-page-national-news-top-stories';
+  | "yt-playlist-page-popular-videos"
+  | "yt-playlist-page-national-news-top-stories";
 
 export type SeedVideo = {
   id: string;
-  creator: SeedScraper | 'fixed' | string;
+  creator: SeedScraper | "fixed" | string;
 };
 
 export type ActionProcedureConfig = {
-  type: 'action';
-  slug: 'yt-activate-watch-history' | 'yt-deactivate-watch-history';
+  type: "action";
+  slug: "yt-activate-watch-history" | "yt-deactivate-watch-history";
 };
 
 export type VideoProcedureConfig = {
-  type: 'video';
+  type: "video";
   // id of videos that are further processed
   seedVideosFixed: Array<string>;
   // function that provides seed videos, including the approx. amount of videos (for the progress bar)
@@ -48,12 +48,12 @@ export type VideoProcedureConfig = {
 };
 
 export type ProfileProcedureConfig = {
-  type: 'profile';
+  type: "profile";
   profileScrapers: Array<ProfileScraper>;
 };
 
 export type SearchProcedureConfig = {
-  type: 'search';
+  type: "search";
   queries: string[];
 };
 
@@ -66,7 +66,7 @@ export type YtProcedureConfig =
 // need to export it here directly to make it work with JSON scheme creation
 export interface YtScrapingConfig extends ScrapingConfig {
   version: 1;
-  provider: 'youtube';
+  provider: "youtube";
   steps: YtProcedureConfig[];
-  navigation: 'yt-default' | 'yt-education-demo';
+  navigation: "yt-default" | "yt-education-demo";
 }

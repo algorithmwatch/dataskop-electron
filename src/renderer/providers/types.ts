@@ -1,4 +1,4 @@
-import { NavigationState } from 'renderer/contexts';
+import { NavigationState } from "renderer/contexts/types";
 
 export type GetCurrentHtml = () => Promise<{ html: string; hash: string }>;
 
@@ -15,15 +15,18 @@ export type ProviderInformation = {
   startUrl: string;
   loginUrl: string;
   loginCookie: string;
+  persistScrapingBrowser: boolean;
+  disableInputAfterLogin: boolean;
   navigation: { [key: string]: NavigationState };
-  confirmCookie: () => void;
-  deserializeConfigMapping: any;
+  demoData: { [key: string]: any };
+  confirmCookies: () => Promise<void>;
+  deserializeMapping: any;
 };
 
 export type DemoData = {
   title: string;
   // for the future: this can also be an url so the data may get fetched remotely
-  data: any;
+  data: string;
 };
 
 export interface ScrapingConfig {

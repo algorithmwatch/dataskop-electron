@@ -1,21 +1,20 @@
-/* eslint-disable no-restricted-syntax */
-import { clearStorage } from 'renderer/components/scraping/ipc';
-import { getScrapingResultsBySession } from 'renderer/lib/db';
-import { delay } from 'renderer/lib/utils/time';
-import { GetHtmlFunction, GetHtmlLazyFunction } from 'renderer/providers/types';
+import { clearStorage } from "renderer/components/scraping/ipc";
+import { getScrapingResultsBySession } from "renderer/lib/db";
+import { currentDelay } from "renderer/lib/delay";
+import { GetHtmlFunction, GetHtmlLazyFunction } from "renderer/providers/types";
 import {
   SeedScraper,
   SeedVideo,
   SeedVideoRepeat,
   VideoProcedureConfig,
-} from '..';
-import { submitConfirmForm } from '../actions/confirm-cookies';
+} from "..";
+import { submitConfirmForm } from "../actions/confirm-cookies";
 import {
   experimentScrapersSlugToFun,
   scrapeSeedVideos,
   scrapeSeedVideosAndFollow,
-} from '../scrapers';
-import { YtScrapingConfig } from '../types';
+} from "../scrapers";
+import { YtScrapingConfig } from "../types";
 
 const getSeedVideosRepeat = async (
   sessionId: string,
@@ -33,7 +32,7 @@ const getSeedVideosRepeat = async (
 
   const oldData = await getScrapingResultsBySession(sessionId, filterBy);
   if (oldData.length > 1) {
-    console.warn('Uh! Got more than 1 previous result. You sure?');
+    console.warn("Uh! Got more than 1 previous result. You sure?");
   }
 
   const [oldResult] = oldData;
@@ -57,10 +56,9 @@ const getSeedVideosRepeat = async (
 async function* videosProcedure(
   getHtml: GetHtmlFunction,
   _getHtmlLazy: GetHtmlLazyFunction,
-  sessionId: string,
   config: VideoProcedureConfig,
   scrapingConfig: YtScrapingConfig,
-  enableLogging: boolean,
+  procedureArgs: any,
 ) {
   const {
     followVideos,
@@ -69,6 +67,7 @@ async function* videosProcedure(
     seedVideosRepeat,
     doLogout,
   } = config;
+  const { enableLogging, sessionId } = procedureArgs;
 
   const isFollowingVideos = !(followVideos == null || followVideos === 0);
   const scrapeComments = false;
@@ -78,9 +77,9 @@ async function* videosProcedure(
 
   if (doLogout) {
     await clearStorage();
-    await delay(5000);
+    await currentDelay("longer");
     await submitConfirmForm(getHtml);
-    await delay(5000);
+    await currentDelay("longer");
   }
 
   let step = 0;
@@ -95,7 +94,7 @@ async function* videosProcedure(
   // 1. block: get seed videos
   const seedVideos: SeedVideo[] = seedVideosFixed.map((x) => ({
     id: x,
-    creator: 'fixed',
+    creator: "fixed",
   }));
 
   // get videos from previous results

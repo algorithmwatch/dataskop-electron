@@ -1,9 +1,8 @@
-/* eslint-disable react/jsx-props-no-spreading */
-import Tippy, { TippyProps } from '@tippyjs/react';
-import classNames from 'classnames';
-import React from 'react';
+import Tippy, { TippyProps } from "@tippyjs/react";
+import clsx from "clsx";
+import React from "react";
 
-function ProcessIndicator({
+const ProcessIndicator = ({
   currentStep,
   steps,
 }: {
@@ -14,7 +13,7 @@ function ProcessIndicator({
       description?: string;
     };
   };
-}): JSX.Element {
+}): JSX.Element => {
   const stepsKeys = Object.keys(steps);
   const stepsValues = Object.values(steps);
   const stepsCount = stepsKeys.length;
@@ -25,9 +24,9 @@ function ProcessIndicator({
   return (
     <div className="px-12">
       <div
-        className={classNames(
-          'relative h-2 w-full transition-opacity',
-          !currentStep.length ? 'opacity-0' : 'opacity-100',
+        className={clsx(
+          "relative h-2 w-full transition-opacity",
+          !currentStep.length ? "opacity-0" : "opacity-100",
         )}
       >
         {/* vertical lines */}
@@ -35,14 +34,14 @@ function ProcessIndicator({
           {stepsValues.map(({ label }, index) => {
             const tippyProps: TippyProps = {
               content: <span>{label}</span>,
-              theme: 'process-info',
-              placement: 'top-start',
+              theme: "process-info",
+              placement: "top-start",
               zIndex: 35,
             };
             const isCurrentStep = stepsKeys[index] === currentStep;
 
             if (isCurrentStep) {
-              tippyProps.theme = 'process-info-current';
+              tippyProps.theme = "process-info-current";
               tippyProps.visible = true;
             }
 
@@ -68,6 +67,6 @@ function ProcessIndicator({
       </div>
     </div>
   );
-}
+};
 
 export default React.memo(ProcessIndicator);

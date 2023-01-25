@@ -1,47 +1,48 @@
+// BrowserRouter breaks images in prod builds
 import {
-  BrowserRouter as Router,
+  MemoryRouter as Router,
   Redirect,
   Route,
   Switch,
-} from 'react-router-dom';
-import './App.global.css';
-import BaseLayoutSwitch from './components/BaseLayoutSwitch';
-import ScrapingAttached from './components/scraping/ScrapingAttached';
-import UpdateNotification from './components/UpdateNotification';
+} from "react-router-dom";
+import "./App.global.css";
+import BaseLayoutSwitch from "./components/BaseLayoutSwitch";
+import ScrapingAttached from "./components/scraping/ScrapingAttached";
+import UpdateNotification from "./components/UpdateNotification";
 import {
   ConfigProvider,
-  ModalProvider,
   NavigationProvider,
   ScrapingProvider,
-} from './contexts';
-import routes, { allRoutes } from './routes';
+} from "./contexts";
+import { allRoutes } from "./routes";
 
-export default function App() {
+const App = () => {
   return (
     <ConfigProvider>
       <NavigationProvider>
-        <ModalProvider>
-          <ScrapingProvider>
-            <UpdateNotification />
-            <Router>
-              <BaseLayoutSwitch>
-                <Switch>
-                  {/* All routes */}
-                  {allRoutes.map(({ path, comp }) => (
-                    <Route path={path} component={comp} key={path} />
-                  ))}
-                  {/* Redirect initial route to start route */}
-                  <Route path="/">
-                    <Redirect to={routes.START.path} />
-                  </Route>
-                </Switch>
-              </BaseLayoutSwitch>
-            </Router>
-            {/* has to come here _after_ the pages in the router */}
+        <ScrapingProvider>
+          <UpdateNotification />
+          <Router>
+            <BaseLayoutSwitch>
+              <Switch>
+                {/* All routes */}
+                {allRoutes.map(({ path, comp }) => (
+                  <Route path={path} component={comp} key={path} />
+                ))}
+                {/* Redirect initial route */}
+                <Route path="/">
+                  <Redirect to="/select_campaign" />
+                </Route>
+              </Switch>
+            </BaseLayoutSwitch>
+            {/* `ScrapingAttached` has to come _after_ the pages in the router
+              but has to be a child of `Router` to navigate */}
             <ScrapingAttached />
-          </ScrapingProvider>
-        </ModalProvider>
+          </Router>
+        </ScrapingProvider>
       </NavigationProvider>
     </ConfigProvider>
   );
-}
+};
+
+export default App;

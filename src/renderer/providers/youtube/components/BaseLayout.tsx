@@ -4,134 +4,116 @@ import {
   faInfoCircle,
   faPaperPlane,
   faUserSecret,
-} from '@fortawesome/pro-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import classNames from 'classnames';
-import { ReactNode, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import logo from 'renderer/static/images/logos/dslogo.svg';
-import {
-  useConfig,
-  useModal,
-  useNavigation,
-  useScraping,
-} from '../../../contexts';
-import routes from '../../../routes';
-import Modal from './Modal';
-import ProcessIndicator from './ProcessIndicator';
-import ScrapingProgressBar from './ScrapingProgressBar';
-import Sidebar from './Sidebar';
+} from "@fortawesome/pro-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import clsx from "clsx";
+import { ReactNode, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import logo from "renderer/static/images/logos/dslogo.svg";
+import { useConfig, useNavigation, useScraping } from "../../../contexts";
+import Modal from "./Modal";
+import { ModalProvider, useModal } from "./modal/context";
+import ProcessIndicator from "./ProcessIndicator";
+import ScrapingProgressBar from "./ScrapingProgressBar";
+import SidebarMenu from "./SidebarMenu";
 
-export default function Base({
+const BaseLayoutInner = ({
   children,
 }: {
   children: ReactNode;
-}): JSX.Element {
+}): JSX.Element => {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
-  const [sectionKey, setSectionKey] = useState('');
+  const [sectionKey, setSectionKey] = useState("");
   const { pathname } = useLocation();
   const {
     state: { pageIndex, sections },
-    dispatch: dispatchNavigation,
     getCurrentPage,
-    getPageIndexByPath,
   } = useNavigation();
   const { dispatch: dispatchModal } = useModal();
   const {
-    state: { demoMode },
+    state: { demoMode, userWasForcefullyLoggedOut },
   } = useScraping();
   const {
     state: { version },
   } = useConfig();
   const sidebarMenu = [
     {
-      label: 'Über',
+      label: "Über",
       icon: faInfoCircle,
       onClick: () => {
         dispatchModal({
-          type: 'set-modal-options',
-          options: { isOpen: true, componentName: 'about' },
+          type: "set-modal-options",
+          options: { isOpen: true, componentName: "about" },
         });
       },
     },
     {
-      label: 'Kontakt',
+      label: "Kontakt",
       icon: faPaperPlane,
       onClick: () => {
         dispatchModal({
-          type: 'set-modal-options',
-          options: { isOpen: true, componentName: 'contact' },
+          type: "set-modal-options",
+          options: { isOpen: true, componentName: "contact" },
         });
       },
     },
-    // {
-    //   label: 'FAQ',
-    //   icon: faQuestionCircle,
-    //   onClick: () => {
-    //     dispatchModal({
-    //       type: 'set-modal-options',
-    //       options: { isOpen: true, componentName: 'faq' },
-    //     });
-    //   },
-    // },
     {
-      label: 'Datenspendevertrag',
-      icon: faFileContract, // faFileSignatur
+      label: "Datenspendevertrag",
+      icon: faFileContract,
       onClick: () => {
         dispatchModal({
-          type: 'set-modal-options',
-          options: { isOpen: true, componentName: 'terms' },
+          type: "set-modal-options",
+          options: { isOpen: true, componentName: "terms" },
         });
       },
     },
     {
-      label: 'Datenschutz',
+      label: "Datenschutz",
       icon: faUserSecret,
       onClick: () => {
         dispatchModal({
-          type: 'set-modal-options',
-          options: { isOpen: true, componentName: 'privacy' },
+          type: "set-modal-options",
+          options: { isOpen: true, componentName: "privacy" },
         });
       },
     },
   ];
-
-  // read config for current route
-  useEffect(() => {
-    const nextPageIndex = getPageIndexByPath(pathname);
-
-    // set page index
-    if (nextPageIndex !== -1) {
-      dispatchNavigation({ type: 'set-page-index', pageIndex: nextPageIndex });
-    }
-  }, [pathname]);
 
   // set dark mode, set process indicator
   useEffect(() => {
     const page = getCurrentPage();
 
     // set processIndicator
-    if (typeof page.sectionKey !== 'undefined') {
+    if (typeof page.sectionKey !== "undefined") {
       if (page.sectionKey === null) {
-        setSectionKey('');
+        setSectionKey("");
       } else {
         setSectionKey(page.sectionKey);
       }
     }
   }, [pageIndex]);
 
+  useEffect(() => {
+    if (userWasForcefullyLoggedOut) {
+      dispatchModal({
+        type: "set-modal-options",
+        options: { isOpen: true, componentName: "logout" },
+      });
+    }
+  }, [userWasForcefullyLoggedOut]);
+
   return (
-    <div className="relative flex flex-col h-screen justify-between">
+    <div className="relative flex flex-col h-screen justify-between bg-yellow-100 bg-[url('renderer/providers/youtube/static/images/bg.png')] bg-[length:90%] dark:bg-blue-900 overflow-hidden text-yellow-1500">
       <Modal />
       <header
-        className={classNames('flex items-center py-4 px-6 z-20 h-18', {
-          'opacity-0': pathname === routes.START.path,
+        className={clsx("flex items-center py-4 px-6 z-20 h-[4.375rem]", {
+          "opacity-0": pathname === "/youtube/start",
         })}
       >
         <div>
-          <img src={logo} style={{ width: '8rem' }} alt="Dataskop Logo" />
+          <img src={logo} style={{ width: "8rem" }} alt="Dataskop Logo" />
         </div>
-        {version && version.includes('beta') && (
+        {version && version.includes("beta") && (
           <div className="ml-3 text-sm bg-yellow-300 px-1.5 py-0.5 text-yellow-1300">
             Beta
           </div>
@@ -157,7 +139,7 @@ export default function Base({
         </div>
       </header>
 
-      <Sidebar
+      <SidebarMenu
         menuItems={sidebarMenu}
         isOpen={menuIsOpen}
         onIsOpenChange={(val: boolean) => setMenuIsOpen(val)}
@@ -174,4 +156,12 @@ export default function Base({
       </footer>
     </div>
   );
-}
+};
+
+const BaseLayout = ({ children }) => (
+  <ModalProvider>
+    <BaseLayoutInner>{children}</BaseLayoutInner>
+  </ModalProvider>
+);
+
+export default BaseLayout;

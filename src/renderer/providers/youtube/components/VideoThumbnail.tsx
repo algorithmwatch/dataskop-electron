@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/mouse-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events */
-import { Channel } from '@algorithmwatch/harke';
-import Tippy, { TippyProps } from '@tippyjs/react';
-import _ from 'lodash';
-import dayjs from 'renderer/lib/utils/dayjs';
+import { Channel } from "@algorithmwatch/harke";
+import Tippy, { TippyProps } from "@tippyjs/react";
+import _ from "lodash";
+import dayjs from "renderer/lib/dayjs";
 
-export default function VideoThumbnail({
+const VideoThumbnail = ({
   videoId,
   url,
   type = 0,
@@ -24,7 +24,7 @@ export default function VideoThumbnail({
   onClickCallback?: () => void;
   onMouseOverCallback?: () => void;
   onMouseOutCallback?: () => void;
-}) {
+}) => {
   if (!videoId && !url) {
     return null;
   }
@@ -49,7 +49,7 @@ export default function VideoThumbnail({
     if (type === 1) {
       const truncatedString = _.truncate(creatorName, {
         length: 10,
-        omission: '…',
+        omission: "…",
       });
       return (
         <div
@@ -61,11 +61,11 @@ export default function VideoThumbnail({
         </div>
       );
     }
-    return <div></div>;
+    return <div />;
   })();
 
   return (
-    <div className="w-24 h-14 bg-gray-300 overflow-hidden flex place-items-center flex-shrink-0">
+    <div className="w-24 h-14 bg-gray-300 overflow-hidden flex place-items-center shrink-0">
       {tippyOptions ? (
         // eslint-disable-next-line react/jsx-props-no-spreading
         <Tippy {...tippyOptions}>{contentElement}</Tippy>
@@ -74,7 +74,9 @@ export default function VideoThumbnail({
       )}
     </div>
   );
-}
+};
+
+export default VideoThumbnail;
 
 export interface TooltipContentType {
   title: string;
@@ -85,11 +87,11 @@ export interface TooltipContentType {
   downvotes?: number | null;
 }
 
-export function TooltipContent({
+export const TooltipContent = ({
   video,
 }: {
   video: TooltipContentType;
-}): JSX.Element {
+}): JSX.Element => {
   const tooltipContent = [];
 
   if (video.title) {
@@ -104,7 +106,7 @@ export function TooltipContent({
     tooltipContent.push(
       <div key="creator-udate">
         {video.channel?.name && video.channel.name}
-        {video.uploadDate && `, ${dayjs(video.uploadDate).format('LL')}`}
+        {video.uploadDate && `, ${dayjs(video.uploadDate).format("LL")}`}
       </div>,
     );
   }
@@ -112,10 +114,10 @@ export function TooltipContent({
   if (video.viewCount) {
     tooltipContent.push(
       <div key="view-count">
-        {String(video.viewCount).replace(/(.)(?=(\d{3})+$)/g, '$1.')} Aufrufe
+        {String(video.viewCount).replace(/(.)(?=(\d{3})+$)/g, "$1.")} Aufrufe
       </div>,
     );
   }
 
   return <>{tooltipContent}</>;
-}
+};

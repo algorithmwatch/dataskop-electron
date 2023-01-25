@@ -5,9 +5,9 @@
  * Started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
  * @module
  */
-import _ from 'lodash';
-import React, { useEffect } from 'react';
-import { Campaign, DemoData } from 'renderer/providers/types';
+import _ from "lodash";
+import React from "react";
+import { Campaign, DemoData } from "renderer/providers/types";
 
 export type ScrapingProgress = {
   isActive: boolean;
@@ -22,41 +22,49 @@ export type Bounds = {
   y: number;
 };
 
+type FilterSteps = (arg0: any) => boolean;
+
 type Action =
-  | { type: 'set-is-attached'; isAttached: boolean }
   | {
-      type: 'set-campaign';
+      type: "set-attached";
+      attached: boolean;
+      visible: boolean;
+      fixed?: boolean;
+      initPositionWindow?: string;
+    }
+  | {
+      type: "set-campaign";
       campaign: Campaign | null;
     }
   | {
-      type: 'set-available-campaigns';
+      type: "set-available-campaigns";
       availableCampaigns: Campaign[];
     }
   | {
-      type: 'set-scraping-progress-bar';
+      type: "set-scraping-progress-bar";
       scrapingProgress: ScrapingProgress;
     }
-  | { type: 'set-user-logged-in'; isUserLoggedIn: boolean }
-  | { type: 'set-scraping-started'; isScrapingStarted: boolean }
-  | { type: 'set-scraping-paused'; isScrapingPaused: boolean }
-  | { type: 'scraping-has-finished' }
-  | { type: 'set-muted'; isMuted: boolean }
-  | { type: 'set-fixed-window'; fixedWindow: boolean }
-  | { type: 'set-visible-window'; visibleWindow: boolean }
-  | { type: 'set-bounds'; bounds: Bounds }
-  | { type: 'set-scraping-error'; scrapingError: Error | null }
-  | { type: 'set-session-id'; sessionId: string }
-  | { type: 'reset-scraping' }
+  | { type: "set-user-logged-in"; loggedIn: boolean }
+  | { type: "start-scraping"; filterSteps?: FilterSteps }
+  | { type: "set-scraping-paused"; paused: boolean }
+  | { type: "scraping-has-finished" }
+  | { type: "user-was-forcefully-logged-out" }
+  | { type: "set-muted"; muted: boolean }
+  | { type: "set-fixed-window"; fixedWindow: boolean }
+  | { type: "set-visible-window"; visibleWindow: boolean }
+  | { type: "set-bounds"; bounds: Bounds }
+  | { type: "set-scraping-error"; scrapingError: Error | null }
+  | { type: "set-session-id"; sessionId: string }
+  | { type: "reset-scraping" }
   | {
-      type: 'scraping-has-started';
+      type: "scraping-has-started";
       sessionId: string | null;
       stepGenerator: AsyncGenerator | null;
     }
-  | { type: 'set-log-html'; logHtml: boolean }
-  | { type: 'set-disable-input'; disableInput: boolean }
-  | { type: 'set-demo-mode'; demoMode: boolean; demoData: DemoData | null }
+  | { type: "set-disable-input"; disableInput: boolean }
+  | { type: "set-demo-mode"; demoMode: boolean; demoData: DemoData | null }
   | {
-      type: 'increment-finished';
+      type: "increment-finished";
     };
 
 type Dispatch = (action: Action) => void;
@@ -70,17 +78,19 @@ type State = {
   scrapingProgress: ScrapingProgress;
   isUserLoggedIn: boolean;
   isScrapingStarted: boolean;
+  filterSteps: null | FilterSteps;
   isScrapingPaused: boolean;
   isScrapingFinished: boolean;
+  userWasForcefullyLoggedOut: boolean;
   scrapingError: Error | null;
   // create a generation to be able to hold/resumee a scraping proccess
   stepGenerator: AsyncGenerator | null;
   isMuted: boolean;
   fixedWindow: boolean;
   visibleWindow: boolean;
+  closeableWindow: boolean;
+  initPositionWindow: string;
   bounds: Bounds;
-  // store scraped HTML in log file (for debugging)
-  logHtml: boolean;
   disableInput: boolean;
   demoMode: boolean;
   demoData: DemoData | null;
@@ -91,7 +101,7 @@ type State = {
 type ScrapingProviderProps = { children: React.ReactNode };
 
 const ScrapingStateContext = React.createContext<
-  { state: State; dispatch: Dispatch; getEtaUntil: any } | undefined
+  { state: State; dispatch: Dispatch } | undefined
 >(undefined);
 
 const initialState: State = {
@@ -106,15 +116,18 @@ const initialState: State = {
   },
   isUserLoggedIn: false,
   isScrapingStarted: false,
+  filterSteps: null,
   isScrapingPaused: false,
   isScrapingFinished: false,
+  userWasForcefullyLoggedOut: false,
   scrapingError: null,
   stepGenerator: null,
   isMuted: true,
   fixedWindow: false,
   visibleWindow: false,
+  closeableWindow: false,
+  initPositionWindow: "center",
   bounds: { width: 100, height: 100, x: 100, y: 100 },
-  logHtml: false,
   disableInput: false,
   demoMode: false,
   demoData: null,
@@ -124,66 +137,70 @@ const initialState: State = {
 
 const scrapingReducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case 'set-is-attached': {
+    case "set-attached": {
       return {
         ...state,
-        isAttached: action.isAttached,
-        visibleWindow: action.isAttached,
+        isAttached: action.attached,
+        visibleWindow: action.visible,
+        fixedWindow: action.fixed ?? initialState.fixedWindow,
+        initPositionWindow:
+          action.initPositionWindow ?? initialState.initPositionWindow,
       };
     }
 
-    case 'set-campaign': {
+    case "set-campaign": {
       return {
         ...state,
         campaign: action.campaign,
       };
     }
 
-    case 'set-available-campaigns': {
+    case "set-available-campaigns": {
       return {
         ...state,
         availableCampaigns: action.availableCampaigns,
       };
     }
 
-    case 'set-scraping-progress-bar': {
+    case "set-scraping-progress-bar": {
       return { ...state, scrapingProgress: action.scrapingProgress };
     }
 
-    case 'set-user-logged-in': {
-      return { ...state, isUserLoggedIn: action.isUserLoggedIn };
+    case "set-user-logged-in": {
+      return { ...state, isUserLoggedIn: action.loggedIn };
     }
 
-    case 'set-scraping-started': {
+    case "start-scraping": {
       return {
         ...state,
-        isScrapingStarted: action.isScrapingStarted,
+        isScrapingStarted: true,
+        filterSteps: action.filterSteps ? action.filterSteps : null,
       };
     }
 
-    case 'set-scraping-paused': {
-      return { ...state, isScrapingPaused: action.isScrapingPaused };
+    case "set-scraping-paused": {
+      return { ...state, isScrapingPaused: action.paused };
     }
 
-    case 'set-muted': {
-      return { ...state, isMuted: action.isMuted };
+    case "set-muted": {
+      return { ...state, isMuted: action.muted };
     }
 
     // Changing this values doesn't work right now. (Guess: The scraping window
     // needs to get refreshed to make it work.)
-    case 'set-fixed-window': {
+    case "set-fixed-window": {
       return { ...state, fixedWindow: action.fixedWindow };
     }
 
-    case 'set-visible-window': {
+    case "set-visible-window": {
       return { ...state, visibleWindow: action.visibleWindow };
     }
 
-    case 'set-bounds': {
+    case "set-bounds": {
       return { ...state, bounds: action.bounds };
     }
 
-    case 'set-scraping-error': {
+    case "set-scraping-error": {
       return {
         ...state,
         scrapingError: action.scrapingError,
@@ -191,7 +208,14 @@ const scrapingReducer = (state: State, action: Action): State => {
       };
     }
 
-    case 'scraping-has-started': {
+    case "user-was-forcefully-logged-out": {
+      return {
+        ...state,
+        userWasForcefullyLoggedOut: true,
+      };
+    }
+
+    case "scraping-has-started": {
       return {
         ...state,
         sessionId: action.sessionId,
@@ -199,18 +223,20 @@ const scrapingReducer = (state: State, action: Action): State => {
         isScrapingStarted: true,
         isScrapingFinished: false,
         isScrapingPaused: false,
+        userWasForcefullyLoggedOut: false,
         scrapingProgress: { isActive: true, value: 0, step: 0 },
         startedAt: Date.now(),
       };
     }
 
-    case 'scraping-has-finished': {
+    case "scraping-has-finished": {
       return {
         ...state,
         visibleWindow: false,
         isScrapingFinished: true,
         isScrapingPaused: true,
         isScrapingStarted: false,
+        filterSteps: null,
         scrapingProgress: {
           isActive: false,
           value: 1,
@@ -219,34 +245,30 @@ const scrapingReducer = (state: State, action: Action): State => {
       };
     }
 
-    case 'set-session-id': {
+    case "set-session-id": {
       return {
         ...state,
         sessionId: action.sessionId,
       };
     }
 
-    // reset everything besides campaign + scraping config
-    case 'reset-scraping': {
+    // reset everything besides campaign and some other fields
+    case "reset-scraping": {
       return {
         ...initialState,
-        ..._.pick(state, ['sessionid', 'campaign', 'isAttached', 'bounds']),
+        ..._.pick(state, ["sessionid", "campaign", "isAttached", "bounds"]),
       };
     }
 
-    case 'set-log-html': {
-      return { ...state, logHtml: action.logHtml };
-    }
-
-    case 'set-disable-input': {
+    case "set-disable-input": {
       return { ...state, disableInput: action.disableInput };
     }
 
-    case 'set-demo-mode': {
+    case "set-demo-mode": {
       return { ...state, demoMode: action.demoMode, demoData: action.demoData };
     }
 
-    case 'increment-finished': {
+    case "increment-finished": {
       return { ...state, finishedTasks: state.finishedTasks + 1 };
     }
 
@@ -259,48 +281,7 @@ const scrapingReducer = (state: State, action: Action): State => {
 const ScrapingProvider = ({ children }: ScrapingProviderProps) => {
   const [state, dispatch] = React.useReducer(scrapingReducer, initialState);
 
-  /**
-   * A quick and dirty way to compute an ETA based on the demo data.
-   */
-  const getEtaUntil = (checkUntilStep = null) => {
-    const { startedAt, finishedTasks, demoData } = state;
-
-    if (demoData === null) return null;
-    if (startedAt === null) return null;
-
-    const untilIndex = checkUntilStep || demoData.data.results.length - 1;
-
-    const finishedFixed =
-      finishedTasks - 1 < demoData.data.results.length
-        ? finishedTasks - 1
-        : demoData.data.results.length - 1;
-
-    const demoStartedAt = demoData.data.results[0].scrapedAt - 10000; // ~ 10 seconds
-    const demoTime = demoData.data.results[finishedFixed].scrapedAt;
-    const demoDuration = demoTime - demoStartedAt;
-    const demoRemaining =
-      demoData.data.results[untilIndex].scrapedAt - demoTime;
-
-    const ourTime = Date.now() - startedAt;
-
-    const etaRemaining = (ourTime / demoDuration) * demoRemaining;
-
-    return etaRemaining;
-  };
-
-  const value = { state, dispatch, getEtaUntil };
-
-  // Expose the status of the scraping to the main process to check wheter the
-  // can safely be closed.
-  useEffect(() => {
-    window.electron.ipcRenderer.removeAllListeners('close-action');
-    window.electron.ipcRenderer.on('close-action', () => {
-      window.electron.ipcRenderer.invoke(
-        'close-main-window',
-        state.scrapingProgress.isActive,
-      );
-    });
-  }, [state.scrapingProgress.isActive]);
+  const value = { state, dispatch };
 
   return (
     <ScrapingStateContext.Provider value={value}>
@@ -313,7 +294,7 @@ const useScraping = () => {
   const context = React.useContext(ScrapingStateContext);
 
   if (context === undefined) {
-    throw new Error('useScraping must be used within a ScrapingProvider');
+    throw new Error("useScraping must be used within a ScrapingProvider");
   }
 
   return context;

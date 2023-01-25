@@ -1,38 +1,35 @@
-// @ts-nocheck
-
 import {
   faChevronCircleLeft,
   faChevronCircleRight,
   IconDefinition,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Glide from '@glidejs/glide';
-import classNames from 'classnames';
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Glide from "@glidejs/glide";
+import clsx from "clsx";
 import React, {
   forwardRef,
   useEffect,
   useImperativeHandle,
   useRef,
-} from 'react';
-import { Options } from './types';
+} from "react";
 
 const ArrowButton = ({
   icon,
   dir,
 }: {
   icon: IconDefinition;
-  dir: '<' | '>';
+  dir: "<" | ">";
 }) => {
   return (
     <button
       type="button"
-      className={classNames({
+      className={clsx({
         glide__arrow: true,
-        'absolute flex top-2/4 z-10 opacity-100 cursor-pointer transition-shadow -translate-y-1/2 focus:outline-none active:outline-none select-none bg-white rounded-full':
+        "absolute flex top-2/4 z-10 opacity-100 cursor-pointer transition-shadow -translate-y-1/2 focus:outline-none active:outline-none select-none bg-white rounded-full":
           true,
-        'left-8': dir === '<',
-        'right-8': dir === '>',
-        'focus:ring-4 focus:ring-blue-400 focus:ring-opacity-50': true,
+        "left-8": dir === "<",
+        "right-8": dir === ">",
+        "focus:ring-4 focus:ring-blue-400 focus:ring-opacity-50": true,
       })}
       data-glide-dir={dir}
     >
@@ -47,7 +44,7 @@ export const Carousel = forwardRef(
       options,
       children,
     }: {
-      options: Options;
+      options: any;
       children: React.ReactNode;
     },
     ref,
@@ -79,7 +76,7 @@ export const Carousel = forwardRef(
     );
   },
 );
-Carousel.displayName = 'Carousel';
+Carousel.displayName = "Carousel";
 
 export const Slide = forwardRef(
   ({ children }: { children: React.ReactNode }, ref) => {
@@ -90,4 +87,4 @@ export const Slide = forwardRef(
     );
   },
 );
-Slide.displayName = 'Slide';
+Slide.displayName = "Slide";

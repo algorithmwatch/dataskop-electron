@@ -19,9 +19,14 @@ const statsForArray = (arri: number[]) => {
   return { sum, min, max, average, median };
 };
 
-const randomIntFromInterval = (min: number, max: number) => {
+const randomIntFromInterval = (min: number, max?: number) => {
+  if (max == null) max = min * 2;
   // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-export { medianForArray, statsForArray, randomIntFromInterval };
+const isNumeric = (str: string) => {
+  return /^\d+$/.test(str);
+};
+
+export { medianForArray, statsForArray, randomIntFromInterval, isNumeric };

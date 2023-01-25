@@ -1,22 +1,22 @@
-import archiver from 'archiver';
-import { app, BrowserWindow, dialog } from 'electron';
-import log from 'electron-log';
-import fs from 'fs';
-import { readdir, stat } from 'fs/promises';
-import path from 'path';
-import { getNowString } from '../renderer/lib/utils/time';
-import { getDbLocation } from './db';
-import { addMainHandler } from './util';
+import archiver from "archiver";
+import { BrowserWindow, dialog } from "electron";
+import log from "electron-log";
+import fs from "fs";
+import { readdir, stat } from "fs/promises";
+import path from "path";
+import { getNowString } from "../renderer/lib/utils/time";
+import { DB_FOLDER } from "./db";
+import { DOWNLOADS_FOLDER } from "./downloads";
+import { HTML_FOLDER } from "./scraping";
+import { addMainHandler } from "./utils";
 
-const getLogDir = () => {
-  return path.dirname(log.default.transports.file.getFile().path);
-};
-
-const getHtmlLogDir = () => {
-  return app.getPath('userData') + '/html';
-};
+const LOG_FOLDER = path.dirname(log.default.transports.file.getFile().path);
 
 const dirSize = async (directory: string) => {
+  if (!fs.existsSync(directory)) {
+    return 0;
+  }
+
   const files = await readdir(directory);
   const stats = files.map((file) => stat(path.join(directory, file)));
 
@@ -27,39 +27,60 @@ const dirSize = async (directory: string) => {
 };
 
 export default function registerExportHandlers(mainWindow: BrowserWindow) {
-  addMainHandler('results-import', async (event) => {
-    const { canceled, filePaths } = await dialog.showOpenDialog({
-      properties: ['openFile', 'multiSelections'],
-      filters: [{ name: 'JSON', extensions: ['json'] }],
-    });
-    if (canceled) return;
+  addMainHandler(
+    "results-import",
+    async (event: {
+      sender: { send: (arg0: string, arg1: string) => void };
+    }) => {
+      const { canceled, filePaths } = await dialog.showOpenDialog({
+        properties: ["openFile", "multiSelections"],
+        filters: [{ name: "JSON", extensions: ["json"] }],
+      });
+      if (canceled) return;
 
-    filePaths.forEach(async (x) => {
-      const data = await fs.promises.readFile(x, 'utf8');
-      event.sender.send('results-import-data', data);
-    });
-  });
+      filePaths.forEach(async (x) => {
+        const data = await fs.promises.readFile(x, "utf8");
+        event.sender.send("results-import-data", data);
+      });
+    },
+  );
 
-  addMainHandler('results-export', async (_event, data, filename) => {
-    if (mainWindow === null) return;
-    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
-      defaultPath: filename,
-    });
-    if (canceled || !filePath) return;
-    fs.writeFileSync(filePath, data);
-  });
+  addMainHandler(
+    "results-export",
+    async (
+      _event: any,
+      data: string | NodeJS.ArrayBufferView,
+      filename: any,
+    ) => {
+      if (mainWindow === null) return;
+      const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+        defaultPath: filename,
+      });
+      if (canceled || !filePath) return;
+      fs.writeFileSync(filePath, data);
+    },
+  );
 
-  addMainHandler('results-save-screenshot', async (_event, rect, filename) => {
-    if (mainWindow === null) return;
-    const nativeImage = await mainWindow.webContents.capturePage(rect);
-    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
-      defaultPath: filename,
-    });
-    if (canceled || !filePath) return;
-    fs.writeFileSync(filePath, nativeImage.toPNG());
-  });
+  addMainHandler(
+    "export-screenshot",
+    async (_event: any, rect: Electron.Rectangle, filename: any) => {
+      if (mainWindow === null) return;
+      const nativeImage = await mainWindow.webContents.capturePage(rect);
 
-  addMainHandler('export-debug-archive', async () => {
+      if (process.env.PLAYWRIGHT_TESTING === "true") {
+        fs.writeFileSync(filename, nativeImage.toJPEG(75));
+        return;
+      }
+
+      const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+        defaultPath: filename,
+      });
+      if (canceled || !filePath) return;
+      fs.writeFileSync(filePath, nativeImage.toJPEG(75));
+    },
+  );
+
+  addMainHandler("export-debug-archive", async () => {
     const filename = `dataskop-debug-${getNowString()}.zip`;
 
     if (mainWindow === null) return;
@@ -71,17 +92,17 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
     const makeArchive = () =>
       new Promise<void>((resolve, reject) => {
         const output = fs.createWriteStream(filePath);
-        const archive = archiver('zip', {
+        const archive = archiver("zip", {
           zlib: { level: 6 },
         });
 
-        output.on('close', function () {
-          console.log('Done creating the zip file for the export.');
+        output.on("close", () => {
+          log.info("Done creating the zip file for the export.");
           resolve();
         });
 
-        archive.on('warning', function (err) {
-          if (err.code === 'ENOENT') {
+        archive.on("warning", (err) => {
+          if (err.code === "ENOENT") {
             // log warning
           } else {
             // throw error
@@ -89,28 +110,38 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
           }
         });
 
-        archive.on('error', function (err) {
+        archive.on("error", (err) => {
           reject(err);
         });
 
         archive.pipe(output);
-        archive.directory(getLogDir(), 'logs');
-        archive.file(getDbLocation(), { name: 'db.json' });
+        archive.directory(LOG_FOLDER, "logs");
+        archive.directory(DB_FOLDER, "databases");
 
-        const htmlLogDir = getHtmlLogDir();
-        if (fs.existsSync(htmlLogDir)) archive.directory(htmlLogDir, 'html');
+        if (fs.existsSync(DOWNLOADS_FOLDER))
+          archive.directory(DOWNLOADS_FOLDER, "downloads");
+
+        if (fs.existsSync(HTML_FOLDER)) archive.directory(HTML_FOLDER, "html");
 
         archive.finalize();
       });
-    return makeArchive();
+    await makeArchive();
   });
 
-  addMainHandler('export-debug-size', async () => {
-    return Promise.all([getHtmlLogDir(), getLogDir()].map(dirSize));
+  addMainHandler("export-debug-size", async () => {
+    return Promise.all([HTML_FOLDER, LOG_FOLDER].map(dirSize));
   });
 
-  addMainHandler('export-debug-clean', async () => {
-    return [getHtmlLogDir(), getLogDir()].map((dir) =>
+  addMainHandler("export-read-log", async () => {
+    // Currently, everything gets written to `main.log`.
+    const logFile = path.join(LOG_FOLDER, "main.log");
+    const logContent = fs.readFileSync(logFile, "utf8");
+
+    return [logContent.slice(-100000), logFile];
+  });
+
+  addMainHandler("export-debug-clean", async () => {
+    return [HTML_FOLDER, LOG_FOLDER].map((dir) =>
       fs.readdirSync(dir).forEach((f) => fs.rmSync(`${dir}/${f}`)),
     );
   });

@@ -1,12 +1,15 @@
+/* eslint-disable jsx-a11y/mouse-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import {
   faChevronLeft,
-  faChevronRight
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import classNames from 'classnames';
-import React, { useState } from 'react';
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import clsx from "clsx";
+import React, { useState } from "react";
 
-export default function Explainer({
+const Explainer = ({
   isOpen = false,
   onIsOpenChange,
   children,
@@ -14,45 +17,43 @@ export default function Explainer({
   isOpen?: boolean;
   onIsOpenChange: (value: boolean) => void;
   children: React.ReactNode;
-}): JSX.Element | null {
+}): JSX.Element | null => {
   const [isToggleHover, setIsToggleHover] = useState(false);
 
   return (
     <div
-      className={classNames({
-        'absolute inset-0 z-50 overflow-y-scroll bg-yellow-1400 bg-opacity-50':
-          isOpen,
+      className={clsx({
+        "absolute inset-0 z-50 overflow-y-scroll bg-yellow-1400/50": isOpen,
       })}
     >
       <div
-        className={classNames(
-          'w-192 min-h-full inset-y-0 bg-white z-30 transition-all duration-300 ease-in-out flex flex-col justify-between box-content border-r-8',
+        className={clsx(
+          "w-[48rem] min-h-full inset-y-0 bg-white z-30 transition-all duration-300 ease-in-out flex flex-col justify-between box-content border-r-8",
           {
-            '-left-192 absolute': !isOpen,
-            'left-0 relative': isOpen,
-            'border-yellow-600': !isToggleHover,
-            'border-yellow-800': isToggleHover,
+            "-left-[48rem] absolute": !isOpen,
+            "left-0 relative": isOpen,
+            "border-yellow-600": !isToggleHover,
+            "border-yellow-800": isToggleHover,
           },
         )}
       >
         {/* Open/close toggle */}
         <div
-          className={classNames('absolute top-20', {
-            'right-4': isOpen,
-            '-right-2': !isOpen,
+          className={clsx("absolute top-20", {
+            "right-4": isOpen,
+            "-right-2": !isOpen,
           })}
         >
-          {/* eslint-disable-next-line jsx-a11y/mouse-events-have-key-events */}
           <button
             type="button"
             onClick={() => onIsOpenChange(!isOpen)}
             onMouseOver={() => setIsToggleHover(true)}
             onMouseOut={() => setIsToggleHover(false)}
-            className={classNames(
-              'w-10 h-10 fixed focus:outline-none transition-colors duration-300 ease-in-out',
+            className={clsx(
+              "w-10 h-10 fixed focus:outline-none transition-colors duration-300 ease-in-out",
               {
-                'bg-yellow-600': !isToggleHover,
-                'bg-yellow-800': isToggleHover,
+                "bg-yellow-600": !isToggleHover,
+                "bg-yellow-800": isToggleHover,
               },
             )}
           >
@@ -70,7 +71,6 @@ export default function Explainer({
 
       {/* Backdrop */}
       {isOpen && (
-        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
         <div
           tabIndex={-1}
           className="fixed inset-0 h-full z-10"
@@ -79,4 +79,6 @@ export default function Explainer({
       )}
     </div>
   );
-}
+};
+
+export default Explainer;

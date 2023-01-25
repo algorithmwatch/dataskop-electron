@@ -1,12 +1,11 @@
-import ReactModal from 'react-modal';
-import { useModal } from 'renderer/contexts';
-import Button from './Button';
-import ModalContentComponents from './modal/ModalContentComponents';
+import ReactModal from "react-modal";
+import Button from "./Button";
+import { useModal } from "./modal/context";
+import ModalContentComponents from "./modal/ModalContentComponents";
 
-// https://github.com/reactjs/react-modal/issues/632#issuecomment-378755186
-if (process.env.NODE_ENV !== 'test') ReactModal.setAppElement('#root');
+ReactModal.setAppElement("#root");
 
-function Modal() {
+const Modal = () => {
   const {
     state: { isOpen, componentName },
     dispatch,
@@ -17,7 +16,7 @@ function Modal() {
 
   const closeModal = () => {
     dispatch({
-      type: 'set-modal-options',
+      type: "set-modal-options",
       options: { isOpen: false },
     });
   };
@@ -30,15 +29,15 @@ function Modal() {
       shouldCloseOnOverlayClick
       style={{
         content: {
-          transform: 'translate(-50%, -50%)',
+          transform: "translate(-50%, -50%)",
         },
       }}
-      overlayClassName="z-60 fixed inset-0 bg-yellow-1400 bg-opacity-50 overflow-auto"
-      className="absolute top-1/2 left-1/2 right-auto bottom-auto -mr-1/2 outline-none h-full max-h-3/4 bg-yellow-100 py-8 pl-8 pr-4"
+      overlayClassName="z-60 fixed inset-0 bg-yellow-1400/50 overflow-auto"
+      className="absolute top-1/2 left-1/2 right-auto bottom-auto -mr-[50%] outline-none h-full max-h-[75%] bg-yellow-100 py-8 pl-8 pr-4"
     >
       <div
         className="max-w-prose overflow-y-auto pr-4"
-        style={{ maxHeight: '90%' }}
+        style={{ maxHeight: "90%" }}
       >
         {CurrentModalComponent && <CurrentModalComponent />}
       </div>
@@ -47,6 +46,6 @@ function Modal() {
       </div>
     </ReactModal>
   );
-}
+};
 
 export default Modal;

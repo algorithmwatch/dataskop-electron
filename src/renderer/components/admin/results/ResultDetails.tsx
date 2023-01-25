@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   getScrapingResultsBySession,
   getSessions,
-  getStatisticsForSession,
   ScrapingSession,
-} from '../../../lib/db';
-import DetailsTable from './DetailsTable';
-import Stats from './Stats';
+} from "renderer/lib/db";
+import { getStatisticsForSession } from "renderer/lib/db/stats";
+import DetailsTable from "./DetailsTable";
+import Stats from "./Stats";
 
 export default function ResultsDetails({
   sessionId,
@@ -30,10 +30,10 @@ export default function ResultsDetails({
 
   return (
     <>
-      <div className="overflow-y-auto" style={{ height: '90vh' }}>
+      <div className="overflow-y-auto" style={{ height: "90vh" }}>
         <h2>Session: {sessionId}</h2>
         <div>
-          duration:{' '}
+          duration:{" "}
           {session &&
             session.finishedAt &&
             (session.finishedAt - session.startedAt) / 1000}

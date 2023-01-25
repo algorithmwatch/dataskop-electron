@@ -1,6 +1,6 @@
 // https://github.com/node4good/lodash-contrib/blob/91dded5d52f6dca50a4c74782740b02478c2c548/common-js/_.object.builders.js#L27
 
-import _ from 'lodash';
+import _ from "lodash";
 
 var concat = Array.prototype.concat;
 

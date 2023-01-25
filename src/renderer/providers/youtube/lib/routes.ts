@@ -11,47 +11,49 @@ import {
   ResearchInfoPage,
   ScrapingExplanationPage,
   SelectDemoPage,
+  StartPage,
   VisualizationAutoplayChainPage,
   VisualizationNewsPage,
   VisualizationProfilePage,
   VisualizationSearchPage,
-} from '../pages';
+} from "../pages";
 
-const ytRoutes = {
-  DONATION_SUCCESS: { path: '/yt/donation-success', comp: DonationSuccessPage },
-  DONATION2: { path: '/yt/donation2', comp: DonationPage2 },
-  DONATION1: { path: '/yt/donation1', comp: DonationPage1 },
-  QUESTIONNAIRE: { path: '/yt/questionnaire', comp: QuestionnairePage },
-  MY_DATA: { path: '/yt/my-data', comp: MyDataPage },
-  VISUALIZATION_SEARCH: {
-    path: '/yt/visualization/search',
+const ytRoutes = [
+  { path: "/youtube/donation-success", comp: DonationSuccessPage },
+  { path: "/youtube/donation2", comp: DonationPage2 },
+  { path: "/youtube/donation1", comp: DonationPage1 },
+  { path: "/youtube/questionnaire", comp: QuestionnairePage },
+  { path: "/youtube/my-data", comp: MyDataPage },
+  {
+    path: "/youtube/visualization/search",
     comp: VisualizationSearchPage,
   },
-  VISUALIZATION_NEWS: {
-    path: '/yt/visualization/news',
+  {
+    path: "/youtube/visualization/news",
     comp: VisualizationNewsPage,
   },
-  VISUALIZATION_AUTOPLAYCHAIN: {
-    path: '/yt/visualization/autoplay-chain',
+  {
+    path: "/youtube/visualization/autoplay-chain",
     comp: VisualizationAutoplayChainPage,
   },
-  RESEARCH_INFO: { path: '/yt/research-info', comp: ResearchInfoPage },
-  VISUALIZATION_PROFILE: {
-    path: '/yt/visualization/profile',
+  { path: "/youtube/research-info", comp: ResearchInfoPage },
+  {
+    path: "/youtube/visualization/profile",
     comp: VisualizationProfilePage,
   },
-  SCRAPING_EXPLANATION: {
-    path: '/yt/scraping-explanation',
+  {
+    path: "/youtube/scraping-explanation",
     comp: ScrapingExplanationPage,
   },
-  INTERFACE_TUTORIAL: {
-    path: '/yt/interface-tutorial',
+  {
+    path: "/youtube/interface-tutorial",
     comp: InterfaceTutorialPage,
   },
-  ONBOARDING_2: { path: '/yt/onboarding2', comp: OnboardingPage2 },
-  ONBOARDING_1: { path: '/yt/onboarding1', comp: OnboardingPage1 },
-  INTRODUCTION: { path: '/yt/intro', comp: IntroductionPage },
-  SELECT_DEMO: { path: '/yt/select-demo', comp: SelectDemoPage },
-};
+  { path: "/youtube/onboarding2", comp: OnboardingPage2 },
+  { path: "/youtube/onboarding1", comp: OnboardingPage1 },
+  { path: "/youtube/intro", comp: IntroductionPage },
+  { path: "/youtube/select-demo", comp: SelectDemoPage },
+  { path: "/youtube/start", comp: StartPage },
+];
 
 export default ytRoutes;

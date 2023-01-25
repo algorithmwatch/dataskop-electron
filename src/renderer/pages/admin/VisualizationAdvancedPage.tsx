@@ -1,14 +1,14 @@
-import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
-import { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-import AutoplayChain from 'renderer/providers/youtube/components/visualizations/AutoplayChain';
-import NewsTop5 from 'renderer/providers/youtube/components/visualizations/NewsTop5';
-import SearchResultsCompare from 'renderer/providers/youtube/components/visualizations/SearchResultsCompare';
-import { useConfig } from '../../contexts/config';
-import { getLookups, getScrapingResultsBySession } from '../../lib/db';
-import Button from '../../providers/youtube/components/Button';
-import MyData from '../../providers/youtube/components/visualizations/MyData';
-import Profile from '../../providers/youtube/components/visualizations/profile';
+import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
+import { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
+import AutoplayChain from "renderer/providers/youtube/components/visualizations/AutoplayChain";
+import NewsTop5 from "renderer/providers/youtube/components/visualizations/NewsTop5";
+import SearchResultsCompare from "renderer/providers/youtube/components/visualizations/SearchResultsCompare";
+import { useConfig } from "../../contexts/config";
+import { getScrapingResultsBySession } from "../../lib/db";
+import Button from "../../providers/youtube/components/Button";
+import MyData from "../../providers/youtube/components/visualizations/MyData";
+import Profile from "../../providers/youtube/components/visualizations/profile";
 
 export default function VisualizationAdvancedPage() {
   const [data, setData] = useState<any>(null);
@@ -18,11 +18,11 @@ export default function VisualizationAdvancedPage() {
   } = useConfig();
 
   const visCompOptions = [
-    'profile',
-    'mydata',
-    'newstop5',
-    'search-results-compare',
-    'autoplay-chain',
+    "profile",
+    "mydata",
+    "newstop5",
+    "search-results-compare",
+    "autoplay-chain",
   ];
   const [visComp, setVisComp] = useState(visCompOptions[0]);
 
@@ -31,7 +31,7 @@ export default function VisualizationAdvancedPage() {
   useEffect(() => {
     const loadData = async () => {
       const results = await getScrapingResultsBySession(sessionId);
-      const lookups = await getLookups();
+      const lookups = await window.electron.ipc.invoke("db-get-lookups");
       setData({ results, lookups });
     };
     loadData();
@@ -66,15 +66,15 @@ export default function VisualizationAdvancedPage() {
         </FormControl>
       </div>
       <div className="overflow-y-auto h-full">
-        {visComp === 'profile' && data && (
+        {visComp === "profile" && data && (
           <Profile data={data.results} lookups={data.lookups} />
         )}
-        {visComp === 'mydata' && data && <MyData data={data} />}
-        {visComp === 'newstop5' && <NewsTop5 data={data.results} />}
-        {visComp === 'search-results-compare' && (
+        {visComp === "mydata" && data && <MyData data={data} />}
+        {visComp === "newstop5" && <NewsTop5 data={data.results} />}
+        {visComp === "search-results-compare" && (
           <SearchResultsCompare data={data.results} />
         )}
-        {visComp === 'autoplay-chain' && <AutoplayChain data={data.results} />}
+        {visComp === "autoplay-chain" && <AutoplayChain data={data.results} />}
       </div>
     </>
   );

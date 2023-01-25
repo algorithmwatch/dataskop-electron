@@ -1,9 +1,7 @@
-// @ts-nocheck
-
-import * as chrono from 'chrono-node';
-import { mean, rollups, sum } from 'd3-array';
-import { useEffect, useState } from 'react';
-import { LookupMap, ScrapingResult } from '../../../../../lib/db/types';
+import * as chrono from "chrono-node";
+import { mean, rollups, sum } from "d3-array";
+import { useEffect, useState } from "react";
+import { LookupMap, ScrapingResult } from "../../../../../lib/db/types";
 
 const parseDate = (str: string, referenceDate: Date) => {
   const germanDate = chrono.de.parseDate(str, referenceDate);
@@ -13,32 +11,36 @@ const parseDate = (str: string, referenceDate: Date) => {
 };
 
 export const useData = (raw: Array<ScrapingResult>, lookups: LookupMap) => {
-  const [data, setData] = useState({ loading: true });
-
-  // console.log(raw, lookups);
+  const [data, setData] = useState<any>({ loading: true });
 
   const slugHistory = raw.find(
-    (x) => x.success && x.slug.includes('user-watch-history'),
+    (x) => x.success && x.slug.includes("user-watch-history"),
   )?.fields.videos;
 
   const channels = raw.find(
-    (x) => x.success && x.slug.includes('subscribed-channels'),
+    (x) => x.success && x.slug.includes("subscribed-channels"),
   )?.fields.channels;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const referenceDate = new Date(raw[0].scrapedAt);
+
         const history = slugHistory.map((d) => {
           const date = parseDate(d.watchedAt, referenceDate);
-          const watchTime = parseInt((d.duration * d.percWatched) / 100 / 1000);
+          const watchTime: any = parseInt(
+            (d.duration * d.percWatched) / 100 / 1000,
+            10,
+          );
           const detail = lookups[d.id]?.data;
           return { ...d, date, watchTime, ...detail };
         });
-        const days = history.length
+
+        const days: any = history.length
           ? parseInt(
               (history[0].date - history[history.length - 1].date) /
                 (1000 * 60 * 60 * 24),
+              10,
             )
           : 0;
         const mostWatchedCategoriesTime = rollups(
@@ -58,12 +60,13 @@ export const useData = (raw: Array<ScrapingResult>, lookups: LookupMap) => {
           (d) => d.notificationsEnabled,
         );
         const topChannel = channels
-          .map((c) => ({
+          .map((c: any) => ({
             name: c.channelName,
-            num: history.filter((h) => h.channelUrl === c.channelUrl).length,
+            num: history.filter((h: any) => h.channelUrl === c.channelUrl)
+              .length,
           }))
-          .filter((c) => c.num)
-          .sort((a, b) => a.num - b.num)
+          .filter((c: any) => c.num)
+          .sort((a: any, b: any) => a.num - b.num)
           .pop();
 
         setData({

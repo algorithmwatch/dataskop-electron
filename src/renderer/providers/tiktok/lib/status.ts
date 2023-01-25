@@ -1,0 +1,196 @@
+import { Dayjs } from "dayjs";
+import _ from "lodash";
+import dayjs from "renderer/lib/dayjs";
+import { addScrapingResult } from "renderer/lib/db";
+
+const STATUS = {
+  // TikTok data was requested and TikTok is busy, It didn't fail yet
+  "monitoring-pending": {
+    notification: {
+      title: "Warte auf DSGVO-Daten",
+      body: "Es kann eine Weile dauern, bis TikTok die Daten bereitstellt.",
+    },
+  },
+  // The download could not happen in the background, we need action from the user
+  "monitoring-download-action-required": {
+    notification: {
+      title: "Handlung erforderlich",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
+  "monitoring-download-success": {},
+  "monitoring-download-error": {
+    notification: {
+      title: "Fehler beim Download",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
+  "monitoring-download-timeout": {
+    notification: {
+      title: "Handlung erforderlich",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
+  // Time to download data has expired
+  "monitoring-download-expired": {
+    notification: {
+      title: "Download abgelaufen",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
+  // Error, the HTML may have changed
+  "monitoring-error-nothing-found": {},
+  // Error, the HTML may have changed
+  "monitoring-error-tab-not-found": {},
+  // Should prompt user to fill out captcha form
+  "error-captcha-required": {},
+  // Error, the HTML may have changed
+  "data-error-tab-not-found": {},
+  // Waiting until TikTok created the dump
+  "data-pending": {},
+  // The data request should either be pending or done but we couldn't verfiy the
+  // current state. Are there network problems?
+  "data-pending-error-unable-to-check": {},
+  // successfully requested a new GDPR dump
+  "data-request-success": {},
+  // There were errors when requesting a new GDPR dump
+  "data-error-request": {
+    notification: {
+      title: "Fehler",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
+  "download-action-required": {
+    notification: {
+      title: "Handlung erforderlich",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
+  "download-success": {},
+  "download-error": {},
+  "download-timeout": {
+    notification: {
+      title: "Handlung erforderlich",
+      body: "Bitte öffne die DataSkop-App, um fortzufahren.",
+    },
+  },
+  // A scraping step was finished
+  "scraping-done": {
+    notification: {
+      title: "Alle Daten sind da",
+      body: "Bitte öffne die DataSkop-App, um dir die Visualisierungen anzusehen.",
+    },
+  },
+  // A user imported a dump
+  "files-imported": {},
+};
+
+// There are two more special stati: `status-not-available` and `status-reset`.
+// They are not listed here because the procedures must not return it.
+
+type StatusKey = keyof typeof STATUS;
+
+const getAllStati = () => {
+  return window.electron.ipc.invoke("db-get-all-stati");
+};
+
+const getStatus = async (): Promise<{ status: string; updatedAt: Dayjs }> => {
+  const statusRows = await getAllStati();
+  if (statusRows.length === 0)
+    return { status: "status-not-available", updatedAt: dayjs() };
+
+  const last = _.last(statusRows) as any;
+  return {
+    status: last.fields.status as string,
+    updatedAt: dayjs(last.scrapedAt as number),
+  };
+};
+
+const isStatusDownloadActionRequired = (status: string) => {
+  return [
+    "monitoring-download-action-required",
+    "download-action-required",
+    "monitoring-download-timeout",
+    "download-timeout",
+  ].includes(status);
+};
+
+// keep the following two functions in sync with main/providers/tiktok/status.ts
+const isStatusPending = (status: string) => {
+  if (
+    ["data-pending", "monitoring-pending", "data-request-success"].includes(
+      status,
+    )
+  )
+    return true;
+
+  // still keep looking even though an error occured
+  return status.includes("error");
+};
+
+const getPrintStatus = (status: string) => {
+  const mapping = {
+    "monitoring-pending": "Warte auf Daten (im Hintergrund)",
+    "monitoring-download-action-required":
+      "Download (im Hintergrund): Handlung erforderlich",
+    "monitoring-download-success": "Download erfolgreich (im Hintergrund)",
+    "monitoring-download-error": "Fehler beim Download (im Hintergrund)",
+    "monitoring-download-timeout":
+      "Download: Handlung erforderlich (Timeout im Hintergrund)",
+    "monitoring-download-expired":
+      "Fehler: Download abgelaufen (im Hintergrund)",
+    "monitoring-error-nothing-found":
+      "Fehler: Nichts gefunden (im Hintergrund)",
+    "monitoring-error-tab-not-found":
+      "Fehler: Tab konnte nicht gefunden werden (im Hintergrund)",
+    "error-captcha-required": "Fehler: CAPTCHA muss gelöst werden",
+    "data-error-tab-not-found": "Fehler: Tab konnte nicht gefunden werden",
+    "data-pending": "Warte auf Daten",
+    "data-pending-error-unable-to-check":
+      "Fehler: Status konnte nicht überprüft werden",
+    "data-request-success": "Daten wurden erfolgreich beantragt",
+    "data-error-request": "Fehler: Beantragung fehlerhaft",
+    "download-action-required": "Download: Handlung erforderlich",
+    "download-success": "Download erfolgreich",
+    "download-error": "Fehler beim Download",
+    "download-timeout": "Download: Handlung erforderlich (Timeout)",
+    "scraping-done": "Scraping abgeschlossen",
+    "files-imported": "Daten wurden importiert",
+    "status-not-available": "Status (noch) nicht vorhanden",
+    "status-reset": "Status erfolgreich zurückgesetzt",
+  };
+
+  return _.get(mapping, status, status);
+};
+
+const shouldJumpToWaitingPage = async () => {
+  const { status } = await getStatus();
+  return status !== "status-not-available" && status !== "status-reset";
+};
+
+const addStatusReset = () => {
+  return addScrapingResult(
+    "no-session",
+    0,
+    {
+      success: true,
+      slug: "status-reset",
+      fields: {
+        status: "status-reset",
+      },
+    },
+    true,
+  );
+};
+
+export {
+  getPrintStatus,
+  getStatus,
+  getAllStati,
+  isStatusPending,
+  isStatusDownloadActionRequired,
+  shouldJumpToWaitingPage,
+  StatusKey,
+  STATUS,
+  addStatusReset,
+};

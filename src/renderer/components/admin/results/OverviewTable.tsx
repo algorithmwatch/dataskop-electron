@@ -1,14 +1,13 @@
-import Paper from '@material-ui/core/Paper';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import dayjs from 'dayjs';
-import { useHistory } from 'react-router';
-import routes from '../../../routes';
+import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import dayjs from "dayjs";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   table: {
@@ -16,7 +15,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function OverviewTable({ rows }: { rows: any }) {
+const OverviewTable = ({ rows }: { rows: any }) => {
   const classes = useStyles();
   const history = useHistory();
 
@@ -38,14 +37,7 @@ export default function OverviewTable({ rows }: { rows: any }) {
             <TableRow
               className="cursor-pointer"
               key={row.sessionId}
-              onClick={() =>
-                history.push(
-                  routes.ADMIN_RESULTS_DETAILS.path.replace(
-                    ':sessionId',
-                    row.sessionId,
-                  ),
-                )
-              }
+              onClick={() => history.push(`/admin/results/${row.sessionId}`)}
             >
               <TableCell component="th" scope="row">
                 {row.sessionId}
@@ -66,4 +58,6 @@ export default function OverviewTable({ rows }: { rows: any }) {
       </Table>
     </TableContainer>
   );
-}
+};
+
+export default OverviewTable;

@@ -1,19 +1,17 @@
-/* eslint-disable no-restricted-syntax */
-import { Card } from '@material-ui/core';
-import { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import LocalCampaignSelect from '../../components/admin/LocalCampaignSelect';
-import RemoteCampaignSelect from '../../components/admin/RemoteCampaignSelect';
-import { makeGetHtml } from '../../components/scraping/ipc';
-import ScrapingControls from '../../components/scraping/ScrapingControls';
-import { useScraping } from '../../contexts/scraping';
-import { Campaign } from '../../providers/types';
-import Button from '../../providers/youtube/components/Button';
+import { Card } from "@material-ui/core";
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import LocalCampaignSelect from "../../components/admin/LocalCampaignSelect";
+import RemoteCampaignSelect from "../../components/admin/RemoteCampaignSelect";
+import { makeGetHtml } from "../../components/scraping/ipc";
+import ScrapingControls from "../../components/scraping/ScrapingControls";
+import { useScraping } from "../../contexts/scraping";
+import { Campaign } from "../../providers/types";
+import Button from "../../providers/youtube/components/Button";
 import {
   activateWatchHistory,
   deactivateWatchHistory,
-} from '../../providers/youtube/lib/actions/manage-watch-history';
-import routes from '../../routes';
+} from "../../providers/youtube/lib/actions/manage-watch-history";
 
 export default function AdvancedScrapingPage(): JSX.Element {
   const {
@@ -24,12 +22,13 @@ export default function AdvancedScrapingPage(): JSX.Element {
   const history = useHistory();
 
   const setCampaign = (campaign: Campaign) =>
-    dispatch({ type: 'set-campaign', campaign });
+    dispatch({ type: "set-campaign", campaign });
 
   // enable and disable scraping window
   useEffect(() => {
-    dispatch({ type: 'set-is-attached', isAttached: true });
-    return () => dispatch({ type: 'set-is-attached', isAttached: false });
+    dispatch({ type: "set-attached", attached: true, visible: true });
+    return () =>
+      dispatch({ type: "set-attached", attached: false, visible: false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -49,16 +48,7 @@ export default function AdvancedScrapingPage(): JSX.Element {
 
         <ScrapingControls />
         {sessionId !== null && (
-          <Button
-            onClick={() =>
-              history.push(
-                routes.ADMIN_RESULTS_DETAILS.path.replace(
-                  ':sessionId',
-                  sessionId,
-                ),
-              )
-            }
-          >
+          <Button onClick={() => history.push(`/admin/results/${sessionId}`)}>
             go to result
           </Button>
         )}

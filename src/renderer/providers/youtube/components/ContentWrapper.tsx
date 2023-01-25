@@ -1,23 +1,23 @@
-import classNames from 'classnames';
-import { ReactNode } from 'react';
+import clsx from "clsx";
+import { ReactNode } from "react";
 
-function ContentWrapper({
+const ContentWrapper = ({
   centerY,
   children,
 }: {
   centerY?: boolean;
   children: ReactNode;
-}) {
+}) => {
   return (
     <div
-      className={classNames(
-        'mx-auto max-w-prose flex flex-col justify-center',
-        centerY ? 'h-full' : 'my-10',
+      className={clsx(
+        "mx-auto max-w-prose flex flex-col justify-center",
+        centerY ? "h-full" : "my-10",
       )}
     >
       <div>{children}</div>
     </div>
   );
-}
+};
 
 export default ContentWrapper;

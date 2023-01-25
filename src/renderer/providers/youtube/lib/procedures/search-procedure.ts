@@ -1,15 +1,13 @@
-/* eslint-disable no-restricted-syntax */
-import { GetHtmlFunction, GetHtmlLazyFunction } from 'renderer/providers/types';
-import { SearchProcedureConfig, YtScrapingConfig } from '..';
-import { scrapeVideoSearch } from '../scrapers';
+import { GetHtmlFunction, GetHtmlLazyFunction } from "renderer/providers/types";
+import { SearchProcedureConfig, YtScrapingConfig } from "..";
+import { scrapeVideoSearch } from "../scrapers";
 
 async function* searchProcedure(
   getHtml: GetHtmlFunction,
   _getHtmlLazy: GetHtmlLazyFunction,
-  _sessionId: string,
   config: SearchProcedureConfig,
   _scrapingConfig: YtScrapingConfig,
-  _enableLogging: boolean,
+  _procedureArgs: any,
 ) {
   const { queries } = config;
   for (const [i, q] of queries.entries()) {

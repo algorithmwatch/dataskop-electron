@@ -17,15 +17,15 @@ export interface Options {
 }
 
 export class CsvConfigConsts {
-  public static EOL = '\r\n';
-  public static BOM = '\ufeff';
+  public static EOL = "\r\n";
+  public static BOM = "\ufeff";
 
-  public static DEFAULT_FIELD_SEPARATOR = ',';
-  public static DEFAULT_DECIMAL_SEPARATOR = '.';
+  public static DEFAULT_FIELD_SEPARATOR = ",";
+  public static DEFAULT_DECIMAL_SEPARATOR = ".";
   public static DEFAULT_QUOTE = '"';
   public static DEFAULT_SHOW_TITLE = false;
-  public static DEFAULT_TITLE = 'My Generated Report';
-  public static DEFAULT_FILENAME = 'generated';
+  public static DEFAULT_TITLE = "My Generated Report";
+  public static DEFAULT_FILENAME = "generated";
   public static DEFAULT_SHOW_LABELS = false;
   public static DEFAULT_USE_TEXT_FILE = false;
   public static DEFAULT_USE_BOM = true;
@@ -49,7 +49,7 @@ export const ConfigDefaults: Options = {
 export class ExportToCsv {
   private _data: any[];
   private _options: Options;
-  private _csv = '';
+  private _csv = "";
 
   get options(): Options {
     return this._options;
@@ -70,7 +70,7 @@ export class ExportToCsv {
       this._options.headers.length > 0
     ) {
       console.warn(
-        'Option to use object keys as headers was set, but headers were still passed!',
+        "Option to use object keys as headers was set, but headers were still passed!",
       );
     }
   }
@@ -79,7 +79,7 @@ export class ExportToCsv {
    */
   generateCsv(jsonData: any, shouldReturnCsv: boolean = false): void | any {
     // Make sure to reset csv data on each run
-    this._csv = '';
+    this._csv = "";
 
     this._parseData(jsonData);
 
@@ -88,14 +88,14 @@ export class ExportToCsv {
     }
 
     if (this._options.showTitle) {
-      this._csv += this._options.title + '\r\n\n';
+      this._csv += this._options.title + "\r\n\n";
     }
 
     this._getHeaders();
     this._getBody();
 
-    if (this._csv == '') {
-      console.log('Invalid data');
+    if (this._csv == "") {
+      console.log("Invalid data");
       return;
     }
 
@@ -107,27 +107,27 @@ export class ExportToCsv {
 
     // Create CSV blob to download if requesting in the browser and the
     // consumer doesn't set the shouldReturnCsv param
-    const FileType = this._options.useTextFile ? 'plain' : 'csv';
-    const fileExtension = this._options.useTextFile ? '.txt' : '.csv';
+    const FileType = this._options.useTextFile ? "plain" : "csv";
+    const fileExtension = this._options.useTextFile ? ".txt" : ".csv";
     let blob = new Blob([this._csv], {
-      type: 'text/' + FileType + ';charset=utf8;',
+      type: "text/" + FileType + ";charset=utf8;",
     });
 
     if (navigator.msSaveBlob) {
-      let filename = this._options.filename.replace(/ /g, '_') + fileExtension;
+      let filename = this._options.filename.replace(/ /g, "_") + fileExtension;
       navigator.msSaveBlob(blob, filename);
     } else {
-      const attachmentType = this._options.useTextFile ? 'text' : 'csv';
+      const attachmentType = this._options.useTextFile ? "text" : "csv";
       let uri =
-        'data:attachment/' +
+        "data:attachment/" +
         attachmentType +
-        ';charset=utf-8,' +
+        ";charset=utf-8," +
         encodeURI(this._csv);
-      let link = document.createElement('a');
+      let link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
 
-      link.setAttribute('visibility', 'hidden');
-      link.download = this._options.filename.replace(/ /g, '_') + fileExtension;
+      link.setAttribute("visibility", "hidden");
+      link.download = this._options.filename.replace(/ /g, "_") + fileExtension;
 
       document.body.appendChild(link);
       link.click();
@@ -148,7 +148,7 @@ export class ExportToCsv {
       : this._options.headers;
 
     if (headers.length > 0) {
-      let row = '';
+      let row = "";
       for (let keyPos = 0; keyPos < headers.length; keyPos++) {
         row += headers[keyPos] + this._options.fieldSeparator;
       }
@@ -163,7 +163,7 @@ export class ExportToCsv {
   private _getBody() {
     const keys = Object.keys(this._data[0]);
     for (var i = 0; i < this._data.length; i++) {
-      let row = '';
+      let row = "";
       for (let keyPos = 0; keyPos < keys.length; keyPos++) {
         const key = keys[keyPos];
         row +=
@@ -179,29 +179,29 @@ export class ExportToCsv {
    * @param {any} data
    */
   private _formatData(data: any) {
-    if (this._options.decimalSeparator === 'locale' && this._isFloat(data)) {
+    if (this._options.decimalSeparator === "locale" && this._isFloat(data)) {
       return data.toLocaleString();
     }
 
-    if (this._options.decimalSeparator !== '.' && this._isFloat(data)) {
-      return data.toString().replace('.', this._options.decimalSeparator);
+    if (this._options.decimalSeparator !== "." && this._isFloat(data)) {
+      return data.toString().replace(".", this._options.decimalSeparator);
     }
 
-    if (typeof data === 'string') {
+    if (typeof data === "string") {
       data = data.replace(/"/g, '""');
       if (
         this._options.quoteStrings ||
-        data.indexOf(',') > -1 ||
-        data.indexOf('\n') > -1 ||
-        data.indexOf('\r') > -1
+        data.indexOf(",") > -1 ||
+        data.indexOf("\n") > -1 ||
+        data.indexOf("\r") > -1
       ) {
         data = this._options.quoteStrings + data + this._options.quoteStrings;
       }
       return data;
     }
 
-    if (typeof data === 'boolean') {
-      return data ? 'TRUE' : 'FALSE';
+    if (typeof data === "boolean") {
+      return data ? "TRUE" : "FALSE";
     }
     return data;
   }
@@ -221,7 +221,7 @@ export class ExportToCsv {
    * @memberof ExportToCsv
    */
   private _parseData(jsonData: any): any[] {
-    this._data = typeof jsonData != 'object' ? JSON.parse(jsonData) : jsonData;
+    this._data = typeof jsonData != "object" ? JSON.parse(jsonData) : jsonData;
 
     return this._data;
   }
@@ -237,7 +237,7 @@ let propIsEnumerable = Object.prototype.propertyIsEnumerable;
 function toObject(val: any) {
   if (val === null || val === undefined) {
     throw new TypeError(
-      'Object.assign cannot be called with null or undefined',
+      "Object.assign cannot be called with null or undefined",
     );
   }
   return Object(val);

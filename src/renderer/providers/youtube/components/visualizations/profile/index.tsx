@@ -1,24 +1,22 @@
-// @ts-nocheck
+import { faIdCard } from "@fortawesome/pro-light-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRef, useState } from "react";
+import { LookupMap, ScrapingResult } from "../../../../../lib/db/types";
+import { exportWatchHistoryCsv } from "../../../lib/export";
+import Button from "../../Button";
+import ContentWrapper from "../../ContentWrapper";
+import Explainer from "../../Explainer";
+import Infobox from "../../Infobox";
+import Beeswarm from "./Beeswarm";
+import Loading from "./Loading";
+import { useData } from "./useData";
 
-import { faIdCard } from '@fortawesome/pro-light-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useRef, useState } from 'react';
-import { LookupMap, ScrapingResult } from '../../../../../lib/db/types';
-import { exportWatchHistoryCsv } from '../../../lib/export';
-import Button from '../../Button';
-import ContentWrapper from '../../ContentWrapper';
-import Explainer from '../../Explainer';
-import Infobox from '../../Infobox';
-import Beeswarm from './Beeswarm';
-import Loading from './Loading';
-import { useData } from './useData';
-
-function Badge({ title, value, unit, small = false }) {
+const Badge = ({ title, value, unit, small = false }) => {
   return (
     <div className="flex flex-col shadow rounded-lg text-center w-45 overflow-hidden">
       <div className="p-2 backdrop-filter backdrop-contrast-125 backdrop-brightness-110 backdrop-saturate-200 flex justify-center items-center flex-grow flex-row">
         <div>
-          <span className={small ? 'hl-1xl font-bold' : 'hl-3xl'}>{value}</span>{' '}
+          <span className={small ? "hl-1xl font-bold" : "hl-3xl"}>{value}</span>{" "}
           <span className="text-xs ">{unit}</span>
         </div>
       </div>
@@ -27,15 +25,15 @@ function Badge({ title, value, unit, small = false }) {
       </div>
     </div>
   );
-}
+};
 
-export default function ProfileVis({
+const ProfileVis = ({
   data,
   lookups,
 }: {
   data: Array<ScrapingResult>;
   lookups: LookupMap;
-}) {
+}) => {
   const [explainerIsOpen, setExplainerIsOpen] = useState(true);
   const [waitExport, setWaitExport] = useState(false);
   const db = useData(data, lookups);
@@ -128,7 +126,7 @@ export default function ProfileVis({
               value={
                 db.mostWatchedCategoriesTime.length
                   ? db.mostWatchedCategoriesTime[0][0]
-                  : 'Keinen'
+                  : "Keinen"
               }
               small
               unit=""
@@ -146,7 +144,7 @@ export default function ProfileVis({
             {/* {db.topChannel && ( */}
             <Badge
               title="Kanalfavorit"
-              value={db.topChannel ? db.topChannel.name : 'keine Daten'}
+              value={db.topChannel ? db.topChannel.name : "keine Daten"}
               small
               unit=""
             />
@@ -164,8 +162,8 @@ export default function ProfileVis({
         <div className="mt-7 text-center">
           <Button
             disabled={waitExport}
-            theme={'link'}
-            size={'small'}
+            theme="link"
+            size="small"
             onClick={async () => {
               setWaitExport(true);
               await exportWatchHistoryCsv(db.history);
@@ -173,11 +171,13 @@ export default function ProfileVis({
             }}
           >
             {waitExport
-              ? 'Einen Moment bitte, der Export wird vorbereitet'
-              : 'CSV exportieren'}
+              ? "Einen Moment, bitte, der Export wird vorbereitet"
+              : "CSV exportieren"}
           </Button>
         </div>
       </div>
     </>
   );
-}
+};
+
+export default ProfileVis;

@@ -1,0 +1,742 @@
+{
+  "questions": [
+    {
+      "label": "Welchem Geschlecht ordnest du dich zu?",
+      "name": "geschlecht",
+      "type": "radio-group",
+      "required": true,
+      "choices": [
+        {
+          "label": "Divers",
+          "value": "divers"
+        },
+        {
+          "label": "Weiblich",
+          "value": "weiblich"
+        },
+        {
+          "label": "Männlich",
+          "value": "männlich"
+        },
+        {
+          "label": "Keine Angabe",
+          "value": "keine angabe"
+        }
+      ]
+    },
+    {
+      "label": "Was sind die ersten zwei Zahlen der Postleitzahl deines Hauptwohnsitzes?",
+      "name": "plz-wohnort",
+      "type": "number",
+      "charLength": 2,
+      "inputParams": { "min": 0, "max": 99, "step": 1 },
+      "required": true
+    },
+    {
+      "label": "Stimmt deine Altersangabe auf TikTok?",
+      "name": "altersangabe-stimmt",
+      "type": "radio-group",
+      "choices": [
+        {
+          "label": "Ja",
+          "value": "ja"
+        },
+        {
+          "label": "Nein",
+          "value": "nein"
+        }
+      ]
+    },
+    {
+      "label": "Tatsächliches Alter (in Jahren):",
+      "name": "tatsächliches-alter",
+      "type": "number",
+      "inputParams": { "min": 0, "max": 130, "step": 1 },
+      "visibleIf": {
+        "name": "altersangabe-stimmt",
+        "hasValue": "nein"
+      }
+    },
+    {
+      "label": "Wann hast du deinen TikTok-Account erstellt?",
+      "name": "account-erstellt-am",
+      "type": "multiple-select",
+      "required": true,
+      "choices": [
+        [
+          {
+            "label": "Monat"
+          },
+          {
+            "label": "Januar",
+            "value": "1"
+          },
+          {
+            "label": "Februar",
+            "value": "2"
+          },
+          {
+            "label": "März",
+            "value": "3"
+          },
+          {
+            "label": "April",
+            "value": "4"
+          },
+          {
+            "label": "Mai",
+            "value": "5"
+          },
+          {
+            "label": "Juni",
+            "value": "6"
+          },
+          {
+            "label": "Juli",
+            "value": "7"
+          },
+          {
+            "label": "August",
+            "value": "8"
+          },
+          {
+            "label": "September",
+            "value": "9"
+          },
+          {
+            "label": "Oktober",
+            "value": "10"
+          },
+          {
+            "label": "November",
+            "value": "11"
+          },
+          {
+            "label": "Dezember",
+            "value": "12"
+          }
+        ],
+        [
+          {
+            "label": "Jahr"
+          },
+          {
+            "label": "2016",
+            "value": "2016"
+          },
+          {
+            "label": "2017",
+            "value": "2017"
+          },
+          {
+            "label": "2018",
+            "value": "2018"
+          },
+          {
+            "label": "2019",
+            "value": "2019"
+          },
+          {
+            "label": "2020",
+            "value": "2020"
+          },
+          {
+            "label": "2021",
+            "value": "2021"
+          },
+          {
+            "label": "2022",
+            "value": "2022"
+          }
+        ]
+      ]
+    },
+    {
+      "label": "Hast du in deiner TikTok-App mehrere eigene TikTok-Accounts verknüpft?",
+      "name": "mehrere-accounts-verknüpft",
+      "type": "radio-group",
+      "required": true,
+      "choices": [
+        {
+          "label": "Ja",
+          "value": "ja"
+        },
+        {
+          "label": "Nein",
+          "value": "nein"
+        }
+      ]
+    },
+    {
+      "label": "Welche Themen bzw. Interessen ordnet TikTok dir deiner Ansicht nach auf der Für-Dich-Seite zu?",
+      "name": "themen-interessen-zuordnunug",
+      "type": "checkbox",
+      "required": true,
+      "choices": [
+        {
+          "label": "Unterhaltung (z.B. Comedy, Zauberei)",
+          "value": "unterhaltung"
+        },
+        {
+          "label": "Menschen & Vlogs",
+          "value": "vlogs"
+        },
+        {
+          "label": "Musik & Tanz",
+          "value": "musik"
+        },
+        {
+          "label": "Kunst, Handwerk, Hobby",
+          "value": "kunst"
+        },
+        {
+          "label": "Wissenschaft, Technik, Bildung",
+          "value": "wissenschaft"
+        },
+        {
+          "label": "Gaming",
+          "value": "gaming"
+        },
+        {
+          "label": "Gemeinschaft & Identität (z.B. LGBT)",
+          "value": "gemeinschaft"
+        },
+        {
+          "label": "Politik & Nachrichten",
+          "value": "politik"
+        },
+        {
+          "label": "Etwas anderes",
+          "value": "anderes"
+        }
+      ]
+    },
+    {
+      "label": "Denkst du deine Für-Dich-Seite enthält besonders schutzwürdige personenbezogene Daten über dich?",
+      "name": "zuordnug-betrifft-persönliche-daten",
+      "type": "radio-group",
+      "choices": [
+        {
+          "label": "Ja",
+          "value": "ja"
+        },
+        {
+          "label": "Nein",
+          "value": "nein"
+        }
+      ]
+    },
+    {
+      "label": "Die Datenschutzgrundverordnung (DSGVO) definiert verschiedene Kategorien besonders schutzwürdiger Daten: Herkunft, politische und religiöse Einstellung, Gewerkschaftszugehörigkeit, Angaben zu Gesundheit und Sexualität. Welche dieser Kategorien denkst du betreffen die Daten aus deiner Für-Dich-Seite?",
+      "name": "zuordnug-betrifft-persönliche-daten-bereiche",
+      "type": "checkbox",
+      "visibleIf": {
+        "name": "zuordnug-betrifft-persönliche-daten",
+        "hasValue": "ja"
+      },
+      "choices": [
+        {
+          "label": "Politische Einstellung",
+          "value": "politische-einstellung"
+        },
+        {
+          "label": "Sexualität",
+          "value": "sexualität"
+        },
+        {
+          "label": "Religion & Weltanschauung",
+          "value": "religion-weltanschauung"
+        },
+        {
+          "label": "Gesundheit/Krankheit",
+          "value": "gesundheit-krankheit"
+        },
+        {
+          "label": "Herkunft",
+          "value": "herkunft"
+        }
+      ]
+    },
+    {
+      "label": "Hast du TikToks Digital Wellbeing-Funktionen aktiviert?",
+      "name": "wellbeing-funktion-aktiviert",
+      "type": "radio-group",
+      "choices": [
+        {
+          "label": "Ja",
+          "value": "ja"
+        },
+        {
+          "label": "Nein",
+          "value": "nein"
+        },
+        {
+          "label": "Weiß ich nicht",
+          "value": "weiß-ich-nicht"
+        }
+      ]
+    },
+    {
+      "label": "Wie viele Stunden verbringst du am Tag auf TikTok?",
+      "name": "einschätzung-nutzunszeit",
+      "type": "number",
+      "inputParams": { "min": 0, "max": 24, "step": 1 }
+    },
+    {
+      "label": "Zu welcher Tages- oder Nachtzeit bist du am meisten auf TikTok?",
+      "name": "einschätzung-nutzungszeit-tageszeit",
+      "type": "radio-group",
+      "choices": [
+        {
+          "label": "Vormittags",
+          "value": "vormittags"
+        },
+        {
+          "label": "Nachmittags",
+          "value": "nachmittags"
+        },
+        {
+          "label": "Abends",
+          "value": "abends"
+        },
+        {
+          "label": "Nachts",
+          "value": "nachts"
+        }
+      ]
+    },
+    {
+      "label": "Hast du TikTok erlaubt, dir personalisierte Werbung zu zeigen?",
+      "name": "personalisierte-werbung-aktiviert",
+      "type": "radio-group",
+      "choices": [
+        {
+          "label": "Ja",
+          "value": "ja"
+        },
+        {
+          "label": "Nein",
+          "value": "nein"
+        },
+        {
+          "label": "Weiß ich nicht",
+          "value": "weiß-ich-nicht"
+        }
+      ]
+    },
+    {
+      "label": "Was denkst du: Welche Informationen hat TikTok über dich?",
+      "name": "welche-infos-hat-tiktok",
+      "type": "checkbox",
+      "choices": [
+        {
+          "label": "E-Mail-Adresse",
+          "value": "e-mail-adresse"
+        },
+        {
+          "label": "Telefonnummer",
+          "value": "telefonnummer"
+        },
+        {
+          "label": "Internetanbieter",
+          "value": "internetanbieter"
+        }
+      ]
+    },
+    {
+      "label": "Warum nutzt du TikTok?",
+      "name": "warum-tiktok-nutzung",
+      "type": "checkbox",
+      "choices": [
+        {
+          "label": "Unterhaltung",
+          "value": "unterhaltung"
+        },
+        {
+          "label": "Bildung",
+          "value": "bildung"
+        },
+        {
+          "label": "Austausch & Vernetzung",
+          "value": "austausch-und-vernetzung"
+        },
+        {
+          "label": "Politik",
+          "value": "politik"
+        },
+        {
+          "label": "Anderes",
+          "value": "anderes"
+        }
+      ]
+    },
+    {
+      "label": "Wie bewertest du deine Erfahrung auf TikTok?",
+      "name": "erfahrung-tiktok-bewertung",
+      "type": "radio-group",
+      "choices": [
+        {
+          "label": "1 = Sehr schlecht",
+          "value": "1"
+        },
+        {
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "label": "9",
+          "value": "9"
+        },
+        {
+          "label": "10 = Sehr gut",
+          "value": "10"
+        }
+      ]
+    },
+    {
+      "label": "Wie sehr vertraust du TikToks Datenschutz?",
+      "name": "vertrauen-in-datenschutz",
+      "type": "radio-group",
+      "choices": [
+        {
+          "label": "1 = Gar nicht",
+          "value": "1"
+        },
+        {
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "label": "9",
+          "value": "9"
+        },
+        {
+          "label": "10 = Sehr",
+          "value": "10"
+        }
+      ]
+    },
+    {
+      "label": "Wie bewertest du TikToks Auswahl an Inhalten für dich auf der Für-Dich-Seite?",
+      "name": "bewertung-recommender",
+      "type": "radio-group",
+      "choices": [
+        {
+          "label": "1 = Sehr schlecht",
+          "value": "1"
+        },
+        {
+          "label": "2",
+          "value": "2"
+        },
+        {
+          "label": "3",
+          "value": "3"
+        },
+        {
+          "label": "4",
+          "value": "4"
+        },
+        {
+          "label": "5",
+          "value": "5"
+        },
+        {
+          "label": "6",
+          "value": "6"
+        },
+        {
+          "label": "7",
+          "value": "7"
+        },
+        {
+          "label": "8",
+          "value": "8"
+        },
+        {
+          "label": "9",
+          "value": "9"
+        },
+        {
+          "label": "10 = Sehr gut",
+          "value": "10"
+        }
+      ]
+    },
+    {
+      "label": "Was beschreibt deine Assoziationen mit dem Empfehlungsalgorithmus auf TikTok am besten? Der TikTok-Empfehlungsalgorithmus ist:",
+      "name": "assoziationen-recommender",
+      "type": "muiltiple-radio-groups",
+      "choices": [
+        [
+          {
+            "label": "1 = Normal",
+            "value": "antwort-1-1"
+          },
+          {
+            "label": "2",
+            "value": "antwort-1-2"
+          },
+          {
+            "label": "3",
+            "value": "antwort-1-3"
+          },
+          {
+            "label": "4",
+            "value": "antwort-1-4"
+          },
+          {
+            "label": "5",
+            "value": "antwort-1-5"
+          },
+          {
+            "label": "6",
+            "value": "antwort-1-6"
+          },
+          {
+            "label": "7",
+            "value": "antwort-1-7"
+          },
+          {
+            "label": "8",
+            "value": "antwort-1-8"
+          },
+          {
+            "label": "9",
+            "value": "antwort-1-9"
+          },
+          {
+            "label": "10 = Mysteriös",
+            "value": "antwort-1-10"
+          }
+        ],
+        [
+          {
+            "label": "1 = Nachvollziehbar",
+            "value": "antwort-2-1"
+          },
+          {
+            "label": "2",
+            "value": "antwort-2-2"
+          },
+          {
+            "label": "3",
+            "value": "antwort-2-3"
+          },
+          {
+            "label": "4",
+            "value": "antwort-2-4"
+          },
+          {
+            "label": "5",
+            "value": "antwort-2-5"
+          },
+          {
+            "label": "6",
+            "value": "antwort-2-6"
+          },
+          {
+            "label": "7",
+            "value": "antwort-2-7"
+          },
+          {
+            "label": "8",
+            "value": "antwort-2-8"
+          },
+          {
+            "label": "9",
+            "value": "antwort-2-9"
+          },
+          {
+            "label": "10 = Gruselig",
+            "value": "antwort-2-10"
+          }
+        ],
+        [
+          {
+            "label": "1 = Harmlos",
+            "value": "antwort-3-1"
+          },
+          {
+            "label": "2",
+            "value": "antwort-3-2"
+          },
+          {
+            "label": "3",
+            "value": "antwort-3-3"
+          },
+          {
+            "label": "4",
+            "value": "antwort-3-4"
+          },
+          {
+            "label": "5",
+            "value": "antwort-3-5"
+          },
+          {
+            "label": "6",
+            "value": "antwort-3-6"
+          },
+          {
+            "label": "7",
+            "value": "antwort-3-7"
+          },
+          {
+            "label": "8",
+            "value": "antwort-3-8"
+          },
+          {
+            "label": "9",
+            "value": "antwort-3-9"
+          },
+          {
+            "label": "10 = Gefährlich",
+            "value": "antwort-3-10"
+          }
+        ],
+        [
+          {
+            "label": "1 = Detailliert",
+            "value": "antwort-4-1"
+          },
+          {
+            "label": "2",
+            "value": "antwort-4-2"
+          },
+          {
+            "label": "3",
+            "value": "antwort-4-3"
+          },
+          {
+            "label": "4",
+            "value": "antwort-4-4"
+          },
+          {
+            "label": "5",
+            "value": "antwort-4-5"
+          },
+          {
+            "label": "6",
+            "value": "antwort-4-6"
+          },
+          {
+            "label": "7",
+            "value": "antwort-4-7"
+          },
+          {
+            "label": "8",
+            "value": "antwort-4-8"
+          },
+          {
+            "label": "9",
+            "value": "antwort-4-9"
+          },
+          {
+            "label": "10 = Grob",
+            "value": "antwort-4-10"
+          }
+        ],
+        [
+          {
+            "label": "1 = Intelligent",
+            "value": "antwort-5-1"
+          },
+          {
+            "label": "2",
+            "value": "antwort-5-2"
+          },
+          {
+            "label": "3",
+            "value": "antwort-5-3"
+          },
+          {
+            "label": "4",
+            "value": "antwort-5-4"
+          },
+          {
+            "label": "5",
+            "value": "antwort-5-5"
+          },
+          {
+            "label": "6",
+            "value": "antwort-5-6"
+          },
+          {
+            "label": "7",
+            "value": "antwort-5-7"
+          },
+          {
+            "label": "8",
+            "value": "antwort-5-8"
+          },
+          {
+            "label": "9",
+            "value": "antwort-5-9"
+          },
+          {
+            "label": "10 = Dumm",
+            "value": "antwort-5-10"
+          }
+        ]
+      ]
+    },
+    {
+      "label": "Hast du auf deiner Für-Dich-Seite schon einmal etwas gesehen, das du lieber nicht gesehen hättest, oder eine andere schlechte Erfahrung mit der Plattform gemacht? Hier kannst du uns davon erzählen:",
+      "type": "textarea",
+      "name": "freitext-erfahrungen-auf-tiktok"
+    },
+    {
+      "label": "Wenn du uns noch etwas zu unserem Projekt oder diesem Fragebogen mitteilen möchtest, kannst du dies hier tun:",
+      "type": "textarea",
+      "name": "freitext-feedback-abschluss"
+    }
+  ]
+}

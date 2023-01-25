@@ -1,30 +1,32 @@
+/* eslint-disable class-methods-use-this */
 /**
  * Store, load and wrangle data.
  *
  * Initially, we've used [Dexie.js](https://github.com/dfahlander/Dexie.js/) with indexedDB to store data. But we ran into strangle problems that we were unable to fix. The resulting error message:
  * > Failed to execute 'transaction' on 'IDBDatabase': The database connection is closing.InvalidStateError: Failed to execute 'transaction' on 'IDBDatabase': The database connection is closing.
  * Did not give us the option to debug it. We have found a hard-to-reprocude bug with indexedDB: https://github.com/dfahlander/Dexie.js/issues/613
+ * And: the indexedDb may get corrupted on version updates: https://github.com/sindresorhus/electron-store/issues/17#issuecomment-962635119
+ *
  * So we decided to to [lowdb](https://github.com/typicode/lowdb) to store all data in JSON file in the `userData` directory.
  *
  * We use a queue for adding the data because otherwise some results were skipped due to some race conditions.
+ *
  * Things that could be done to improve the data handling:
  * - don't start processing the tasks (in the queue) once there were added. Only process them every 30 seconds (to reduce disk access)
  * - likewise, when reading data from the disk, add a cache (e.g. 10 seconds)
+ * - don't pass the whole JSON object via IPC every time a changes of the DB is needed (This code was added before contextIsolation so initially we had access to node and the file system)
  * @module
  */
-import _ from 'lodash';
-import { Low } from 'lowdb';
-import PQueue from 'p-queue';
-import { Campaign, ScrapingConfig } from '../../providers/types';
-import dayjs from '../utils/dayjs';
-import { statsForArray } from '../utils/math';
-import { LookupMap, ScrapingResultSaved, ScrapingSession } from './types';
+import _ from "lodash";
+import { Low } from "lowdb";
+import PQueue from "p-queue";
+import { Campaign } from "../../providers/types";
+import { ScrapingResultSaved, ScrapingSession } from "./types";
 
 type Data = {
   scrapingSessions: ScrapingSession[];
   scrapingResults: ScrapingResultSaved[];
   campaigns: Campaign[];
-  lookup: { oldest: number; items: LookupMap } | null;
 };
 
 let db: Low<Data> | null = null;
@@ -34,11 +36,11 @@ const queue = new PQueue({ concurrency: 1 });
 const initDb = async () => {
   class CustomAsyncAdapter {
     async read() {
-      return window.electron.ipcRenderer.invoke('db-read');
+      return window.electron.ipc.invoke("db-read");
     }
 
     async write(data: any) {
-      return window.electron.ipcRenderer.invoke('db-write', data);
+      return window.electron.ipc.invoke("db-write", data);
     }
   }
 
@@ -49,7 +51,7 @@ const initDb = async () => {
 initDb();
 
 const setUpDb = async () => {
-  if (db === null) throw Error('db is not initialized');
+  if (db === null) throw Error("db is not initialized");
 
   await db.read();
 
@@ -57,18 +59,14 @@ const setUpDb = async () => {
     scrapingSessions: [],
     scrapingResults: [],
     campaigns: [],
-    lookup: null,
   };
   return db.data;
 };
 
 // sessions
 
-const addNewSession = async (
-  sessionId: string,
-  scrapingConfig: ScrapingConfig,
-  campaign: Campaign | null,
-) => {
+const addNewSession = async (sessionId: string, campaign: Campaign) => {
+  const scrapingConfig = campaign.config;
   const obj = {
     sessionId,
     startedAt: Date.now(),
@@ -80,7 +78,7 @@ const addNewSession = async (
 
   await setUpDb();
 
-  if (db === null || db.data === null) throw Error('db is not initialized');
+  if (db === null || db.data === null) throw Error("db is not initialized");
   db.data.scrapingSessions.push(obj);
 
   return db.write();
@@ -124,7 +122,7 @@ const addQuestionnaireToSession = async (
 const getSessions = async () => {
   const data = await setUpDb();
 
-  const sessionsCount = _.countBy(data.scrapingResults, 'sessionId');
+  const sessionsCount = _.countBy(data.scrapingResults, "sessionId");
   const sessions = data.scrapingSessions.map((x) => ({
     ...x,
     count: sessionsCount[x.sessionId] ?? 0,
@@ -147,30 +145,36 @@ const getSessionById = async (
 
 // scraping results
 
-const queuedAddScrapingResult = async (obj: ScrapingResultSaved) => {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const _addScrapingResult = async (obj: ScrapingResultSaved) => {
   await setUpDb();
 
-  if (db === null || db.data === null) throw Error('db is not initialized');
+  if (db === null || db.data === null) throw Error("db is not initialized");
 
   db.data.scrapingResults.push(obj);
 
   return db.write();
 };
 
-const addScrapingResult = (sessionId: string, step: number, data: any) => {
+const addScrapingResult = (
+  sessionId: string,
+  step: number,
+  data: any,
+  skipQueue = false,
+) => {
   const obj = {
     sessionId,
     step,
     ...data,
     scrapedAt: Date.now(),
   };
-
-  return queue.add(() => queuedAddScrapingResult(obj));
+  if (skipQueue) return _addScrapingResult(obj);
+  return queue.add(() => _addScrapingResult(obj));
 };
 
-const getScrapingResults = async () => {
+const getScrapingResults = async (): Promise<ScrapingResultSaved[]> => {
   const data = await setUpDb();
-  return _.orderBy(data.scrapingResults, 'scrapedAt');
+  return _.orderBy(data.scrapingResults, "scrapedAt");
 };
 
 const getScrapingResultsBySession = async (
@@ -191,7 +195,7 @@ const getScrapingResultsBySession = async (
 
 const modifyLocalCampaigns = async (campaign: Campaign, remove = false) => {
   await setUpDb();
-  if (db === null || db.data === null) throw Error('db is not initialized');
+  if (db === null || db.data === null) throw Error("db is not initialized");
 
   const newData =
     db.data.campaigns?.filter((x) => x.slug !== campaign.slug) || [];
@@ -206,61 +210,6 @@ const getLocalCampaigns = async () => {
   return data.campaigns || [];
 };
 
-// lookup table for e.g. additional background scraping
-
-const getLookups = async (
-  options: { deleteOld: boolean; ids: null | string[] } = {
-    deleteOld: false,
-    ids: null,
-  },
-): Promise<LookupMap> => {
-  const KEEP_LOOKUPS_MAX_DAYS = 7;
-
-  const lookup = (await setUpDb()).lookup;
-
-  if (lookup == null) return {};
-
-  // If the first entry (the oldest one) is older than the max value,
-  // clear all lookups and get fresh data.
-  if (
-    options.deleteOld &&
-    dayjs().diff(dayjs(lookup.oldest), 'day') > KEEP_LOOKUPS_MAX_DAYS
-  ) {
-    await clearLookups();
-    return {};
-  }
-
-  if (options.ids) {
-    return _.pick(lookup.items, options.ids);
-  }
-
-  return lookup.items;
-};
-
-const addLookups = async (newItems: LookupMap) => {
-  if (_.isEmpty(newItems)) return;
-
-  await setUpDb();
-
-  if (db === null || db.data === null) throw Error('db is not initialized');
-
-  if (db.data.lookup == null) {
-    db.data.lookup = { items: newItems, oldest: Date.now() };
-  } else {
-    db.data.lookup.items = _.merge(db.data.lookup.items, newItems);
-  }
-  return db.write();
-};
-
-const clearLookups = async () => {
-  await setUpDb();
-
-  if (db === null || db.data === null) throw Error('db is not initialized');
-
-  db.data.lookup = null;
-  return db.write();
-};
-
 // some utils
 
 const getAllData = async () => {
@@ -268,7 +217,9 @@ const getAllData = async () => {
 };
 
 const clearData = async () => {
-  if (db === null) throw Error('db is not initialized');
+  await setUpDb();
+
+  if (db === null) throw Error("db is not initialized");
 
   if (db.data === null) return;
   // keep campaign data
@@ -276,9 +227,9 @@ const clearData = async () => {
     scrapingSessions: [],
     scrapingResults: [],
     campaigns: db.data.campaigns,
-    lookup: null,
   };
   await db.write();
+  window.electron.log.info("Deleting all session and results data");
 };
 
 // import data
@@ -291,7 +242,7 @@ const importResultRows = async (
   const sum = _.uniqWith(old.concat(rows), _.isEqual);
 
   // db.data can't be null
-  if (db === null || db.data === null) throw Error('db is not initialized');
+  if (db === null || db.data === null) throw Error("db is not initialized");
   db.data.scrapingResults = sum;
   await db.write();
 
@@ -304,75 +255,14 @@ const importSessionRows = async (rows: ScrapingSession[]): Promise<number> => {
   const sum = _.uniqWith(old.concat(rows), _.isEqual);
 
   // db.data can't be null
-  if (db === null || db.data === null) throw Error('db is not initialized');
+  if (db === null || db.data === null) throw Error("db is not initialized");
   db.data.scrapingSessions = sum;
   await db.write();
 
   return sum.length - old.length;
 };
 
-// some math utils
-
-const getStatisticsForSession = async (sessiondId: string) => {
-  const data = await setUpDb();
-
-  const allTasks = data.scrapingResults.filter(
-    (x) => x.sessionId === sessiondId,
-  );
-
-  allTasks.sort((a, b) => a.scrapedAt - b.scrapedAt);
-
-  const firstResult = data.scrapingSessions.filter(
-    (x) => x.sessionId === sessiondId,
-  )[0];
-
-  if (!firstResult) return {};
-
-  const { startedAt } = firstResult;
-  const allTimesSlug = new Map();
-  const allTimesStep = new Map();
-  let previousTime = startedAt;
-
-  for (let i = 0; i < allTasks.length; i += 1) {
-    const { slug, scrapedAt, step } = allTasks[i];
-    const duration = scrapedAt - previousTime;
-
-    if (allTimesSlug.has(slug)) {
-      const oldTimes = allTimesSlug.get(slug);
-      const newTimes = oldTimes.concat([duration]);
-      allTimesSlug.set(slug, newTimes);
-    } else {
-      allTimesSlug.set(slug, [duration]);
-    }
-
-    if (allTimesStep.has(step)) {
-      const oldTimes = allTimesStep.get(step);
-      const newTimes = oldTimes.concat([duration]);
-      allTimesStep.set(step, newTimes);
-    } else {
-      allTimesStep.set(step, [duration]);
-    }
-
-    previousTime = scrapedAt;
-  }
-
-  const resultSlug: { [key: string]: any } = {};
-  allTimesSlug.forEach((value, key: string) => {
-    resultSlug[key] = statsForArray(value);
-  });
-
-  const resultStep: { [key: string]: any } = {};
-  allTimesStep.forEach((value, key: string) => {
-    resultStep[key] = statsForArray(value);
-  });
-
-  return { steps: resultStep, slugs: resultSlug };
-};
-
 export {
-  getLookups,
-  addLookups,
-  clearLookups,
   getAllData,
   addScrapingResult,
   importResultRows,
@@ -383,7 +273,7 @@ export {
   getSessions,
   getScrapingResultsBySession,
   addNewSession,
-  getStatisticsForSession,
+  setUpDb,
   modifyLocalCampaigns,
   getLocalCampaigns,
   setSessionFinishedAt,

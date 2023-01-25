@@ -7,33 +7,53 @@
  * Started with this guide: https://kentcdodds.com/blog/how-to-use-react-context-effectively
  * @module
  */
-import * as Sentry from '@sentry/electron/renderer';
-import React, { useEffect } from 'react';
-import { postEvent } from 'renderer/lib/utils/networking';
-import { Campaign } from 'renderer/providers/types';
+import * as Sentry from "@sentry/electron/renderer";
+import React, { useEffect } from "react";
+import { postEvent } from "renderer/lib/networking";
+import { isNumeric } from "renderer/lib/utils/math";
+import { Campaign } from "renderer/providers/types";
+
+export type UserConfig = {
+  htmlLogging: boolean;
+  debugLogging: boolean;
+  monitoring: boolean;
+  monitoringInterval: boolean;
+  openAtLogin: boolean;
+  scrapingForceOpen: boolean;
+  scrapingOpenDevTools: boolean;
+};
 
 type Action =
   | {
-      type: 'set-config';
+      type: "set-config";
       version: string;
       isDebug: boolean;
       showAdvancedMenu: boolean;
-      simpleBackendUrl: string;
       platformUrl: string;
       trackEvents: boolean;
       seriousProtection: string;
+      autoSelectCampaign: number | null;
+      userConfig: UserConfig;
+      isMac: boolean;
+      isPlaywrightTesing: boolean;
     }
-  | { type: 'show-advanced-menu' }
-  | { type: 'set-debug'; isDebug: boolean };
+  | { type: "show-advanced-menu" }
+  | { type: "set-debug"; isDebug: boolean }
+  | { type: "set-user-config"; newValues: any }
+  | { type: "update-check-done" };
 type Dispatch = (action: Action) => void;
 type State = {
   version: string;
+  updateCheckDone: boolean;
+  isMac: boolean;
+  isPlaywrightTesing: boolean;
   isDebug: boolean;
   showAdvancedMenu: boolean;
-  simpleBackendUrl: string | null;
   platformUrl: string | null;
   trackEvents: boolean;
   seriousProtection: string | null;
+  autoSelectCampaign: number | null;
+  userConfig: null | UserConfig;
 };
 type ConfigProviderProps = { children: React.ReactNode };
 
@@ -43,25 +63,35 @@ const ConfigStateContext = React.createContext<
 
 const configReducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case 'set-config': {
+    case "set-config": {
       return {
         ...state,
-        version: action.version,
-        isDebug: action.isDebug,
-        simpleBackendUrl: action.simpleBackendUrl,
-        platformUrl: action.platformUrl,
-        trackEvents: action.trackEvents,
-        seriousProtection: action.seriousProtection,
-        showAdvancedMenu: action.showAdvancedMenu,
+        ...action,
       };
     }
 
-    case 'set-debug': {
+    case "set-debug": {
       return { ...state, isDebug: action.isDebug };
     }
 
-    case 'show-advanced-menu': {
+    case "show-advanced-menu": {
       return { ...state, showAdvancedMenu: true };
+    }
+
+    case "set-user-config": {
+      // sync changes back to disk
+      window.electron.ipc.invoke("db-set-config", action.newValues);
+      return {
+        ...state,
+        userConfig: { ...state.userConfig, ...action.newValues },
+      };
+    }
+
+    case "update-check-done": {
+      return {
+        ...state,
+        updateCheckDone: true,
+      };
     }
 
     default: {
@@ -73,35 +103,44 @@ const configReducer = (state: State, action: Action): State => {
 const ConfigProvider = ({ children }: ConfigProviderProps) => {
   // initial values get overriden with `useEffect` when the component gets mounten
   const [state, dispatch] = React.useReducer(configReducer, {
-    version: 'loading...',
+    version: "loading...",
+    updateCheckDone: false,
+    isMac: false,
     isDebug: false,
     showAdvancedMenu: false,
-    simpleBackendUrl: null,
     platformUrl: null,
     trackEvents: false,
     seriousProtection: null,
+    autoSelectCampaign: null,
+    userConfig: null,
+    isPlaywrightTesing: false,
   });
 
   useEffect(() => {
-    const getVersionNumber = async () => {
-      // in devopment, this returns the electron version instead of the app version.
-      const version = await window.electron.ipcRenderer.invoke(
-        'get-version-number',
+    (async () => {
+      window.electron.ipc.once("update-check-done", () =>
+        dispatch({ type: "update-check-done" }),
       );
 
-      const env = await window.electron.ipcRenderer.invoke('get-env');
+      const { env, version, isMac } = await window.electron.ipc.invoke(
+        "get-info",
+      );
+
+      const userConfig = await window.electron.ipc.invoke("db-get-config");
 
       if (!env) {
-        console.log('could not get ENV from main');
+        window.electron.log.error("Could not get ENV from main. Aborting.");
         return;
       }
 
       const isDebug =
-        env.NODE_ENV === 'development' || env.DEBUG_PROD === 'true';
-      const simpleBackendUrl = env.SIMPLE_BACKEND ?? null;
+        env.NODE_ENV === "development" || env.DEBUG_PROD === "true";
       const platformUrl = env.PLATFORM_URL ?? null;
       const trackEvents = !!env.TRACK_EVENTS;
       const seriousProtection = env.SERIOUS_PROTECTION ?? null;
+      const autoSelectCampaign = isNumeric(env.AUTO_SELECT_CAMPAIGN)
+        ? parseInt(env.AUTO_SELECT_CAMPAIGN, 10)
+        : null;
       const showAdvancedMenu = isDebug;
 
       if (env.SENTRY_DSN) {
@@ -111,17 +150,19 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
       }
 
       dispatch({
-        type: 'set-config',
+        type: "set-config",
         isDebug,
         version,
-        simpleBackendUrl,
         platformUrl,
         trackEvents,
         seriousProtection,
+        autoSelectCampaign,
         showAdvancedMenu,
+        userConfig,
+        isMac,
+        isPlaywrightTesing: env.PLAYWRIGHT_TESTING === "true",
       });
-    };
-    getVersionNumber();
+    })();
   }, []);
 
   // The `message` should be a simple string without any specific information.
@@ -156,7 +197,7 @@ const useConfig = () => {
   const context = React.useContext(ConfigStateContext);
 
   if (context === undefined) {
-    throw new Error('useConfig must be used within a ConfigProvider');
+    throw new Error("useConfig must be used within a ConfigProvider");
   }
 
   return context;

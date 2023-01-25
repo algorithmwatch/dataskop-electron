@@ -1,20 +1,14 @@
-import { delay } from '../lib/utils/time';
-import { Campaign, ProviderInformation } from './types';
-import { youtubeInfo } from './youtube';
-import ytRoutes from './youtube/lib/routes';
+import { tiktokInfo } from "./tiktok";
+import { defaultCampaign } from "./tiktok/lib";
+import { Campaign, ProviderInformation } from "./types";
+import { youtubeInfo } from "./youtube";
 
 const providerInfo: { [key: string]: ProviderInformation } = {
   youtube: youtubeInfo,
+  tiktok: tiktokInfo,
 };
 
 // To make some campaign always available, add them here.
-const localActiveCampaings: Campaign[] = [];
+const localActiveCampaings: Campaign[] = [defaultCampaign];
 
-const defaultDelay = 500;
-
-// can be made more adaptable later on, only used in a couple of cases
-const currentDelay = () => delay(defaultDelay);
-
-const providerRoutes = [...Object.values(ytRoutes)];
-
-export { providerInfo, localActiveCampaings, currentDelay, providerRoutes };
+export { providerInfo, localActiveCampaings };

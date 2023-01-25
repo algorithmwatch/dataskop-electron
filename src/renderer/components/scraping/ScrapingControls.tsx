@@ -3,17 +3,16 @@
  *
  * @module
  */
-/* eslint-disable no-restricted-syntax */
-import { useScraping } from 'renderer/contexts';
-import { providerInfo } from 'renderer/providers';
-import Button from '../../providers/youtube/components/Button';
-import { goToUrl } from './ipc';
+import { useScraping } from "renderer/contexts";
+import { providerInfo } from "renderer/providers/info";
+import Button from "../../providers/youtube/components/Button";
+import { goToUrl } from "./ipc";
 
-export default function ScrapingControls({
+const ScrapingControls = ({
   hideControls = false,
 }: {
   hideControls?: boolean;
-}): JSX.Element {
+}): JSX.Element => {
   const {
     state: {
       campaign,
@@ -35,63 +34,63 @@ export default function ScrapingControls({
         clear: true,
       });
     }
-    dispatch({ type: 'reset-scraping' });
+    dispatch({ type: "reset-scraping" });
   };
 
   // controls for the scraping
 
   const pauseScraping = () => {
-    dispatch({ type: 'set-scraping-paused', isScrapingPaused: true });
+    dispatch({ type: "set-scraping-paused", paused: true });
   };
 
   const resumeScraping = () => {
-    dispatch({ type: 'set-scraping-paused', isScrapingPaused: false });
+    dispatch({ type: "set-scraping-paused", paused: false });
   };
 
   const toggleIsMuted = () => {
-    dispatch({ type: 'set-muted', isMuted: !isMuted });
+    dispatch({ type: "set-muted", muted: !isMuted });
   };
 
   const toggleVis = () => {
-    dispatch({ type: 'set-visible-window', visibleWindow: !visibleWindow });
+    dispatch({ type: "set-visible-window", visibleWindow: !visibleWindow });
   };
 
   const startScraping = () => {
-    dispatch({ type: 'set-scraping-started', isScrapingStarted: true });
+    dispatch({ type: "start-scraping" });
   };
 
   return (
-    <>
-      <div>
-        <p style={{ color: 'red' }}>
-          {scrapingError !== null &&
-            `${scrapingError.name}: ${scrapingError.message}`}
-        </p>
-        <br />
-        <div className={hideControls ? 'invisible' : ''}>
-          <Button onClick={resetScraping}>reset scraping</Button>
-          {!isUserLoggedIn && <p>Please login before continuing.</p>}
-          {isUserLoggedIn && !isScrapingStarted && (
-            <Button onClick={startScraping}>start scraping</Button>
-          )}
-          {!isScrapingFinished && isScrapingStarted && !isScrapingPaused && (
-            <Button onClick={pauseScraping}>pause scraping</Button>
-          )}
-          {!isScrapingFinished && isScrapingStarted && isScrapingPaused && (
-            <Button onClick={resumeScraping}>resume scraping</Button>
-          )}
-
-          <Button onClick={toggleIsMuted}>is {!isMuted && 'not'} muted</Button>
-          <Button onClick={toggleVis}>
-            {!visibleWindow ? 'show' : 'hide'} scraping window
-          </Button>
-        </div>
-        {isScrapingStarted && (
-          <progress className="progress" value={scrapingProgress.value} max="1">
-            {scrapingProgress.value}
-          </progress>
+    <div>
+      <p style={{ color: "red" }}>
+        {scrapingError !== null &&
+          `${scrapingError.name}: ${scrapingError.message}`}
+      </p>
+      <br />
+      <div className={hideControls ? "invisible" : ""}>
+        <Button onClick={resetScraping}>reset scraping</Button>
+        {!isUserLoggedIn && <p>Please login before continuing.</p>}
+        {isUserLoggedIn && !isScrapingStarted && (
+          <Button onClick={startScraping}>start scraping</Button>
         )}
+        {!isScrapingFinished && isScrapingStarted && !isScrapingPaused && (
+          <Button onClick={pauseScraping}>pause scraping</Button>
+        )}
+        {!isScrapingFinished && isScrapingStarted && isScrapingPaused && (
+          <Button onClick={resumeScraping}>resume scraping</Button>
+        )}
+
+        <Button onClick={toggleIsMuted}>is {!isMuted && "not"} muted</Button>
+        <Button onClick={toggleVis}>
+          {!visibleWindow ? "show" : "hide"} scraping window
+        </Button>
       </div>
-    </>
+      {isScrapingStarted && (
+        <progress className="progress" value={scrapingProgress.value} max="1">
+          {scrapingProgress.value}
+        </progress>
+      )}
+    </div>
   );
-}
+};
+
+export default ScrapingControls;

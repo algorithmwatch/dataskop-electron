@@ -1,26 +1,32 @@
 {
   "name": "dataskop-electron",
-  "version": "0.4.12",
+  "version": "0.5.0-alpha.33",
   "description": "DataSkop Electron App: The Personal Data Dashboard (PeDD) of DataSkop",
+  "main": "./src/main/main.ts",
   "scripts": {
     "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
+    "build:playwright": "cross-env PLAYWRIGHT_TESTING=true npm run build",
     "build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
     "build:renderer": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.prod.ts",
-    "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir src",
+    "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
     "lint": "cross-env NODE_ENV=development eslint . --cache --ext .js,.jsx,.ts,.tsx",
     "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never",
     "package-windows": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never --win",
     "postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts",
     "start": "ts-node ./.erb/scripts/check-port-in-use.js && npm run start:renderer",
-    "start:main": "cross-env NODE_ENV=development electron -r ts-node/register/transpile-only  ./src/main/main.ts",
+    "start:main": "cross-env NODE_ENV=development electron -r ts-node/register/transpile-only .",
+    "start:preload": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
     "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
-    "test": "jest",
+    "test": "npx playwright test",
     "cross-env": "cross-env",
     "format": "prettier --write .",
     "schema": "./scripts/create_schema.sh",
-    "version:pre": "cd release/app && npm version prerelease --no-git-tag-version --preid beta && cd ../.. && npm version prerelease --no-git-tag-version --preid beta",
-    "version:preminor": "cd release/app && npm version preminor --no-git-tag-version --preid beta && cd ../.. && npm version preminor --no-git-tag-version --preid beta",
-    "version:prepatch": "cd release/app && npm version prepatch --no-git-tag-version --preid beta && cd ../.. && npm version prepatch --no-git-tag-version --preid beta",
+    "version:beta:pre": "cd release/app && npm version prerelease --no-git-tag-version --preid beta && cd ../.. && npm version prerelease --no-git-tag-version --preid beta",
+    "version:beta:preminor": "cd release/app && npm version preminor --no-git-tag-version --preid beta && cd ../.. && npm version preminor --no-git-tag-version --preid beta",
+    "version:beta:prepatch": "cd release/app && npm version prepatch --no-git-tag-version --preid beta && cd ../.. && npm version prepatch --no-git-tag-version --preid beta",
+    "version:alpha:pre": "cd release/app && npm version prerelease --no-git-tag-version --preid alpha && cd ../.. && npm version prerelease --no-git-tag-version --preid alpha",
+    "version:alpha:preminor": "cd release/app && npm version preminor --no-git-tag-version --preid alpha && cd ../.. && npm version preminor --no-git-tag-version --preid alpha",
+    "version:alpha:prepatch": "cd release/app && npm version prepatch --no-git-tag-version --preid alpha && cd ../.. && npm version prepatch --no-git-tag-version --preid alpha",
     "version:minor": "cd release/app && npm version minor --no-git-tag-version && cd ../.. && npm version minor --no-git-tag-version",
     "version:patch": "cd release/app && npm version patch --no-git-tag-version && cd ../.. && npm version patch --no-git-tag-version",
     "postversion": "./scripts/postversion.sh $npm_package_version",
@@ -64,6 +70,9 @@
       ]
     },
     "win": {
+      "publisherName": [
+        "CN=AW AlgorithmWatch gGmbH, O=AW AlgorithmWatch gGmbH, S=Berlin, C=DE"
+      ],
       "target": [
         "nsis"
       ]
@@ -109,6 +118,11 @@
       "name": "Gregor Weichbrodt",
       "email": "gregorweichbrodt@gmail.com",
       "url": "https://gregorweichbrodt.de"
+    },
+    {
+      "name": "Christopher Pietsch",
+      "email": "cpietsch@gmail.com",
+      "url": "https://chrispie.com"
     }
   ],
   "license": "MIT",
@@ -120,76 +134,31 @@
     "dataskop"
   ],
   "homepage": "https://dataskop.net",
-  "jest": {
-    "testURL": "http://localhost/",
-    "testEnvironment": "jsdom",
-    "transform": {
-      "\\.(ts|tsx|js|jsx)$": "ts-jest"
-    },
-    "transformIgnorePatterns": [
-      "node_modules/(?!(lowdb|steno|p-queue|p-timeout|d3-array|internmap|d3-force|d3-quadtree|d3-dispatch|d3-timer|d3-selection|@observablehq/plot|d3|delaunator|robust-predicates|isoformat))"
-    ],
-    "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
-      "\\.(css|less|sass|scss)$": "identity-obj-proxy",
-      "^renderer/(.*)": "<rootDir>/src/renderer/$1",
-      "^renderer": "<rootDir>/src/renderer",
-      "lowdb": "lowdb/lib/index"
-    },
-    "moduleFileExtensions": [
-      "js",
-      "jsx",
-      "ts",
-      "tsx",
-      "json"
-    ],
-    "moduleDirectories": [
-      "node_modules",
-      "release/app/node_modules"
-    ],
-    "testPathIgnorePatterns": [
-      "release/app/dist"
-    ],
-    "setupFiles": [
-      "./.erb/scripts/check-build-exists.ts"
-    ],
-    "globals": {
-      "ts-jest": {
-        "diagnostics": {
-          "warnOnly": true
-        }
-      }
-    }
-  },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.95.0",
-    "@pmmmwh/react-refresh-webpack-plugin": "0.5.1",
+    "@playwright/test": "^1.28.1",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1",
+    "@svgr/webpack": "^6.5.1",
     "@teamsupercell/typings-for-css-modules-loader": "^2.4.0",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.1.2",
     "@types/archiver": "^5.3.1",
-    "@types/base-64": "^1.0.0",
     "@types/cheerio": "^0.22.29",
+    "@types/d3": "^7.4.0",
     "@types/glidejs__glide": "^3.4.1",
     "@types/history": "4.7.9",
-    "@types/jest": "^27.0.2",
     "@types/lodash": "^4.14.168",
-    "@types/node": "16.10.2",
-    "@types/react": "^17.0.27",
-    "@types/react-dom": "^17.0.9",
+    "@types/node": "^16.10.2",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
     "@types/react-modal": "^3.13.1",
-    "@types/react-router": "^5.1.16",
-    "@types/react-router-dom": "^5.3.0",
-    "@types/react-table": "^7.0.29",
-    "@types/react-test-renderer": "^17.0.1",
+    "@types/react-router-dom": "^5.3.3",
     "@types/react-window": "^1.8.5",
     "@types/terser-webpack-plugin": "^5.0.4",
+    "@types/unzipper": "^0.10.5",
     "@types/uuid": "^8.3.0",
     "@types/webpack-env": "^1.16.2",
-    "@typescript-eslint/eslint-plugin": "^4.8.1",
-    "@typescript-eslint/parser": "^4.8.1",
-    "autoprefixer": "^10.2.5",
-    "browserslist-config-erb": "^0.0.3",
+    "@typescript-eslint/eslint-plugin": "^5.23.0",
+    "@typescript-eslint/parser": "^5.23.0",
+    "autoprefixer": "^10.4.8",
     "chalk": "^4.1.2",
     "concurrently": "^6.3.0",
     "core-js": "^3.18.1",
@@ -198,31 +167,38 @@
     "css-minimizer-webpack-plugin": "^3.1.0",
     "detect-port": "^1.3.0",
     "dotenv-webpack": "^7.0.3",
-    "electron": "^19.0.10",
-    "electron-builder": "^23.3.3",
+    "electron": "^22.0.0",
+    "electron-builder": "^23.6.0",
     "electron-devtools-installer": "^3.2.0",
     "electron-notarize": "^1.1.1",
     "electron-rebuild": "^3.2.3",
-    "eslint": "^7.32.0",
-    "eslint-config-erb": "^4.0.3",
+    "eslint": "^8.15.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-import-resolver-webpack": "^0.13.2",
+    "eslint-plugin-compat": "^4.0.2",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react-hooks": "^4.5.0",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.2",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^27.2.4",
     "mini-css-extract-plugin": "^2.3.0",
-    "postcss": "^8.2.9",
+    "postcss": "^8.4.16",
     "postcss-loader": "^5.2.0",
     "prettier": "^2.7.1",
     "react-refresh": "^0.10.0",
-    "react-refresh-typescript": "^2.0.2",
-    "react-test-renderer": "^17.0.2",
     "rimraf": "^3.0.2",
     "sass": "^1.42.1",
     "sass-loader": "^12.1.0",
     "style-loader": "^3.3.0",
-    "tailwindcss": "^2.2.19",
+    "tailwindcss": "^3.1.8",
     "terser-webpack-plugin": "^5.2.4",
-    "ts-jest": "^27.0.5",
     "ts-json-schema-generator": "^0.97.0",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.2.1",
@@ -236,41 +212,48 @@
   },
   "dependencies": {
     "@algorithmwatch/harke": "^0.4.8",
-    "@fortawesome/fontawesome-pro": "^5.15.4",
-    "@fortawesome/fontawesome-svg-core": "^1.2.36",
-    "@fortawesome/free-solid-svg-icons": "^5.15.4",
-    "@fortawesome/pro-duotone-svg-icons": "^5.15.4",
-    "@fortawesome/pro-light-svg-icons": "^5.15.4",
-    "@fortawesome/pro-regular-svg-icons": "^5.15.4",
-    "@fortawesome/pro-solid-svg-icons": "^5.15.4",
+    "@algorithmwatch/schaufel-ab": "^0.3.2",
+    "@algorithmwatch/schaufel-core": "^0.18.0",
+    "@algorithmwatch/schaufel-wrangle": "^0.18.0",
+    "@fortawesome/fontawesome-pro": "^6.1.2",
+    "@fortawesome/fontawesome-svg-core": "^6.1.2",
+    "@fortawesome/free-brands-svg-icons": "^6.1.2",
+    "@fortawesome/free-solid-svg-icons": "^6.1.2",
+    "@fortawesome/pro-duotone-svg-icons": "^6.1.2",
+    "@fortawesome/pro-light-svg-icons": "^6.1.2",
+    "@fortawesome/pro-regular-svg-icons": "^6.1.2",
+    "@fortawesome/pro-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@glidejs/glide": "^3.5.2",
     "@headlessui/react": "^1.6.6",
     "@material-ui/core": "^4.12.4",
-    "@observablehq/plot": "^0.5.2",
+    "@observablehq/plot": "^0.6.0",
     "@sentry/electron": "^3.0.7",
     "@tippyjs/react": "^4.2.6",
     "ajv": "^8.11.0",
     "archiver": "^5.3.1",
-    "base-64": "^1.0.0",
     "chrono-node": "^2.3.9",
-    "classnames": "^2.3.1",
+    "clsx": "^1.2.1",
     "d3-array": "^3.1.6",
+    "d3-delaunay": "^6.0.2",
     "d3-force": "^3.0.0",
+    "d3-polygon": "^3.0.1",
+    "d3-scale": "^4.0.2",
     "d3-selection": "^3.0.0",
     "dayjs": "^1.11.4",
     "electron-debug": "^3.2.0",
     "electron-fetch": "^1.7.4",
     "electron-log": "^4.4.8",
+    "electron-store": "^8.1.0",
     "electron-updater": "^5.2.1",
     "history": "^5.3.0",
     "lodash": "^4.17.21",
     "lowdb": "^3.0.0",
     "p-limit": "3",
-    "p-queue": "^7.3.0",
+    "p-queue": "6",
     "perfect-arrows": "^0.3.7",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-hook-form": "^7.34.0",
     "react-json-view": "^1.21.3",
     "react-modal": "^3.15.1",
@@ -278,21 +261,22 @@
     "react-router-dom": "^5.3.1",
     "react-use": "^17.4.0",
     "react-window": "^1.8.7",
-    "regenerator-runtime": "^0.13.9",
     "source-map-support": "^0.5.21",
+    "unzipper": "^0.10.11",
     "uuid": "^8.3.1"
   },
   "devEngines": {
     "node": ">=16.x",
     "npm": ">=7.x"
   },
-  "browserslist": [],
+  "browserslist": [
+    "Chrome >= 108"
+  ],
   "prettier": {
     "overrides": [
       {
         "files": [
           ".prettierrc",
-          ".babelrc",
           ".eslintrc"
         ],
         "options": {
@@ -300,7 +284,7 @@
         }
       }
     ],
-    "singleQuote": true,
+    "singleQuote": false,
     "trailingComma": "all"
   }
 }

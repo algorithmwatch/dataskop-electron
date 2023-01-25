@@ -1,89 +1,106 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /**
  * The actual window (tab) where the scraping is happening.
  *
  * @module
  */
-// /* eslint-disable jsx-a11y/no-static-element-interactions */
-// /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { faTimes } from '@fortawesome/pro-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { pick, round } from 'lodash';
-import { useEffect } from 'react';
-import { Rnd } from 'react-rnd';
-import { Bounds, useScraping } from 'renderer/contexts';
+import { faCog, faTimes } from "@fortawesome/pro-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { pick, round } from "lodash";
+import { useEffect } from "react";
+import { Rnd } from "react-rnd";
+import { Bounds, useConfig, useScraping } from "renderer/contexts";
 
-export default function ScrapingWindow({
-  forceReload = 0,
-  initPosition = 'center',
-  initSizeFactorHeight = 0.8,
-  initSizeFactorWidth = 0.6,
-}: {
-  forceReload: number;
-  initPosition?: string;
-  initSizeFactorHeight?: number;
-  initSizeFactorWidth?: number;
-}) {
+const ScrapingWindow = ({ forceReload = 0 }: { forceReload: number }) => {
   const margin = 30;
 
+  const initSizeFactorHeight = 0.8;
+  const initSizeFactorWidth = 0.8;
+
   const {
-    state: { isMuted, fixedWindow, bounds, visibleWindow },
+    state: {
+      isMuted,
+      fixedWindow,
+      bounds,
+      visibleWindow,
+      closeableWindow,
+      initPositionWindow,
+    },
     dispatch,
   } = useScraping();
 
-  const setBounds = (bounds: Bounds) => {
-    dispatch({ type: 'set-bounds', bounds });
+  const {
+    state: { userConfig },
+  } = useConfig();
+
+  const setBounds = (newBounds: Bounds) => {
+    dispatch({ type: "set-bounds", bounds: newBounds });
   };
 
   useEffect(() => {
-    window.electron.ipcRenderer.invoke('scraping-set-muted', isMuted);
+    window.electron.ipc.invoke("scraping-set-muted", isMuted);
   }, [isMuted]);
 
+  const windowDimensions = () => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    const leftOverSpace = 1 - initSizeFactorHeight;
+    const leftOverSpaceWidth = 1 - initSizeFactorWidth;
+
+    const res = {
+      width: round(width * initSizeFactorWidth),
+      height: round(height * initSizeFactorHeight),
+      x: round(width * leftOverSpaceWidth),
+      y: round(height * leftOverSpace),
+    };
+
+    if (initPositionWindow === "center") {
+      res.x = round(width * leftOverSpaceWidth * 0.5);
+      res.y = round(height * leftOverSpace * 0.5);
+    }
+
+    if (initPositionWindow === "center-top") {
+      res.x = round(width * leftOverSpaceWidth * 0.5);
+      res.y = margin;
+    }
+
+    return res;
+  };
+
   useEffect(() => {
-    if (visibleWindow) {
-      const b = { ...bounds };
+    if (visibleWindow || (!!userConfig && userConfig.scrapingForceOpen)) {
+      const b = bounds;
       b.height -= margin * 2;
       b.width -= margin * 2;
       b.x += margin;
-      b.y += margin;
-      window.electron.ipcRenderer.invoke('scraping-set-bounds', b);
+      b.y += margin * 2;
+      window.electron.ipc.invoke("scraping-set-bounds", b);
     } else {
-      const b = { ...bounds, width: 0, height: 0 };
-      window.electron.ipcRenderer.invoke('scraping-set-bounds', b);
+      // const b = { ...bounds, width: 0, height: 0 };
+
+      // Set off screen. TikTok wasn't working otherwise
+      const b = { height: 1500, width: 2000, x: 0, y: window.screen.height };
+      window.electron.ipc.invoke("scraping-set-bounds", b);
     }
   }, [bounds, visibleWindow]);
 
   useEffect(() => {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-
-    const windowDimensions = () => {
-      const leftOverSpace = 1 - initSizeFactorHeight;
-      const leftOverSpaceWidth = 1 - initSizeFactorWidth;
-
-      const res = {
-        width: round(width * initSizeFactorWidth),
-        height: round(height * initSizeFactorHeight),
-        x: round(width * leftOverSpaceWidth),
-        y: round(height * leftOverSpace),
-      };
-
-      if (initPosition === 'center') {
-        res.x = round(width * leftOverSpaceWidth * 0.5);
-        res.y = round(height * leftOverSpace * 0.5);
-      }
-
-      return res;
-    };
-
     setBounds(windowDimensions());
-  }, [initPosition, initSizeFactorHeight, forceReload, initSizeFactorWidth]);
+  }, [
+    initPositionWindow,
+    initSizeFactorHeight,
+    forceReload,
+    initSizeFactorWidth,
+  ]);
 
   if (!visibleWindow) return null;
 
   return (
     <div
       style={{
-        position: 'fixed',
+        position: "fixed",
         left: 0,
         top: 0,
       }}
@@ -92,10 +109,10 @@ export default function ScrapingWindow({
         enableResizing={!fixedWindow}
         disableDragging={fixedWindow}
         className="bg-gray-100"
-        size={pick(bounds, ['width', 'height'])}
-        position={pick(bounds, ['x', 'y'])}
+        size={pick(bounds, ["width", "height"])}
+        position={pick(bounds, ["x", "y"])}
         onDragStop={(_e, d) => {
-          setBounds({ ...bounds, ...pick(d, ['x', 'y']) });
+          setBounds({ ...bounds, ...pick(d, ["x", "y"]) });
         }}
         onResize={(_e, _direction, ref, _delta, position) => {
           setBounds({
@@ -105,22 +122,43 @@ export default function ScrapingWindow({
           });
         }}
       />
-      <div
-        onClick={() => {
-          dispatch({ type: 'set-visible-window', visibleWindow: false });
-        }}
-        className="flex items-center justify-center cursor-pointer bg-gray-300 hover:bg-gray-200"
-        style={{
-          width: 30,
-          height: 30,
-          position: 'fixed',
-          left: bounds.x + bounds.width - 30,
-          top: bounds.y,
-          color: 'white',
-        }}
-      >
-        <FontAwesomeIcon icon={faTimes} className="text-yellow-1500 text-xl" />
+      <div>
+        <FontAwesomeIcon
+          spin
+          icon={faCog}
+          style={{
+            width: 100,
+            height: 100,
+            position: "fixed",
+            left: bounds.x + bounds.width / 2 - 50,
+            top: bounds.y + bounds.height / 2 - 50,
+            color: "black",
+          }}
+        />
       </div>
+      {closeableWindow && (
+        <div
+          onClick={() => {
+            dispatch({ type: "set-visible-window", visibleWindow: false });
+          }}
+          className="flex items-center justify-center cursor-pointer bg-gray-300 hover:bg-gray-200"
+          style={{
+            width: 30,
+            height: 30,
+            position: "fixed",
+            left: bounds.x + bounds.width - 30,
+            top: bounds.y,
+            color: "white",
+          }}
+        >
+          <FontAwesomeIcon
+            icon={faTimes}
+            className="text-yellow-1500 text-xl"
+          />
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default ScrapingWindow;

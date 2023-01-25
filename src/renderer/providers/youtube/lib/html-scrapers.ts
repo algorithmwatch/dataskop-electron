@@ -1,16 +1,12 @@
 // only extract data from HTML, used for
 
-import { parseVideoNoJs } from '@algorithmwatch/harke';
-import _ from 'lodash';
-import { addLookups, getLookups } from 'renderer/lib/db';
-import { delay } from 'renderer/lib/utils/time';
-import { submitConfirmForm } from './actions/confirm-cookies';
+import { parseVideoNoJs } from "@algorithmwatch/harke";
+import _ from "lodash";
+import { currentDelay } from "renderer/lib/delay";
+import { submitConfirmForm } from "./actions/confirm-cookies";
 
-async function lookupOrScrapeVideos(
-  videoIds: string[],
-  enableLogging: boolean = false,
-) {
-  let items = await getLookups({ deleteOld: true, ids: videoIds });
+async function lookupOrScrapeVideos(videoIds: string[], enableLogging = false) {
+  const items = await window.electron.ipc.invoke("db-get-lookups", videoIds);
 
   const readyIds = new Set(Object.keys(items));
 
@@ -22,25 +18,23 @@ async function lookupOrScrapeVideos(
     );
   }
   const getHtml = async () => {
-    await window.electron.ipcRenderer.invoke('scraping-background-init');
+    await window.electron.ipc.invoke("scraping-background-init");
     return () =>
-      window.electron.ipcRenderer.invoke(
-        'scraping-background-get-current-html',
-      );
+      window.electron.ipc.invoke("scraping-background-get-current-html");
   };
 
   await submitConfirmForm(getHtml, (sel) =>
-    window.electron.ipcRenderer.invoke('scraping-background-submit-form', sel),
+    window.electron.ipc.invoke("scraping-background-submit-form", sel),
   );
 
   // important to wait some secconds to set the responding cookie in the session
-  await delay(3000);
+  await currentDelay("longer");
 
   // only fetch new videos that are not already stored
   const toFetch = _.uniq(videoIds.filter((x) => !readyIds.has(x)));
 
-  const fetched: any[] = await window.electron.ipcRenderer.invoke(
-    'youtube-scraping-background-videos',
+  const fetched: any[] = await window.electron.ipc.invoke(
+    "youtube-scraping-background-videos",
     toFetch,
   );
 
@@ -51,13 +45,13 @@ async function lookupOrScrapeVideos(
         data: {
           ...parseVideoNoJs(x.html),
           createdAt: Date.now(),
-          provider: 'youtube',
+          provider: "youtube",
         },
       },
     })),
   );
 
-  await addLookups(parsed);
+  await window.electron.ipc.invoke("db-set-lookups", parsed);
 
   if (enableLogging) {
     window.electron.log.info(
@@ -65,9 +59,9 @@ async function lookupOrScrapeVideos(
     );
   }
 
-  await window.electron.ipcRenderer.invoke('scraping-background-close');
+  await window.electron.ipc.invoke("scraping-background-close");
 
-  return getLookups({ deleteOld: false, ids: videoIds });
+  return window.electron.ipc.invoke("db-get-lookups", videoIds);
 }
 
 export { lookupOrScrapeVideos };

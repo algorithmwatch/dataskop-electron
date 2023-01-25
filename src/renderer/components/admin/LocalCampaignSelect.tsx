@@ -7,13 +7,13 @@ import {
   InputLabel,
   MenuItem,
   Select,
-} from '@material-ui/core';
-import _ from 'lodash';
-import { useEffect, useState } from 'react';
-import { Campaign } from 'renderer/providers/types';
-import { allCampaigns } from 'renderer/providers/youtube';
-import { getLocalCampaigns } from '../../lib/db';
-import Button from '../../providers/youtube/components/Button';
+} from "@material-ui/core";
+import _ from "lodash";
+import { useEffect, useState } from "react";
+import { Campaign } from "renderer/providers/types";
+import { allCampaigns } from "renderer/providers/youtube";
+import { getLocalCampaigns } from "../../lib/db";
+import Button from "../../providers/youtube/components/Button";
 
 const LocalScrapingConfigSelect = ({
   campaign,
@@ -37,7 +37,7 @@ const LocalScrapingConfigSelect = ({
     loadData();
   }, []);
 
-  const uniqueOptions = _.uniqBy(options, 'slug');
+  const uniqueOptions = _.uniqBy(options, "slug");
 
   // hotfix for some strange behaviour for w/ config options and uniqueness
   const chosenOptionArray = uniqueOptions.filter(
@@ -74,7 +74,7 @@ const LocalScrapingConfigSelect = ({
           aria-expanded={expanded}
           aria-label="show more"
         >
-          {expanded ? 'hide JSON' : 'show JSON'}
+          {expanded ? "hide JSON" : "show JSON"}
         </Button>
       </CardActions>
       <Collapse in={expanded} timeout={1000}>

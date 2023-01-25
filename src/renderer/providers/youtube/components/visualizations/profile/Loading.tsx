@@ -1,53 +1,26 @@
-// @ts-nocheck
+import { faSpinnerThird } from "@fortawesome/pro-light-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useScraping } from "renderer/contexts";
 
-/* eslint-disable react-hooks/exhaustive-deps */
-import { faSpinnerThird } from '@fortawesome/pro-light-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
-import { useScraping } from 'renderer/contexts';
-
-export default function ScrapingProgressBar() {
+const ScrapingProgressBar = () => {
   const {
     state: {
       campaign,
-      visibleWindow,
-      scrapingProgress: { isActive, value, step },
-      finishedTasks,
+      scrapingProgress: { step },
     },
-    dispatch,
-    getEtaUntil,
   } = useScraping();
 
-  const [etaMin, setEtaMin] = useState('wenige Minuten');
-
-  // useEffect(() => {
-  //   if (finishedTasks > 5) {
-  //     const etaMs = getEtaUntil(1);
-  //     if (etaMs === null) return;
-  //     const minutes = Math.round(etaMs / 1000 / 60);
-  //     if (minutes >= 2) {
-  //       setEtaMin(`${minutes} Minuten`);
-  //     } else if (minutes === 1) {
-  //       setEtaMin('eine Minute');
-  //     } else {
-  //       setEtaMin('unter eine Minute');
-  //     }
-  //   } else {
-  //     setEtaMin('10 Minuten');
-  //   }
-  // }, [finishedTasks]);
-
-  // if (!isActive) {
-  //   return null;
-  // }
+  const etaMin = "wenige Minuten";
 
   const typeDescriptionMap = {
-    action: 'Scraping Profil',
-    profile: 'Scraping Profil',
-    video: 'Empfehlungsexperimente…',
-    search: 'Suchexperiment…',
+    action: "Scraping Profil",
+    profile: "Scraping Profil",
+    video: "Empfehlungsexperimente…",
+    search: "Suchexperiment…",
   };
-  const currentType = campaign?.config.steps[step].type;
+  const currentType = campaign?.config.steps[step]
+    .type as keyof typeof typeDescriptionMap;
+
   const description = typeDescriptionMap[currentType];
 
   return (
@@ -61,13 +34,9 @@ export default function ScrapingProgressBar() {
             <div className="text-xs">{etaMin}</div>
           </div>
         </div>
-        {/* <div className="z-0 absolute bottom-0 inset-x-0 h-1 bg-yellow-300">
-          <div
-            className="bg-yellow-700 h-full"
-            style={{ width: `${value * 100}%` }}
-          />
-        </div> */}
       </div>
     </div>
   );
-}
+};
+
+export default ScrapingProgressBar;

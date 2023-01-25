@@ -1,8 +1,8 @@
-import { ParserResult } from '@algorithmwatch/harke';
-import { Campaign, ScrapingConfig } from '../../providers/types';
+import { ParserResult } from "@algorithmwatch/harke";
+import { Campaign, ScrapingConfig } from "../../providers/types";
 
 // re-defining the slug of `ParserResult` from `harke-parser` because the slug is not changable
-interface ScrapingResult extends Omit<ParserResult, 'slug'> {
+interface ScrapingResult extends Omit<ParserResult, "slug"> {
   slug: string;
   success: boolean;
 }
@@ -25,14 +25,8 @@ interface ScrapingSession {
 }
 
 // A lookup is used to cache a computation
-interface LookupItem {
-  data: any;
-  createdAt: number;
-  provider: 'youtube';
-}
-
 interface LookupMap {
-  [key: string]: LookupItem;
+  [key: string]: any;
 }
 
 export { ScrapingResult, ScrapingResultSaved, ScrapingSession, LookupMap };

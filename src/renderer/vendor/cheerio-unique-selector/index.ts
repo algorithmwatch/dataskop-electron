@@ -1,11 +1,11 @@
 // https://github.com/bertyhell/cheerio-get-css-selector/blob/d7437880d635e7c12f758d16759fafa3154e1977/src/get-unique-selector.js
 
 function getElementSelector(el) {
-  if (el.attr('id')) {
-    return `#${el.attr('id')}`;
+  if (el.attr("id")) {
+    return `#${el.attr("id")}`;
   }
   const { tagName } = el.get(0);
-  if (tagName === 'body') {
+  if (tagName === "body") {
     return tagName;
   }
   if (el.siblings().length === 0) {
@@ -24,13 +24,13 @@ function getUniquePath(el, $) {
   const parents = el.parents();
   if (!parents[0]) {
     // Element doesn't have any parents
-    return ':root';
+    return ":root";
   }
   let selector = getElementSelector(el);
   let i = 0;
   let elementSelector;
 
-  if (selector[0] === '#' || selector === 'body') {
+  if (selector[0] === "#" || selector === "body") {
     return selector;
   }
 
@@ -38,7 +38,7 @@ function getUniquePath(el, $) {
     elementSelector = getElementSelector($(parents[i]));
     selector = `${elementSelector} > ${selector}`;
     i += 1;
-  } while (i < parents.length - 1 && elementSelector[0] !== '#'); // Stop before we reach the html element parent
+  } while (i < parents.length - 1 && elementSelector[0] !== "#"); // Stop before we reach the html element parent
   return selector;
 }
 

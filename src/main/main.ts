@@ -1,5 +1,5 @@
-/* eslint global-require: off, no-console: off */
-
+/* eslint-disable no-new */
+/* eslint-disable global-require */
 /**
  * This module executes inside of electron's main process. You can start
  * electron renderer process from here and communicate with the other processes
@@ -10,35 +10,89 @@
  */
 
 // Do not (!) change the import to: `import Sentry from '@sentry/electron'`
-import * as Sentry from '@sentry/electron/main';
-import 'core-js/stable';
+import * as Sentry from "@sentry/electron/main";
+import "core-js/stable";
+import dns from "dns";
 import {
   app,
   BrowserWindow,
   dialog,
   ipcMain,
+  Notification,
   powerSaveBlocker,
   screen,
-  session,
   shell,
-} from 'electron';
-import log from 'electron-log';
-import { autoUpdater } from 'electron-updater';
-import path from 'path';
-import 'regenerator-runtime/runtime';
-import registerBackgroundScrapingHandlers from './background-scraping';
-import registerDbHandlers from './db';
-import registerExportHandlers from './export';
-import MenuBuilder from './menu';
-import registerYoutubeHanderls from './providers/youtube';
-import registerScrapingHandlers from './scraping';
-import { resolveHtmlPath } from './util';
+} from "electron";
+import log from "electron-log";
+import { autoUpdater } from "electron-updater";
+import path from "path";
+import registerBackgroundScrapingHandlers from "./background-scraping";
+import registerDbHandlers, { clearData, configStore } from "./db";
+import registerDownloadsHandlers, { clearDownloads } from "./downloads";
+import registerExportHandlers from "./export";
+import { buildMenu } from "./menu";
+import registerTiktokDataHandlers from "./providers/tiktok/data";
+import registerTiktokScrapingHandlers from "./providers/tiktok/scraping";
+import { isLastStatusPending } from "./providers/tiktok/status";
+import registerYoutubeHandlers from "./providers/youtube";
+import registerScrapingHandlers from "./scraping";
+import { buildTray } from "./tray";
+import { delay, isFromLocalhost, resolveHtmlPath } from "./utils";
+
+const handleProdException = (message: string, stack: string) => {
+  if (process.env.NODE_ENV !== "production") {
+    log.info("Not showing exception modal when not in prod");
+    return;
+  }
+
+  const clicked = dialog.showMessageBoxSync({
+    title: "Fehler",
+    message: "Es ist ein Fehler aufgetreten 😔",
+    detail: `${message},${stack}`,
+    type: "error",
+    buttons: ["Ignorieren", "Fehler melden", "Beenden"],
+  });
+
+  if (clicked === 1) {
+    shell.openExternal(
+      `mailto:support@dataskop.net?subject=Fehler in der DataSkop-App ${
+        process.platform
+      } ${app.getVersion()}&body=${message},${stack}`,
+    );
+  }
+
+  if (clicked === 2) {
+    app.quit();
+  }
+};
+
+log.catchErrors({
+  showDialog: false,
+  onError(error) {
+    handleProdException(error.message, error.stack ?? "");
+  },
+});
+
+ipcMain.handle("show-renderer-error-modal", (event, message, stack) => {
+  handleProdException(message, stack);
+});
+
+// https://github.com/electron/electron/issues/23756#issuecomment-651287598
+app.commandLine.appendSwitch(
+  "disable-features",
+  "SpareRendererForSitePerProcess,WebRtcHideLocalIpsWithMdns",
+);
+
+// https://stackoverflow.com/a/65863174/4028896
+if (process.platform === "win32") {
+  app.setAppUserModelId("DataSkop");
+}
 
 // read .env files for development
-require('dotenv').config();
+require("dotenv").config();
 
 const DEBUG =
-  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+  process.env.NODE_ENV === "development" || process.env.DEBUG_PROD === "true";
 
 if (process.env.SENTRY_DSN) {
   Sentry.init({
@@ -46,101 +100,172 @@ if (process.env.SENTRY_DSN) {
   });
 }
 
-export default class AppUpdater {
+let mainWindow: BrowserWindow | null = null;
+
+class AppUpdater {
   constructor() {
-    log.transports.file.level = DEBUG ? 'debug' : 'info';
+    log.transports.file.level = DEBUG ? "debug" : "info";
+    autoUpdater.logger = log;
 
     if (process.env.UPDATE_FEED_URL) {
       autoUpdater.setFeedURL(process.env.UPDATE_FEED_URL);
     }
 
-    autoUpdater.logger = log;
+    if (app.getVersion().includes("alpha")) {
+      autoUpdater.channel = "alpha";
+    }
+
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
 
-let mainWindow: BrowserWindow | null = null;
+// send update-related events to renderer
+autoUpdater.on("update-available", () => {
+  mainWindow?.webContents.send("update-available");
+});
+autoUpdater.on("update-not-available", () => {
+  mainWindow?.webContents.send("update-check-done");
+});
+autoUpdater.on("update-downloaded", () => {
+  mainWindow?.webContents.send("update-downloaded");
+});
+autoUpdater.on("error", (error) => {
+  log.error(`Error with auto-updater: ${error}`);
+  // Proceed even if an error occured
+  mainWindow?.webContents.send("update-check-done");
+});
 
-if (process.env.NODE_ENV === 'production') {
-  const sourceMapSupport = require('source-map-support');
+// handle update-related events from renderer
+ipcMain.handle("update-check-beta", () => {
+  autoUpdater.channel = "beta";
+  return autoUpdater.checkForUpdatesAndNotify();
+});
+ipcMain.handle("update-restart-app", () => {
+  log.debug("called handle update-restart-app");
+  autoUpdater.quitAndInstall();
+});
+
+if (process.env.NODE_ENV === "production") {
+  const sourceMapSupport = require("source-map-support");
   sourceMapSupport.install();
 }
 
 if (DEBUG) {
-  require('electron-debug')();
+  require("electron-debug")();
 }
 
 const installExtensions = async () => {
-  const installer = require('electron-devtools-installer');
+  const installer = require("electron-devtools-installer");
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS'];
+  const extensions = ["REACT_DEVELOPER_TOOLS"];
 
   return installer
     .default(
       extensions.map((name) => installer[name]),
       forceDownload,
     )
-    .catch(console.log);
+    .catch(log.error);
 };
 
+// Monitoring handling
+
+let doingMonitoring = false;
+
+const doMonitoring = async () => {
+  if (!isLastStatusPending()) {
+    log.info(
+      `The current status does not require monitoring. Not doing monitoring.`,
+    );
+    return;
+  }
+
+  if (doingMonitoring) {
+    log.info("Some monitoring action has already stared. Do nothing.");
+    return;
+  }
+
+  log.info("Starting to check for GDRP status.");
+  doingMonitoring = true;
+
+  configStore.set("monitoring", true);
+  await delay(1000);
+
+  if (mainWindow == null) {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    createWindow();
+  } else {
+    mainWindow.reload();
+  }
+};
+
+ipcMain.handle("monitoring-done", () => {
+  log.info("Monitoring is done. Removing flags and closing main window.");
+  configStore.set("monitoring", false);
+  doingMonitoring = false;
+  // Close window on macOS only, keep it minimized for the rest
+  if (mainWindow && process.platform === "darwin") mainWindow.close();
+});
+
+// Main function to initialize a window
 const createWindow = async () => {
-  log.debug('called createWindow', mainWindow == null);
+  log.debug(`Creating main window mainWindow=${mainWindow !== null}`);
 
   if (DEBUG) {
     await installExtensions();
   }
 
-  // The 'unsafe-eval' is required to execute custom JavaScript in the scraper view. When not allowed it,
-  // the browser view ist not using a custom user agent (that is required to scrape YouTube).
-  // `https://ssl.gstatic.com` to allow Google Login to work.
-
-  // HOTFIX: allow all HTTPS traffic because there were issues with google login
-  const cspString =
-    "script-src 'self' 'unsafe-eval' 'unsafe-inline' http://localhost:1212 https://dataskop.net https://*.dataskop.net https://ssl.gstatic.com https:";
-
-  if (process.env)
-    session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-      callback({
-        responseHeaders: {
-          ...details.responseHeaders,
-          'Content-Security-Policy': [cspString],
-        },
-      });
-    });
-
   const RESOURCES_PATH = app.isPackaged
-    ? path.join(process.resourcesPath, 'assets')
-    : path.join(__dirname, '../../assets');
+    ? path.join(process.resourcesPath, "assets")
+    : path.join(__dirname, "../../assets");
 
   const getAssetPath = (...paths: string[]): string => {
     return path.join(RESOURCES_PATH, ...paths);
   };
+
+  const startMinimized = !!(process.env.START_MINIMIZED || doingMonitoring);
 
   mainWindow = new BrowserWindow({
     show: false,
     width: 1280,
     height: 800,
     minWidth: 800,
-    minHeight: 600,
-    maxWidth: 1920,
-    maxHeight: 1080,
-    icon: getAssetPath('icon.png'),
+    minHeight: 700,
+    icon: getAssetPath("icon.png"),
+    skipTaskbar: startMinimized,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload:
+        process.env.NODE_ENV === "development"
+          ? path.join(__dirname, "../../.erb/dll/preload.js")
+          : path.join(__dirname, "preload.js"),
       backgroundThrottling: false,
       sandbox: false,
     },
   });
 
-  mainWindow.loadURL(resolveHtmlPath('index.html'));
+  // Only launch if the computer is connected to the internet.
+  // Resolve always sends a DNS request.
+  while (true) {
+    try {
+      await dns.promises.resolve("datenspende.dataskop.net");
+      log.info("Connected to the internet. Let's go!");
+      break;
+    } catch (e) {
+      await delay(1000);
+      log.info("Checking network connection...");
+    }
+  }
 
-  // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-  mainWindow.webContents.on('did-finish-load', () => {
+  mainWindow.loadURL(resolveHtmlPath("index.html"));
+
+  // Don't use `ready-to-show` since it fire more often, e.g., it looks like it fires
+  // every time the scraping window changes.
+  mainWindow.webContents.on("did-finish-load", () => {
+    log.info("Main window: did-finish-load fired");
+
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
-    if (process.env.START_MINIMIZED) {
+    if (startMinimized) {
       mainWindow.minimize();
     } else {
       const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -151,7 +276,9 @@ const createWindow = async () => {
         y: Math.floor(height * 0.05),
       });
       mainWindow.show();
-      mainWindow.focus();
+
+      // Only check for update after the renderer window was initialized
+      new AppUpdater();
     }
   });
 
@@ -161,143 +288,184 @@ const createWindow = async () => {
   in the state of the renderer process. So we have to communicate back and forth.
   */
 
-  mainWindow.on('close', function (e) {
-    mainWindow?.webContents.send('close-action');
+  mainWindow.on("close", (e) => {
+    mainWindow?.webContents.send("close-action");
     e.preventDefault();
   });
 
-  mainWindow.on('closed', () => {
+  mainWindow.on("closed", () => {
     mainWindow = null;
   });
 
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+  buildMenu(mainWindow);
 
-  // Open urls in the user's browser
-  mainWindow.webContents.on('new-window', (event, url) => {
-    event.preventDefault();
+  const createOrBringToFocus = () => {
+    if (mainWindow === null) createWindow();
+    else mainWindow.show();
+  };
+
+  buildTray(
+    createOrBringToFocus,
+    doMonitoring,
+    configStore,
+    getAssetPath("icon.png"),
+  );
+
+  // Open URLs in the user's browser
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
+    return { action: "deny" };
   });
 
-  // The follwing snipet was added before electron-react-boilterplate v4. So it
-  // may be no longer needed and actually causes harm.
-  // // https://stackoverflow.com/a/63174933/4028896
-  // mainWindow.webContents.on('did-frame-finish-load', async () => {
-  //   if (DEBUG) {
-  //     await installExtensions();
-  //   }
-  // });
+  // Allow scraping to happend in brackground
+  powerSaveBlocker.start("prevent-app-suspension");
 
-  // not sure if timeout is actually required
-  setTimeout(() => {
-    // Remove this if your app does not use auto updates
-    // eslint-disable-next-line
-    new AppUpdater();
-  }, 1000);
-
-  // allow scraping to happend in brackground
-  powerSaveBlocker.start('prevent-app-suspension');
-
-  // register handlers
+  // Register general handlers
   registerScrapingHandlers(mainWindow);
+  registerDownloadsHandlers(mainWindow);
   registerExportHandlers(mainWindow);
-
-  // window not needed
   registerBackgroundScrapingHandlers();
   registerDbHandlers();
 
-  registerYoutubeHanderls(mainWindow);
+  // Register provider specific handlers
+  registerYoutubeHandlers(mainWindow);
+  registerTiktokScrapingHandlers(mainWindow);
+  registerTiktokDataHandlers(mainWindow);
 };
 
 /**
  * Controlling main window
  */
 
-ipcMain.handle('close-main-window', (_e, isCurrentlyScraping: boolean) => {
-  log.debug('called handle close-main-window', mainWindow == null);
-  if (mainWindow === null) return;
+ipcMain.handle(
+  "close-main-window",
+  (
+    _e,
+    isCurrentlyScraping: boolean,
+    cleanupData: boolean,
+    reachedEnd: boolean,
+  ) => {
+    log.debug("called handle close-main-window", mainWindow == null);
+    if (mainWindow === null) return;
 
-  if (isCurrentlyScraping) {
-    const choice = dialog.showMessageBoxSync(mainWindow, {
-      type: 'question',
-      buttons: ['Ja, beenden', 'Abbrechen'],
-      defaultId: 1,
-      cancelId: 1,
-      title: 'Bestätigen',
-      message:
-        'Willst du DataSkop wirklich beenden? Der Scraping-Vorgang läuft noch.',
-    });
-    if (choice == 1) {
-      return;
+    if (isCurrentlyScraping) {
+      const choice = dialog.showMessageBoxSync(mainWindow, {
+        type: "question",
+        buttons: ["Ja, beenden", "Abbrechen"],
+        defaultId: 1,
+        cancelId: 1,
+        title: "Bestätigen",
+        message: "Willst du DataSkop wirklich beenden? Ein Vorgang läuft noch.",
+      });
+      if (choice === 1) {
+        return;
+      }
     }
-  }
-  mainWindow.destroy();
-});
 
-app.on('window-all-closed', () => {
+    // Cleanup after the user donated (or finish the walkthrough)
+    if (cleanupData) {
+      clearDownloads();
+      clearData();
+    }
+
+    if (reachedEnd) {
+      app.exit();
+    } else {
+      mainWindow.setSkipTaskbar(true);
+      mainWindow.destroy();
+    }
+  },
+);
+
+app.on("window-all-closed", () => {
+  if (configStore.get("monitoring")) {
+    log.warn(
+      "Detected faulty value `true` for `monitoring`. Setting to `false` now.",
+    );
+    // Reset monitoring in case something went wrong (e.g. a crash)
+    configStore.set("monitoring", false);
+  }
+
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
-  if (process.platform !== 'darwin') {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });
 
-app.whenReady().then(createWindow).catch(console.log);
+app
+  .whenReady()
+  .then(() => createWindow())
+  .catch(log.error);
 
-app.on('activate', () => {
-  log.debug('called activate', mainWindow == null);
+// macOS only
+app.on("activate", () => {
+  log.debug("Called activate", mainWindow == null);
 
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) createWindow();
 });
 
-// app.on('before-quit', (event) => {
-//   // Not 100% sure if this is needed. There have been some issues with
-//   closeDb();
-// });
-
-// send update-related events to renderer
-
-autoUpdater.on('update-available', () => {
-  mainWindow?.webContents.send('update-available');
+// Expose certain information to the renderer
+ipcMain.handle("get-info", (e) => {
+  // Expose configs done via .env to the renderer. The keys have to explicitly
+  // specified as follows (right now).
+  if (isFromLocalhost(e))
+    return {
+      version: app.getVersion(),
+      isMac: process.platform === "darwin",
+      env: {
+        NODE_ENV: process.env.NODE_ENV,
+        DEBUG_PROD: process.env.DEBUG_PROD,
+        PLATFORM_URL: process.env.PLATFORM_URL,
+        TRACK_EVENTS: process.env.TRACK_EVENTS,
+        SERIOUS_PROTECTION: process.env.SERIOUS_PROTECTION,
+        AUTO_SELECT_CAMPAIGN: process.env.AUTO_SELECT_CAMPAIGN,
+        PLAYWRIGHT_TESTING: process.env.PLAYWRIGHT_TESTING,
+      },
+    };
 });
 
-autoUpdater.on('update-downloaded', () => {
-  mainWindow?.webContents.send('update-downloaded');
+// Handle notifications from the renderer
+ipcMain.handle("show-notification", (_e, title, body) => {
+  log.info(`Notification: ${title}, ${body}`);
+  const notification = new Notification({
+    title,
+    body,
+  });
+  notification.show();
+  notification.on("click", () => {
+    log.info(`Clicking on notification, mainWindow=${mainWindow !== null}`);
+    // Create window when there is none
+    if (mainWindow === null) createWindow();
+  });
 });
 
-autoUpdater.on('error', async (_event, error) => {
-  mainWindow?.webContents.send('update-error', error);
+// Restart the app
+ipcMain.handle("restart", () => {
+  app.relaunch();
+  app.exit();
 });
 
-// handle update-related events from renderer
+// You can ignore the steps for squirrel builds because we don't use squirrel
+// https://www.electronjs.org/docs/latest/api/app#appsetloginitemsettingssettings-macos-windows
 
-ipcMain.handle('update-check-beta', () => {
-  autoUpdater.channel = 'beta';
-  return autoUpdater.checkForUpdatesAndNotify();
-});
+const setOpenAtLogin = (value: boolean) => {
+  if (app.getLoginItemSettings().openAtLogin === value) {
+    log.info(`Not updating \`openAtLogin\`, the value is already: ${value}`);
+    return;
+  }
 
-ipcMain.handle('update-restart-app', () => {
-  log.debug('called handle update-restart-app');
-  autoUpdater.quitAndInstall();
-});
+  log.info(`Updating \`openAtLogin\` to: ${value}`);
+  app.setLoginItemSettings({
+    openAtLogin: value,
+  });
+};
 
-// expose certain information to the renderer
+// run once on init
+setOpenAtLogin(configStore.get("openAtLogin"));
 
-ipcMain.handle('get-version-number', () => {
-  return app.getVersion();
-});
-
-ipcMain.handle('get-env', () => {
-  // Expose configs done via .env to the renderer. The keys have to references as
-  // follows, don't try to optimize the code.
-  return {
-    NODE_ENV: process.env.NODE_ENV,
-    DEBUG_PROD: process.env.DEBUG_PROD,
-    PLATFORM_URL: process.env.PLATFORM_URL,
-    SIMPLE_BACKEND: process.env.SIMPLE_BACKEND,
-    TRACK_EVENTS: process.env.TRACK_EVENTS,
-    SERIOUS_PROTECTION: process.env.SERIOUS_PROTECTION,
-  };
-});
+configStore.onDidChange("openAtLogin", (newValue) =>
+  setOpenAtLogin(!!newValue),
+);
