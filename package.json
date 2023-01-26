@@ -250,7 +250,7 @@
     "lodash": "^4.17.21",
     "lowdb": "^3.0.0",
     "p-limit": "3",
-    "p-queue": "6",
+    "p-queue": "7",
     "perfect-arrows": "^0.3.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
