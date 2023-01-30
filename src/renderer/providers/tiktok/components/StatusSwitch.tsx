@@ -66,7 +66,7 @@ const StatusSwitch = ({ status }: { status: Status }): JSX.Element => {
         <StatusContent
           status={status}
           title="DSGVO-Anfrage fehlgeschlagen"
-          body="Wir konnten deine DSGVO-Daten nicht beantragen. Besuche Tiktok.com im Browser und lade dir die DSGVO-Daten in deinem Benutzerkonto herunter. Anschließend kannst du sie in der DataSkop-App importieren."
+          body="Wir konnten deine DSGVO-Daten nicht beantragen. Besuche Tiktok.com im Browser und lade dir die DSGVO-Daten in deinem Benutzerkonto herunter. Anschließend kannst du sie in der DataSkop-App importieren. Setze dafür das Programm zurück."
           allowReset
         />
       )}
@@ -81,7 +81,8 @@ const StatusSwitch = ({ status }: { status: Status }): JSX.Element => {
         <StatusContent
           status={status}
           title="Status konnte nicht überprüft werden"
-          body="Wir konnten den Status deines DSGVO-Exports nicht überprüfen. Wir versuchen es noch mal. Alternativ kannst du auch Tiktok.com im Browser besuchen und dir deine DSGVO-Daten in deinem Benutzerkonto herunterladen. Anschließend kannst du sie in der DataSkop-App importieren."
+          body="Wir konnten den Status deines DSGVO-Exports nicht überprüfen. Wir versuchen es noch mal. Alternativ kannst du auch Tiktok.com im Browser besuchen und dir deine DSGVO-Daten in deinem Benutzerkonto herunterladen. Anschließend kannst du sie in der DataSkop-App importieren. Setze dafür das Programm zurück."
+          allowReset
         />
       )}
     </>

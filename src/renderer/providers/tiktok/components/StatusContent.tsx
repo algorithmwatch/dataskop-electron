@@ -140,6 +140,7 @@ const StatusContent = ({
         {allowReset && (
           <div className="mt-2 xl:mt-5">
             <Button
+              theme="outline"
               onClick={async () => {
                 // Don't log the user out
                 window.electron.log.info(
@@ -149,7 +150,7 @@ const StatusContent = ({
                 window.electron.ipc.invoke("restart");
               }}
             >
-              Status zurücksetzen & neu starten
+              Zurücksetzen
             </Button>
           </div>
         )}
