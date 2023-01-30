@@ -109,10 +109,10 @@ const BeforeLoginPage = (): JSX.Element => {
               Was geschieht mit meinen Daten?
             </HelpButton>
           </div>
-          <div className="absolute bottom-4 inset-x-4">
+          <div className="absolute bottom-5 inset-x-5">
             <Link
               to="/tiktok/import_data_export"
-              className="text-east-blue-800 font-semibold hover:underline text-lg"
+              className="text-east-blue-800 font-semibold hover:underline text-xl"
             >
               Ich habe die DSGVO-Daten bereits.
             </Link>

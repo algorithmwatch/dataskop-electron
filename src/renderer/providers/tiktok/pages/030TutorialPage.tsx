@@ -3,7 +3,6 @@
  *
  * @module
  */
-import { faLoader } from "@fortawesome/pro-duotone-svg-icons";
 import {
   faChartScatterBubble,
   faCircleUser,
@@ -84,8 +83,10 @@ const TutorialPage = (): JSX.Element => {
       carouselRef.current?.go("<");
     }
   };
+
   const handleNextClick = () => {
-    if (carouselRef.current?.index === 3) {
+    // FIXME: The slides should be saved in const to avoid this magic constant.
+    if (carouselRef.current?.index === 2) {
       history.push(getNextPage("path"));
     } else {
       carouselRef.current?.go(">");
@@ -133,17 +134,9 @@ const TutorialPage = (): JSX.Element => {
       >
         <Slide>
           <TutorialSlide title="Anmelden" icon={faCircleUser}>
-            <p>
-              Zuerst meldest du dich mit deinem TikTok-Konto an. Wir speichern
-              deine Login-Daten nicht.
-            </p>
-          </TutorialSlide>
-        </Slide>
-        <Slide>
-          <TutorialSlide title="Download" icon={faLoader}>
-            Als Nächstes beantragt die DataSkop-App deine DSGVO-Daten. Sobald
-            TikTok diese Daten bereitstellt, lädt die App sie im Hintergrund
-            automatisch herunter und verarbeitet sie.
+            Zuerst meldest du dich mit deinem TikTok-Konto an. Als Nächstes
+            beantragt die DataSkop-App deine DSGVO-Daten. Alternativ kannst du
+            auch deine DSGVO-Daten direkt in die App importieren.
           </TutorialSlide>
         </Slide>
         <Slide>
@@ -152,10 +145,10 @@ const TutorialPage = (): JSX.Element => {
             icon={faTriangleExclamation}
             theme="alert"
           >
-            Es kann bis zu vier Tage dauern, bis TikTok die DSGVO-Daten
-            bereitstellt. Es ist deshalb wichtig, dass du die DataSkop-App nicht
-            schließt und sie im Hintergrund geöffnet bleibt. Du erhältst eine
-            Benachrichtigung, sobald es weitergehen kann.
+            Es dauert mehrere Tage, bis TikTok die DSGVO-Daten bereitstellt. Es
+            ist deshalb wichtig, dass du die DataSkop-App nicht schließt und sie
+            im Hintergrund geöffnet bleibt. Du erhältst eine Benachrichtigung,
+            sobald es weitergehen kann.
           </TutorialSlide>
         </Slide>
         <Slide>
