@@ -17,6 +17,7 @@ import { useConfig, useScraping } from "renderer/contexts";
 import { clearData } from "renderer/lib/db";
 import { delay } from "renderer/lib/utils/time";
 import tiktokRoutes from "renderer/providers/tiktok/lib/routes";
+import { addStatusReset } from "renderer/providers/tiktok/lib/status";
 import { Button } from "./Button";
 import Modal from "./Modal";
 
@@ -105,9 +106,9 @@ const SidebarMenu = ({
           </Button>,
           <Button
             onClick={async () => {
-              await clearData();
+              // Add a special `reset` icon instead of deleting data (e.g. to keep the survey results.)
+              await addStatusReset();
               await window.electron.ipc.invoke("scraping-clear-storage");
-              await scrapingDispatch({ type: "reset-scraping" });
               await delay(1000);
               window.electron.ipc.invoke("restart");
             }}

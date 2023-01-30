@@ -140,8 +140,8 @@ const StatusContent = ({
         {allowReset && (
           <div className="mt-2 xl:mt-5">
             <Button
-              // theme="outline"
               onClick={async () => {
+                // Don't log the user out
                 window.electron.log.info(
                   "Resetting `status` and restarting app",
                 );
