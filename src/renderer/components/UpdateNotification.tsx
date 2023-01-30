@@ -6,6 +6,7 @@ import { Button } from "./Button";
 const UpdateNotification = (): JSX.Element | null => {
   const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
   const [showRestartButton, setShowRestartButton] = useState(false);
+  const [clickedRestart, setClickedRestart] = useState(false);
 
   useEffect(() => {
     window.electron.ipc.once("update-available", () => {
@@ -24,7 +25,7 @@ const UpdateNotification = (): JSX.Element | null => {
       <div className="space-y-4 text-center text-yellow-1500">
         <div className="hl-3xl">Neues Update verfügbar</div>
 
-        {!showRestartButton ? (
+        {!showRestartButton && !clickedRestart ? (
           <div className="flex items-center justify-center">
             <div className="mr-2">
               <FontAwesomeIcon icon={faSpinnerThird} spin />
@@ -33,15 +34,26 @@ const UpdateNotification = (): JSX.Element | null => {
           </div>
         ) : (
           <>
-            <div>
-              Update heruntergeladen. Starte DataSkop neu, um es zu
-              installieren.
-            </div>
-            <Button
-              onClick={() => window.electron.ipc.invoke("update-restart-app")}
-            >
-              Neu starten
-            </Button>
+            {!clickedRestart && (
+              <>
+                <div>
+                  Update heruntergeladen. Starte DataSkop neu, um es zu
+                  installieren.
+                </div>
+                <Button
+                  onClick={() => {
+                    setShowRestartButton(false);
+                    setClickedRestart(true);
+                    window.electron.ipc.invoke("update-restart-app");
+                  }}
+                >
+                  Neu starten
+                </Button>
+              </>
+            )}
+            {clickedRestart && (
+              <div>Warte bitte einen Moment bis das Programm neu startet.</div>
+            )}
           </>
         )}
       </div>
