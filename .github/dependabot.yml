@@ -31,6 +31,10 @@ updates:
         # There are problems with v4 and pure ESM module
       - dependency-name: "p-limit"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "p-queue"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "lowdb"
+        update-types: ["version-update:semver-major"]
         # There seem to be larger changes, maybe work on it later.
       - dependency-name: "*react-router*"
         update-types: ["version-update:semver-major"]
