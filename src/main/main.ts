@@ -300,8 +300,20 @@ const createWindow = async () => {
   buildMenu(mainWindow);
 
   const createOrBringToFocus = () => {
-    if (mainWindow === null) createWindow();
-    else mainWindow.show();
+    if (mainWindow === null) {
+      createWindow();
+    } else {
+      try {
+        mainWindow.show();
+      } catch (error) {
+        // Unclear in which situations mainWindow isn't null but was somehow destroyed.
+        // This needs more investigation, the situation happend in prod. :/
+        log.error(
+          `Error withing 'createOrBringToFocus', creating new window now: ${error}`,
+        );
+        createWindow();
+      }
+    }
   };
 
   buildTray(
