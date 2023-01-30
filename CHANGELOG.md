@@ -1,5 +1,22 @@
 # Changelog
 
+## [v0.5.2] - 2023-01-30
+
+- Make it easier to reset the app for some faulty stati
+- Fix a bug that deletes the survey results on reset
+- Fix a bug that caused the update process to break if a user clicked the restart button twice
+- Improve some text in the tutorial slides
+
+## [v0.5.1] - 2023-01-25
+
+- Fix broken ETA computation
+- Improve in-app copy text
+
+## [v0.5.0] - 2023-01-25
+
+- Fix broken ETA computation
+- Improve in-app copy text
+
 ## [v0.5.0-alpha.33] - 2023-01-24
 
 - Add 'reset' & 'export archive' to the sidebar
