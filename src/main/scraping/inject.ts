@@ -43,14 +43,19 @@ const elementExists = async (
   selector: any,
   shadowSelector: null | string = null,
 ) => {
-  if (shadowSelector === null)
-    return view.webContents.executeJavaScript(
-      `document.querySelector("${selector}") !== null`,
-    );
+  try {
+    if (shadowSelector === null)
+      return await view.webContents.executeJavaScript(
+        `document.querySelector("${selector}") !== null`,
+      );
 
-  return view.webContents.executeJavaScript(
-    `document.querySelector("${selector}").shadowRoot.querySelector("${shadowSelector}") !== null`,
-  );
+    return await view.webContents.executeJavaScript(
+      `document.querySelector("${selector}").shadowRoot.querySelector("${shadowSelector}") !== null`,
+    );
+  } catch (error) {
+    log.info(`elementExists error: ${error}`);
+    return false;
+  }
 };
 
 const clickElement = async (
@@ -59,21 +64,25 @@ const clickElement = async (
   docIndex = 0,
   shadowSelector: null | string = null,
 ) => {
-  if (shadowSelector !== null)
-    return view.webContents.executeJavaScript(
-      `document.querySelector("${selector}").shadowRoot.querySelector("${shadowSelector}").click()`,
-    );
+  try {
+    if (shadowSelector !== null)
+      return await view.webContents.executeJavaScript(
+        `document.querySelector("${selector}").shadowRoot.querySelector("${shadowSelector}").click()`,
+      );
 
-  if (docIndex === 0) {
-    await view.webContents.executeJavaScript(
-      `document.querySelector("${selector}").click()`,
-    );
-  } else {
-    await view.webContents.executeJavaScript(
-      `document.getElementsByTagName('iframe')[${
-        docIndex - 1
-      }].contentWindow.document.querySelector("${selector}").click()`,
-    );
+    if (docIndex === 0) {
+      await view.webContents.executeJavaScript(
+        `document.querySelector("${selector}").click()`,
+      );
+    } else {
+      await view.webContents.executeJavaScript(
+        `document.getElementsByTagName('iframe')[${
+          docIndex - 1
+        }].contentWindow.document.querySelector("${selector}").click()`,
+      );
+    }
+  } catch (error) {
+    log.info(`clickElement error: ${error}`);
   }
 };
 

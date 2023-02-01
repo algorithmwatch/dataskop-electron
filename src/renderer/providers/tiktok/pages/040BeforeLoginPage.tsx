@@ -79,10 +79,10 @@ const BeforeLoginPage = (): JSX.Element => {
           <h1 className="hl-2xl mb-4">Was geschieht mit meinen Daten? </h1>
           <p>
             Bevor du deine Daten spendest, entfernen wir sensible und nicht für
-            die Analyse relevante Informationen. Das sind z.B. die Nutzernamen
-            deiner Follower, deine Kommentare oder Chats. Deine bereinigten
-            Daten werden Algorithmwatch und ggf. Partnerinstitutionen als
-            Datenspende zur Verfügung gestellt.{" "}
+            die Analyse relevante Informationen. Das sind zum Beispiel die
+            Nutzernamen deiner Follower, deine Kommentare oder den Textinhalt in
+            Chats. Deine bereinigten Daten werden AlgorithmWatch und
+            Partnerinstitutionen als Datenspende zur Verfügung gestellt.{" "}
             <a
               href="https://dataskop.net/tiktok-daten/"
               target="_blank"
@@ -98,8 +98,8 @@ const BeforeLoginPage = (): JSX.Element => {
         <Content title="Bei TikTok anmelden" icon={faCircleUser}>
           <p>
             Nach dem Login wird die App deine DSGVO-Daten für dich automatisch
-            beantragen und verarbeiten. Du erhältst eine Benachrichtigung,
-            sobald alles fertig ist.
+            beantragen. Du erhältst eine Benachrichtigung, sobald es weiter
+            geht. Wir speichern deine Login-Daten nicht.
           </p>
           <div className="mt-14 space-y-4 lg:space-y-0 lg:space-x-6">
             <HelpButton onClick={() => setModal1IsOpen(true)}>

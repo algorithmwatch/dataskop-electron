@@ -4,7 +4,7 @@
  *
  * @module
  */
-import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
+import { faAngleLeft } from "@fortawesome/pro-solid-svg-icons";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
@@ -18,10 +18,7 @@ const ProviderLoginPage = (): JSX.Element => {
     state: { isUserLoggedIn, campaign },
     dispatch,
   } = useScraping();
-  const {
-    sendEvent,
-    state: { isDebug },
-  } = useConfig();
+  const { sendEvent } = useConfig();
 
   const footerSlots = {
     center: [
@@ -30,28 +27,22 @@ const ProviderLoginPage = (): JSX.Element => {
         theme="text"
         startIcon={faAngleLeft}
         onClick={() => {
-          dispatch({ type: "set-visible-window", visibleWindow: false });
           history.goBack();
+          dispatch({ type: "reset-scraping" });
+          dispatch({
+            type: "set-attached",
+            attached: false,
+            visible: false,
+            fixed: true,
+            initPositionWindow: "center-top",
+          });
+          window.electron.ipc.invoke("scraping-clear-storage");
         }}
       >
         Zurück
       </Button>,
     ],
   };
-
-  if (isDebug) {
-    footerSlots.center.push(
-      <Button
-        key="2"
-        endIcon={faAngleRight}
-        onClick={() => {
-          history.push(getNextPage("path"));
-        }}
-      >
-        DEBUG ONLY: Weiter
-      </Button>,
-    );
-  }
 
   useEffect(() => {
     if (isUserLoggedIn) {
