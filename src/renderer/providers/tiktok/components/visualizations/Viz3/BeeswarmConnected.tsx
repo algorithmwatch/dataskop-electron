@@ -18,7 +18,7 @@ export function AxisBottom({ scale, height }) {
   ));
 }
 
-export default function beeswarm({ data, pics }) {
+export default function beeswarm({ data, pics, minNum }) {
   const [rect, ref] = useRect();
   const [active, setActive] = useState(null);
   const [simulationDone, setSimulationDone] = useState(false);
@@ -31,13 +31,6 @@ export default function beeswarm({ data, pics }) {
     share: "geteilte Videos",
     view: "angesehene Videos",
     favorite: "favorisierte Videos",
-  };
-
-  const minNum = {
-    view: 5,
-    like: 2,
-    share: 1,
-    favorite: 1,
   };
 
   const colors = {

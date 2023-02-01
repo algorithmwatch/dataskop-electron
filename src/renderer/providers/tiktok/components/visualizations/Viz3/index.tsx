@@ -42,6 +42,14 @@ const VizThree = ({ gdprData, metadata }) => {
       `Got pics for ${Object.keys(pics).length} authors`,
     );
 
+  // Hide some circles if there would be too many items
+  const minNum = {
+    view: stats.views > 100 ? 5 : 1,
+    like: stats.likes > 50 ? 2 : 1,
+    share: 1,
+    favorite: 1,
+  };
+
   return (
     <>
       <div className="mx-auto flex items-center text-2xl mb-3 lg:mb-6">
@@ -61,7 +69,7 @@ const VizThree = ({ gdprData, metadata }) => {
         className="flex flex-col items-stretch min-h-[50vh] grow"
         id="dataskop-export-screenshot-inner"
       >
-        <BeeswarmConnected data={allData} pics={pics} />
+        <BeeswarmConnected data={allData} pics={pics} minNum={minNum} />
       </main>
     </>
   );
