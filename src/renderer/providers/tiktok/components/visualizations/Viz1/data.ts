@@ -4,26 +4,6 @@ import _ from "lodash";
 // 10 minutes between videos is acceptable
 const GAP_WATCHED = 10 * 60;
 
-//  modify login data to facilitate checking for whether a new login was made
-function makeLoginObj(array) {
-  const obj = {};
-  for (const loginEntry of array) {
-    // extract date (without time)
-    // console.log(loginEntry);
-    const dateTime = new Date(loginEntry.Date.replace(" UTC", ""));
-    const dateNoTime = withoutTime(dateTime);
-
-    // check if date is already a key, add date (w/out time) as a key and the entire loginEntry (with time) as a value
-    if (dateNoTime in obj) {
-      obj[dateNoTime].push(dateTime);
-    } else {
-      obj[dateNoTime] = [];
-      obj[dateNoTime].push(dateTime);
-    }
-  }
-  return obj;
-}
-
 const formatNumber = (number: number) => {
   return Math.round(number).toLocaleString("de-DE");
 };
@@ -81,7 +61,6 @@ function checkForLogin(loginObj: any, date_prev: Date, date_curr: Date) {
 function addTimeOfDay(
   ogVidData: any,
   timeRange: number,
-  loginObj: any,
 ): [{ Date: Date; TotalTime: number }[], number, string[]] {
   let dailyTime = 0;
   let totalTime = 0;
@@ -160,7 +139,6 @@ function getTimeOfDay(entryHour: number) {
 function makeWatchtimeData(
   ogVidData: any,
   timeRange: number,
-  loginObj: any,
 ): [
   { Date: Date; GapLabel: string; GapLength: number }[],
   number,
@@ -220,7 +198,6 @@ function makeWatchtimeData(
 function makeTimeSlots(
   ogVidData: any,
   timeRange: number,
-  loginObj: any,
 ): [{ Date: Date; TimeOfDay: string; TotalTime: number }[], number, any, any] {
   let totalTime = 0;
   let totActivity = 0;
@@ -297,9 +274,12 @@ function makeTimeSlots(
   return [result, totActivity, [], aggregates];
 }
 
-// helper function to compute the total number of times the user
-// opened TikTok
+// helper function to compute the total number of times the user opened TikTok
 function getNumAppOpen(ogLoginData: any, timeRange: number) {
+  // It can happen that there is no login data in the dump.
+  // This implausible but it's on TikToks end.
+  if (!ogLoginData) return "-";
+
   let total = 0;
   let datePrev = new Date(ogLoginData[0].Date.replace(" UTC", ""));
 
@@ -322,7 +302,7 @@ function getNumAppOpen(ogLoginData: any, timeRange: number) {
     }
     datePrev = dateCurr;
   }
-  return total;
+  return `${total}x`;
 }
 
 // converts times to hours + mins if the times are over 60 mins, input is in mins
@@ -370,26 +350,18 @@ export const arrangeDataVizOne = (
   );
   const ogLoginData = dump.Activity["Login History"].LoginHistoryList;
 
-  const loginObj = makeLoginObj(ogLoginData);
-
   if (graph === "timeslots") {
     [result, totActivity, coreTimeArray, aggregates] = makeTimeSlots(
       ogVidData,
       timeRange,
-      loginObj,
     );
   } else if (graph === "skipped") {
     [result, totActivity, coreTimeArray, aggregates] = makeWatchtimeData(
       ogVidData,
       timeRange,
-      loginObj,
     );
   } else if (graph === "default") {
-    [result, totActivity, coreTimeArray] = addTimeOfDay(
-      ogVidData,
-      timeRange,
-      loginObj,
-    );
+    [result, totActivity, coreTimeArray] = addTimeOfDay(ogVidData, timeRange);
   } else {
     throw new Error("Invalid graph");
   }

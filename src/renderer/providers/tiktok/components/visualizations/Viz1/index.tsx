@@ -203,7 +203,7 @@ const VizOne = ({
     headValues = [
       { head: totActivity, label: "Aktivität" },
       { head: avgMinsPerDay, label: "pro Tag" },
-      { head: `${numAppOpen}x`, label: "App geöffnet" },
+      { head: numAppOpen, label: "App geöffnet" },
       { head: `${headValue}:00`, label: "Hauptzeit" },
     ];
   }
