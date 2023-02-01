@@ -10,7 +10,6 @@ import {
 } from "@fortawesome/pro-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
 import AdminMenu from "renderer/components/admin/AdminMenu";
 import Drawer from "renderer/components/Drawer";
 import { useConfig, useScraping } from "renderer/contexts";
@@ -33,7 +32,6 @@ const SidebarMenu = ({
     dispatch: configDispatch,
   } = useConfig();
   const { dispatch: scrapingDispatch } = useScraping();
-  const history = useHistory();
 
   const [modal1IsOpen, setModal1IsOpen] = useState(false);
 
@@ -98,6 +96,7 @@ const SidebarMenu = ({
         closeModal={() => setModal1IsOpen(false)}
         buttons={[
           <Button
+            key="close"
             theme="outline"
             className="mr-5"
             onClick={() => setModal1IsOpen(false)}
@@ -105,6 +104,7 @@ const SidebarMenu = ({
             Schließen
           </Button>,
           <Button
+            key="reset"
             onClick={async () => {
               // Add a special `reset` icon instead of deleting data (e.g. to keep the survey results.)
               await addStatusReset();

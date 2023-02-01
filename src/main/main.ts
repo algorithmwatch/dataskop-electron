@@ -1,12 +1,7 @@
 /* eslint-disable no-new */
 /* eslint-disable global-require */
 /**
- * This module executes inside of electron's main process. You can start
- * electron renderer process from here and communicate with the other processes
- * through IPC.
- *
- * When running `npm run build` or `npm run build:main`, this file is compiled to
- * `./src/main.js` using webpack. This gives us some performance wins.
+The entrypoint for the main process.
  */
 
 // Do not (!) change the import to: `import Sentry from '@sentry/electron'`
@@ -44,6 +39,8 @@ const handleProdException = (message: string, stack: string) => {
     log.info("Not showing exception modal when not in prod");
     return;
   }
+
+  log.error(`Exception modal shown with: ${message} ${stack}`);
 
   const clicked = dialog.showMessageBoxSync({
     title: "Fehler",
@@ -383,7 +380,6 @@ ipcMain.handle(
     if (reachedEnd) {
       app.exit();
     } else {
-      mainWindow.setSkipTaskbar(true);
       mainWindow.destroy();
     }
   },
@@ -419,10 +415,8 @@ app.on("activate", () => {
   if (mainWindow === null) createWindow();
 });
 
-// Expose certain information to the renderer
+// Expose certain information to the renderer. The keys need to get hard-coded.
 ipcMain.handle("get-info", (e) => {
-  // Expose configs done via .env to the renderer. The keys have to explicitly
-  // specified as follows (right now).
   if (isFromLocalhost(e))
     return {
       version: app.getVersion(),
