@@ -53,9 +53,9 @@ const exportChannels = [
   "results-export",
   "export-screenshot",
   "export-debug-archive",
-  "export-debug-size",
-  "export-read-log",
-  "export-debug-clean",
+  "export-file-infos",
+  "export-remove-debug-files",
+  "export-remove-all-files",
 ];
 
 // db.ts

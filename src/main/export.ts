@@ -1,14 +1,13 @@
 import archiver from "archiver";
-import { BrowserWindow, dialog } from "electron";
+import { app, BrowserWindow, dialog } from "electron";
 import log from "electron-log";
 import fs from "fs";
 import { readdir, stat } from "fs/promises";
 import path from "path";
-import { getNowString } from "../renderer/lib/utils/time";
 import { DB_FOLDER } from "./db";
 import { DOWNLOADS_FOLDER } from "./downloads";
 import { HTML_FOLDER } from "./scraping";
-import { addMainHandler } from "./utils";
+import { addMainHandler, getNowString } from "./utils";
 
 const LOG_FOLDER = path.dirname(log.default.transports.file.getFile().path);
 
@@ -128,21 +127,39 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
     await makeArchive();
   });
 
-  addMainHandler("export-debug-size", async () => {
-    return Promise.all([HTML_FOLDER, LOG_FOLDER].map(dirSize));
-  });
+  addMainHandler("export-file-infos", async () => {
+    const sizes = await Promise.all(
+      [HTML_FOLDER, LOG_FOLDER, DOWNLOADS_FOLDER, DB_FOLDER].map(dirSize),
+    );
 
-  addMainHandler("export-read-log", async () => {
     // Currently, everything gets written to `main.log`.
     const logFile = path.join(LOG_FOLDER, "main.log");
-    const logContent = fs.readFileSync(logFile, "utf8");
+    const logContent = fs.readFileSync(logFile, "utf8").slice(-100000);
 
-    return [logContent.slice(-100000), logFile];
+    return {
+      sizes,
+      files: {
+        log: logFile,
+        html: HTML_FOLDER,
+        downloads: DOWNLOADS_FOLDER,
+        db: DB_FOLDER,
+      },
+      logContent,
+    };
   });
 
-  addMainHandler("export-debug-clean", async () => {
+  addMainHandler("export-remove-debug-files", async () => {
     return [HTML_FOLDER, LOG_FOLDER].map((dir) =>
       fs.readdirSync(dir).forEach((f) => fs.rmSync(`${dir}/${f}`)),
     );
+  });
+
+  addMainHandler("export-remove-all-files", async () => {
+    [HTML_FOLDER, LOG_FOLDER, DOWNLOADS_FOLDER, DB_FOLDER].map((dir) =>
+      fs.readdirSync(dir).forEach((f) => fs.rmSync(`${dir}/${f}`)),
+    );
+    // We removed the database so restart to re-init it.
+    app.relaunch();
+    app.exit();
   });
 }
