@@ -139,9 +139,10 @@ const Beeswarm = ({ data, tooltipFun }) => {
             _.orderBy(_.uniq(data.map((x) => x.day)), "date"),
             window.outerWidth,
           ),
-          domain: _.orderBy(_.uniq(data.map((x) => x.day)), "date"),
-
-          reverse: true,
+          domain: _.orderBy(
+            _.uniq(data.map((x) => ({ day: x.day, date: x.date }))),
+            "date",
+          ).map((x) => x.day),
           tickRotate: -45,
         },
         marks: [
