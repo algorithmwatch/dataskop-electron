@@ -64,24 +64,22 @@ test.describe.serial(() => {
 
     await page.waitForTimeout(1000);
     if (
-      (await page.locator("#debug-logging div").textContent())?.trim() ===
-      "Debug logging: no"
+      (await page.locator("div", { hasText: "Debug logging: no" }).count()) > 0
     ) {
-      await page.click("#debug-logging button");
+      await page.click("div:text('Debug') + button");
     }
 
     if (
-      (await page.locator("#html-logging div").textContent())?.trim() ===
-      "HTML logging: no"
+      (await page.locator("div", { hasText: "HTML logging: no" }).count()) > 0
     ) {
-      await page.click("#html-logging button");
+      await page.click("div:text('HTML') + button");
     }
 
     // open menu again
     await page.locator("button").first().click();
     await page.waitForTimeout(1000);
 
-    await page.click("text=Advanced");
+    await page.click("*:text-is('Advanced')");
     await page.click("text=Start TikTok");
 
     await page.waitForTimeout(1000);
