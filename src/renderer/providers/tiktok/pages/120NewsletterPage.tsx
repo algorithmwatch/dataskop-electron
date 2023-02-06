@@ -11,8 +11,8 @@ import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { useConfig } from "renderer/contexts";
 import { postNewsletterSubscription } from "renderer/lib/networking";
-import { isValidEmail } from "renderer/lib/utils/strings";
 import Content from "renderer/providers/tiktok/components/Content";
+import { isValidEmail } from "shared/utils/strings";
 
 const NewsletterChoicePage = (): JSX.Element => {
   const inputRef = useRef<HTMLInputElement>(null);

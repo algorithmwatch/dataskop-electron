@@ -14,8 +14,8 @@ import { useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
-import { isValidEmail } from "renderer/lib/utils/strings";
 import Content from "renderer/providers/tiktok/components/Content";
+import { isValidEmail } from "shared/utils/strings";
 import { useConfig, useNavigation, useScraping } from "../../../contexts";
 
 window.persistEmail = "";

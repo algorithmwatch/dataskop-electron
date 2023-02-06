@@ -1,7 +1,7 @@
 import { Dayjs } from "dayjs";
 import _ from "lodash";
-import dayjs from "renderer/lib/dayjs";
 import { addScrapingResult } from "renderer/lib/db";
+import dayjs from "../../../../shared/dayjs";
 
 const STATUS = {
   // TikTok data was requested and TikTok is busy, It didn't fail yet

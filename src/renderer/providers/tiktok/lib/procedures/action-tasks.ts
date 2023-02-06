@@ -2,8 +2,8 @@ import cheerio from "cheerio";
 import { range } from "lodash";
 import { currentDelay } from "renderer/lib/delay";
 import { clickOnElement, getReadyHtml } from "renderer/lib/scraping";
-import { delay } from "renderer/lib/utils/time";
 import { GetCurrentHtml } from "renderer/providers/types";
+import { delay } from "shared/utils/time";
 
 const GDPR_RESULTS_HTML_SELECTOR = "div[role=tabpanel]";
 

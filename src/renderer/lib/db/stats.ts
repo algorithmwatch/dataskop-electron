@@ -1,4 +1,4 @@
-import { statsForArray } from "../utils/math";
+import { statsForArray } from "../../../shared/utils/math";
 import { setUpDb } from "./data";
 
 // some math utils

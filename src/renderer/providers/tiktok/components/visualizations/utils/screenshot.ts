@@ -1,5 +1,5 @@
-import { delay } from "renderer/lib/utils/time";
 import logo from "renderer/providers/tiktok/static/images/logo.svg";
+import { delay } from "shared/utils/time";
 
 const doScreenshot = async (
   box: { width: any; height: any; y: any; x: any },

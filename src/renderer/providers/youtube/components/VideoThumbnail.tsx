@@ -2,7 +2,7 @@
 import { Channel } from "@algorithmwatch/harke";
 import Tippy, { TippyProps } from "@tippyjs/react";
 import _ from "lodash";
-import dayjs from "renderer/lib/dayjs";
+import dayjs from "../../../../shared/dayjs";
 
 const VideoThumbnail = ({
   videoId,

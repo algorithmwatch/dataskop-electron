@@ -11,10 +11,10 @@ import { useHistory } from "react-router-dom";
 import { useConfig, UserConfig, useScraping } from "renderer/contexts";
 import { currentDelay } from "renderer/lib/delay";
 import { createScrapingGenerator } from "renderer/lib/scraping";
-import { delay } from "renderer/lib/utils/time";
 import { providerInfo } from "renderer/providers/info";
 import { getStatus } from "renderer/providers/tiktok/lib/status";
 import { Campaign } from "renderer/providers/types";
+import { delay } from "shared/utils/time";
 import { v4 as uuidv4 } from "uuid";
 import {
   addNewSession,

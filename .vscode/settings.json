@@ -36,16 +36,20 @@
   },
   // automatically manage import / export
   "[typescript]": {
+    "typescript.preferences.importModuleSpecifier": "relative",
     "editor.codeActionsOnSave": {
       "source.organizeImports": true
     }
   },
   "[typescriptreact]": {
+    "typescript.preferences.importModuleSpecifier": "relative",
     "editor.codeActionsOnSave": {
       "source.organizeImports": true
     }
   },
-  "editor.rulers": [80],
+  "editor.rulers": [
+    80
+  ],
   "[shellscript]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
   },

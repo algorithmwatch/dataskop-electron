@@ -8,9 +8,11 @@ import log from "electron-log";
 import fs from "fs";
 import _ from "lodash";
 import path from "path";
+import { stripNonAscii } from "../../shared/utils/strings";
+import { delay, getNowString } from "../../shared/utils/time";
 import { DOWNLOADS_FOLDER, postDownloadFileProcessing } from "../downloads";
 import { postLoadUrlYoutube } from "../providers/youtube";
-import { addMainHandler, delay, getNowString, stripNonAscii } from "../utils";
+import { addMainHandler } from "../utils";
 import {
   clickElement,
   elementExists,

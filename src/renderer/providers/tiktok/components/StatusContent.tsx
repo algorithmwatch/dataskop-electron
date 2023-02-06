@@ -6,8 +6,8 @@ import { Button } from "renderer/components/Button";
 import Modal from "renderer/components/Modal";
 import ProgressBar from "renderer/components/ProgressBar";
 import { useConfig } from "renderer/contexts";
-import dayjs from "renderer/lib/dayjs";
 import HelpButton from "renderer/providers/tiktok/components/HelpButton";
+import dayjs from "../../../../shared/dayjs";
 import { addStatusReset, getAllStati, getPrintStatus } from "../lib/status";
 import Content from "./Content";
 

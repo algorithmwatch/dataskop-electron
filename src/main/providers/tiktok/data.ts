@@ -12,9 +12,11 @@ import {
 } from "@algorithmwatch/schaufel-wrangle";
 import { app, BrowserWindow, dialog } from "electron";
 import log from "electron-log";
+import { getNowString } from "../../../shared/utils/time";
 import { dataStore, getLookups } from "../../db";
 import { getDownload } from "../../downloads";
-import { addMainHandler, getNowString, postBackend } from "../../utils";
+import { addMainHandler } from "../../utils";
+import { postBackend } from "../../utils/networking";
 
 /**
  * Get data from the disk

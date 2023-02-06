@@ -8,15 +8,10 @@ import fs from "fs";
 import _ from "lodash";
 import path from "path";
 import unzipper from "unzipper";
+import { delay, getNowString } from "../shared/utils/time";
 import { addLookups } from "./db";
-import {
-  addMainHandler,
-  delay,
-  getFileList,
-  getNowString,
-  readJson,
-  writeJson,
-} from "./utils";
+import { addMainHandler } from "./utils";
+import { getFileList, readJson, writeJson } from "./utils/files";
 
 export const DOWNLOADS_FOLDER = path.join(app.getPath("userData"), "downloads");
 

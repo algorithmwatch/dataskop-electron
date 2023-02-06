@@ -15,7 +15,6 @@ import { Button } from "renderer/components/Button";
 import Modal from "renderer/components/Modal";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { useConfig, useScraping } from "renderer/contexts";
-import dayjs from "renderer/lib/dayjs";
 import { addScrapingResult, getScrapingResults } from "renderer/lib/db";
 import { currentDelay } from "renderer/lib/delay";
 import {
@@ -24,6 +23,7 @@ import {
   useSurvey,
 } from "renderer/providers/tiktok/components/survey/context";
 import { Survey } from "renderer/providers/tiktok/components/survey/Survey";
+import dayjs from "../../../../shared/dayjs";
 import StatusSwitch from "../components/StatusSwitch";
 import questions from "../components/survey/questions.json";
 import {

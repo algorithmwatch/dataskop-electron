@@ -10,8 +10,8 @@
 import * as Sentry from "@sentry/electron/renderer";
 import React, { useEffect } from "react";
 import { postEvent } from "renderer/lib/networking";
-import { isNumeric } from "renderer/lib/utils/math";
 import { Campaign } from "renderer/providers/types";
+import { isNumeric } from "shared/utils/math";
 
 export type UserConfig = {
   htmlLogging: boolean;

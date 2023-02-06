@@ -4,10 +4,11 @@ import log from "electron-log";
 import fs from "fs";
 import { readdir, stat } from "fs/promises";
 import path from "path";
+import { getNowString } from "../shared/utils/time";
 import { DB_FOLDER } from "./db";
 import { DOWNLOADS_FOLDER } from "./downloads";
 import { HTML_FOLDER } from "./scraping";
-import { addMainHandler, getNowString } from "./utils";
+import { addMainHandler } from "./utils";
 
 const LOG_FOLDER = path.dirname(log.default.transports.file.getFile().path);
 

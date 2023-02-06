@@ -1,5 +1,5 @@
-import { randomIntFromInterval } from "./utils/math";
-import { delay } from "./utils/time";
+import { randomIntFromInterval } from "../../shared/utils/math";
+import { delay } from "../../shared/utils/time";
 
 const delays: { [key: string]: number } = { default: 1000, longer: 5000 };
 

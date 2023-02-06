@@ -5,10 +5,10 @@
  */
 import { constants } from "@algorithmwatch/harke";
 import _ from "lodash";
-import dayjs from "renderer/lib/dayjs";
 import { exportCsv } from "renderer/lib/export";
-import { fixDuplicatedString } from "renderer/lib/utils/strings";
 import { renameKeys } from "renderer/vendor/lodash-contrib";
+import { fixDuplicatedString } from "shared/utils/strings";
+import dayjs from "../../../../shared/dayjs";
 import { lookupOrScrapeVideos } from "./html-scrapers";
 
 const translateCategories = (cat: string) => {

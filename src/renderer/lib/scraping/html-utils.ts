@@ -2,9 +2,9 @@ import { ParserResult } from "@algorithmwatch/harke";
 import { range } from "lodash";
 import { GetCurrentHtml, GetHtmlFunction } from "renderer/providers/types";
 import { getUniquePath } from "renderer/vendor/cheerio-unique-selector";
+import { delay } from "../../../shared/utils/time";
 import { ScrapingResult } from "../db";
 import { currentDelay } from "../delay";
-import { delay } from "../utils/time";
 
 /**
  * Keep trying to parse the HTML and wait if necessary. Not reloading the HTML

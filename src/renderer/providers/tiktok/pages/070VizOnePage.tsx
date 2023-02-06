@@ -15,7 +15,7 @@ import { useHistory } from "react-router-dom";
 import { useWindowSize } from "react-use";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
-import dayjs from "renderer/lib/dayjs";
+import dayjs from "../../../../shared/dayjs";
 import Modal from "../../../components/Modal";
 import { useNavigation } from "../../../contexts";
 import { VizOne } from "../components/visualizations";

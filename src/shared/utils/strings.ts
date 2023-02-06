@@ -3,6 +3,7 @@
  *
  * @module
  */
+import { Buffer } from "buffer";
 
 const splitByWhitespace = (x: string): Array<string> => x.trim().split(/\s+/);
 
@@ -60,10 +61,15 @@ function humanFileSize(bytes: number, si = false, dp = 1) {
 const emailRegex = new RegExp(/^\S+@\S+\.\S\S+$/);
 const isValidEmail = (x: string) => emailRegex.test(x);
 
+const toBase64 = (str: string) => {
+  return Buffer.from(str, "utf-8").toString("base64");
+};
+
 export {
   splitByWhitespace,
   fixDuplicatedString,
   stripNonAscii,
   humanFileSize,
   isValidEmail,
+  toBase64,
 };

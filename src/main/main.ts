@@ -21,6 +21,7 @@ import {
 import log from "electron-log";
 import { autoUpdater } from "electron-updater";
 import path from "path";
+import { delay } from "../shared/utils/time";
 import registerBackgroundScrapingHandlers from "./background-scraping";
 import registerDbHandlers, { clearData, configStore } from "./db";
 import registerDownloadsHandlers, { clearDownloads } from "./downloads";
@@ -32,7 +33,7 @@ import { isLastStatusPending } from "./providers/tiktok/status";
 import registerYoutubeHandlers from "./providers/youtube";
 import registerScrapingHandlers from "./scraping";
 import { buildTray } from "./tray";
-import { delay, isFromLocalhost, resolveHtmlPath } from "./utils";
+import { isFromLocalhost, resolveHtmlPath } from "./utils";
 
 const handleProdException = (message: string, stack: string) => {
   if (process.env.NODE_ENV !== "production") {

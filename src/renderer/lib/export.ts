@@ -7,7 +7,7 @@ import _ from "lodash";
 import { ExportToCsv } from "renderer/vendor/export-to-csv";
 import { flatten } from "renderer/vendor/flat";
 import { renameKeys } from "renderer/vendor/lodash-contrib";
-import dayjs from "./dayjs";
+import dayjs from "../../shared/dayjs";
 
 const exportCsv = ({
   filename,

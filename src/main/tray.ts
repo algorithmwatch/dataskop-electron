@@ -2,7 +2,7 @@ import { Menu, MenuItemConstructorOptions, nativeImage, Tray } from "electron";
 import log from "electron-log";
 import _ from "lodash";
 import process from "process";
-import dayjs from "./dayjs";
+import dayjs from "../shared/dayjs";
 import { getAllStati } from "./db";
 import { getPrintStatus } from "./providers/tiktok/status";
 

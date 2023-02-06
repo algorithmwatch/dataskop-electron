@@ -3,12 +3,8 @@
  *
  * @module
  */
-import { Buffer } from "buffer";
 import { Campaign } from "renderer/providers/types";
-
-const toBase64 = (str: string) => {
-  return Buffer.from(str, "utf-8").toString("base64");
-};
+import { toBase64 } from "../../shared/utils/strings";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const postJson = (url: string, seriousProtection: string | null, body: any) => {

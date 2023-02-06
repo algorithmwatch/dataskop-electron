@@ -2,7 +2,7 @@ import _ from "lodash";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
-import { humanFileSize } from "renderer/lib/utils/strings";
+import { humanFileSize } from "shared/utils/strings";
 import { useConfig } from "../../contexts";
 
 const SettingsPage = (): JSX.Element => {

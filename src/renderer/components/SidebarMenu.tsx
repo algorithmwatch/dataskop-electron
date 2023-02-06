@@ -14,9 +14,9 @@ import AdminMenu from "renderer/components/admin/AdminMenu";
 import Drawer from "renderer/components/Drawer";
 import { useConfig, useScraping } from "renderer/contexts";
 import { clearData } from "renderer/lib/db";
-import { delay } from "renderer/lib/utils/time";
 import tiktokRoutes from "renderer/providers/tiktok/lib/routes";
 import { addStatusReset } from "renderer/providers/tiktok/lib/status";
+import { delay } from "shared/utils/time";
 import { Button } from "./Button";
 import Modal from "./Modal";
 

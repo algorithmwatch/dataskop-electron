@@ -15,9 +15,11 @@ import _ from "lodash";
 import pLimit from "p-limit";
 import PQueue from "p-queue";
 import path from "path";
+import { delay } from "../../../shared/utils/time";
 import { addLookups, addLookupsToUpload, getLookups } from "../../db";
 import { HTML_FOLDER } from "../../scraping";
-import { addMainHandler, delay, fetchBackend } from "../../utils";
+import { addMainHandler } from "../../utils";
+import { fetchBackend } from "../../utils/networking";
 
 const BACKEND_CHUNK_SIZE = 50;
 const SCRAPE_CHUNK_SIZE = 20;
