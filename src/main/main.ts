@@ -208,6 +208,19 @@ ipcMain.handle("monitoring-done", () => {
 const createWindow = async () => {
   log.debug(`Creating main window mainWindow=${mainWindow !== null}`);
 
+  // Only launch if the computer is connected to the internet.
+  // Resolve always sends a DNS request.
+  while (true) {
+    try {
+      await dns.promises.resolve("datenspende.dataskop.net");
+      log.info("Connected to the internet. Let's go!");
+      break;
+    } catch (e) {
+      await delay(1000);
+      log.info("Checking network connection...");
+    }
+  }
+
   if (DEBUG) {
     await installExtensions();
   }
@@ -239,19 +252,6 @@ const createWindow = async () => {
       sandbox: false,
     },
   });
-
-  // Only launch if the computer is connected to the internet.
-  // Resolve always sends a DNS request.
-  while (true) {
-    try {
-      await dns.promises.resolve("datenspende.dataskop.net");
-      log.info("Connected to the internet. Let's go!");
-      break;
-    } catch (e) {
-      await delay(1000);
-      log.info("Checking network connection...");
-    }
-  }
 
   mainWindow.loadURL(resolveHtmlPath("index.html"));
 
