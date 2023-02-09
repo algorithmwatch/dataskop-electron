@@ -11,7 +11,8 @@ import path from "path";
 import { stripNonAscii } from "../../shared/utils/strings";
 import { delay, getNowString } from "../../shared/utils/time";
 import { DOWNLOADS_FOLDER, postDownloadFileProcessing } from "../downloads";
-import { postLoadUrlYoutube } from "../providers/youtube";
+import { postloadTiktok } from "../providers/tiktok/data-gathering";
+import { postLoadYoutube } from "../providers/youtube/data-gathering";
 import { addMainHandler } from "../utils";
 import {
   clickElement,
@@ -237,7 +238,11 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
         await waitUntilIdle(view);
 
         if (url.includes("youtube")) {
-          await postLoadUrlYoutube(view);
+          await postLoadYoutube(view);
+        }
+
+        if (url.includes("tiktok")) {
+          await postloadTiktok(view);
         }
 
         return null;
