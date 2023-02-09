@@ -154,7 +154,7 @@ const NewsletterChoicePage = (): JSX.Element => {
                 Vergiss nicht, auf den Bestätigungslink zu klicken, den du im
                 Anschluss in einer E-Mail von uns erhältst.{" "}
                 <a
-                  href="https://dataskop.net/datenschutzerklaerung/"
+                  href="https://algorithmwatch.org/de/datenschutz/"
                   target="_blank"
                   rel="noreferrer"
                   className="underline hover:no-underline"
