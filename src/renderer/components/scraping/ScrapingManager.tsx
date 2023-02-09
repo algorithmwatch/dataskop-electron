@@ -263,9 +263,8 @@ const ScrapingManager = ({
       return;
     }
 
-    await goToUrl(provider.loginUrl);
-
-    return provider.confirmCookies();
+    const loadedSuccess = await goToUrl(provider.loginUrl);
+    if (loadedSuccess) return provider.confirmCookies();
   };
 
   const cleanUpScraper = () => {

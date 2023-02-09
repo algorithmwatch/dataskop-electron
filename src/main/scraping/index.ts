@@ -218,13 +218,13 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
   addMainHandler("scraping-load-url", async (_event: any, url: string) => {
     const view = scrapingView;
 
-    if (view == null) {
-      throw new Error("scraping-load-url was called while the view is null");
-    }
-
     // try 5 times and then give up
     for (const i of _.range(5)) {
       try {
+        if (view == null || view.webContents == null) {
+          log.warn("Aborting `scraping-load-url` because the view is faulty");
+          return false;
+        }
         await view.webContents.loadURL(url, {
           userAgent: getUserAgent(process.platform),
         });
@@ -245,7 +245,8 @@ export default function registerScrapingHandlers(mainWindow: BrowserWindow) {
           await postloadTiktok(view);
         }
 
-        return null;
+        // success
+        return true;
       } catch (error) {
         log.log(`strange error, retry...${error}`);
         await delay(1000 * i);
