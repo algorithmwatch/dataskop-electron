@@ -9,6 +9,7 @@ import { DB_FOLDER } from "./db";
 import { DOWNLOADS_FOLDER } from "./downloads";
 import { HTML_FOLDER } from "./scraping";
 import { addMainHandler } from "./utils";
+import { deleteFolderRecursive } from "./utils/files";
 
 const LOG_FOLDER = path.dirname(log.default.transports.file.getFile().path);
 
@@ -155,10 +156,11 @@ export default function registerExportHandlers(mainWindow: BrowserWindow) {
     );
   });
 
-  addMainHandler("export-remove-all-files", async () => {
-    [HTML_FOLDER, LOG_FOLDER, DOWNLOADS_FOLDER, DB_FOLDER].map((dir) =>
-      fs.readdirSync(dir).forEach((f) => fs.rmSync(`${dir}/${f}`)),
+  addMainHandler("export-remove-all-files", () => {
+    [HTML_FOLDER, LOG_FOLDER, DOWNLOADS_FOLDER, DB_FOLDER].forEach(
+      deleteFolderRecursive,
     );
+
     // We removed the database so restart to re-init it.
     app.relaunch();
     app.exit();
