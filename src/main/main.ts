@@ -22,16 +22,16 @@ import log from "electron-log";
 import { autoUpdater } from "electron-updater";
 import path from "path";
 import { delay } from "../shared/utils/time";
-import registerBackgroundScrapingHandlers from "./background-scraping";
+import registerScrapingHandlers from "./active-scraping";
 import registerDbHandlers, { clearData, configStore } from "./db";
 import registerDownloadsHandlers, { clearDownloads } from "./downloads";
 import registerExportHandlers from "./export";
 import { buildMenu } from "./menu";
+import registerPassiveScrapingBrowserHandlers from "./passive-scraping/browser-scraping";
 import registerTiktokDataHandlers from "./providers/tiktok/data";
 import registerTiktokScrapingHandlers from "./providers/tiktok/scraping";
 import { isLastStatusPending } from "./providers/tiktok/status";
 import registerYoutubeHandlers from "./providers/youtube";
-import registerScrapingHandlers from "./scraping";
 import { buildTray } from "./tray";
 import { isFromLocalhost, resolveHtmlPath } from "./utils";
 
@@ -334,7 +334,7 @@ const createWindow = async () => {
   registerScrapingHandlers(mainWindow);
   registerDownloadsHandlers(mainWindow);
   registerExportHandlers(mainWindow);
-  registerBackgroundScrapingHandlers();
+  registerPassiveScrapingBrowserHandlers();
   registerDbHandlers();
 
   // Register provider specific handlers

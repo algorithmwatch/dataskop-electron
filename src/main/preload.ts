@@ -41,10 +41,10 @@ const downloadsChannels = [
 
 // background-scraping.ts
 const backgroundScrapingChannels = [
-  "scraping-background-init",
-  "scraping-background-get-current-html",
-  "scraping-background-submit-form",
-  "scraping-background-close",
+  "passive-scraping-browser-init",
+  "passive-scraping-browser-get-current-html",
+  "passive-scraping-browser-submit-form",
+  "passive-scraping-browser-close",
 ];
 
 // export.ts
@@ -72,7 +72,7 @@ const dbChannels = [
 
 const youtubeChannels = [
   "youtube-results-export-images",
-  "youtube-scraping-background-videos",
+  "youtube-passive-scraping-browser-videos",
 ];
 
 const tiktokChannels = [

@@ -12,7 +12,7 @@ import { addMainHandler } from "../../utils";
 
 export default function registerYoutubeHandlers(mainWindow: BrowserWindow) {
   addMainHandler(
-    "youtube-scraping-background-videos",
+    "youtube-passive-scraping-browser-videos",
     (_event: any, videoIds: any[]) => {
       async function scrapeMetaInformation(videoId: string) {
         const url = getVideoUrl(videoId);

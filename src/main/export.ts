@@ -5,9 +5,9 @@ import fs from "fs";
 import { readdir, stat } from "fs/promises";
 import path from "path";
 import { getNowString } from "../shared/utils/time";
+import { HTML_FOLDER } from "./active-scraping";
 import { DB_FOLDER } from "./db";
 import { DOWNLOADS_FOLDER } from "./downloads";
-import { HTML_FOLDER } from "./scraping";
 import { addMainHandler } from "./utils";
 import { deleteFolderRecursive } from "./utils/files";
 

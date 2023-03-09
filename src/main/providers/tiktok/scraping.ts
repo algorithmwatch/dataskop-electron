@@ -16,8 +16,8 @@ import pLimit from "p-limit";
 import PQueue from "p-queue";
 import path from "path";
 import { delay } from "../../../shared/utils/time";
+import { HTML_FOLDER } from "../../active-scraping";
 import { addLookups, addLookupsToUpload, getLookups } from "../../db";
-import { HTML_FOLDER } from "../../scraping";
 import { addMainHandler } from "../../utils";
 import { fetchBackend } from "../../utils/networking";
 

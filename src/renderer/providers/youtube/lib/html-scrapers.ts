@@ -18,13 +18,13 @@ async function lookupOrScrapeVideos(videoIds: string[], enableLogging = false) {
     );
   }
   const getHtml = async () => {
-    await window.electron.ipc.invoke("scraping-background-init");
+    await window.electron.ipc.invoke("passive-scraping-browser-init");
     return () =>
-      window.electron.ipc.invoke("scraping-background-get-current-html");
+      window.electron.ipc.invoke("passive-scraping-browser-get-current-html");
   };
 
   await submitConfirmForm(getHtml, (sel) =>
-    window.electron.ipc.invoke("scraping-background-submit-form", sel),
+    window.electron.ipc.invoke("passive-scraping-browser-submit-form", sel),
   );
 
   // important to wait some secconds to set the responding cookie in the session
@@ -34,7 +34,7 @@ async function lookupOrScrapeVideos(videoIds: string[], enableLogging = false) {
   const toFetch = _.uniq(videoIds.filter((x) => !readyIds.has(x)));
 
   const fetched: any[] = await window.electron.ipc.invoke(
-    "youtube-scraping-background-videos",
+    "youtube-passive-scraping-browser-videos",
     toFetch,
   );
 
@@ -59,7 +59,7 @@ async function lookupOrScrapeVideos(videoIds: string[], enableLogging = false) {
     );
   }
 
-  await window.electron.ipc.invoke("scraping-background-close");
+  await window.electron.ipc.invoke("passive-scraping-browser-close");
 
   return window.electron.ipc.invoke("db-get-lookups", videoIds);
 }

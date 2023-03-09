@@ -1,4 +1,4 @@
-import { elementExists } from "../../scraping/inject";
+import { elementExists } from "../../active-scraping/inject";
 
 const postloadTiktok = async (
   view: Electron.CrossProcessExports.BrowserView,

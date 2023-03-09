@@ -1,15 +1,15 @@
 /**
- * Scraping in the background without executing JavaScript.
+ * Scraping in the background with a browser (executing JavaScript)
  */
 
 import crypto from "crypto";
 import { BrowserWindow, session } from "electron";
-import { addMainHandler } from "./utils";
+import { addMainHandler } from "../utils";
 
 let backgroundScrapingWindow: null | BrowserWindow = null;
 
-export default function registerBackgroundScrapingHandlers() {
-  addMainHandler("scraping-background-init", () => {
+export default function registerPassiveScrapingBrowserHandlers() {
+  addMainHandler("passive-scraping-browser-init", () => {
     backgroundScrapingWindow = new BrowserWindow({
       show: false,
       width: 1280,
@@ -23,7 +23,7 @@ export default function registerBackgroundScrapingHandlers() {
     return backgroundScrapingWindow.loadURL("https://google.com");
   });
 
-  addMainHandler("scraping-background-get-current-html", async () => {
+  addMainHandler("passive-scraping-browser-get-current-html", async () => {
     const html = await backgroundScrapingWindow?.webContents.executeJavaScript(
       "document.documentElement.outerHTML",
     );
@@ -33,7 +33,7 @@ export default function registerBackgroundScrapingHandlers() {
   });
 
   addMainHandler(
-    "scraping-background-submit-form",
+    "passive-scraping-browser-submit-form",
     async (_event: any, selector: any) => {
       await backgroundScrapingWindow?.webContents.executeJavaScript(
         `document.querySelector("${selector}").submit()`,
@@ -41,7 +41,7 @@ export default function registerBackgroundScrapingHandlers() {
     },
   );
 
-  addMainHandler("scraping-background-close", async () => {
+  addMainHandler("passive-scraping-browser-close", async () => {
     return backgroundScrapingWindow?.close();
   });
 }
