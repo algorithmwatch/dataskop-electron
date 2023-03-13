@@ -76,10 +76,11 @@ const scrapeVideos = async (
     videos.map(idToTiktokUrl),
     true,
     false,
-    false,
     htmlLogging ? brokenHtmlFolder : false,
     0,
     log.scope("schaufel").info,
+    undefined, // use default fetch function without proxy
+    undefined, // try only 5 (the default) times
   );
   log.info(`Fetched: ${fetched.length} videos`);
 
