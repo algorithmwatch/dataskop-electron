@@ -1,5 +1,5 @@
 /**
- * TODO: For TikTok
+ * Import JSON dumps
  *
  * @module
  */
@@ -13,7 +13,15 @@ import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { addScrapingResult } from "renderer/lib/db";
 import Content from "renderer/providers/tiktok/components/Content";
 
-const ImportDataExportPage = (): JSX.Element => {
+const ImportPage = ({
+  previousPath,
+  nextPath,
+  description,
+}: {
+  previousPath: string;
+  nextPath: string;
+  description: string;
+}): JSX.Element => {
   const history = useHistory();
   const [importIsValid, setImportIsValid] = useState(false);
   const [inputTouched, setInputTouched] = useState(false);
@@ -50,7 +58,7 @@ const ImportDataExportPage = (): JSX.Element => {
         theme="text"
         startIcon={faAngleLeft}
         onClick={() => {
-          history.push("/tiktok/before_login");
+          history.push(previousPath);
         }}
       >
         Zurück
@@ -61,7 +69,7 @@ const ImportDataExportPage = (): JSX.Element => {
         disabled={!importIsValid}
         onClick={async () => {
           // First navigate, then start scraping on the waiting page
-          history.push("/tiktok/waiting");
+          history.push(nextPath);
         }}
       >
         Weiter
@@ -76,11 +84,7 @@ const ImportDataExportPage = (): JSX.Element => {
         icon={faFileImport}
         theme="transparent"
       >
-        <p className="mb-8">
-          Wenn du die DSGVO-Daten auf TikTok bereits beantragt und den
-          Datenexport heruntergeladen hast, kannst du ihn hier einfügen. Die
-          DSGVO-Daten werden dann nicht erneut beantragt.
-        </p>
+        <p className="mb-8">{description}</p>
         <div className="flex min-h-[8rem] lg:min-h-[10rem] xl:min-h-[12rem] 2xl:min-h-[16rem]">
           <DropFile handleFiles={handleFiles} isDoppable={importIsValid}>
             {!inputTouched && !importIsValid && (
@@ -114,4 +118,4 @@ const ImportDataExportPage = (): JSX.Element => {
   );
 };
 
-export default ImportDataExportPage;
+export default ImportPage;

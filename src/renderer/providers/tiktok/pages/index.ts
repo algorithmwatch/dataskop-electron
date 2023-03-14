@@ -2,7 +2,7 @@ import StartPage from "./010StartPage";
 import IntroductionPage from "./020IntroductionPage";
 import TutorialPage from "./030TutorialPage";
 import BeforeLoginPage from "./040BeforeLoginPage";
-import ImportDataExportPage from "./045ImportDataExportPage";
+import ImportPage from "./045ImportPage";
 import WaitingPage from "./050WaitingPage";
 import WaitingDonePage from "./060WaitingDonePage";
 import VizOnePage from "./070VizOnePage";
@@ -18,7 +18,7 @@ export {
   IntroductionPage,
   TutorialPage,
   BeforeLoginPage,
-  ImportDataExportPage,
+  ImportPage,
   WaitingPage,
   WaitingDonePage,
   VizOnePage,
