@@ -8,10 +8,10 @@ import { faAngleLeft } from "@fortawesome/pro-solid-svg-icons";
 import { ChangeEvent, Fragment, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
+import Content from "renderer/components/Content";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { useConfig } from "renderer/contexts";
 import { postNewsletterSubscription } from "renderer/lib/networking";
-import Content from "renderer/providers/tiktok/components/Content";
 import { isValidEmail } from "shared/utils/strings";
 
 const NewsletterChoicePage = (): JSX.Element => {

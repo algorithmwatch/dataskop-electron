@@ -1,4 +1,4 @@
-const ProgressBar = ({ value, eta }) => {
+const ProgressBar = ({ value, eta }: { value: number; eta?: number }) => {
   return (
     <div>
       <div className="flex items-center justify-center">

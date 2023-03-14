@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import { faLoader, IconDefinition } from "@fortawesome/pro-regular-svg-icons";
+import { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import { Button } from "renderer/components/Button";
 import Modal from "renderer/components/Modal";
@@ -8,10 +9,11 @@ import ProgressBar from "renderer/components/ProgressBar";
 import { useConfig } from "renderer/contexts";
 import HelpButton from "renderer/providers/tiktok/components/HelpButton";
 import dayjs from "../../../../shared/dayjs";
-import { addStatusReset, getAllStati, getPrintStatus } from "../lib/status";
-import Content from "./Content";
+import { getPrintStatus } from "../../../../shared/status";
+import Content from "../../../components/Content";
+import { addStatusReset, getAllStati } from "../../../lib/status";
 
-const RelativeTime = ({ time }) => {
+const RelativeTime = ({ time }: { time: Dayjs }) => {
   const [curTime, setCurTime] = useState(new Date());
 
   useEffect(() => {

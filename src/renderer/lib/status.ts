@@ -1,14 +1,14 @@
 import { Dayjs } from "dayjs";
 import _ from "lodash";
 import { addScrapingResult } from "renderer/lib/db";
-import dayjs from "../../../../shared/dayjs";
+import dayjs from "../../shared/dayjs";
 
 const STATUS = {
-  // TikTok data was requested and TikTok is busy, It didn't fail yet
+  // GDPR data was requested and the provider is processing the request.
   "monitoring-pending": {
     notification: {
       title: "Warte auf DSGVO-Daten",
-      body: "Es kann eine Weile dauern, bis TikTok die Daten bereitstellt.",
+      body: "Es kann eine Weile dauern, bis die Daten bereitstellt werden.",
     },
   },
   // The download could not happen in the background, we need action from the user
@@ -46,7 +46,7 @@ const STATUS = {
   "error-captcha-required": {},
   // Error, the HTML may have changed
   "data-error-tab-not-found": {},
-  // Waiting until TikTok created the dump
+  // Waiting until the proivder created the dump
   "data-pending": {},
   // The data request should either be pending or done but we couldn't verfiy the
   // current state. Are there network problems?
@@ -115,54 +115,6 @@ const isStatusDownloadActionRequired = (status: string) => {
   ].includes(status);
 };
 
-// keep the following two functions in sync with main/providers/tiktok/status.ts
-const isStatusPending = (status: string) => {
-  if (
-    ["data-pending", "monitoring-pending", "data-request-success"].includes(
-      status,
-    )
-  )
-    return true;
-
-  // still keep looking even though an error occured
-  return status.includes("error");
-};
-
-const getPrintStatus = (status: string) => {
-  const mapping = {
-    "monitoring-pending": "Warte auf Daten (im Hintergrund)",
-    "monitoring-download-action-required":
-      "Download (im Hintergrund): Handlung erforderlich",
-    "monitoring-download-success": "Download erfolgreich (im Hintergrund)",
-    "monitoring-download-error": "Fehler beim Download (im Hintergrund)",
-    "monitoring-download-timeout":
-      "Download: Handlung erforderlich (Timeout im Hintergrund)",
-    "monitoring-download-expired":
-      "Fehler: Download abgelaufen (im Hintergrund)",
-    "monitoring-error-nothing-found":
-      "Fehler: Nichts gefunden (im Hintergrund)",
-    "monitoring-error-tab-not-found":
-      "Fehler: Tab konnte nicht gefunden werden (im Hintergrund)",
-    "error-captcha-required": "Fehler: CAPTCHA muss gelöst werden",
-    "data-error-tab-not-found": "Fehler: Tab konnte nicht gefunden werden",
-    "data-pending": "Warte auf Daten",
-    "data-pending-error-unable-to-check":
-      "Fehler: Status konnte nicht überprüft werden",
-    "data-request-success": "Daten wurden erfolgreich beantragt",
-    "data-error-request": "Fehler: Beantragung fehlerhaft",
-    "download-action-required": "Download: Handlung erforderlich",
-    "download-success": "Download erfolgreich",
-    "download-error": "Fehler beim Download",
-    "download-timeout": "Download: Handlung erforderlich (Timeout)",
-    "scraping-done": "Scraping abgeschlossen",
-    "files-imported": "Daten wurden importiert",
-    "status-not-available": "Status (noch) nicht vorhanden",
-    "status-reset": "Status erfolgreich zurückgesetzt",
-  };
-
-  return _.get(mapping, status, status);
-};
-
 const shouldJumpToWaitingPage = async () => {
   const { status } = await getStatus();
   return status !== "status-not-available" && status !== "status-reset";
@@ -184,10 +136,8 @@ const addStatusReset = () => {
 };
 
 export {
-  getPrintStatus,
   getStatus,
   getAllStati,
-  isStatusPending,
   isStatusDownloadActionRequired,
   shouldJumpToWaitingPage,
   StatusKey,

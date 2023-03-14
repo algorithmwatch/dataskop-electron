@@ -13,8 +13,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
+import Content from "renderer/components/Content";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
-import Content from "renderer/providers/tiktok/components/Content";
 import { isValidEmail } from "shared/utils/strings";
 import { useConfig, useNavigation, useScraping } from "../../../contexts";
 

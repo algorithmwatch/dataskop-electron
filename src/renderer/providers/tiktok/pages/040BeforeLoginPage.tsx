@@ -8,9 +8,9 @@ import { faAngleLeft } from "@fortawesome/pro-solid-svg-icons";
 import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
+import Content from "renderer/components/Content";
 import Modal from "renderer/components/Modal";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
-import Content from "renderer/providers/tiktok/components/Content";
 import HelpButton from "renderer/providers/tiktok/components/HelpButton";
 import { useNavigation } from "../../../contexts";
 

@@ -15,8 +15,8 @@ import { faCog, faEnvelope } from "@fortawesome/pro-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
+import Content from "renderer/components/Content";
 import WizardLayout from "renderer/components/WizardLayout";
-import Content from "renderer/providers/tiktok/components/Content";
 
 const ShareButton = ({
   title,

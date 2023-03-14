@@ -9,13 +9,13 @@ import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
 import { useNavigation } from "../../../contexts";
+import { shouldJumpToWaitingPage } from "../../../lib/status";
 import awlogo from "../../../static/images/logos/aw-logo.png";
 import bmbflogo from "../../../static/images/logos/bmbf-logo.png";
 import enslogo from "../../../static/images/logos/ens-logo.png";
 import fhplogo from "../../../static/images/logos/fhp-logo.png";
 import mplogo from "../../../static/images/logos/mp-logo.png";
 import uplogo from "../../../static/images/logos/up-logo.png";
-import { shouldJumpToWaitingPage } from "../lib/status";
 import videoBg from "../static/bg.mp4";
 import dslogo from "../static/images/logo.svg";
 

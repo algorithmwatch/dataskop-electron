@@ -8,10 +8,10 @@ import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
+import Content from "renderer/components/Content";
 import DropFile from "renderer/components/DropFile";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { addScrapingResult } from "renderer/lib/db";
-import Content from "renderer/providers/tiktok/components/Content";
 
 const ImportPage = ({
   previousPath,

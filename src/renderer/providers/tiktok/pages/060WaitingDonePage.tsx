@@ -7,8 +7,8 @@ import { faFaceSadSweat, faPartyHorn } from "@fortawesome/pro-light-svg-icons";
 import { faAngleRight } from "@fortawesome/pro-solid-svg-icons";
 import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
+import Content from "renderer/components/Content";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
-import Content from "renderer/providers/tiktok/components/Content";
 import { useNavigation } from "../../../contexts";
 
 const WaitingDonePage = (): JSX.Element => {

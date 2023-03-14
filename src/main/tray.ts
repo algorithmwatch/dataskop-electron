@@ -3,8 +3,8 @@ import log from "electron-log";
 import _ from "lodash";
 import process from "process";
 import dayjs from "../shared/dayjs";
+import { getPrintStatus } from "../shared/status";
 import { getAllStati } from "./db";
-import { getPrintStatus } from "./providers/tiktok/status";
 
 const isLinux = process.platform === "linux";
 

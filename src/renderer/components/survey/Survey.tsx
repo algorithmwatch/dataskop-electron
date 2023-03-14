@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unneeded-ternary */
 /* eslint-disable jsx-a11y/label-has-associated-control */
@@ -22,7 +23,7 @@ import {
   QuestionTextType,
   QuestionTypes,
   useSurvey,
-} from "renderer/providers/tiktok/components/survey/context";
+} from "renderer/components/survey/context";
 
 const SurveyTextInput = ({
   question,
@@ -364,7 +365,7 @@ const Answer = (question: QuestionTypes) => {
     );
   }
 
-  return <div>"Could not render answer 🤔"</div>;
+  return <div>Could not render answer 🤔</div>;
 };
 
 export const Survey = ({

@@ -2,12 +2,12 @@ import cheerio from "cheerio";
 import _ from "lodash";
 import { ProcedureArgs } from "renderer/lib/scraping";
 import { GetHtmlFunction, GetHtmlLazyFunction } from "renderer/providers/types";
+import { isStatusPending } from "../../../../../shared/status";
 import {
   isStatusDownloadActionRequired,
-  isStatusPending,
   STATUS,
   StatusKey,
-} from "../status";
+} from "../../../../lib/status";
 import {
   clickDownloadButton,
   clickOnDownloadTab,
