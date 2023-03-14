@@ -15,7 +15,7 @@ const scrapeWatchedVideos = async (
   await window.electron.ipc.invoke(
     "tiktok-scrape-videos",
     ids,
-    true,
+    false,
     config.maxScraping,
     procedureArgs.htmlLogging,
   );
