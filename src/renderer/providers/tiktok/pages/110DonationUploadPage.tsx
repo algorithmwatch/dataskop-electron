@@ -21,7 +21,7 @@ import { useConfig, useNavigation, useScraping } from "../../../contexts";
 window.persistEmail = "";
 window.hasDonated = false;
 
-const DonationFormPage = (): JSX.Element => {
+const DonationUploadPage = (): JSX.Element => {
   const { getNextPage } = useNavigation();
   const {
     state: { platformUrl },
@@ -145,4 +145,4 @@ const DonationFormPage = (): JSX.Element => {
   );
 };
 
-export default DonationFormPage;
+export default DonationUploadPage;

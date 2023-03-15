@@ -14,7 +14,7 @@ import { useConfig } from "renderer/contexts";
 import { postNewsletterSubscription } from "renderer/lib/networking";
 import { isValidEmail } from "shared/utils/strings";
 
-const NewsletterChoicePage = (): JSX.Element => {
+const NewsletterPage = (): JSX.Element => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState<string>(window.persistEmail ?? "");
   const [formIsVisible, setFormIsVisible] = useState(false);
@@ -171,4 +171,4 @@ const NewsletterChoicePage = (): JSX.Element => {
   );
 };
 
-export default NewsletterChoicePage;
+export default NewsletterPage;

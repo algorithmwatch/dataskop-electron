@@ -1,22 +1,20 @@
-import {
-  DonationPage1,
-  DonationPage2,
-  DonationSuccessPage,
-  InterfaceTutorialPage,
-  IntroductionPage,
-  MyDataPage,
-  OnboardingPage1,
-  OnboardingPage2,
-  QuestionnairePage,
-  ResearchInfoPage,
-  ScrapingExplanationPage,
-  SelectDemoPage,
-  StartPage,
-  VisualizationAutoplayChainPage,
-  VisualizationNewsPage,
-  VisualizationProfilePage,
-  VisualizationSearchPage,
-} from "../pages";
+import StartPage from "../pages/010StartPage";
+import SelectDemoPage from "../pages/011SelectDemoPage";
+import IntroductionPage from "../pages/020IntroductionPage";
+import OnboardingPage1 from "../pages/030OnboardingPage1";
+import OnboardingPage2 from "../pages/040OnboardingPage2";
+import InterfaceTutorialPage from "../pages/050InterfaceTutorialPage";
+import ScrapingExplanationPage from "../pages/060ScrapingExplanationPage";
+import VisualizationProfilePage from "../pages/070VisualizationProfilePage";
+import ResearchInfoPage from "../pages/080ResearchInfoPage";
+import VisualizationAutoplayChainPage from "../pages/090VisualizationAutoplayChainPage";
+import VisualizationNewsPage from "../pages/100VisualizationNewsPage";
+import VisualizationSearchPage from "../pages/110VisualizationSearchPage";
+import MyDataPage from "../pages/120MyDataPage";
+import QuestionnairePage from "../pages/130QuestionnairePage";
+import DonationPage1 from "../pages/140DonationPage1";
+import DonationPage2 from "../pages/150DonationPage2";
+import DonationSuccessPage from "../pages/160DonationSuccessPage";
 
 const ytRoutes = [
   { path: "/youtube/donation-success", comp: DonationSuccessPage },
