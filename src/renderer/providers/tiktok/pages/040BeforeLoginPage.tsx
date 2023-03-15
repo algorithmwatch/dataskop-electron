@@ -9,9 +9,9 @@ import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
 import Content from "renderer/components/Content";
+import HelpButton from "renderer/components/HelpButton";
 import Modal from "renderer/components/Modal";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
-import HelpButton from "renderer/providers/tiktok/components/HelpButton";
 import { useNavigation } from "../../../contexts";
 
 const BeforeLoginPage = (): JSX.Element => {
