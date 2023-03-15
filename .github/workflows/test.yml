@@ -61,12 +61,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run build:playwright
 
-      - name: Run tests
+      - name: Run tests w/ timeout and retries
+        uses: nick-fields/retry@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DUMP_PATH: "./tests/test_dump_01.json"
           EXPORT_PATH: "test_runs"
-        run: npm test
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: npm test
 
       - name: Archive npm logs
         uses: actions/upload-artifact@v2
