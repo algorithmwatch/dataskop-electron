@@ -174,7 +174,14 @@ const SidebarMenu = ({
                 onItemClicked={() => setIsOpen(false)}
                 menuItems={[
                   { label: "Start TikTok", to: "/select_campaign/tiktok" },
-                  { label: "Start YouTube", to: "/select_campaign/youtube" },
+                  {
+                    label: "Start YouTube (GDPR)",
+                    to: "/select_campaign/google-takeout-youtube",
+                  },
+                  {
+                    label: "Start YouTube (legacy)",
+                    to: "/select_campaign/youtube",
+                  },
                   { label: "Results", to: "/admin/results" },
                   { label: "Settings", to: "/admin/settings" },
                   {

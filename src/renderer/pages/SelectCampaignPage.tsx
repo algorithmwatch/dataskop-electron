@@ -6,12 +6,12 @@
 import { useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { getActiveCampaigns } from "renderer/lib/networking";
-import { providerInfo } from "renderer/providers/info";
+import { localActiveCampaings, providerInfo } from "renderer/providers/info";
 import { useConfig, useNavigation, useScraping } from "../contexts";
 
 const SelectCampaignPage = (): JSX.Element => {
   const {
-    state: { availableCampaigns },
+    state: { availableCampaigns, campaign },
     dispatch,
   } = useScraping();
 
@@ -23,7 +23,7 @@ const SelectCampaignPage = (): JSX.Element => {
       seriousProtection,
       updateCheckDone,
       userConfig,
-      isPlaywrightTesing,
+      autoSelectCampaign,
     },
     sendEvent,
   } = useConfig();
@@ -31,44 +31,38 @@ const SelectCampaignPage = (): JSX.Element => {
   const { dispatch: navDispath } = useNavigation();
   const history = useHistory();
 
-  const handleCampaignChange = (campaign: any) => {
+  const handleCampaignChange = (newCampaign: any) => {
     // Important to push first new state and *then* dispatching the new campaigns.
     // The base layout is updated when the campaign changes and this causes
     // a re-render of this page.
     history.push(
-      providerInfo[campaign.config.provider].navigation[
-        campaign.config.navigation
+      providerInfo[newCampaign.config.provider].navigation[
+        newCampaign.config.navigation
       ].pages[0].path,
     );
 
     dispatch({
       type: "set-campaign",
-      campaign,
+      campaign: newCampaign,
     });
 
     navDispath({
       type: "set-navigation-by-provider",
-      provider: campaign.config.provider,
-      navSlug: campaign.config.navigation,
+      provider: newCampaign.config.provider,
+      navSlug: newCampaign.config.navigation,
     });
   };
 
   const handleCampaignClick = (index: number) => {
-    const campaign = availableCampaigns[index];
-    handleCampaignChange(campaign);
+    const clickedCampaign = availableCampaigns[index];
+    handleCampaignChange(clickedCampaign);
   };
 
   const setActiveCampaign = async () => {
     if (platformUrl == null || userConfig == null) return;
 
-    // Wait until the update check is completed or monitoring step active. Not
-    // active for dev and testing.
-    if (
-      !isPlaywrightTesing && // testing
-      !module.hot && // dev
-      !userConfig.monitoring &&
-      !updateCheckDone
-    ) {
+    // Wait until the update check is completed or monitoring step active.
+    if (!userConfig.monitoring && !updateCheckDone) {
       window.electron.log.info(
         `Not fetching active campaings from backend yet. Monitoring:${userConfig.monitoring} UpdateCheckDone:${updateCheckDone}`,
       );
@@ -76,10 +70,19 @@ const SelectCampaignPage = (): JSX.Element => {
     }
 
     try {
+      // Choose a default campaign
+      if (autoSelectCampaign !== null && campaign === null) {
+        window.electron.log.info("Set autoSelectCampaign", autoSelectCampaign);
+        handleCampaignChange(localActiveCampaings[autoSelectCampaign]);
+        return;
+      }
+
       const campaigns = await getActiveCampaigns(
         platformUrl,
         seriousProtection,
       );
+
+      sendEvent(null, "successfully fetched remote config");
 
       // only use campaigns that have a valid provider configuration
       const filteredCampaigns = campaigns.filter(
@@ -102,12 +105,11 @@ const SelectCampaignPage = (): JSX.Element => {
         return;
       }
 
+      // Only set available campaigns to ask the user to choose one.
       dispatch({
         type: "set-available-campaigns",
         availableCampaigns: filteredCampaigns,
       });
-
-      sendEvent(null, "successfully fetched remote config");
     } catch (error) {
       window.electron.log.error(
         "not able to set sraping config from remote",

@@ -277,6 +277,15 @@ const createWindow = async () => {
 
       // Only check for update after the renderer window was initialized
       new AppUpdater();
+
+      if (
+        process.env.NODE_ENV === "development" ||
+        !!process.env.PLAYWRIGHT_TESTING
+      ) {
+        // The update is not checked unless the apps in prod. Thus, manually
+        // set the update check as complete.
+        mainWindow.webContents.send("update-check-done");
+      }
     }
   });
 
