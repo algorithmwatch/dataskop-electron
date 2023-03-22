@@ -212,7 +212,7 @@
   },
   "dependencies": {
     "@algorithmwatch/harke-parser": "^0.7.0",
-    "@algorithmwatch/harke-scraper": "^0.7.0",
+    "@algorithmwatch/harke-scraper": "^0.8.1",
     "@algorithmwatch/schaufel-ab": "^0.3.2",
     "@algorithmwatch/schaufel-core": "^0.23.1",
     "@algorithmwatch/schaufel-wrangle": "^0.23.1",

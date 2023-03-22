@@ -16,7 +16,7 @@ import {
   SurveyProvider,
 } from "renderer/components/survey/context";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
-import { useConfig, useScraping } from "renderer/contexts";
+import { useConfig, useNavigation, useScraping } from "renderer/contexts";
 import { addScrapingResult, getScrapingResults } from "renderer/lib/db";
 import { currentDelay } from "renderer/lib/delay";
 import dayjs from "../../shared/dayjs";
@@ -38,6 +38,7 @@ const WaitingPage = ({
   }>;
 }): JSX.Element => {
   const history = useHistory();
+  const { getNextPage } = useNavigation();
   const {
     state: { isScrapingFinished, isScrapingStarted },
     dispatch,
@@ -77,7 +78,7 @@ const WaitingPage = ({
 
     // The modal was open when the scraping was finished. Only push now after the user closed the modal.
     if (!surveyModalIsOpen && status.status === "scraping-done")
-      history.push("/tiktok/waiting_done");
+      history.push(getNextPage("path"));
   }, [surveyModalIsOpen]);
 
   useEffect(() => {
@@ -195,7 +196,8 @@ const WaitingPage = ({
 
       if (newStatus.status === "scraping-done") {
         // Only go to next page is the model is closed
-        if (!surveyModalIsOpen) history.push("/tiktok/waiting_done");
+        if (!surveyModalIsOpen) history.push(getNextPage("path"));
+
         return;
       }
 

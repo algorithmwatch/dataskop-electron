@@ -65,10 +65,13 @@ export const postDownloadFileProcessing = async (filePath: string) => {
   return filePathExtracted;
 };
 
-export const getDownload = async (picks: string[] = []) => {
-  const allJsons = getFileList(DOWNLOADS_FOLDER).filter(
-    (x) => path.extname(x) === ".json",
-  );
+export const getDownload = async (
+  picks: string[] = [],
+  regex: RegExp | null = null,
+) => {
+  const allJsons = getFileList(DOWNLOADS_FOLDER)
+    .filter((x) => path.extname(x) === ".json")
+    .filter((x) => regex === null || x.match(regex));
 
   if (allJsons.length) {
     allJsons.sort();

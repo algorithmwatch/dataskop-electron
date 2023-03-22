@@ -28,6 +28,7 @@ import registerDownloadsHandlers, { clearDownloads } from "./downloads";
 import registerExportHandlers from "./export";
 import { buildMenu } from "./menu";
 import registerPassiveScrapingBrowserHandlers from "./passive-scraping/browser-scraping";
+import registerGoogleTakeoutYoutubeHandlers from "./providers/google-takeout-youtube";
 import registerTiktokDataHandlers from "./providers/tiktok/data";
 import registerTiktokScrapingHandlers from "./providers/tiktok/scraping";
 import { isLastStatusPending } from "./providers/tiktok/status";
@@ -350,6 +351,7 @@ const createWindow = async () => {
   registerYoutubeHandlers(mainWindow);
   registerTiktokScrapingHandlers(mainWindow);
   registerTiktokDataHandlers(mainWindow);
+  registerGoogleTakeoutYoutubeHandlers(mainWindow);
 };
 
 /**

@@ -1,5 +1,5 @@
 /**
- * Tiktok specific code for main.
+ * Tiktok specific scraping.
  */
 
 import {

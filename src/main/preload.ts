@@ -73,6 +73,8 @@ const dbChannels = [
 const youtubeChannels = [
   "youtube-results-export-images",
   "youtube-passive-scraping-browser-videos",
+  "google-takout-youtube-scrape-watched-videos",
+  "google-takout-youtube-use-data",
 ];
 
 const tiktokChannels = [

@@ -1,4 +1,3 @@
-import { getMostRecentWatchVideos } from "@algorithmwatch/schaufel-wrangle";
 import { ProcedureArgs } from "renderer/lib/scraping";
 import { GetHtmlFunction, GetHtmlLazyFunction } from "renderer/providers/types";
 
@@ -6,18 +5,10 @@ const scrapeWatchedVideos = async (
   config: any,
   procedureArgs: ProcedureArgs,
 ): Promise<string> => {
-  const dump = await window.electron.ipc.invoke("downloads-get");
-  const ids = getMostRecentWatchVideos(
-    dump,
-    config.maxVideos,
-    config.minWatchedSeconds,
-  );
   await window.electron.ipc.invoke(
-    "tiktok-scrape-videos",
-    ids,
-    false,
+    "google-takout-youtube-scrape-watched-videos",
+    config.maxVideos,
     config.maxScraping,
-    procedureArgs.htmlLogging,
   );
   return "scraping-done";
 };
@@ -31,7 +22,7 @@ async function* scrapingProcedure(
   procedureArgs: ProcedureArgs,
 ) {
   const funs = {
-    "tt-scrape-watched-videos": scrapeWatchedVideos,
+    "gtyt-scraping-watched-videos": scrapeWatchedVideos,
   };
   const { slug }: { slug: keyof typeof funs } = config;
 
