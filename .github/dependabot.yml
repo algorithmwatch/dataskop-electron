@@ -27,7 +27,11 @@ updates:
       - dependency-name: "tailwindcss"
         update-types: ["version-update:semver-major"]
       - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
         update-types: ["version-update:semver-minor"]
+      - dependency-name: "@sentry/electron"
+        update-types: ["version-update:semver-major"]
         # There are problems with v4 and pure ESM module
       - dependency-name: "p-limit"
         update-types: ["version-update:semver-major"]
