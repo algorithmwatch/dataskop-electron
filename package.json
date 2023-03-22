@@ -235,7 +235,7 @@
     "archiver": "^5.3.1",
     "chrono-node": "^2.3.9",
     "clsx": "^1.2.1",
-    "d3-array": "^3.1.6",
+    "d3-array": "^3.2.3",
     "d3-delaunay": "^6.0.2",
     "d3-force": "^3.0.0",
     "d3-polygon": "^3.0.1",
