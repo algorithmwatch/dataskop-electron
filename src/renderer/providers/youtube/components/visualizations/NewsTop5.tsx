@@ -1,4 +1,4 @@
-import { Channel, RecommendedVideo } from "@algorithmwatch/harke";
+import { Channel, RecommendedVideo } from "@algorithmwatch/harke-parser";
 import { faNewspaper } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import _ from "lodash";

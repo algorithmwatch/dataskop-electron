@@ -9,7 +9,7 @@
  */
 
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { constants } from "@algorithmwatch/harke";
+import { constants } from "@algorithmwatch/harke-parser";
 import { faAngleLeft, faAngleRight } from "@fortawesome/pro-solid-svg-icons";
 import { useForm } from "react-hook-form";
 import { RouteComponentProps, useHistory } from "react-router-dom";

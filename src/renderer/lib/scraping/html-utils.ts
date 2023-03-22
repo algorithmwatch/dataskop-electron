@@ -1,4 +1,4 @@
-import { ParserResult } from "@algorithmwatch/harke";
+import { ParserResult } from "@algorithmwatch/harke-parser";
 import { range } from "lodash";
 import { GetCurrentHtml, GetHtmlFunction } from "renderer/providers/types";
 import { getUniquePath } from "renderer/vendor/cheerio-unique-selector";

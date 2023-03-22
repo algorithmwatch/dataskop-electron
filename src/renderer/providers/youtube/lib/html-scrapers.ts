@@ -1,6 +1,6 @@
 // only extract data from HTML, used for
 
-import { parseVideoNoJs } from "@algorithmwatch/harke";
+import { parseVideoNoJs } from "@algorithmwatch/harke-parser";
 import _ from "lodash";
 import { currentDelay } from "renderer/lib/delay";
 import { submitConfirmForm } from "./actions/confirm-cookies";

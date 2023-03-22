@@ -6,7 +6,7 @@ import {
   parseSubscribedChannels,
   parseVideoPage,
   parseWatchHistory,
-} from "@algorithmwatch/harke";
+} from "@algorithmwatch/harke-parser";
 import _ from "lodash";
 import { ScrapingResult } from "renderer/lib/db/types";
 import { currentDelay } from "renderer/lib/delay";

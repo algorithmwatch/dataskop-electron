@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/mouse-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events */
-import { Channel } from "@algorithmwatch/harke";
+import { Channel } from "@algorithmwatch/harke-parser";
 import Tippy, { TippyProps } from "@tippyjs/react";
 import _ from "lodash";
 import dayjs from "../../../../shared/dayjs";

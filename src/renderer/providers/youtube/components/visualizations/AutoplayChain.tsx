@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import { RecommendedVideo, VideoPage } from "@algorithmwatch/harke";
+import { RecommendedVideo, VideoPage } from "@algorithmwatch/harke-parser";
 import { faPlayCircle } from "@fortawesome/pro-light-svg-icons";
 import {
   faImages,

@@ -2,7 +2,7 @@
  * Youtube specific code for main.
  */
 
-import { getThumbnails, getVideoUrl } from "@algorithmwatch/harke";
+import { getThumbnails, getVideoUrl } from "@algorithmwatch/harke-parser";
 import { BrowserWindow, dialog, session } from "electron";
 import fetch from "electron-fetch";
 import fs from "fs";

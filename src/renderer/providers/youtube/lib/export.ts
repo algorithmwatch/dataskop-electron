@@ -3,7 +3,7 @@
  * for CSV exports. This was initially implemented for the YT education mode.
  * @module
  */
-import { constants } from "@algorithmwatch/harke";
+import { constants } from "@algorithmwatch/harke-parser";
 import _ from "lodash";
 import { exportCsv } from "renderer/lib/export";
 import { renameKeys } from "renderer/vendor/lodash-contrib";

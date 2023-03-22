@@ -1,4 +1,4 @@
-import { RecommendedVideo } from "@algorithmwatch/harke";
+import { RecommendedVideo } from "@algorithmwatch/harke-parser";
 import { faSearch } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import _ from "lodash";
