@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import _ from "lodash";
 import { useMemo, useState } from "react";
-import TabBar from "../TabBar";
-import { VizBoxRow } from "../VizBox";
+import TabBar from "../../../../../components/visualizations/TabBar";
+import { VizBoxRow } from "../../../../../components/visualizations/VizBox";
 import Beeswarm from "./Beeswarm";
 import { transformData } from "./data";
 

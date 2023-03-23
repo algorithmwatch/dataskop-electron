@@ -1,5 +1,5 @@
 /**
- * Adapted for Google Takeout Youtube from TikTok
+ * Adapted for Google Takeout Youtube from TikTok
  *
  * @module
  */
@@ -15,12 +15,12 @@ import { useHistory } from "react-router-dom";
 import { useWindowSize } from "react-use";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
-import dayjs from "../../../../shared/dayjs";
 import Modal from "../../../components/Modal";
+import TimeConsumedViz from "../../../components/visualizations/TimeConsumedViz";
 import { useNavigation } from "../../../contexts";
-import { VizOne } from "../../tiktok/components/visualizations";
-import { doScreenshot } from "../../tiktok/components/visualizations/utils/screenshot";
+import { doScreenshot } from "../../../lib/visualizations/screenshot";
 import { useData } from "../lib/useData";
+import { arrangeDataVizOne, getMaxRange } from "../lib/viz1-data";
 
 const VizOnePage = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -30,8 +30,7 @@ const VizOnePage = (): JSX.Element => {
   );
 
   const [graph, setGraph] = useState("");
-
-  const { dump } = useData();
+  const { dump, lookups } = useData();
 
   const footerSlots: FooterSlots = {
     start: [
@@ -108,17 +107,13 @@ const VizOnePage = (): JSX.Element => {
   };
 
   const { width, height } = useWindowSize();
+  const maxRange = useMemo(() => getMaxRange(dump), [dump]);
+  const arrangeData = useMemo(
+    () => _.partial(arrangeDataVizOne, dump, lookups),
+    [dump, lookups],
+  );
 
-  const maxRange = useMemo(() => {
-    if (dump === null) return 365;
-    return 365;
-    const dates = dump["Activity"]["Video Browsing History"]["VideoList"].map(
-      (x) => x.Date,
-    );
-    const min = _.min(dates) as string;
-    const max = _.max(dates) as string;
-    return dayjs(max).diff(dayjs(min), "day");
-  }, [dump]);
+  window.electron.log.info("maxRange", maxRange);
 
   return (
     <>
@@ -146,13 +141,14 @@ const VizOnePage = (): JSX.Element => {
           className="mt-3 lg:mt-9 2xl:mt-12 flex flex-col 2xl:mx-16"
           id="dataskop-export-screenshot-outer"
         >
-          {dump && false && (
-            <VizOne
-              gdprData={dump}
+          {dump && (
+            <TimeConsumedViz
+              arrangeData={arrangeData}
               width={width}
               height={height}
               onGraphChange={setGraph}
               maxRange={maxRange}
+              graphOptions={["default", "timeslots"]}
             />
           )}
         </div>

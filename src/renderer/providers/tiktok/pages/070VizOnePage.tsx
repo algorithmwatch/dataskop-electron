@@ -15,12 +15,15 @@ import { useHistory } from "react-router-dom";
 import { useWindowSize } from "react-use";
 import { Button } from "renderer/components/Button";
 import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
-import dayjs from "../../../../shared/dayjs";
 import Modal from "../../../components/Modal";
+import TimeConsumedViz from "../../../components/visualizations/TimeConsumedViz";
 import { useNavigation } from "../../../contexts";
-import { VizOne } from "../components/visualizations";
-import { doScreenshot } from "../components/visualizations/utils/screenshot";
+import { doScreenshot } from "../../../lib/visualizations/screenshot";
 import { useData } from "../lib/useData";
+import {
+  arrangeDataVizOne,
+  getMaxRange,
+} from "../lib/visualizations/viz1-data";
 
 const VizOnePage = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -111,15 +114,7 @@ const VizOnePage = (): JSX.Element => {
 
   const { width, height } = useWindowSize();
 
-  const maxRange = useMemo(() => {
-    if (dump === null) return 365;
-    const dates = dump["Activity"]["Video Browsing History"]["VideoList"].map(
-      (x) => x.Date,
-    );
-    const min = _.min(dates) as string;
-    const max = _.max(dates) as string;
-    return dayjs(max).diff(dayjs(min), "day");
-  }, [dump]);
+  const maxRange = useMemo(() => getMaxRange(dump), [dump]);
 
   return (
     <>
@@ -148,8 +143,8 @@ const VizOnePage = (): JSX.Element => {
           id="dataskop-export-screenshot-outer"
         >
           {dump && (
-            <VizOne
-              gdprData={dump}
+            <TimeConsumedViz
+              arrangeData={_.partial(arrangeDataVizOne, dump)}
               width={width}
               height={height}
               onGraphChange={setGraph}

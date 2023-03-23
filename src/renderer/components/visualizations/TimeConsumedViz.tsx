@@ -2,12 +2,12 @@ import { faPenToSquare } from "@fortawesome/pro-regular-svg-icons";
 import * as Plot from "@observablehq/plot";
 import _ from "lodash";
 import React, { useEffect, useRef, useState } from "react";
-import SelectInput from "../SelectInput";
-import TabBar from "../TabBar";
-import { chooseTicks } from "../utils/ticks";
-import addTooltips from "../utils/tooltips";
-import { VizBoxRow } from "../VizBox";
-import { arrangeDataVizOne } from "./data";
+import { chooseTicks } from "../../lib/visualizations/ticks";
+import addTooltips from "../../lib/visualizations/tooltips";
+
+import SelectInput from "./SelectInput";
+import TabBar from "./TabBar";
+import { VizBoxRow } from "./VizBox";
 
 const TIMESLOTS = ["vormittags", "nachmittags", "abends", "nachts"];
 
@@ -26,18 +26,20 @@ function rangeOfTime(timeofday: string) {
   }
 }
 
-const VizOne = ({
-  gdprData,
+const TimeConsumedViz = ({
+  arrangeData,
   height,
   width,
   onGraphChange,
   maxRange,
+  graphOptions = ["default", "timeslots", "skipped"],
 }: {
-  gdprData: any;
+  arrangeData: any;
   height: number;
   width: number;
   onGraphChange: (x: string) => void;
   maxRange: number;
+  graphOptions?: string[];
 }) => {
   const allRangeOptions = [
     { id: "1", label: "letzte 14 Tage", value: 14 },
@@ -61,10 +63,15 @@ const VizOne = ({
   );
 
   const [totActivity, avgMinsPerDay, numAppOpen, headValue, videoData] =
-    React.useMemo(
-      () => arrangeDataVizOne(gdprData, graph, range.value),
-      [graph, range.value],
-    );
+    React.useMemo(() => arrangeData(graph, range.value), [graph, range.value]);
+
+  window.electron.log.info(
+    totActivity,
+    avgMinsPerDay,
+    numAppOpen,
+    headValue,
+    videoData,
+  );
 
   const smallerScreen = window.outerHeight <= 1200;
 
@@ -205,7 +212,7 @@ const VizOne = ({
       { head: avgMinsPerDay, label: "pro Tag" },
       { head: numAppOpen, label: "App geöffnet" },
       { head: `${headValue}:00`, label: "Hauptzeit" },
-    ];
+    ].filter((x) => x.head);
   }
 
   if (graph === "timeslots") {
@@ -253,7 +260,7 @@ const VizOne = ({
           ["default", "Aktivität"],
           ["timeslots", "Tageszeiten"],
           ["skipped", "Übersprungen"],
-        ]}
+        ].filter((x) => graphOptions.includes(x[0]))}
       />
 
       {/* Chart wrapper */}
@@ -277,4 +284,4 @@ const VizOne = ({
   );
 };
 
-export default VizOne;
+export default TimeConsumedViz;

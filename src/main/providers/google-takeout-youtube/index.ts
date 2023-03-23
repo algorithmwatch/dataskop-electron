@@ -29,14 +29,15 @@ export default function registerGoogleTakeoutYoutubeHandlers(
   addMainHandler(
     "google-takout-youtube-use-data",
     async (_event: any, maxVideos: number): Promise<any> => {
-      const dump = await getDump();
+      const rawDump = await getDump();
 
-      const urls = _.uniq(
-        (extractWatchedVideosFromDump(dump) as string[])
+      const dump = _.uniq(
+        extractWatchedVideosFromDump(rawDump, false)
           .slice(0, maxVideos)
-          .filter((x) => x),
+          .filter((x) => x.titleUrl),
       );
 
+      const urls = dump.map((x) => x.titleUrl);
       const ids = urls.map(fromUrlToId);
       const lookups = getLookups(ids);
       return [dump, lookups];

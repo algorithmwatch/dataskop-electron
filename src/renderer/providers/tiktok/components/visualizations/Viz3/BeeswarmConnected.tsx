@@ -5,7 +5,7 @@ import { Delaunay } from "d3-delaunay";
 import { forceCollide, forceSimulation, forceX, forceY } from "d3-force";
 import { scaleLinear, scalePoint } from "d3-scale";
 import { useMemo, useState } from "react";
-import { useRect } from "../utils/useRect";
+import { useRect } from "../../../../../lib/visualizations/useRect";
 
 export function AxisBottom({ scale, height }) {
   return scale.ticks(10).map((tickValue, i) => (

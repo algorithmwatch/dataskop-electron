@@ -9,8 +9,8 @@ import { scaleQuantize } from "d3-scale";
 import { pointer, select } from "d3-selection";
 import _ from "lodash";
 import { useEffect, useMemo, useState } from "react";
-import { chooseTicks } from "../utils/ticks";
-import { useRect } from "../utils/useRect";
+import { chooseTicks } from "../../../../../lib/visualizations/ticks";
+import { useRect } from "../../../../../lib/visualizations/useRect";
 
 const forceStrengthX = 0.8;
 const forceStrengthY = 0.4;

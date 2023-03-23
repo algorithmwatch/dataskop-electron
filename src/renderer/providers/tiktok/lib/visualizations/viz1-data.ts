@@ -1,11 +1,19 @@
 import * as d3 from "d3";
 import _ from "lodash";
+import dayjs from "../../../../../shared/dayjs";
+import { formatNumber } from "../../../../../shared/utils/time";
 
 // 10 minutes between videos is acceptable
 const GAP_WATCHED = 10 * 60;
 
-const formatNumber = (number: number) => {
-  return Math.round(number).toLocaleString("de-DE");
+export const getMaxRange = (dump) => {
+  if (dump === null) return 365;
+  const dates = dump["Activity"]["Video Browsing History"]["VideoList"].map(
+    (x) => x.Date,
+  );
+  const min = _.min(dates) as string;
+  const max = _.max(dates) as string;
+  return dayjs(max).diff(dayjs(min), "day");
 };
 
 // helper function to check if dates are equal
@@ -44,17 +52,6 @@ function getCoreTime(coreTimeObj: any) {
   const vals = Object.values(coreTimeObj);
   const max = d3.max(vals);
   return Object.keys(coreTimeObj).filter((key) => coreTimeObj[key] === max);
-}
-
-// helper for checking whether a new login was made, returns true if new login was made
-// remove login check (1): delete this entire function
-function checkForLogin(loginObj: any, date_prev: Date, date_curr: Date) {
-  const dateNoTime = withoutTime(date_prev);
-  const timeArray = loginObj[dateNoTime.toString()];
-  for (const loginTime of timeArray) {
-    if (loginTime < date_prev && loginTime > date_curr) return true;
-  }
-  return false;
 }
 
 // for single-color bars
@@ -271,6 +268,8 @@ function makeTimeSlots(
     aggregates[k] /= total / 100;
   }
 
+  console.log(result);
+
   return [result, totActivity, [], aggregates];
 }
 
@@ -322,7 +321,7 @@ export const arrangeDataVizOne = (
 ): [
   string,
   string,
-  number,
+  string,
   any,
   // TODO: create type
   (

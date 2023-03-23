@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import _ from "lodash";
 import { useEffect, useMemo, useState } from "react";
-import { VizBoxRow } from "../VizBox";
+import { VizBoxRow } from "../../../../../components/visualizations/VizBox";
 import BeeswarmConnected from "./BeeswarmConnected";
 import { transformData } from "./data";
 
