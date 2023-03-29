@@ -1,34 +1,24 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import _ from "lodash";
-import { useMemo, useState } from "react";
-import TabBar from "../../../../../components/visualizations/TabBar";
-import { VizBoxRow } from "../../../../../components/visualizations/VizBox";
+import { useState } from "react";
+import TabBar from "../TabBar";
+import { VizBoxRow } from "../VizBox";
 import Beeswarm from "./Beeswarm";
-import { transformData } from "./data";
 
-const VizTwo = ({ gdprData, metadata }) => {
+const CategoricalBeeswarmViz = ({
+  topDiversificationLabels,
+  topHashtagsFlat,
+  stats,
+  tooltipFun,
+}) => {
   const [datasource, setDatasource] = useState("hashtags");
-
-  const { topDiversificationLabels, topHashtagsFlat, stats } = useMemo(
-    () => transformData(gdprData, metadata),
-    [gdprData, metadata],
-  );
 
   const data =
     datasource === "hashtags" ? topHashtagsFlat : topDiversificationLabels;
 
   window.electron.log.info(
-    `Displayin Viz2 with ${datasource} for ${data.length} videos`,
+    `Displayin CategoricalBeeswarmViz with ${datasource} for ${data.length} videos`,
   );
-
-  const tooltip = (x) =>
-    `${
-      _.isString(x.datum.author) ? x.datum.author : x.datum.author.nickname
-    }: ${
-      datasource === `hashtags`
-        ? x.datum.hashtags.join(" ")
-        : x.datum.diversificationLabels.join(", ")
-    }`;
 
   return (
     <>
@@ -57,10 +47,10 @@ const VizTwo = ({ gdprData, metadata }) => {
             ["kategorien", "kategorien"],
           ]}
         />
-        <Beeswarm data={data} tooltipFun={tooltip} />
+        <Beeswarm data={data} tooltipFun={_.partial(tooltipFun, datasource)} />
       </main>
     </>
   );
 };
 
-export default VizTwo;
+export default CategoricalBeeswarmViz;

@@ -34,6 +34,7 @@ type NavigationStateContextType =
       getPreviousPage: NavigationFunctionSignature;
       getCurrentPage: NavigationFunctionSignature;
       getPageIndexByPath: (path: NavigationStatePage["path"]) => number;
+      hasNextPage: () => boolean;
     }
   | undefined;
 
@@ -107,6 +108,10 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
     return nextPageObj;
   }) as NavigationFunctionSignature;
 
+  const hasNextPage = () => {
+    return state.pageIndex < state.pages.length - 1;
+  };
+
   const getPreviousPage = ((propName) => {
     const prevIndex = state.pageIndex === 0 ? 0 : state.pageIndex - 1;
 
@@ -142,12 +147,6 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
   const getPageIndexByPath = (path: NavigationStatePage["path"]): number =>
     state.pages.findIndex((page) => page.path === path);
 
-  // const navigateTo = (value: number | NavigationStatePage["path"]) => {
-  //   const pageIndex =
-  //     typeof value === "number" ? value : getPageIndexByPath(value);
-  //   dispatch({ type: "set-page-index", pageIndex });
-  // };
-
   const value = {
     state,
     dispatch,
@@ -155,6 +154,7 @@ const NavigationProvider = ({ children }: NavigationProviderProps) => {
     getPreviousPage,
     getCurrentPage,
     getPageIndexByPath,
+    hasNextPage,
   };
 
   return (

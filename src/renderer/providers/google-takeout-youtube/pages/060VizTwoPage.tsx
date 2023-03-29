@@ -1,15 +1,9 @@
-/**
- * TODO: For TikTok
- *
- * @module
- */
 import {
   faAngleLeft,
   faAngleRight,
   faImage,
   faInfoCircle,
 } from "@fortawesome/pro-solid-svg-icons";
-import _ from "lodash";
 import { useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "renderer/components/Button";
@@ -19,7 +13,7 @@ import CategoricalBeeswarmViz from "../../../components/visualizations/Categoric
 import { useNavigation } from "../../../contexts";
 import { doScreenshot } from "../../../lib/visualizations/screenshot";
 import { useData } from "../lib/useData";
-import { transformData } from "../lib/visualizations/viz2-data";
+import { transformData } from "../lib/viz2-data";
 
 const VizTwoPage = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
@@ -105,15 +99,6 @@ const VizTwoPage = (): JSX.Element => {
     [dump, lookups],
   );
 
-  const tooltipFun = (datasource, x) =>
-    `${
-      _.isString(x.datum.author) ? x.datum.author : x.datum.author.nickname
-    }: ${
-      datasource === `hashtags`
-        ? x.datum.hashtags.join(" ")
-        : x.datum.diversificationLabels.join(", ")
-    }`;
-
   return (
     <>
       <Modal
@@ -142,10 +127,10 @@ const VizTwoPage = (): JSX.Element => {
         >
           {procData && (
             <CategoricalBeeswarmViz
-              topDiversificationLabels={procData.topDiversificationLabels}
-              topHashtagsFlat={procData.topHashtagsFlat}
+              topDiversificationLabels={procData.categories}
+              topHashtagsFlat={procData.hashtags}
               stats={procData.stats}
-              tooltipFun={tooltipFun}
+              tooltipFun={(_, x) => x.datum.tooltip}
             />
           )}
         </div>

@@ -17,7 +17,7 @@ const ContentPage = ({
   title: string;
   children: JSX.Element;
 }): JSX.Element => {
-  const { getNextPage, getPreviousPage } = useNavigation();
+  const { getNextPage, getPreviousPage, hasNextPage } = useNavigation();
   const history = useHistory();
 
   const footerSlots: FooterSlots = {
@@ -32,6 +32,11 @@ const ContentPage = ({
       >
         Zurück
       </Button>,
+    ],
+  };
+
+  if (hasNextPage() && footerSlots.center) {
+    footerSlots.center.push(
       <Button
         key="2"
         endIcon={faAngleRight}
@@ -41,8 +46,8 @@ const ContentPage = ({
       >
         Weiter
       </Button>,
-    ],
-  };
+    );
+  }
 
   return (
     <WizardLayout className="text-center" footerSlots={footerSlots}>

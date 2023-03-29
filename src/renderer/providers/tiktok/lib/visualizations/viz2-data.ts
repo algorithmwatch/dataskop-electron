@@ -43,8 +43,6 @@ const transformData = (gdprData, metadata) => {
       ...d,
     }));
 
-  // console.log(history, entries);
-
   const entriesExpanded = entries
     .map((e) => e.dates.map((d) => ({ ...e, date: d })))
     .flat()

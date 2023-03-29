@@ -65,14 +65,6 @@ const TimeConsumedViz = ({
   const [totActivity, avgMinsPerDay, numAppOpen, headValue, videoData] =
     React.useMemo(() => arrangeData(graph, range.value), [graph, range.value]);
 
-  window.electron.log.info(
-    totActivity,
-    avgMinsPerDay,
-    numAppOpen,
-    headValue,
-    videoData,
-  );
-
   const smallerScreen = window.outerHeight <= 1200;
 
   const chartHeight =

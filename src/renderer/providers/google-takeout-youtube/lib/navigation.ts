@@ -23,6 +23,14 @@ const gtYtDefault: NavigationState = {
       path: "/google-takeout-youtube/viz_one",
       sectionKey: null,
     },
+    {
+      path: "/google-takeout-youtube/viz_two",
+      sectionKey: null,
+    },
+    {
+      path: "/google-takeout-youtube/outro",
+      sectionKey: null,
+    },
   ],
   sections: {},
 };

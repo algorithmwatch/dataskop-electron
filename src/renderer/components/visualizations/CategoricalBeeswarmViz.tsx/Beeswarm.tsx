@@ -9,8 +9,8 @@ import { scaleQuantize } from "d3-scale";
 import { pointer, select } from "d3-selection";
 import _ from "lodash";
 import { useEffect, useMemo, useState } from "react";
-import { chooseTicks } from "../../../../../lib/visualizations/ticks";
-import { useRect } from "../../../../../lib/visualizations/useRect";
+import { chooseTicks } from "../../../lib/visualizations/ticks";
+import { useRect } from "../../../lib/visualizations/useRect";
 
 const forceStrengthX = 0.8;
 const forceStrengthY = 0.4;
@@ -126,7 +126,7 @@ const Beeswarm = ({ data, tooltipFun }) => {
         width,
         height,
         marginTop: 35,
-        marginBottom: 53,
+        marginBottom: 63,
         marginLeft: 220,
         style: {
           fontSize: "0.8rem",
