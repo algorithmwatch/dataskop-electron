@@ -385,6 +385,7 @@ ipcMain.handle(
 
     // Cleanup after the user donated (or finish the walkthrough)
     if (cleanupData) {
+      log.info("Clearing the data before closing the app.");
       clearDownloads();
       clearData();
     }

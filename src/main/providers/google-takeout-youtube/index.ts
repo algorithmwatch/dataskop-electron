@@ -1,15 +1,17 @@
 /**
  * YouTube specific scraping.
  */
+import fs from "fs";
 
 import { extractIdFromUrl, getVideoUrl } from "@algorithmwatch/harke-parser";
 import {
   extractWatchedVideosFromDump,
   scrapeYouTubeVideos,
 } from "@algorithmwatch/harke-scraper";
-import { BrowserWindow } from "electron";
+import { BrowserWindow, dialog } from "electron";
 import _ from "lodash";
 import path from "path";
+import { getNowString } from "../../../shared/utils/time";
 import { HTML_FOLDER } from "../../active-scraping";
 import { getLookups } from "../../db";
 import { getDownload } from "../../downloads";
@@ -59,9 +61,7 @@ export default function registerGoogleTakeoutYoutubeHandlers(
           .filter((x) => x),
       );
 
-      console.log(urls);
       const ids = urls.map(fromUrlToId);
-      console.log(ids);
 
       const fetchFun = (videoIds: string[]) =>
         scrapeYouTubeVideos(videoIds.map(fromIdtoUrl), {
@@ -84,4 +84,37 @@ export default function registerGoogleTakeoutYoutubeHandlers(
       );
     },
   );
+
+  addMainHandler("google-takout-youtube-data-export", async (_event: any) => {
+    if (mainWindow === null) return;
+
+    const dump = await getDump();
+    const ids = dump
+      .filter((x) => x.titleUrl)
+      .map((x) => `yv${extractIdFromUrl(x.titleUrl)}`);
+
+    const lookups = getLookups(ids);
+    const results = dump.map((x) => {
+      if (!x.titleUrl) return x;
+      const vId = `yv${extractIdFromUrl(x.titleUrl)}`;
+      const result = _.get(lookups, `${vId}.result`, null);
+      x.result = result;
+      return x;
+    });
+
+    const data = { "watch-history": results };
+    const defaultPath = `dataskop-google-takeout-youtube-watch-history-${getNowString()}.json`;
+
+    if (process.env.PLAYWRIGHT_TESTING === "true") {
+      fs.writeFileSync(defaultPath, JSON.stringify(data));
+      return;
+    }
+
+    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+      defaultPath,
+    });
+    if (canceled || !filePath) return;
+
+    fs.writeFileSync(filePath, JSON.stringify(data));
+  });
 }

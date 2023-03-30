@@ -28,6 +28,7 @@ type Action =
       type: "set-config";
       version: string;
       isDebug: boolean;
+      isDevelopment: boolean;
       showAdvancedMenu: boolean;
       platformUrl: string;
       trackEvents: boolean;
@@ -48,6 +49,7 @@ type State = {
   isMac: boolean;
   isPlaywrightTesing: boolean;
   isDebug: boolean;
+  isDevelopment: boolean;
   showAdvancedMenu: boolean;
   platformUrl: string | null;
   trackEvents: boolean;
@@ -107,6 +109,7 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
     updateCheckDone: false,
     isMac: false,
     isDebug: false,
+    isDevelopment: false,
     showAdvancedMenu: false,
     platformUrl: null,
     trackEvents: false,
@@ -133,8 +136,8 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
         return;
       }
 
-      const isDebug =
-        env.NODE_ENV === "development" || env.DEBUG_PROD === "true";
+      const isDevelopment = env.NODE_ENV === "development";
+      const isDebug = isDevelopment || env.DEBUG_PROD === "true";
       const platformUrl = env.PLATFORM_URL ?? null;
       const trackEvents = !!env.TRACK_EVENTS;
       const seriousProtection = env.SERIOUS_PROTECTION ?? null;
@@ -152,6 +155,7 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
       dispatch({
         type: "set-config",
         isDebug,
+        isDevelopment,
         version,
         platformUrl,
         trackEvents,

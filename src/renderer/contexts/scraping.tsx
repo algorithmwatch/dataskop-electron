@@ -37,10 +37,6 @@ type Action =
       campaign: Campaign | null;
     }
   | {
-      type: "set-available-campaigns";
-      availableCampaigns: Campaign[];
-    }
-  | {
       type: "set-scraping-progress-bar";
       scrapingProgress: ScrapingProgress;
     }
@@ -73,7 +69,6 @@ type State = {
   isAttached: boolean;
   // set to the current selected campaign (fetch from the backend or a local one)
   campaign: Campaign | null;
-  availableCampaigns: Campaign[];
   sessionId: string | null;
   scrapingProgress: ScrapingProgress;
   isUserLoggedIn: boolean;
@@ -107,7 +102,6 @@ const ScrapingStateContext = React.createContext<
 const initialState: State = {
   isAttached: false,
   campaign: null,
-  availableCampaigns: [],
   sessionId: null,
   scrapingProgress: {
     isActive: false,
@@ -152,13 +146,6 @@ const scrapingReducer = (state: State, action: Action): State => {
       return {
         ...state,
         campaign: action.campaign,
-      };
-    }
-
-    case "set-available-campaigns": {
-      return {
-        ...state,
-        availableCampaigns: action.availableCampaigns,
       };
     }
 

@@ -4,10 +4,6 @@ const gtYtDefault: NavigationState = {
   pageIndex: 0,
   pages: [
     {
-      path: "/tiktok/start",
-      sectionKey: null,
-    },
-    {
       path: "/google-takeout-youtube/intro",
       sectionKey: null,
     },

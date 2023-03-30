@@ -75,6 +75,7 @@ const youtubeChannels = [
   "youtube-passive-scraping-browser-videos",
   "google-takout-youtube-scrape-watched-videos",
   "google-takout-youtube-use-data",
+  "google-takout-youtube-data-export",
 ];
 
 const tiktokChannels = [

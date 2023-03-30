@@ -3,19 +3,20 @@
  *
  * @module
  */
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { getActiveCampaigns } from "renderer/lib/networking";
 import { localActiveCampaings, providerInfo } from "renderer/providers/info";
+import Content from "../components/Content";
 import { useConfig, useNavigation, useScraping } from "../contexts";
+import { addStatusReset } from "../lib/status";
+import { Campaign } from "../providers/types";
 
 const SelectCampaignPage = (): JSX.Element => {
   const {
-    state: { availableCampaigns, campaign },
+    state: { campaign },
     dispatch,
   } = useScraping();
-
-  const { forceProvider }: { forceProvider: string } = useParams();
 
   const {
     state: {
@@ -24,14 +25,21 @@ const SelectCampaignPage = (): JSX.Element => {
       updateCheckDone,
       userConfig,
       autoSelectCampaign,
+      isDevelopment,
     },
     sendEvent,
   } = useConfig();
 
   const { dispatch: navDispath } = useNavigation();
   const history = useHistory();
+  const { forceProvider }: { forceProvider: string } = useParams();
 
-  const handleCampaignChange = (newCampaign: any) => {
+  const [campaignChoices, setCampaignChoices] = useState<Campaign[]>([]);
+
+  const handleCampaignChange = async (newCampaign: any) => {
+    // Always add a new status reset when changing campaigns
+    await addStatusReset();
+
     // Important to push first new state and *then* dispatching the new campaigns.
     // The base layout is updated when the campaign changes and this causes
     // a re-render of this page.
@@ -54,7 +62,7 @@ const SelectCampaignPage = (): JSX.Element => {
   };
 
   const handleCampaignClick = (index: number) => {
-    const clickedCampaign = availableCampaigns[index];
+    const clickedCampaign = campaignChoices[index];
     handleCampaignChange(clickedCampaign);
   };
 
@@ -82,6 +90,8 @@ const SelectCampaignPage = (): JSX.Element => {
         seriousProtection,
       );
 
+      if (isDevelopment) campaigns.push(...localActiveCampaings);
+
       sendEvent(null, "successfully fetched remote config");
 
       // only use campaigns that have a valid provider configuration
@@ -106,10 +116,7 @@ const SelectCampaignPage = (): JSX.Element => {
       }
 
       // Only set available campaigns to ask the user to choose one.
-      dispatch({
-        type: "set-available-campaigns",
-        availableCampaigns: filteredCampaigns,
-      });
+      setCampaignChoices(filteredCampaigns);
     } catch (error) {
       window.electron.log.error(
         "not able to set sraping config from remote",
@@ -123,25 +130,26 @@ const SelectCampaignPage = (): JSX.Element => {
     setActiveCampaign();
   }, [platformUrl, seriousProtection, updateCheckDone, userConfig?.monitoring]);
 
-  if (availableCampaigns.length === 0) return <div />;
+  if (campaignChoices.length === 0) return <div />;
 
   return (
-    <div className="mx-auto flex flex-col h-full text-center">
-      <div className="hl-4xl mb-6">Wähle eine Untersuchung aus</div>
-      <div className="space-x-4">
-        {availableCampaigns.map((x, i) => (
-          <button
-            key={x.id}
-            type="button"
-            className="p-5 mt-5 border-solid border-4 border-yellow-700"
-            onClick={() => handleCampaignClick(i)}
-          >
-            <div className="hl-xl">{x.title}</div>
-            <div>{x.description}</div>
-          </button>
-        ))}
+    <Content title="Wähle eine Untersuchung aus" theme="transparent">
+      <div className="mx-auto flex flex-col h-full text-center">
+        <div className="space-x-4">
+          {campaignChoices.map((x, i) => (
+            <button
+              key={x.id}
+              type="button"
+              className="p-5 mt-5 border-solid border-4 border-turquoise-600"
+              onClick={() => handleCampaignClick(i)}
+            >
+              <div className="hl-xl">{x.title}</div>
+              <div>{x.description}</div>
+            </button>
+          ))}
+        </div>
       </div>
-    </div>
+    </Content>
   );
 };
 

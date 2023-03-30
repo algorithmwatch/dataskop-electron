@@ -24,12 +24,13 @@ const ScrapingAttached = () => {
   // Expose the status of the scraping to the main process to check wheter the
   // can safely be closed.
   useEffect(() => {
+    const cleanUp = window.hasDonated !== null || window.clearImports;
     window.electron.ipc.removeAllListeners("close-action");
     window.electron.ipc.on("close-action", () => {
       window.electron.ipc.invoke(
         "close-main-window",
         scrapingProgress.isActive,
-        window.hasDonated !== null,
+        cleanUp,
         !!window.reachedEnd,
       );
     });

@@ -5,6 +5,7 @@ declare global {
     log: any;
     persistEmail: string;
     hasDonated: boolean | null;
+    clearImports: true | undefined;
     notEligibleToDonate: true | null;
     reachedEnd: true | null;
     viz1modalHide: true | undefined;

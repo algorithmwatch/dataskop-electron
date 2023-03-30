@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /**
  * TODO: For TikTok
  *
@@ -70,9 +72,12 @@ const StartPage = (): JSX.Element => {
                 className="mx-3 py-1 block w-20 h-auto"
               />
               <img
+                onClick={() => {
+                  history.push("/select_campaign/google-takeout-youtube");
+                }}
                 src={uplogo}
                 alt=""
-                className="mx-3 py-1 block w-36 h-auto"
+                className="mx-3 py-1 block w-36 h-auto hover:cursor-pointer"
               />
               <img
                 src={fhplogo}
