@@ -233,7 +233,7 @@
     "@tippyjs/react": "^4.2.6",
     "ajv": "^8.11.0",
     "archiver": "^5.3.1",
-    "chrono-node": "^2.3.9",
+    "chrono-node": "^2.6.2",
     "clsx": "^1.2.1",
     "d3-array": "^3.2.3",
     "d3-delaunay": "^6.0.4",
