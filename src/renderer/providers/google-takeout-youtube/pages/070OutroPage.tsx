@@ -53,6 +53,16 @@ const OutroPage = (): JSX.Element => {
           itaque unde at corporis, sint eos dolor rerum repellat! Ipsa,
           voluptate quibusdam.
         </div>
+        <div className="text-sm text-neutral-500" key="1">
+          Du kannst die{" "}
+          <span
+            className="underline hover:cursor-pointer"
+            onClick={() => window.electron.ipc.invoke("quit")}
+          >
+            App jetzt schließen
+          </span>
+          .
+        </div>
       </div>
     </ContentPage>
   );

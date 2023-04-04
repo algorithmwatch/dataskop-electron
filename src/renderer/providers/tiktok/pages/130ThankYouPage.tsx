@@ -92,7 +92,14 @@ const ThankYouPage = (): JSX.Element => {
   const footerSlots = {
     center: [
       <div className="text-sm text-neutral-500" key="1">
-        Du kannst die App jetzt schließen.
+        Du kannst die{" "}
+        <span
+          className="underline hover:cursor-pointer"
+          onClick={() => window.electron.ipc.invoke("quit")}
+        >
+          App jetzt schließen
+        </span>
+        .
       </div>,
     ],
   };

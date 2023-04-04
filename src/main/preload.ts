@@ -11,6 +11,7 @@ const mainChannels = [
   "update-restart-app",
   "show-notification",
   "restart",
+  "quit",
 ];
 
 const monitoringChannels = ["monitoring-done"];

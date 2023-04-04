@@ -467,6 +467,11 @@ ipcMain.handle("restart", () => {
   app.exit();
 });
 
+// Quit the app
+ipcMain.handle("quit", () => {
+  app.quit();
+});
+
 // You can ignore the steps for squirrel builds because we don't use squirrel
 // https://www.electronjs.org/docs/latest/api/app#appsetloginitemsettingssettings-macos-windows
 
