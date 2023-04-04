@@ -17,10 +17,12 @@ const ImportPage = ({
   previousPath,
   nextPath,
   description,
+  clearImportsOnClose,
 }: {
   previousPath: string;
   nextPath: string;
   description: string;
+  clearImportsOnClose?: boolean;
 }): JSX.Element => {
   const history = useHistory();
   const [importIsValid, setImportIsValid] = useState(false);
@@ -45,6 +47,7 @@ const ImportPage = ({
         },
         true,
       );
+      if (clearImportsOnClose) window.clearImports = true;
     }
 
     setImportIsValid(response.success);

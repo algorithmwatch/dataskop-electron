@@ -6,7 +6,7 @@
  * @module
  */
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ContentPage from "../../../pages/ContentPage";
 
 const ExportLink = ({ setExporting }) => {
@@ -30,10 +30,6 @@ const ExportLink = ({ setExporting }) => {
 
 const OutroPage = (): JSX.Element => {
   const [isExporting, setExporting] = useState();
-
-  useEffect(() => {
-    window.clearImports = true;
-  }, []);
 
   return (
     <ContentPage title="Outro">

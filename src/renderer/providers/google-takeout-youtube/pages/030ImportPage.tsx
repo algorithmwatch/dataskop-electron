@@ -6,6 +6,7 @@ const GTYoutubeImportPage = (): JSX.Element => {
       previousPath="/google-takeout-youtube/intro"
       nextPath="/google-takeout-youtube/waiting"
       description="Lorem Lorem Lorem"
+      clearImportsOnClose
     />
   );
 };
