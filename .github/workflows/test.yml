@@ -65,8 +65,8 @@ jobs:
         uses: nick-fields/retry@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DUMP_PATH: "./tests/test_dump_01.json"
-          EXPORT_PATH: "test_runs"
+          DUMP_PATH: "./tests/tiktok-test-dump-01.json"
+          EXPORT_PATH: "test-runs"
         with:
           timeout_minutes: 10
           max_attempts: 3
