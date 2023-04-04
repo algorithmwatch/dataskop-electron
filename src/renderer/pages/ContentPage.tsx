@@ -13,9 +13,13 @@ import { useNavigation } from "../contexts";
 const ContentPage = ({
   title,
   children,
+  nextPath,
+  prevPath,
 }: {
   title: string;
   children: JSX.Element;
+  nextPath?: string;
+  prevPath?: string;
 }): JSX.Element => {
   const { getNextPage, getPreviousPage, hasNextPage } = useNavigation();
   const history = useHistory();
@@ -27,7 +31,7 @@ const ContentPage = ({
         theme="text"
         startIcon={faAngleLeft}
         onClick={() => {
-          history.push(getPreviousPage("path"));
+          history.push(prevPath || getPreviousPage("path"));
         }}
       >
         Zurück
@@ -35,13 +39,13 @@ const ContentPage = ({
     ],
   };
 
-  if (hasNextPage() && footerSlots.center) {
+  if ((!!nextPath || hasNextPage()) && footerSlots.center) {
     footerSlots.center.push(
       <Button
         key="2"
         endIcon={faAngleRight}
         onClick={() => {
-          history.push(getNextPage("path"));
+          history.push(nextPath || getNextPage("path"));
         }}
       >
         Weiter
