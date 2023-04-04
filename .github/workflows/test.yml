@@ -61,16 +61,27 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run build:playwright
 
-      - name: Run tests w/ timeout and retries
+      - name: Run TikTok tests w/ timeout and retries
         uses: nick-fields/retry@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DUMP_PATH: "./tests/tiktok-test-dump-01.json"
+          DUMP_PATH: "./tests/data/tiktok-dump-01.json"
           EXPORT_PATH: "test-runs"
         with:
           timeout_minutes: 10
           max_attempts: 3
-          command: npm test
+          command: npm test -- start.test.ts tiktok-import.test.ts
+
+      - name: Run Google Takeout Youtube tests w/ timeout and retries
+        uses: nick-fields/retry@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DUMP_PATH: "./tests/data/google-takeout-youtube-watch-history-01.json"
+          EXPORT_PATH: "test-runs"
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: npm test -- google-takeout-youtube-import.test.ts
 
       - name: Archive npm logs
         uses: actions/upload-artifact@v2

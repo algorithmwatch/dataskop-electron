@@ -8,12 +8,12 @@ import {
   extractWatchedVideosFromDump,
   scrapeYouTubeVideos,
 } from "@algorithmwatch/harke-scraper";
-import { BrowserWindow, dialog } from "electron";
+import { app, BrowserWindow, dialog } from "electron";
 import _ from "lodash";
 import path from "path";
 import { getNowString } from "../../../shared/utils/time";
 import { HTML_FOLDER } from "../../active-scraping";
-import { getLookups } from "../../db";
+import { dataStore, getLookups } from "../../db";
 import { getDownload } from "../../downloads";
 import { backgroundScraping } from "../../passive-scraping/background-scraping";
 import { addMainHandler } from "../../utils";
@@ -94,15 +94,15 @@ export default function registerGoogleTakeoutYoutubeHandlers(
       .map((x) => `yv${extractIdFromUrl(x.titleUrl)}`);
 
     const lookups = getLookups(ids);
-    const results = dump.map((x) => {
-      if (!x.titleUrl) return x;
-      const vId = `yv${extractIdFromUrl(x.titleUrl)}`;
-      const result = _.get(lookups, `${vId}.result`, null);
-      x.result = result;
-      return x;
-    });
 
-    const data = { "watch-history": results };
+    const sessions = dataStore.store.data;
+    const data = {
+      sessions,
+      dump,
+      lookups,
+      version: app.getVersion(),
+    };
+
     const defaultPath = `dataskop-google-takeout-youtube-watch-history-${getNowString()}.json`;
 
     if (process.env.PLAYWRIGHT_TESTING === "true") {

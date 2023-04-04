@@ -72,6 +72,7 @@ const StartPage = (): JSX.Element => {
                 className="mx-3 py-1 block w-20 h-auto"
               />
               <img
+                id="up-logo"
                 onClick={() => {
                   history.push("/select_campaign/google-takeout-youtube");
                 }}
