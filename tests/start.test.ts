@@ -39,7 +39,7 @@ test.describe.serial(() => {
     await page.waitForTimeout(1000);
 
     await expect(page).toHaveTitle("DataSkop");
-    await expect(page.locator("text=Start")).toBeVisible();
+    await expect(page.locator("text='Start'")).toBeVisible();
 
     await page.keyboard.down("Tab");
     await page.keyboard.down("Tab");
