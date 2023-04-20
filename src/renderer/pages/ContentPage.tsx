@@ -21,11 +21,16 @@ const ContentPage = ({
   nextPath?: string;
   prevPath?: string;
 }): JSX.Element => {
-  const { getNextPage, getPreviousPage, hasNextPage } = useNavigation();
+  const { getNextPage, getPreviousPage, hasNextPage, hasPrevPage } =
+    useNavigation();
   const history = useHistory();
 
   const footerSlots: FooterSlots = {
-    center: [
+    center: [],
+  };
+
+  if (prevPath !== "" && (!!prevPath || hasPrevPage()) && footerSlots.center) {
+    footerSlots.center.push([
       <Button
         key="1"
         theme="text"
@@ -36,10 +41,10 @@ const ContentPage = ({
       >
         Zurück
       </Button>,
-    ],
-  };
+    ]);
+  }
 
-  if ((!!nextPath || hasNextPage()) && footerSlots.center) {
+  if (nextPath !== "" && (!!nextPath || hasNextPage()) && footerSlots.center) {
     footerSlots.center.push(
       <Button
         key="2"

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /**
@@ -55,6 +56,15 @@ const StartPage = (): JSX.Element => {
             >
               Start
             </Button>
+          </div>
+          <div className="mt-10 hover:cursor-pointer text-sm text-gray-600">
+            <span
+              onClick={() => {
+                history.push("/select_campaign");
+              }}
+            >
+              Weitere Untersuchungen
+            </span>
           </div>
         </div>
         <div className="flex">

@@ -7,10 +7,10 @@ import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { getActiveCampaigns } from "renderer/lib/networking";
 import { localActiveCampaings, providerInfo } from "renderer/providers/info";
-import Content from "../components/Content";
 import { useConfig, useNavigation, useScraping } from "../contexts";
 import { addStatusReset } from "../lib/status";
 import { Campaign } from "../providers/types";
+import ContentPage from "./ContentPage";
 
 const SelectCampaignPage = (): JSX.Element => {
   const {
@@ -133,7 +133,7 @@ const SelectCampaignPage = (): JSX.Element => {
   if (campaignChoices.length === 0) return <div />;
 
   return (
-    <Content title="Wähle eine Untersuchung aus" theme="transparent">
+    <ContentPage title="Wähle eine Untersuchung">
       <div className="mx-auto flex flex-col h-full text-center">
         <div className="space-x-4">
           {campaignChoices.map((x, i) => (
@@ -149,7 +149,7 @@ const SelectCampaignPage = (): JSX.Element => {
           ))}
         </div>
       </div>
-    </Content>
+    </ContentPage>
   );
 };
 
