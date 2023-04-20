@@ -9,13 +9,13 @@ import { Dayjs } from "dayjs";
 import _ from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
-import AdminMenu from "renderer/components/admin/AdminMenu";
 import { Button } from "renderer/components/Button";
+import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
+import AdminMenu from "renderer/components/admin/AdminMenu";
 import {
   QuestionTypes,
   SurveyProvider,
 } from "renderer/components/survey/context";
-import WizardLayout, { FooterSlots } from "renderer/components/WizardLayout";
 import { useConfig, useNavigation, useScraping } from "renderer/contexts";
 import { addScrapingResult, getScrapingResults } from "renderer/lib/db";
 import { currentDelay } from "renderer/lib/delay";
@@ -23,9 +23,9 @@ import dayjs from "../../shared/dayjs";
 import { isStatusPending } from "../../shared/status";
 import SurveyModal from "../components/survey/SurveyModal";
 import {
+  STATUS,
   getStatus,
   isStatusDownloadActionRequired,
-  STATUS,
 } from "../lib/status";
 
 const WaitingPage = ({
@@ -234,7 +234,11 @@ const WaitingPage = ({
       center: [
         <Transition
           key="1"
-          show={footerButtonsAreVisible && !surveyIsComplete}
+          show={
+            !!surveyQuestions.length &&
+            footerButtonsAreVisible &&
+            !surveyIsComplete
+          }
           appear
           enter="transition-opacity duration-1000"
           enterFrom="opacity-0"

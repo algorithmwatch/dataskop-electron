@@ -21,7 +21,7 @@ const ImportPage = ({
 }: {
   previousPath: string;
   nextPath: string;
-  description: string;
+  description: string | JSX.Element;
   clearImportsOnClose?: boolean;
 }): JSX.Element => {
   const history = useHistory();

@@ -32,14 +32,12 @@ const OutroPage = (): JSX.Element => {
   const [isExporting, setExporting] = useState();
 
   return (
-    <ContentPage title="Outro">
+    <ContentPage title="Vielen Dank">
       <div className="space-y-6 text-xl max-w-prose">
-        <div>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro
-          sapiente, voluptates laudantium ad fugiat ipsa aperiam blanditiis in,
-          itaque unde at corporis, sint eos dolor rerum repellat! Ipsa,
-          voluptate quibusdam.
-        </div>
+        {/* <div>
+          Vielen Dank, dass du DataSkop genutzt hast. Wenn du magst kannst, du
+          hier alle Daten exportieren.
+        </div> */}
         <div>
           {isExporting ? (
             "Einen Momement, bitte..."
@@ -47,12 +45,12 @@ const OutroPage = (): JSX.Element => {
             <ExportLink setExporting={setExporting} />
           )}
         </div>
-        <div>
+        {/* <div>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro
           sapiente, voluptates laudantium ad fugiat ipsa aperiam blanditiis in,
           itaque unde at corporis, sint eos dolor rerum repellat! Ipsa,
           voluptate quibusdam.
-        </div>
+        </div> */}
         <div className="text-sm text-neutral-500" key="1">
           Du kannst die{" "}
           <span

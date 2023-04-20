@@ -8,7 +8,7 @@ import {
   extractWatchedVideosFromDump,
   scrapeYouTubeVideos,
 } from "@algorithmwatch/harke-scraper";
-import { app, BrowserWindow, dialog } from "electron";
+import { BrowserWindow, app, dialog } from "electron";
 import _ from "lodash";
 import path from "path";
 import { getNowString } from "../../../shared/utils/time";
@@ -23,7 +23,7 @@ const brokenHtmlFolder = path.join(HTML_FOLDER, "broken-html");
 const fromUrlToId = (x) => `yv${extractIdFromUrl(x)}`;
 const fromIdtoUrl = (x) => getVideoUrl(x.slice(2));
 
-const getDump = () => getDownload(undefined, /.*watch-history.*/);
+const getDump = () => getDownload(undefined);
 
 export default function registerGoogleTakeoutYoutubeHandlers(
   mainWindow: BrowserWindow,

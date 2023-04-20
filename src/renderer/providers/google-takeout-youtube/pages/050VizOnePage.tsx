@@ -75,7 +75,7 @@ const VizOnePage = (): JSX.Element => {
 
           doScreenshot(
             { width, height, y: 0, x: 0 },
-            `DataSkop_TikTok_Viz_1_${graph}.jpg`,
+            `DataSkop_YouTube_Viz_1_${graph}.jpg`,
           );
         }}
       >
@@ -88,10 +88,10 @@ const VizOnePage = (): JSX.Element => {
         theme="text"
         startIcon={faAngleLeft}
         onClick={() => {
-          history.push(getPreviousPage("path"));
+          history.push("/google-takeout-youtube/import");
         }}
       >
-        Zurück
+        Andere Daten importieren
       </Button>,
 
       <Button
@@ -128,11 +128,10 @@ const VizOnePage = (): JSX.Element => {
         <div className="text-center">
           <h1 className="hl-2xl mb-4">Über diese Grafiken</h1>
           <p className="">
-            Die Visualisierung zur Nutzungszeit zeigt dir, wann und wie du in
-            der TikTok-App aktiv warst. Du kannst zwischen „Aktivität“ (wie
-            viele Minuten an welchem Tag), „Tageszeit“ (welcher Zeitraum an
-            welchem Tag) und „Übersprungen“ (Anteil der gesehenen Videos, die du
-            kürzer oder länger als drei Sekunden geschaut hast) auswählen.
+            Die Visualisierung zur Nutzungszeit zeigt dir, wann und wie du auf
+            YouTube aktiv warst. Du kannst zwischen „Aktivität“ (wie viele
+            Minuten an welchem Tag), „Tageszeit“ (welcher Zeitraum an welchem
+            Tag) auswählen.
           </p>
         </div>
       </Modal>

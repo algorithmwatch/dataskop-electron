@@ -19,9 +19,7 @@ const VizTwoPage = (): JSX.Element => {
   const { getNextPage, getPreviousPage } = useNavigation();
   const history = useHistory();
 
-  const { dump, lookups } = useData({
-    dumpPicks: ["Activity.Video Browsing History"],
-  });
+  const { dump, lookups } = useData();
   const [aboutModalIsOpen, setAboutModalIsOpen] = useState(
     !window.viz2modalHide,
   );
@@ -63,7 +61,7 @@ const VizTwoPage = (): JSX.Element => {
 
           doScreenshot(
             { width, height, y: 0, x: 0 },
-            "DataSkop_TikTok_Viz_2.jpg",
+            "DataSkop_YouTube_Viz_2.jpg",
           );
         }}
       >
@@ -114,9 +112,10 @@ const VizTwoPage = (): JSX.Element => {
           <p className="">
             Die Visualisierung zu Hashtags und Kategorien zeigt dir, welche
             Inhalte bei dir besonders beliebt waren. Du kannst zwischen
-            „Hashtags“ (von Creatorn vergeben) und „Kategorien“ (von TikTok
-            vergeben) auswählen. Die Anzahl der Punkte repräsentiert die Zahl
-            der Videos, die du länger als fünf Sekunden geschaut hast.
+            „Hashtags“ und „Kategorien“ auswählen (beide vom Creator vergeben).
+            Sollte ein Video keine Hashtags haben, nutzen wir Schlagwörter aus
+            dem Videotitel. Die Anzahl der Punkte repräsentiert die Anzahl der
+            Videos.
           </p>
         </div>
       </Modal>
