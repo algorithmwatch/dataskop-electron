@@ -132,23 +132,45 @@ const SelectCampaignPage = (): JSX.Element => {
 
   if (campaignChoices.length === 0) return <div />;
 
+  const activeCampaign = campaignChoices.filter((x) => x.id === campaign?.id);
+  const otherCampaigns = campaignChoices.filter((x) => x.id !== campaign?.id);
+
   return (
     <ContentPage title="Wähle eine Untersuchung">
-      <div className="mx-auto flex flex-col h-full text-center">
-        <div className="space-x-4">
-          {campaignChoices.map((x, i) => (
-            <button
-              key={x.id}
-              type="button"
-              className="p-5 mt-5 border-solid border-4 border-turquoise-600"
-              onClick={() => handleCampaignClick(i)}
-            >
-              <div className="hl-xl">{x.title}</div>
-              <div>{x.description}</div>
-            </button>
-          ))}
+      <>
+        <div className="mx-auto flex flex-col h-full text-center">
+          <div className="space-x-4">
+            {otherCampaigns.map((x, i) => (
+              <button
+                key={x.id}
+                type="button"
+                className="p-5 mt-5 border-solid border-4 border-turquoise-600"
+                onClick={() => handleCampaignClick(i)}
+              >
+                <div className="hl-xl">{x.title}</div>
+                <div>{x.description}</div>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+        {activeCampaign.length && (
+          <h3 className="font-semibold">Aktuelle Auswahl</h3>
+        )}
+        <div className="mx-auto flex flex-col h-full text-center">
+          <div className="space-x-4">
+            {activeCampaign.map((x, i) => (
+              <button
+                key={x.id}
+                type="button"
+                className="p-5 border-solid border-4 border-sky-600 hover:cursor-default"
+              >
+                <div className="hl-xl">{x.title}</div>
+                <div>{x.description}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </>
     </ContentPage>
   );
 };

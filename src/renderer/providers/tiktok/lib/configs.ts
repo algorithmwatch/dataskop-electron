@@ -25,7 +25,7 @@ const defaultConfig: TikTokScrapingConfig = {
 };
 
 const defaultCampaign: Campaign = {
-  id: -1,
+  id: -2,
   slug: "tiktok-default",
   title: "tiktok default",
   description: "only for development",

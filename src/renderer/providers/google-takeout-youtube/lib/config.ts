@@ -16,7 +16,7 @@ const defaultConfig: ScrapingConfig = {
 };
 
 const defaultCampaign: Campaign = {
-  id: -1,
+  id: -3,
   slug: "google-takeout-default",
   title: "google-takeout default",
   description: "only for development",

@@ -60,10 +60,10 @@ const StartPage = (): JSX.Element => {
           <div className="mt-10 hover:cursor-pointer text-sm text-gray-600">
             <span
               onClick={() => {
-                history.push("/select_campaign");
+                history.push("/select_campaign/google-takeout-youtube");
               }}
             >
-              Weitere Untersuchungen
+              Start YouTube
             </span>
           </div>
         </div>
