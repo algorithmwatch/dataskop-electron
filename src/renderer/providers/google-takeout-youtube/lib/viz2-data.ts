@@ -63,8 +63,6 @@ const transformData = (dump, lookups) => {
   const topHashtags = new Set(topHashtagCounts.map((x) => x[0]));
   const finalHashtags = allHashtags.filter((x) => topHashtags.has(x.label));
 
-  console.log(topHashtagCounts, topHashtags, counts);
-
   const stats = {
     totalVideos: temp.length,
     totalDays: _.head(temp).date.diff(_.last(temp).date, "day"),

@@ -112,10 +112,9 @@ const VizTwoPage = (): JSX.Element => {
           <p className="">
             Die Visualisierung zu Hashtags und Kategorien zeigt dir, welche
             Inhalte bei dir besonders beliebt waren. Du kannst zwischen
-            „Hashtags“ und „Kategorien“ auswählen (beide vom Creator vergeben).
-            Sollte ein Video keine Hashtags haben, nutzen wir Schlagwörter aus
-            dem Videotitel. Die Anzahl der Punkte repräsentiert die Anzahl der
-            Videos.
+            „Hashtags“ und „Kategorien“ auswählen. Die Hashtags werden teilweise
+            von YouTube generiert. Die Anzahl der Punkte repräsentiert die
+            Anzahl der Videos.
           </p>
         </div>
       </Modal>
